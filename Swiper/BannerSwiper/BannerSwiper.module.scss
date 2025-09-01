@@ -1,0 +1,80 @@
+.Wrapper {
+    position: relative;
+    height: 100%;
+    overflow: hidden;
+}
+.SwiperA {
+    height: 100%;
+}
+
+.PageWrapper {
+    z-index: 2;
+    bottom: 6px;
+    right: 0px;
+    position: absolute;
+    padding: 0 8px;
+
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    justify-content: end;
+    .Page {
+        width: 33px;
+        height: 20px;
+        font-size: 12px;
+        padding: 4px 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #00000080;
+
+        border-radius: 100px;
+        color: var(--White1);
+        span:first-child {
+            color: #fff;
+        }
+    }
+}
+
+// .Button {
+//     position: absolute;
+//     z-index: 200;
+
+//     width: var(--box-55);
+//     height: var(--box-55);
+//     border-radius: 50%;
+//     background-color: #fff;
+
+//     font-size: var(--font-24);
+//     cursor: pointer;
+//     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+
+//     display: flex;
+//     justify-content: center;
+//     align-items: center;
+
+//     transition: all 0.2s ease;
+//     &:hover {
+//         background-color: var(--primary-color);
+//         border: none;
+//         color: #fff;
+//     }
+
+//     &.Icon {
+//         &:hover {
+//             color: #fff;
+//         }
+//     }
+// }
+
+// .Prev {
+//     top: 50%;
+//     transform: translateY(-50%);
+//     left: var(--space-20);
+// }
+
+// .Next {
+//     top: 50%;
+//     transform: translateY(-50%);
+//     right: var(--space-20);
+// }

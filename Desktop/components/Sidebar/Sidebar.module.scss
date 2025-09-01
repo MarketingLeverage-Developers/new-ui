@@ -1,0 +1,12 @@
+.sidebar {
+    grid-area: sidebar;
+    // background: var(--base-color-senary);
+    margin: 0;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    width: 100%;
+
+    border-right: 1px solid var(--Gray6);
+}

@@ -1,0 +1,25 @@
+.InnerItem {
+    display: flex;
+    align-items: center;
+    padding: 9px 0;
+    padding-left: 36px;
+    padding-right: 13px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    color: var(--Gray2);
+    font-size: 15px;
+    font-weight: 400;
+
+    &.Active {
+        background-color: var(--Primary2);
+        color: var(--Primary1);
+        border-radius: 8px;
+    }
+
+    &:hover {
+        background-color: var(--Primary2);
+        color: var(--Primary1);
+        border-radius: 8px;
+    }
+}

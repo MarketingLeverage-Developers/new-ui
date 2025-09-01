@@ -1,0 +1,10 @@
+.Item {
+    width: 100px;
+    height: 30px;
+    background-color: var(--White);
+    border: 1px solid var(--Gray3);
+
+    &.Active {
+        background-color: var(--Primary1);
+    }
+}

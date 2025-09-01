@@ -1,0 +1,14 @@
+.Toggle {
+    width: 26px;
+    height: 26px;
+    cursor: pointer;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .Icon {
+        color: var(--Primary1);
+        width: 20px;
+        height: 20px;
+    }
+}

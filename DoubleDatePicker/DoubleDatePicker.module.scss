@@ -1,0 +1,222 @@
+.DoubleDatePickerWrapper {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    border: 1px solid var(--Primary1);
+    border-radius: 20px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    background-color: var(--White1);
+
+    .DatePickerContent {
+        padding: 20px 25px 0 25px;
+    }
+
+    :global {
+        .rdp-month_grid {
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .rdp-day.rdp-range_start::before {
+            left: 50%;
+            right: -2px;
+            border-top-right-radius: 999px;
+            border-bottom-right-radius: 999px;
+        }
+        .rdp-day.rdp-range_end::before {
+            left: -2px;
+            right: 50%;
+            border-top-left-radius: 999px;
+            border-bottom-left-radius: 999px;
+        }
+
+        .rdp-months {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-direction: row;
+            gap: 25px;
+            .rdp-nav {
+                display: none;
+            }
+
+            .rdp-month {
+                width: 100%;
+                height: 100%;
+                display: flex;
+                align-items: flex-start;
+                justify-content: center;
+            }
+            .rdp-weeks {
+                width: 100%;
+            }
+        }
+
+        .rdp-caption,
+        .rdp-caption_label {
+            display: none;
+        }
+
+        .rdp-weekday {
+            color: var(--Gray2);
+            text-align: center;
+            font-size: 14px;
+
+            &:first-child {
+                color: #ff6363;
+            }
+
+            &:last-child {
+                color: #778eff;
+            }
+        }
+
+        .rdp-day {
+            text-align: center;
+            width: 26px;
+            height: 26px;
+
+            .rdp-day_button {
+                width: 26px;
+                height: 26px;
+                padding: 0;
+                border: none;
+                border-radius: 0;
+                color: var(--Gray1);
+                background-color: inherit;
+            }
+
+            &.rdp-outside .rdp-day_button {
+                color: var(--Gray4);
+            }
+
+            &.rdp-range_start .rdp-day_button,
+            &.rdp-range_end .rdp-day_button {
+                background-color: var(--Primary1);
+                color: var(--White1);
+                border-radius: 50%;
+            }
+            // &.rdp-range_start .rdp-day_button {
+            // }
+
+            &.rdp-day.rdp-selected.rdp-range_start {
+                background-color: #fff5eb;
+                border-radius: 50% 0 0 50%;
+            }
+            &.rdp-day.rdp-selected.rdp-range_end {
+                background-color: #fff5eb;
+                border-radius: 0 50% 50% 0;
+            }
+
+            &.rdp-selected:not(.rdp-range_start):not(.rdp-range_end) .rdp-day_button {
+                background-color: #fff5eb;
+                color: var(--Black1);
+                border-radius: 0;
+            }
+
+            &.rdp-today:not(.rdp-selected) .rdp-day_button {
+                background-color: #fff5eb;
+            }
+        }
+    }
+
+    .NavWrapper {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        // gap: 15px;
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .NavButton {
+        background-color: inherit;
+        border: none;
+        cursor: pointer;
+        padding: 4px;
+
+        .Icon {
+            color: var(--Gray1);
+            font-size: 18px;
+        }
+    }
+    .MonthTextWrapper {
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 30px;
+    }
+
+    .MonthText {
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--Black1);
+        min-width: 100px;
+        text-align: center;
+    }
+
+    .Legend {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 15px 20px;
+        width: 100%;
+        border-top: 1px solid var(--Gray5);
+        margin-top: 16px;
+
+        .RangeText {
+            text-align: end;
+            font-size: 14px;
+            color: var(--Gray1);
+            flex: 1;
+            padding-right: 25px;
+        }
+        .Buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .CancelButton,
+        .ConfirmButton {
+            padding: 4px 9px;
+            font-size: 14px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .CancelButton {
+            background-color: var(--White1);
+            border: 1px solid #d5d5d5;
+            color: var(--Gray1);
+        }
+
+        .ConfirmButton {
+            background-color: var(--Primary1);
+            color: #fff;
+        }
+    }
+
+    .DotToday,
+    .DotSelected {
+        display: inline-block;
+        width: var(--box-10);
+        height: var(--box-10);
+        border-radius: 50%;
+    }
+
+    .DotToday {
+        background-color: rgba(255, 149, 0, 0.2);
+    }
+
+    .DotSelected {
+        background-color: var(--Primary1);
+    }
+
+    .Item {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+    }
+}

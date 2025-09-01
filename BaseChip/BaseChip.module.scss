@@ -1,0 +1,13 @@
+.BaseChip {
+    background-color: var(--background-color);
+    border-radius: var(--border-radius);
+    width: var(--width);
+    height: var(--height);
+    padding: var(--padding);
+    font-size: var(--font-size);
+    color: var(--color);
+    font-weight: var(--text-font-weight, 400);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

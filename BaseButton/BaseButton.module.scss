@@ -1,0 +1,28 @@
+.BaseButton {
+    background-color: var(--background-color, var(--Primary1));
+    color: var(--color, var(--White1));
+    border: none;
+    font-weight: 500;
+    border-radius: var(--border-radius);
+
+    width: var(--width);
+    height: var(--height);
+    padding: var(--padding);
+    font-size: var(--font-size);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+
+    &.Gradient {
+        background: linear-gradient(90deg, var(--Gradient1) 0%, var(--Gradient2) 100%);
+    }
+
+    &.Disabled {
+        background-color: var(--Gray6);
+        color: var(--Gray3);
+        cursor: default;
+    }
+}

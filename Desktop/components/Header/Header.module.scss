@@ -1,0 +1,11 @@
+// Block: header
+.header {
+    grid-area: header;
+    height: auto; // 내부 내용에 따라 높이 결정
+    margin: 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+
+    background-color: var(--White1);
+}

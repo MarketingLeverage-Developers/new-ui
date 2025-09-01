@@ -1,0 +1,17 @@
+.BaseModalClose {
+    width: 26px;
+    height: 26px;
+    color: var(--Gray2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 18px;
+    border: none;
+    background-color: inherit;
+
+    &.Close:hover {
+        background-color: var(--Gray5);
+    }
+}

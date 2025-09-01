@@ -1,0 +1,6 @@
+/* src/shared/primitives/Grid/components/Col/Col.module.scss */
+.Col {
+    grid-column: span var(--span) / span var(--span);
+    justify-self: var(--justify-self, start);
+    width: var(--col-width, auto);
+}

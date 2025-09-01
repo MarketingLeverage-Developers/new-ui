@@ -1,0 +1,16 @@
+.PillButton {
+    background-color: var(--Primary1);
+    color: var(--White1);
+    border: none;
+    border-radius: 100px;
+    font-weight: 500;
+
+    width: var(--width);
+    height: var(--height);
+    padding: var(--padding);
+    font-size: var(--font-size);
+
+    &.Gradient {
+        background: linear-gradient(90deg, var(--Gradient1) 0%, var(--Gradient2) 100%);
+    }
+}

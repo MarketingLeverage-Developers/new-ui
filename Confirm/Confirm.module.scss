@@ -1,0 +1,52 @@
+.Confirm {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+
+    .IconWrapper {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background-color: var(--Primary3);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: var(--White1);
+
+        img {
+            height: 50%;
+        }
+
+        margin-bottom: 24px;
+    }
+
+    .TextWrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        .Title {
+            text-align: center;
+            font-size: 17px;
+            color: var(--Black1);
+            font-weight: 600;
+
+            span {
+                color: var(--Primary1);
+            }
+        }
+
+        .Description {
+            font-size: 14px;
+            color: var(--Gray2);
+            font-weight: 500;
+        }
+        margin-bottom: 36px;
+    }
+
+    .ButtonWrapper {
+        width: 100%;
+        display: flex;
+        gap: 8px;
+    }
+}

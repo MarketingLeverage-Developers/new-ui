@@ -1,0 +1,6 @@
+.StripedTable {
+    border-collapse: separate; /* 중요: collapse면 radius 깨짐 */
+    border-spacing: 0; /* 셀 간격 제거 */
+
+    overflow: hidden; /* radius 영역 밖은 잘라내기 */
+}

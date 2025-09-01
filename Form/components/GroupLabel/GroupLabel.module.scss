@@ -1,0 +1,10 @@
+.GroupLabel {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    .Text {
+        font-size: 17px;
+        font-weight: 600;
+        color: var(--Black1);
+    }
+}

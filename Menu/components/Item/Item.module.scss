@@ -1,0 +1,27 @@
+.Item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 28px;
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--Gray2);
+    cursor: pointer;
+
+    /* 핵심: 평소에도 동일한 두께의 보더를 두되, 투명색으로 둬서 '자리'를 미리 확보 */
+    border-left: 5px solid transparent;
+
+    .Icon {
+        width: 18px;
+        height: 18px;
+        flex-shrink: 0;
+        color: currentColor; // react-icons는 이 색을 바로 따름
+    }
+
+    &.Active {
+        color: var(--Primary1);
+        border-left-color: var(--Primary1); /* 두께/레이아웃 변화 없음, 색만 변경 */
+        /* 필요하면 배경색도 */
+        /* background-color: var(--Primary2); */
+    }
+}

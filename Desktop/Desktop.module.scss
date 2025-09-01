@@ -1,0 +1,14 @@
+.Desktop {
+    display: grid;
+    grid-template-areas:
+        'sidebar subSidebar header'
+        'sidebar subSidebar main'
+        'sidebar subSidebar footer';
+    grid-template-columns: auto auto 1fr; /* ✅ sidebar + subSidebar + main */
+    grid-template-rows: auto 1fr auto;
+
+    min-height: 100vh;
+    overflow: visible;
+    margin: 0;
+    padding: 0;
+}

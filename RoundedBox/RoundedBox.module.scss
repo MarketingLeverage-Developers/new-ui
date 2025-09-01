@@ -1,0 +1,58 @@
+.Container {
+    display: flex;
+    align-items: stretch;
+    width: var(--width);
+    height: var(--height);
+}
+
+.RoundedBox {
+    background-color: var(--White1);
+    border-radius: 20px;
+    box-sizing: border-box;
+    padding: var(--padding);
+    flex: 1 1 auto;
+    min-width: 0;
+    min-height: 0;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.Viewport {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: auto;
+    /* 내부 스크롤바 숨김 */
+    scrollbar-width: none;
+}
+.Viewport::-webkit-scrollbar {
+    display: none;
+}
+
+.NoScroll {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.ExternalScrollbar {
+    // width: 14px; /* 필요 시 조정 */
+    overflow-y: auto;
+    overflow-x: hidden;
+    /* 미관용 */
+    background: transparent;
+}
+
+/* 외부 스크롤바 스타일(옵션) */
+.ExternalScrollbar::-webkit-scrollbar {
+    width: 8px;
+}
+.ExternalScrollbar::-webkit-scrollbar-thumb {
+    background: var(--Gray5);
+    border-radius: 6px;
+}
+.ExternalScrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: var(--Gray5) transparent;
+}

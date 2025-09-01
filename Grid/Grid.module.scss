@@ -1,0 +1,8 @@
+.Grid {
+    padding: var(--padding);
+    display: grid;
+    grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+    row-gap: var(--row-gap, var(--gap, 12px));
+    column-gap: var(--col-gap, var(--gap, 12px));
+    width: 100%;
+}

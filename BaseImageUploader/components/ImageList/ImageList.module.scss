@@ -1,0 +1,27 @@
+.ImageList {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); // 4개씩 고정
+    gap: 8px; // 아이템 사이 간격
+    place-items: center;
+}
+
+.ImageItem {
+    width: 92px;
+    img {
+        width: 92px;
+        height: 92px;
+        object-fit: cover;
+        border-radius: 8px;
+        border: 1px solid var(--Gray5);
+    }
+    span {
+        display: block; /* inline → block으로 */
+        font-size: 13px;
+        color: var(--Gray2);
+        font-weight: 500;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 100%;
+    }
+}

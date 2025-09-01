@@ -1,0 +1,42 @@
+.RoundedSearch {
+    border-radius: 6px;
+    padding: 9px 12px;
+    width: var(--width, fit-content);
+    height: 34px;
+    border: 1px solid var(--Gray5);
+    outline: none;
+
+    display: flex;
+    gap: 8px;
+    align-items: center;
+
+    position: relative;
+    background-color: inherit;
+
+    &:focus-within {
+        border: 1px solid var(--Primary1);
+    }
+}
+
+.Input {
+    border: none;
+    outline: none;
+    width: 100%;
+    height: 17px;
+    background-color: inherit;
+
+    font-size: 14px;
+    color: var(--Black1);
+    padding-right: 36px;
+
+    &::placeholder {
+        color: var(--Gray3);
+    }
+}
+
+.MagnifyIcon {
+    width: 18px;
+    height: 18px;
+    display: block;
+    fill: var(--Gray2);
+}

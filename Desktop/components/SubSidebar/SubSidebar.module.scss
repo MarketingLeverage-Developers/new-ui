@@ -1,0 +1,9 @@
+.SubSidebar {
+    grid-area: subSidebar;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    width: 220px; /* ✅ 필요 시 고정 너비 */
+    border-right: 1px solid var(--Gray6);
+}

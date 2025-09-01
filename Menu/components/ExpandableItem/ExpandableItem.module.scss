@@ -1,0 +1,72 @@
+$MAX: 600px; /* 예측 가능한 최대 높이(필요에 맞게 조정) */
+
+.ExpandableItem {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.Visible {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 12px 28px;
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--Gray2);
+    cursor: pointer;
+
+    /* 여기서 핵심: 기본적으로 투명 보더를 두어 자리 확보 */
+    border-left: 5px solid transparent;
+
+    .IconLabel {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .Icon {
+        width: 18px;
+        height: 18px;
+        flex-shrink: 0;
+        color: currentColor;
+    }
+
+    .ArrowIcon {
+        width: 18px;
+        height: 18px;
+        flex-shrink: 0;
+        transition: transform 180ms ease;
+        color: currentColor;
+    }
+
+    &.Active {
+        color: var(--Primary1);
+        border-left-color: var(--Primary1); /* 두께는 유지, 색만 변경 */
+        background-color: var(--Primary2);
+    }
+
+    &.Open {
+        .ArrowIcon {
+            transform: rotate(180deg);
+        }
+    }
+}
+
+/* max-height로 열리고 닫히는 부분 */
+.Hidden {
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 300ms ease, opacity 300ms ease;
+    opacity: 0;
+}
+
+.Hidden.Open {
+    max-height: $MAX;
+    opacity: 1;
+}
+
+.HiddenInner {
+    padding: 6px 16px;
+}
