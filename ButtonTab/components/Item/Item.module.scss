@@ -1,0 +1,19 @@
+.Item {
+    height: 46px;
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    color: var(--Gray1);
+    background-color: var(--White1);
+    border: 1px solid var(--Gray5);
+    border-radius: 8px;
+    font-size: 15px;
+
+    &.Active {
+        background-color: var(--Primary2);
+        border: 1px solid var(--Primary1);
+        color: var(--Primary1);
+        font-weight: 500;
+    }
+}
