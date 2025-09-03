@@ -9,17 +9,42 @@ type RoundedPasswordProps = {
     helperText?: React.ReactNode;
 } & InputHTMLAttributes<HTMLInputElement>;
 
-const RoundedPassword = ({ status = STATUS.DEFAULT, helperText, ...props }: RoundedPasswordProps) => {
+const isFilled = (v: unknown) =>
+    v !== undefined && v !== null && (Array.isArray(v) ? v.length > 0 : String(v).length > 0);
+
+const RoundedPassword: React.FC<RoundedPasswordProps> = ({
+    status = STATUS.DEFAULT,
+    helperText,
+    value,
+    onBlur,
+    ...props
+}) => {
+    const [touched, setTouched] = useState(false);
     const [visible, setVisible] = useState(false);
 
-    const roundedPasswordClassName = classNames(styles.RoundedPassword, {
-        [styles.Error]: status === STATUS.ERROR,
-        [styles.Success]: status === STATUS.SUCCESS,
+    const filled = isFilled(value);
+    const showFeedback = touched || filled;
+
+    const cn = classNames(styles.RoundedPassword, {
+        [styles.Error]: showFeedback && status === STATUS.ERROR,
+        [styles.Success]: showFeedback && status === STATUS.SUCCESS,
+        [styles.Touched]: touched,
     });
 
+    const handleBlur: React.FocusEventHandler<HTMLInputElement> = (e) => {
+        setTouched(true);
+        onBlur?.(e);
+    };
+
     return (
-        <div className={roundedPasswordClassName}>
-            <input {...props} type={visible ? 'text' : 'password'} className={styles.Input} />
+        <div className={cn}>
+            <input
+                {...props}
+                type={visible ? 'text' : 'password'}
+                value={value}
+                onBlur={handleBlur}
+                className={styles.Input}
+            />
             <button
                 type="button"
                 className={styles.EyeButton}
@@ -32,7 +57,9 @@ const RoundedPassword = ({ status = STATUS.DEFAULT, helperText, ...props }: Roun
                     <AiFillEyeInvisible className={styles.EyeIcon} aria-hidden="true" />
                 )}
             </button>
-            {status !== STATUS.DEFAULT && <span className={styles.Helper}>{helperText}</span>}
+            {showFeedback && status !== STATUS.DEFAULT && helperText && (
+                <span className={styles.Helper}>{helperText}</span>
+            )}
         </div>
     );
 };
