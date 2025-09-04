@@ -5,10 +5,10 @@ import styles from './BaseImageUploader.module.scss';
 
 type BaseImageUploaderProps = {
     children: React.ReactNode;
-};
+} & React.ComponentProps<typeof ImageUploader>;
 
-const BaseImageUploader = ({ children }: BaseImageUploaderProps) => (
-    <ImageUploader accept="image/*" multiple maxFiles={10}>
+const BaseImageUploader = ({ children, ...props }: BaseImageUploaderProps) => (
+    <ImageUploader {...props}>
         <div className={styles.BaseImageUploader}>{children}</div>
     </ImageUploader>
 );
