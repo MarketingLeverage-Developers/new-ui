@@ -1,0 +1,25 @@
+.Select {
+    position: absolute;
+    width: 377px;
+    top: 0;
+    left: 200px;
+    background-color: var(--White1);
+    padding: 8px;
+    border-radius: 8px;
+    border: 2px solid var(--Gray5);
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.06);
+}
+
+.Item {
+    display: flex;
+    align-items: center;
+    padding: 10px 4px;
+    gap: 6px;
+    width: 100%;
+    // background-color: var(--Primary1);
+
+    &.Item:hover {
+        background-color: var(--Primary2);
+        cursor: pointer;
+    }
+}
