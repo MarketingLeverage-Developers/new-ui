@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import styles from './SearchInput.module.scss';
-import { MdOutlineCancel } from 'react-icons/md';
+import { MdCancel } from 'react-icons/md';
 import { CiSearch } from 'react-icons/ci';
 
 type SearchInputProps = React.InputHTMLAttributes<HTMLInputElement>;
@@ -24,7 +24,7 @@ const SearchInput = ({ value, onChange, ...props }: SearchInputProps) => {
             </div>
             {String(value ?? inputRef.current?.value ?? '').length > 0 && (
                 <div className={styles.CancelIcons}>
-                    <MdOutlineCancel style={{ cursor: 'pointer' }} onClick={clearHandler} />
+                    <MdCancel style={{ cursor: 'pointer' }} onClick={clearHandler} />
                 </div>
             )}
         </div>
