@@ -1,8 +1,9 @@
 import Dropdown from '@/shared/headless/Dropdown/Dropdown';
-import ManySelect from '@/shared/headless/ManySelect/ManySelect';
-import React from 'react';
+import React, { useMemo } from 'react';
 import styles from './Select.module.scss';
 import Item from './components/Item';
+import { useSearchSelect } from '../../SearchSelect';
+import { useManySelect } from '@/shared/headless/ManySelect/ManySelect';
 
 export type SelectItem = {
     label: string;
@@ -12,17 +13,35 @@ export type SelectItem = {
 type SelectProps = {
     items: SelectItem[];
 };
-// manaySelect 말고 다른 이름으로
-const Select = ({ items }: SelectProps) => (
-    <Dropdown.Content>
-        <div className={styles.Select}>
-            <ManySelect defaultValue={['apple']}>
-                {items.map((item, idx) => (
-                    <Item key={`${item.value}-${idx}`} item={item} isCheck={false} onTriggerClick={() => {}} />
+
+const Select = ({ items }: SelectProps) => {
+    const { query } = useSearchSelect();
+    const { isChecked, toggleManySelectValue } = useManySelect();
+
+    const filtered = useMemo(() => {
+        const q = query.trim().toLowerCase();
+        return items.filter((it) => {
+            if (q && !it.label.toLowerCase().includes(q)) return false;
+
+            return true;
+        });
+    }, [items, query, isChecked]);
+
+    return (
+        <Dropdown.Content>
+            <div className={styles.Select}>
+                {filtered.length === 0 && <div className={styles.Empty}>결과가 없습니다</div>}
+                {filtered.map((item) => (
+                    <Item
+                        key={item.value}
+                        item={item}
+                        isCheck={isChecked(item.value)}
+                        onTriggerClick={() => toggleManySelectValue(item.value)} // ✅ 여기서 내려줌
+                    />
                 ))}
-            </ManySelect>
-        </div>
-    </Dropdown.Content>
-);
+            </div>
+        </Dropdown.Content>
+    );
+};
 
 export default Select;
