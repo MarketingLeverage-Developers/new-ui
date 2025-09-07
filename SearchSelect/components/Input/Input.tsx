@@ -4,10 +4,8 @@ import React from 'react';
 import { useSearchSelect } from '../../SearchSelect';
 import styles from './Input.module.scss';
 
-type SearchInputProps = Omit<
-    React.InputHTMLAttributes<HTMLInputElement>,
-    'value' | 'defaultValue' | 'onChange' | 'placeholder'
->;
+type SearchInputProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, 'value' | 'onChange' | 'placeholder'>;
+
 const Input = ({ ...rest }: SearchInputProps) => {
     const { query, setQuery, label } = useSearchSelect();
     return (

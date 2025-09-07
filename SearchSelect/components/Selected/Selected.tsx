@@ -1,8 +1,8 @@
 import React from 'react';
 import styles from './Selected.module.scss';
 import { useManySelect } from '@/shared/headless/ManySelect/ManySelect';
-import Item from './components/Item';
 import { useSearchSelect } from '../../SearchSelect';
+import { MdCancel } from 'react-icons/md';
 
 const Selected = () => {
     const { label } = useSearchSelect();
@@ -11,7 +11,10 @@ const Selected = () => {
         <div className={styles.Selected}>
             {label && <span className={styles.Label}>선택된 {label}</span>}
             {manySelectValue.map((item, idx) => (
-                <Item key={idx} text={item} onCancel={() => toggleManySelectValue(item)} />
+                <div className={styles.Item} key={idx}>
+                    <span>{item}</span>
+                    <MdCancel style={{ cursor: 'pointer' }} onClick={() => toggleManySelectValue(item)} />
+                </div>
             ))}
         </div>
     );
