@@ -1,2 +1,25 @@
 .Selected {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    .Label {
+        color: var(--Gray1);
+    }
+}
+
+.Item {
+    display: flex;
+    align-items: center;
+    width: fit-content;
+    gap: 24px;
+    padding: 9px 16px;
+    background-color: var(--Gray6);
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 400;
+
+    svg {
+        color: var(--Gray2);
+    }
 }

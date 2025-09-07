@@ -6,36 +6,49 @@ import Select from './components/Select/Select';
 import ManySelect from '@/shared/headless/ManySelect/ManySelect';
 import Selected from './components/Selected/Selected';
 
+export type SelectItem = {
+    label: string;
+    value: string;
+};
+
 type SearchSelectContextType = {
     query: string;
     setQuery: (q: string) => void;
+    label: string;
+    data: SelectItem[];
 };
 
 const SearchSelectContext = createContext<SearchSelectContextType>({
     query: '',
     setQuery: () => {},
+    label: '',
+    data: [],
 });
 
 type SearchSelectProps = {
     children: React.ReactNode;
+    label: string;
+    data: SelectItem[];
 };
 
-const SearchSelect = ({ children }: SearchSelectProps) => {
+export const SearchSelect = ({ children, label, data }: SearchSelectProps) => {
     const [query, setQuery] = useState('');
+    const [labelState] = useState(label);
+    const [dataState] = useState(data);
 
     return (
         <div className={styles.SearchSelect}>
+            <span className={styles.Title}>{label} 설정</span>
             <ManySelect>
                 <Dropdown>
-                    <div className={styles.label}>컬럼 선택</div>
-                    <SearchSelectContext.Provider value={{ query, setQuery }}>{children}</SearchSelectContext.Provider>
+                    <SearchSelectContext.Provider value={{ query, setQuery, label: labelState, data: dataState }}>
+                        {children}
+                    </SearchSelectContext.Provider>
                 </Dropdown>
             </ManySelect>
         </div>
     );
 };
-
-export default SearchSelect;
 
 SearchSelect.Selected = Selected;
 SearchSelect.Input = SearchInput;

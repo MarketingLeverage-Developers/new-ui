@@ -1,8 +1,8 @@
 import React from 'react';
-import type { SelectItem } from '../Select';
 import ManySelect, { useManySelect } from '@/shared/headless/ManySelect/ManySelect';
 import styles from '../Select.module.scss';
 import CheckBoxToggle from '@/shared/primitives/CheckBoxToggle/CheckBoxToggle';
+import type { SelectItem } from '../../../SearchSelect';
 
 type ItemProps = {
     item: SelectItem;
