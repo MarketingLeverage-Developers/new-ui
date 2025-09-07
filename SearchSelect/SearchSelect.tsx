@@ -1,29 +1,44 @@
-import React from 'react';
+import React, { createContext, useContext, useState } from 'react';
 import styles from './SearchSelect.module.scss';
-import SelectedItem from './components/SelectedItem/SelectedItem';
 import SearchInput from './components/Input/Input';
 import Dropdown from '@/shared/headless/Dropdown/Dropdown';
 import Select from './components/Select/Select';
+import ManySelect from '@/shared/headless/ManySelect/ManySelect';
+import Selected from './components/Selected/Selected';
+
+type SearchSelectContextType = {
+    query: string;
+    setQuery: (q: string) => void;
+};
+
+const SearchSelectContext = createContext<SearchSelectContextType>({
+    query: '',
+    setQuery: () => {},
+});
 
 type SearchSelectProps = {
     children: React.ReactNode;
 };
 
-// TODO : input 에 data 필터
 const SearchSelect = ({ children }: SearchSelectProps) => {
-    const test = '';
+    const [query, setQuery] = useState('');
+
     return (
         <div className={styles.SearchSelect}>
-            <Dropdown>
-                <div className={styles.label}>컬럼 선택</div>
-                {children}
-            </Dropdown>
+            <ManySelect>
+                <Dropdown>
+                    <div className={styles.label}>컬럼 선택</div>
+                    <SearchSelectContext.Provider value={{ query, setQuery }}>{children}</SearchSelectContext.Provider>
+                </Dropdown>
+            </ManySelect>
         </div>
     );
 };
 
 export default SearchSelect;
 
-SearchSelect.SelectedItem = SelectedItem;
+SearchSelect.Selected = Selected;
 SearchSelect.Input = SearchInput;
 SearchSelect.Select = Select;
+
+export const useSearchSelect = () => useContext(SearchSelectContext);
