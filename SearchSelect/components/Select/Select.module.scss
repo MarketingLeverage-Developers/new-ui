@@ -1,8 +1,4 @@
 .SelectWrapper {
-    position: absolute;
-
-    top: 0;
-    left: 200px;
     background-color: var(--White1);
     padding: 8px;
     border: 2px solid var(--Gray5);
@@ -12,7 +8,6 @@
     .Select {
         padding-right: 11px;
         overflow-y: auto;
-        width: 377px;
         height: 120px;
         &::-webkit-scrollbar {
             width: 6px;

@@ -38,7 +38,7 @@ export const SearchSelect = ({ children, label, data }: SearchSelectProps) => {
 
     return (
         <div className={styles.SearchSelect}>
-            <span className={styles.Title}>{label} 설정</span>
+            {/* <span className={styles.Title}>{label} 설정</span> */}
             <ManySelect>
                 <Dropdown>
                     <SearchSelectContext.Provider value={{ query, setQuery, label: labelState, data: dataState }}>

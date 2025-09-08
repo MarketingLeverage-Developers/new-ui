@@ -10,13 +10,15 @@ const Input = ({ ...rest }: SearchInputProps) => {
     const { query, setQuery, label } = useSearchSelect();
     return (
         <Dropdown.Trigger>
-            {label && <span className={styles.Label}>{label}</span>}
-            <SearchInput
-                {...rest}
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder={`검색어를 입력하세요`}
-            />
+            <div className={styles.InputWrapper}>
+                {label && <span className={styles.Label}>{label}</span>}
+                <SearchInput
+                    {...rest}
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    placeholder={`검색어를 입력하세요`}
+                />
+            </div>
         </Dropdown.Trigger>
     );
 };

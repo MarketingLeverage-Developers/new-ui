@@ -19,12 +19,12 @@ const Select = () => {
     }, [data, query, isChecked]);
 
     return (
-        <Dropdown.Content>
+        <Dropdown.Content matchTriggerWidth>
             <div className={styles.SelectWrapper}>
                 <div className={styles.Select}>
                     {filtered.length === 0 && <div className={styles.Empty}>결과가 없습니다</div>}
                     {filtered.map((item) => (
-                        <ManySelect.Item value={item.value}>
+                        <ManySelect.Item key={item.value} value={item.value}>
                             <div className={styles.Item} onClick={() => toggleManySelectValue(item.value)}>
                                 <CheckBoxToggle value={isChecked(item.value)} />
                                 <span>{item.label}</span>
