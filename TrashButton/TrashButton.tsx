@@ -7,8 +7,8 @@ type TrashButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
 };
 
 const TrashButton = ({ onClick, ...props }: TrashButtonProps) => (
-    <button {...props} className={styles.TrashButton}>
-        <BiSolidTrashAlt onClick={onClick} />
+    <button {...props} className={styles.TrashButton} onClick={onClick}>
+        <BiSolidTrashAlt />
     </button>
 );
 
