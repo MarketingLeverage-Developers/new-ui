@@ -1,18 +1,25 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import styles from './Selected.module.scss';
 import { useManySelect } from '@/shared/headless/ManySelect/ManySelect';
 import { useSearchSelect } from '../../SearchSelect';
 import { MdCancel } from 'react-icons/md';
 
 const Selected = () => {
-    const { label } = useSearchSelect();
+    const { label, data } = useSearchSelect();
     const { manySelectValue, toggleManySelectValue } = useManySelect();
+
+    const labelMap = useMemo(() => {
+        const map = new Map<string, string>();
+        data.forEach((i) => map.set(i.uid, i.label));
+        return map;
+    }, [data]);
+
     return (
         <div className={styles.Selected}>
             {label && <span className={styles.Label}>선택된 {label}</span>}
             {manySelectValue.map((item, idx) => (
                 <div className={styles.Item} key={idx}>
-                    <span>{item}</span>
+                    <span>{labelMap.get(item)}</span>
                     <MdCancel style={{ cursor: 'pointer' }} onClick={() => toggleManySelectValue(item)} />
                 </div>
             ))}
