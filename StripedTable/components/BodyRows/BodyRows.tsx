@@ -64,7 +64,7 @@ export const BodyRows: React.FC = () => {
                                 ))}
                             </Row>
 
-                            {hasHidden && opened && (
+                            {opened && (
                                 <Row>
                                     <Cell colSpan={state.columnRow.columns.length} style={getDetailsCellStyle(bg)}>
                                         <div
