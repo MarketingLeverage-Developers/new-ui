@@ -8,7 +8,7 @@ import Selected from './components/Selected/Selected';
 
 export type SelectItem = {
     label: string;
-    value: string;
+    uid: string;
 };
 
 type SearchSelectContextType = {
@@ -33,17 +33,14 @@ type SearchSelectProps = {
 
 export const SearchSelect = ({ children, label, data }: SearchSelectProps) => {
     const [query, setQuery] = useState('');
-    const [labelState] = useState(label);
-    const [dataState] = useState(data);
+    const value = React.useMemo(() => ({ query, setQuery, label, data }), [query, label, data]);
 
     return (
         <div className={styles.SearchSelect}>
             {/* <span className={styles.Title}>{label} 설정</span> */}
             <ManySelect>
                 <Dropdown>
-                    <SearchSelectContext.Provider value={{ query, setQuery, label: labelState, data: dataState }}>
-                        {children}
-                    </SearchSelectContext.Provider>
+                    <SearchSelectContext.Provider value={value}>{children}</SearchSelectContext.Provider>
                 </Dropdown>
             </ManySelect>
         </div>
