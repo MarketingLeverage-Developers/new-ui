@@ -1,0 +1,11 @@
+.SearchManySelect {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    gap: 24px;
+
+    .Title {
+        font-size: 17px;
+        font-weight: 500;
+    }
+}

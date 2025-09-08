@@ -1,11 +1,11 @@
 import React, { useMemo } from 'react';
 import styles from './Selected.module.scss';
 import { useManySelect } from '@/shared/headless/ManySelect/ManySelect';
-import { useSearchSelect } from '../../SearchSelect';
+import { useSearchManySelect } from '../../SearchManySelect';
 import { MdCancel } from 'react-icons/md';
 
 const Selected = () => {
-    const { label, data } = useSearchSelect();
+    const { label, data } = useSearchManySelect();
     const { manySelectValue, toggleManySelectValue } = useManySelect();
 
     const labelMap = useMemo(() => {

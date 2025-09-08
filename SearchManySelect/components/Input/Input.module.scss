@@ -1,0 +1,8 @@
+.InputWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    .Label {
+        color: var(--Gray1);
+    }
+}

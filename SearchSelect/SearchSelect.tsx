@@ -2,9 +2,8 @@ import React, { createContext, useContext, useState } from 'react';
 import styles from './SearchSelect.module.scss';
 import SearchInput from './components/Input/Input';
 import Dropdown from '@/shared/headless/Dropdown/Dropdown';
-import Select from './components/Select/Select';
-import ManySelect from '@/shared/headless/ManySelect/ManySelect';
-import Selected from './components/Selected/Selected';
+import SelectComponent from './components/Select/Select';
+import Select from '@/shared/headless/Select/Select';
 
 export type SelectItem = {
     label: string;
@@ -37,18 +36,16 @@ export const SearchSelect = ({ children, label, data }: SearchSelectProps) => {
 
     return (
         <div className={styles.SearchSelect}>
-            {/* <span className={styles.Title}>{label} 설정</span> */}
-            <ManySelect>
+            <Select>
                 <Dropdown>
                     <SearchSelectContext.Provider value={value}>{children}</SearchSelectContext.Provider>
                 </Dropdown>
-            </ManySelect>
+            </Select>
         </div>
     );
 };
 
-SearchSelect.Selected = Selected;
 SearchSelect.Input = SearchInput;
-SearchSelect.Select = Select;
+SearchSelect.Select = SelectComponent;
 
 export const useSearchSelect = () => useContext(SearchSelectContext);
