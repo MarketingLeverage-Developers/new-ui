@@ -2,14 +2,16 @@ import Dropdown, { useDropdown } from '@/shared/headless/Dropdown/Dropdown';
 import React, { useEffect, useMemo } from 'react';
 import styles from './Select.module.scss';
 import { useSearchSelect } from '../../SearchSelect';
-import ManySelect, { useManySelect } from '@/shared/headless/ManySelect/ManySelect';
-import CheckBoxToggle from '@/shared/primitives/CheckBoxToggle/CheckBoxToggle';
+import ManySelect from '@/shared/headless/ManySelect/ManySelect';
 import { buildHangulIndex, choseongOnly, disassembleHangul, isConsonantOnly } from './hangulSearch';
+import SearchInput from '@/shared/primitives/SearchInput/SearchInput';
+import { useSelect } from '@/shared/headless/Select/Select';
+import classNames from 'classnames';
 
 const Select = () => {
-    const { open, isOpen } = useDropdown();
-    const { query, data } = useSearchSelect();
-    const { isChecked, toggleManySelectValue } = useManySelect();
+    const { open, isOpen, close } = useDropdown();
+    const { query, data, setQuery } = useSearchSelect();
+    const { isActive, changeSelectValue } = useSelect();
 
     const indexed = useMemo(
         () =>
@@ -41,6 +43,17 @@ const Select = () => {
         );
     }, [indexed, query]);
 
+    const checkBoxClassName = (uid: string) =>
+        classNames(styles.CheckBox, {
+            [styles.Active]: isActive(uid),
+        });
+
+    const onSelectHandler = (uid: string) => {
+        if (isActive(uid)) changeSelectValue('');
+        else changeSelectValue(uid);
+        if (isOpen) close();
+    };
+
     // 모달이 닫힌 상태인데 query 값 갱신되면
     useEffect(() => {
         if (!isOpen && query.length > 1) open();
@@ -49,12 +62,16 @@ const Select = () => {
     return (
         <Dropdown.Content matchTriggerWidth>
             <div className={styles.SelectWrapper}>
+                <SearchInput
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    placeholder={`검색어를 입력하세요`}
+                />
                 <div className={styles.Select}>
                     {filtered.length === 0 && <div className={styles.Empty}>결과가 없습니다</div>}
                     {filtered.map((item) => (
                         <ManySelect.Item key={item.uid} value={item.uid}>
-                            <div className={styles.Item} onClick={() => toggleManySelectValue(item.uid)}>
-                                <CheckBoxToggle value={isChecked(item.uid)} />
+                            <div className={styles.Item} onClick={() => onSelectHandler(item.uid)}>
                                 <span>{item.label}</span>
                             </div>
                         </ManySelect.Item>

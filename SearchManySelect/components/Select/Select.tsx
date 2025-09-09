@@ -3,8 +3,9 @@ import React, { useEffect, useMemo } from 'react';
 import styles from './Select.module.scss';
 import { useSearchManySelect } from '../../SearchManySelect';
 import ManySelect, { useManySelect } from '@/shared/headless/ManySelect/ManySelect';
-import CheckBoxToggle from '@/shared/primitives/CheckBoxToggle/CheckBoxToggle';
 import { buildHangulIndex, choseongOnly, disassembleHangul, isConsonantOnly } from './hangulSearch';
+import { FaCheck } from 'react-icons/fa';
+import classNames from 'classnames';
 
 const Select = () => {
     const { open, isOpen } = useDropdown();
@@ -41,6 +42,11 @@ const Select = () => {
         );
     }, [indexed, query]);
 
+    const checkBoxClassName = (uid: string) =>
+        classNames(styles.CheckBox, {
+            [styles.Active]: isChecked(uid),
+        });
+
     // 모달이 닫힌 상태인데 query 값 갱신되면
     useEffect(() => {
         if (!isOpen && query.length > 1) open();
@@ -54,7 +60,7 @@ const Select = () => {
                     {filtered.map((item) => (
                         <ManySelect.Item key={item.uid} value={item.uid}>
                             <div className={styles.Item} onClick={() => toggleManySelectValue(item.uid)}>
-                                <CheckBoxToggle value={isChecked(item.uid)} />
+                                <div className={checkBoxClassName(item.uid)}>{isChecked(item.uid) && <FaCheck />}</div>
                                 <span>{item.label}</span>
                             </div>
                         </ManySelect.Item>

@@ -33,7 +33,7 @@
     .Item {
         display: flex;
         align-items: center;
-        padding: 10px 4px;
+        padding: 10px;
         gap: 6px;
         width: 100%;
         font-size: 14px;
@@ -42,6 +42,25 @@
         &.Item:hover {
             background-color: var(--Primary2);
             cursor: pointer;
+        }
+
+        .CheckBox {
+            width: 20px;
+            height: 20px;
+            border-radius: 3px;
+            border: 1.5px solid var(--Gray5);
+            background-color: var(--White1);
+            outline: none;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            &.Active {
+                background-color: var(--Primary1);
+                border: none;
+                color: var(--White1);
+            }
         }
     }
 }

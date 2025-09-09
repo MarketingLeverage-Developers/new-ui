@@ -1,23 +1,34 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import styles from './Input.module.scss';
 import RoundedInput from '@/shared/primitives/RoundedInput/RoundedInput';
 import { useSelect } from '@/shared/headless/Select/Select';
 import Dropdown from '@/shared/headless/Dropdown/Dropdown';
 import BaseButton from '@/shared/primitives/BaseButton/BaseButton';
+import { useSearchSelect } from '../../SearchSelect';
 
 type SearchInputProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, 'value' | 'onChange' | 'placeholder'>;
 
 const Input = ({ ...rest }: SearchInputProps) => {
-    // const { query, setQuery } = useSearchSelect();
+    const { data } = useSearchSelect();
     const { selectValue } = useSelect();
+
+    const labelMap = useMemo(() => {
+        const map = new Map<string, string>();
+        data.forEach((i) => map.set(i.uid, i.label));
+        return map;
+    }, [data]);
+
+    const value = labelMap.get(selectValue) ?? '';
+    const hasValue = !!value;
+
     return (
         <Dropdown.Trigger>
             <div className={styles.InputWrapper}>
-                <RoundedInput {...rest} value={selectValue} style={{ width: '100%' }} />
+                <RoundedInput {...rest} value={value} className={hasValue ? styles.Selected : undefined} />
+                <BaseButton radius={8} padding={{ x: 17, y: 14 }} textColor="var(--Primary1)" bgColor="var(--Primary2)">
+                    업체 검색
+                </BaseButton>
             </div>
-            <BaseButton radius={8} padding={{ x: 17, y: 14 }} textColor="var(--Primary1)" bgColor="var(--Primary2)">
-                업체 검색
-            </BaseButton>
         </Dropdown.Trigger>
     );
 };

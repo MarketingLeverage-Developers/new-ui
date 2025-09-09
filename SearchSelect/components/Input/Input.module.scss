@@ -1,5 +1,14 @@
 .InputWrapper {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr auto;
     gap: 8px;
-    justify-content: space-between;
+}
+
+.Selected {
+    background: var(--Gray6);
+    border: 1px solid var(--Gray5);
+}
+
+.Selected input {
+    color: var(--Gray1);
 }

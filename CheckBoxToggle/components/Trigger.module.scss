@@ -3,7 +3,7 @@
     height: 20px;
     border-radius: 3px;
     border: 1.5px solid var(--Gray5);
-    background-color: #fff;
+    background-color: var(--White1);
     outline: none;
     font-size: 16px;
     display: flex;
@@ -13,6 +13,6 @@
     &.Active {
         background-color: var(--Primary1);
         border: none;
-        color: #fff;
+        color: var(--White1);
     }
 }
