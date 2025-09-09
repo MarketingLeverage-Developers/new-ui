@@ -24,7 +24,7 @@ const Input = ({ ...rest }: SearchInputProps) => {
     return (
         <Dropdown.Trigger>
             <div className={styles.InputWrapper}>
-                <RoundedInput {...rest} value={value} className={hasValue ? styles.Selected : undefined} />
+                <RoundedInput {...rest} value={value} readOnly className={hasValue ? styles.Selected : undefined} />
                 <BaseButton radius={8} padding={{ x: 17, y: 14 }} textColor="var(--Primary1)" bgColor="var(--Primary2)">
                     업체 검색
                 </BaseButton>
