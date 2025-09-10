@@ -8,11 +8,13 @@ type LabelProps = {
     text: string;
     subText?: string;
     marginBottom?: CSSLength;
+    gap?: CSSLength;
 } & React.HTMLAttributes<HTMLDivElement>;
 
-export const Label = ({ text, subText, marginBottom = 0, ...props }: LabelProps) => {
+export const Label = ({ text, subText, marginBottom = 0, gap = 8, ...props }: LabelProps) => {
     const cssVariables: CSSVariables = {
         '--margin-bottom': toCssUnit(marginBottom),
+        '--gap': toCssUnit(gap),
     };
 
     return (
