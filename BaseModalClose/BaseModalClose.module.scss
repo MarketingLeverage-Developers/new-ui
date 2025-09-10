@@ -11,7 +11,8 @@
     border: none;
     background-color: inherit;
 
-    &.Close:hover {
+    &:hover {
+        border-radius: 6px;
         background-color: var(--Gray5);
     }
 }
