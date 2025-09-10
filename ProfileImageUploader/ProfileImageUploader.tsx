@@ -1,62 +1,136 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, type ChangeEvent } from 'react';
 import styles from './ProfileImageUploader.module.scss';
 import { IoMdCamera } from 'react-icons/io';
+import type { ImageItem, ImageItemInput } from '@/shared/headless/ImageUploader/ImageUploader';
+import EX_IMG from '@/shared/assets/images/profile-example.png';
 
 type ProfileImageUploaderProps = {
-    url?: string; // controlled 모드: 외부 상태
-    onChange?: (file: File) => void; // 파일 선택 시 부모로 알림
+    value?: ImageItem[];
+    onChange?: (next: ImageItem[] | ChangeEvent<Element>) => void;
+    onResolveFiles?: (files: File[]) => Promise<ImageItemInput[]>;
+    accept?: string;
+    disabled?: boolean;
+    maxSize?: number;
 };
 
-const ProfileImageUploader: React.FC<ProfileImageUploaderProps> = ({ url, onChange }) => {
-    const isControlled = url !== undefined;
-    const [internalUrl, setInternalUrl] = useState<string | undefined>(undefined); // uncontrolled용
+const normalize = (arr: ImageItemInput[], fileFallbackName?: string): ImageItemInput[] => {
+    const used = new Set<string>();
+    return arr.map((it, idx) => {
+        const base = it.id ?? it.url ?? String(idx);
+        let id = base,
+            n = 1;
+        while (used.has(id)) {
+            n += 1;
+            id = `${base}__${n}`;
+        }
+        used.add(id);
+        return { id, url: it.url, name: it.name ?? fileFallbackName };
+    });
+};
+
+const ProfileImageUploader: React.FC<ProfileImageUploaderProps> = ({
+    value,
+    onChange,
+    onResolveFiles,
+    accept = 'image/*',
+    disabled,
+    maxSize,
+}) => {
+    const isControlled = value !== undefined;
+    const [internalItems, setInternalItems] = useState<ImageItem[]>([]);
+
+    const ownedObjectUrlRef = useRef<string | null>(null);
     const inputRef = useRef<HTMLInputElement | null>(null);
 
+    const revokeOwned = () => {
+        if (ownedObjectUrlRef.current) {
+            try {
+                URL.revokeObjectURL(ownedObjectUrlRef.current);
+            } catch {}
+            ownedObjectUrlRef.current = null;
+        }
+    };
+    useEffect(() => () => revokeOwned(), []);
+
+    const first = isControlled ? (value?.[0] as ImageItem | undefined) : internalItems[0];
+    const src = first?.url;
+
     const handleClick = () => {
-        inputRef.current?.click();
+        if (!disabled) inputRef.current?.click();
     };
 
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        e.target.value = ''; // 같은 파일 다시 선택 가능하도록 초기화
-
+    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const el = e.currentTarget;
+        const file = el.files?.[0];
+        el.value = '';
         if (!file) return;
+        if (maxSize && file.size > maxSize) return;
 
-        if (isControlled) {
-            onChange?.(file);
-        } else {
-            const reader = new FileReader();
-            reader.onload = () => {
-                if (typeof reader.result === 'string') {
-                    setInternalUrl(reader.result);
-                    onChange?.(file);
+        // 1) 즉시 로컬 미리보기(배열의 첫 요소 대체)
+        const previewUrl = URL.createObjectURL(file);
+        revokeOwned();
+        ownedObjectUrlRef.current = previewUrl;
+
+        const previewItem: ImageItem = { id: previewUrl, url: previewUrl, name: file.name, owned: true };
+        const nextListPreview: ImageItem[] = [previewItem]; // 프로필은 단일만 유지
+
+        if (isControlled) onChange?.(nextListPreview);
+        else setInternalItems(nextListPreview);
+
+        // 2) 서버 업로드 있으면 교체
+        if (onResolveFiles) {
+            try {
+                const resolved = await onResolveFiles([file]); // ImageItemInput[]
+                const normalized = normalize(resolved ?? [], file.name); // ImageItemInput[]
+                const firstResolved = normalized[0];
+
+                if (firstResolved?.url) {
+                    revokeOwned(); // 로컬 미리보기 정리
+                    const serverItem: ImageItem = {
+                        id: firstResolved.id ?? firstResolved.url,
+                        url: firstResolved.url,
+                        name: firstResolved.name,
+                        owned: false,
+                    };
+                    const nextListServer: ImageItem[] = [serverItem];
+
+                    if (isControlled) onChange?.(nextListServer);
+                    else setInternalItems(nextListServer);
                 }
-            };
-            reader.readAsDataURL(file);
+            } catch {
+                // 실패 시 프리뷰 유지
+            }
         }
     };
 
-    const src = isControlled ? url : internalUrl;
-
     return (
-        <div className={styles.ProfileImageUploader}>
-            <div className={styles.ImageWrapper} onClick={handleClick}>
+        <div className={styles.ProfileImageUploader} data-disabled={disabled ? 'true' : 'false'}>
+            <div className={styles.ImageWrapper} onClick={handleClick} role="button" aria-disabled={disabled}>
                 {src ? (
-                    <img src={src} alt="profile" className={styles.Image} />
+                    <img src={src} alt="Profile" className={styles.Image} />
                 ) : (
-                    <div className={styles.Placeholder}>이미지 없음</div>
+                    <div className={styles.Placeholder}>
+                        <img src={EX_IMG} alt="이미지 없을때" />
+                    </div>
                 )}
             </div>
 
             <input
                 ref={inputRef}
                 type="file"
-                accept="image/*"
+                accept={accept}
                 onChange={handleFileChange}
                 className={styles.HiddenInput}
+                disabled={disabled}
             />
 
-            <button type="button" onClick={handleClick} className={styles.Button}>
+            <button
+                type="button"
+                onClick={handleClick}
+                className={styles.Button}
+                disabled={disabled}
+                aria-label="이미지 선택"
+            >
                 <IoMdCamera />
             </button>
         </div>
