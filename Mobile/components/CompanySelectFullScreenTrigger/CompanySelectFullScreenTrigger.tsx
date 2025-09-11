@@ -3,8 +3,8 @@ import styles from './Drawer.module.scss';
 import Modal from '@/shared/headless/Modal/Modal';
 
 type DrawerProps = {
-    Trigger: React.ReactNode;
-    children: React.ReactNode;
+    Trigger?: React.ReactNode;
+    children?: React.ReactNode;
 };
 
 export const CompanySelectFullScreenTrigger = ({ Trigger, children }: DrawerProps) => (
