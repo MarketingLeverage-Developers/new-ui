@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './Drawer.module.scss';
+import styles from './CompanySelectFullScreenTrigger.module.scss';
 import Modal from '@/shared/headless/Modal/Modal';
 
 type DrawerProps = {
