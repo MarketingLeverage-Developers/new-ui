@@ -7,8 +7,7 @@ type TriggerProps = {
     children: React.ReactNode;
 };
 
-export const Trigger = ({ children }: TriggerProps) => {
-    return (
+export const Trigger = ({ children }: TriggerProps) => (
         <Dropdown.Trigger>
             <div className={styles.Trigger}>
                 {children}
@@ -16,4 +15,3 @@ export const Trigger = ({ children }: TriggerProps) => {
             </div>
         </Dropdown.Trigger>
     );
-};
