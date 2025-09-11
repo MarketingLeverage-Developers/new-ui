@@ -1,0 +1,19 @@
+.HoverButton {
+    width: var(--width, auto);
+    display: flex;
+    align-items: center;
+    background-color: transparent;
+    justify-content: center;
+    border-radius: 6px;
+    padding: var(--padding);
+    border: none;
+    cursor: pointer;
+
+    span {
+        color: var(--textColor);
+    }
+
+    &:hover {
+        background-color: var(--Gray5);
+    }
+}
