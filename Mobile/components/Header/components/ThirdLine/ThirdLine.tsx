@@ -5,4 +5,4 @@ type ThirdLineProps = {
     children?: React.ReactNode;
 };
 
-export const ThirdLine = ({ children }: ThirdLineProps) => <div className={styles.ThirdLinev}>{children}</div>;
+export const ThirdLine = ({ children }: ThirdLineProps) => <div className={styles.ThirdLine}>{children}</div>;
