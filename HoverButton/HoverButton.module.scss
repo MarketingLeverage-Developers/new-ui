@@ -10,10 +10,15 @@
     cursor: pointer;
 
     span {
-        color: var(--textColor);
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--Gray2);
     }
 
     &:hover {
         background-color: var(--Gray5);
+        span {
+            color: var(--Gray1);
+        }
     }
 }
