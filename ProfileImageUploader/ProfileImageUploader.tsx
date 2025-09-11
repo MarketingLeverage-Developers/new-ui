@@ -3,6 +3,7 @@ import styles from './ProfileImageUploader.module.scss';
 import { IoMdCamera } from 'react-icons/io';
 import type { ImageItem, ImageItemInput } from '@/shared/headless/ImageUploader/ImageUploader';
 import EX_IMG from '@/shared/assets/images/profile-example.png';
+import SampleProfile from '@/shared/assets/images/profile-example.png';
 
 type ProfileImageUploaderProps = {
     value?: ImageItem[];
@@ -107,11 +108,16 @@ const ProfileImageUploader: React.FC<ProfileImageUploaderProps> = ({
         <div className={styles.ProfileImageUploader} data-disabled={disabled ? 'true' : 'false'}>
             <div className={styles.ImageWrapper} onClick={handleClick} role="button" aria-disabled={disabled}>
                 {src ? (
-                    <img src={src} alt="Profile" className={styles.Image} />
-                ) : (
-                    <div className={styles.Placeholder}>
-                        <img src={EX_IMG} alt="이미지 없을때" />
+                    <div className={styles.Image}>
+                        <img src={src} alt="이미지 업로드" />
+                        {/* 실제 API 받을 때는 src 안에 src 로 바꾸면 된다 */}
                     </div>
+                ) : (
+                    // <img src={src} alt="profile" className={styles.Image} />
+                    <div className={styles.Placeholder}>이미지 없음</div>
+                    // <div className={styles.Placeholder}>
+                    //     <img src={SampleProfile} alt="이미지 없음" />
+                    // </div>
                 )}
             </div>
 
