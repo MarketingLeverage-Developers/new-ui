@@ -12,7 +12,7 @@ type HoverButtonProps = {
     width?: string | number;
     padding?: PaddingSize | number;
     textColor?: HexColor | ThemeColorVar;
-    style: React.CSSProperties;
+    style?: React.CSSProperties;
     children: React.ReactNode;
 };
 
