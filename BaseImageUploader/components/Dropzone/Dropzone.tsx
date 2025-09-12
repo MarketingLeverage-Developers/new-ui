@@ -15,7 +15,7 @@ const DropzoneRenderer = ({ openFileDialog }: DropzoneProps) => {
     const { dragging } = useImageUploader();
 
     return (
-        <>
+        <div className={styles.DropZoneContainer}>
             <div className={styles.Dropzone}>
                 <img src={Direcotry} alt="이미지 업로드 아이콘" />
                 {dragging ? <p>여기에 놓으세요.</p> : <p>파일을 드래그하여 업로드하세요.</p>}
@@ -32,6 +32,6 @@ const DropzoneRenderer = ({ openFileDialog }: DropzoneProps) => {
                 </BaseButton>
             </div>
             <p className={styles.HelperText}>jpg, png, gif 파일만 등록할 수 있습니다.</p>
-        </>
+        </div>
     );
 };
