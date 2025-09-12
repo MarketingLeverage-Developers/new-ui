@@ -32,6 +32,14 @@
         cursor: pointer;
         user-select: none;
     }
+
+    .Trigger {
+        color: var(--Gray2);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+    }
 }
 
 .Icon {
