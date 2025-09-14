@@ -4,7 +4,7 @@ import styles from './Image.module.scss';
 import type { CSSLength } from '@/shared/types';
 import { toCssUnit } from '@/shared/utils';
 
-type ImageProps = {
+type ImageProps = React.HTMLAttributes<HTMLImageElement> & {
     src: string;
     alt: string;
     width?: CSSLength;
@@ -38,6 +38,7 @@ export const Image: React.FC<ImageProps> = ({
     onClick,
     onLoad,
     onError,
+    ...props
 }) => {
     // 커스텀 CSS 변수를 안전하게 담을 수 있는 타입으로 선언
     const cssVars: CSSVarStyle = {
@@ -49,6 +50,7 @@ export const Image: React.FC<ImageProps> = ({
 
     return (
         <img
+            {...props}
             src={src}
             alt={alt}
             loading={loading}
