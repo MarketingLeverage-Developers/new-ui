@@ -38,6 +38,7 @@ export const Image: React.FC<ImageProps> = ({
     onClick,
     onLoad,
     onError,
+    style,
     ...props
 }) => {
     // 커스텀 CSS 변수를 안전하게 담을 수 있는 타입으로 선언
@@ -55,7 +56,7 @@ export const Image: React.FC<ImageProps> = ({
             alt={alt}
             loading={loading}
             className={classNames(styles.Image, { [styles.Block]: block }, className)}
-            style={cssVars}
+            style={{ ...cssVars, ...style }}
             onClick={onClick}
             onLoad={onLoad}
             onError={onError}
