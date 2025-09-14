@@ -1,52 +1,19 @@
 import Dropdown, { useDropdown } from '@/shared/headless/Dropdown/Dropdown';
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect } from 'react';
 import styles from './Select.module.scss';
-import { useSearchSelect } from '../../SearchSelect';
 import ManySelect from '@/shared/headless/ManySelect/ManySelect';
-import { buildHangulIndex, choseongOnly, disassembleHangul, isConsonantOnly } from './hangulSearch';
 import SearchInput from '@/shared/primitives/SearchInput/SearchInput';
 import { useSelect } from '@/shared/headless/Select/Select';
-import classNames from 'classnames';
+import { useQuerySearch } from '@/shared/headless/QuerySearch/QuerySearch';
+import type { SelectItem } from '../../SearchSelect';
+import { useHangulSearch } from '@/shared/hooks/client/useHangulSearch';
 
 const Select = () => {
     const { open, isOpen, close } = useDropdown();
-    const { query, data, setQuery } = useSearchSelect();
+    const { query, data, setQuery } = useQuerySearch<SelectItem>();
     const { isActive, changeSelectValue } = useSelect();
 
-    const indexed = useMemo(
-        () =>
-            data.map((it) => ({
-                ...it,
-                _idx: buildHangulIndex(String(it.label ?? '')),
-            })),
-        [data]
-    );
-
-    const filtered = useMemo(() => {
-        const qRaw = (query ?? '').trim();
-        if (!qRaw) return indexed;
-
-        const q = qRaw.toLowerCase();
-        const qJamo = disassembleHangul(q); // 예) '맠' -> 'ㅁㅏㅋ', '서' -> 'ㅅㅓ'
-        const qCho = choseongOnly(q).replace(/\s+/g, ''); // 예) '선택값' -> 'ㅅㅌㄱ'
-        const onlyConsonants = isConsonantOnly(q); // 예) 'ㅅ' -> true, '서','맠' -> false
-
-        return indexed.filter(
-            ({ _idx }) =>
-                // 1) 일반 포함 검색 (예: '마' -> '마케팅')
-                _idx.norm.includes(q) ||
-                // 2) 자음만 입력이 아닐 때는 자모 매칭을 항상 수행
-                //    (예: '맠' -> '마케..', '서' -> '선..')
-                (!onlyConsonants && _idx.jamo.includes(qJamo)) ||
-                // 3) 자음만 입력 시 초성 매칭 (예: 'ㅅ' -> '선택된','암사슴')
-                (onlyConsonants && _idx.cho.includes(qCho))
-        );
-    }, [indexed, query]);
-
-    const checkBoxClassName = (uid: string) =>
-        classNames(styles.CheckBox, {
-            [styles.Active]: isActive(uid),
-        });
+    const { filtered } = useHangulSearch<SelectItem>(data, query, (it) => String(it.label ?? ''));
 
     const onSelectHandler = (uid: string) => {
         if (isActive(uid)) changeSelectValue('');
@@ -83,3 +50,33 @@ const Select = () => {
 };
 
 export default Select;
+
+// const indexed = useMemo(
+//     () =>
+//         data.map((it) => ({
+//             ...it,
+//             _idx: buildHangulIndex(String(it.label ?? '')),
+//         })),
+//     [data]
+// );
+
+// const filtered = useMemo(() => {
+//     const qRaw = (query ?? '').trim();
+//     if (!qRaw) return indexed;
+
+//     const q = qRaw.toLowerCase();
+//     const qJamo = disassembleHangul(q); // 예) '맠' -> 'ㅁㅏㅋ', '서' -> 'ㅅㅓ'
+//     const qCho = choseongOnly(q).replace(/\s+/g, ''); // 예) '선택값' -> 'ㅅㅌㄱ'
+//     const onlyConsonants = isConsonantOnly(q); // 예) 'ㅅ' -> true, '서','맠' -> false
+
+//     return indexed.filter(
+//         ({ _idx }) =>
+//             // 1) 일반 포함 검색 (예: '마' -> '마케팅')
+//             _idx.norm.includes(q) ||
+//             // 2) 자음만 입력이 아닐 때는 자모 매칭을 항상 수행
+//             //    (예: '맠' -> '마케..', '서' -> '선..')
+//             (!onlyConsonants && _idx.jamo.includes(qJamo)) ||
+//             // 3) 자음만 입력 시 초성 매칭 (예: 'ㅅ' -> '선택된','암사슴')
+//             (onlyConsonants && _idx.cho.includes(qCho))
+//     );
+// }, [indexed, query]);

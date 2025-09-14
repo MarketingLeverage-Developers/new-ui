@@ -3,9 +3,9 @@ import React, { useEffect, useMemo } from 'react';
 import styles from './Select.module.scss';
 import { useSearchManySelect } from '../../SearchManySelect';
 import ManySelect, { useManySelect } from '@/shared/headless/ManySelect/ManySelect';
-import { buildHangulIndex, choseongOnly, disassembleHangul, isConsonantOnly } from './hangulSearch';
 import { FaCheck } from 'react-icons/fa';
 import classNames from 'classnames';
+import { buildHangulIndex, choseongOnly, disassembleHangul, isConsonantOnly } from '@/shared/utils/search/hangulSearch';
 
 const Select = () => {
     const { open, isOpen } = useDropdown();
