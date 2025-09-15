@@ -6,3 +6,5 @@ type FooterProps = {
 };
 
 export const Footer = ({ children }: FooterProps) => <footer className={styles.Footer}>{children}</footer>;
+
+// Footer.Col = Col;
