@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './FullScreenTrigger.module.scss';
+import styles from './FullScreenModal.module.scss';
 import Modal from '@/shared/headless/Modal/Modal';
 import Trigger from './components/Trigger';
 import Content from './components/Content';
