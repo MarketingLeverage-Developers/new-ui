@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import styles from './MobileHeaderSearchInput.module.scss';
-import PageName from '../PageName/PageName';
 import { CiSearch } from 'react-icons/ci';
 import Flex from '../Flex/Flex';
 import classNames from 'classnames';
@@ -8,11 +7,11 @@ import { IoIosArrowBack } from 'react-icons/io';
 import { getThemeColor } from '@/shared/utils/css/getThemeColor';
 import RoundedSearch from '../RoundedSearch/RoundedSearch';
 
-type MobileHeaderSearchInputProps = React.InputHTMLAttributes<HTMLInputElement> & {
-    pageTitle: string;
+type ToggleSearchInputProps = React.InputHTMLAttributes<HTMLInputElement> & {
+    children: React.ReactNode;
 };
 
-const MobileHeaderSearchInput = ({ pageTitle, value, onChange, ...props }: MobileHeaderSearchInputProps) => {
+const ToggleSearchInput = ({ children, value, onChange, ...props }: ToggleSearchInputProps) => {
     const [open, setOpen] = useState(false);
 
     const searchClassName = classNames(styles.SearchInput, {
@@ -21,9 +20,9 @@ const MobileHeaderSearchInput = ({ pageTitle, value, onChange, ...props }: Mobil
     });
 
     return (
-        <div className={styles.MobileHeaderSearchInput}>
+        <div className={styles.ToggleSearchInput}>
             <Flex justify="space-between">
-                <PageName.Mobile text={pageTitle} />
+                {children}
                 <Flex padding={5} onClick={() => setOpen(true)} className={styles.Cursor}>
                     <CiSearch strokeWidth={1.5} size={20} color={getThemeColor('Gray1')} />
                 </Flex>
@@ -38,4 +37,4 @@ const MobileHeaderSearchInput = ({ pageTitle, value, onChange, ...props }: Mobil
     );
 };
 
-export default MobileHeaderSearchInput;
+export default ToggleSearchInput;
