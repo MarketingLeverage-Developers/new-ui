@@ -8,9 +8,10 @@ import { toCssUnit } from '@/shared/utils';
 
 type RoundedSearchProps = {
     width?: CSSLength;
+    divProps?: React.HTMLAttributes<HTMLDivElement>;
 } & InputHTMLAttributes<HTMLInputElement>;
 
-const RoundedSearch = ({ width, ...props }: RoundedSearchProps) => {
+const RoundedSearch = ({ width, divProps, ...inputProps }: RoundedSearchProps) => {
     const cssVariables: CSSVariables = {
         '--width': toCssUnit(width),
     };
@@ -18,9 +19,9 @@ const RoundedSearch = ({ width, ...props }: RoundedSearchProps) => {
     const roundedSearchClassName = classNames(styles.RoundedSearch, {});
 
     return (
-        <div {...props} className={roundedSearchClassName} style={{ ...cssVariables, ...props.style }}>
+        <div {...divProps} className={roundedSearchClassName} style={{ ...cssVariables, ...divProps?.style }}>
             <HiMiniMagnifyingGlass className={styles.MagnifyIcon} />
-            <input {...props} className={styles.Input} />
+            <input {...inputProps} className={styles.Input} />
         </div>
     );
 };
