@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import styles from './ToggleSearchInput.scss';
+import styles from './ToggleSearchInput.module.scss';
 import { CiSearch } from 'react-icons/ci';
 import Flex from '../Flex/Flex';
 import classNames from 'classnames';
