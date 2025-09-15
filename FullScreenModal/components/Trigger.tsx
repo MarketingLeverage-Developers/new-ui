@@ -2,9 +2,9 @@ import Modal from '@/shared/headless/Modal/Modal';
 import React from 'react';
 
 type TriggerProps = {
-    trigger: React.ReactNode;
+    children: React.ReactNode;
 };
 
-const Trigger = ({ trigger }: TriggerProps) => <Modal.Trigger>{trigger}</Modal.Trigger>;
+const Trigger = ({ children }: TriggerProps) => <Modal.Trigger>{children}</Modal.Trigger>;
 
 export default Trigger;
