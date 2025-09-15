@@ -9,7 +9,7 @@ type FullScreenModalProps = {
 };
 
 export const FullScreenModal = ({ children }: FullScreenModalProps) => (
-    <nav className={styles.CompanySelectFullScreenTrigger}>
+    <nav className={styles.FullScreenModal}>
         <Modal>{children}</Modal>
     </nav>
 );
