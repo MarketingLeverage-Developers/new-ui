@@ -32,7 +32,7 @@ const MobileHeaderSearchInput = ({ pageTitle, value, onChange, ...props }: Mobil
                 <Flex padding={5} onClick={() => setOpen(false)} className={styles.Cursor}>
                     <IoIosArrowBack size={20} color={getThemeColor('Gray1')} />
                 </Flex>
-                <RoundedSearch placeholder="검색" value={value} onChange={onChange} fullWidth={true} {...props} />
+                <RoundedSearch placeholder="검색" value={value} onChange={onChange} width={'100%'} {...props} />
             </div>
         </div>
     );
