@@ -25,7 +25,7 @@ const MobileHeaderSearchInput = ({ pageTitle, value, onChange, ...props }: Mobil
             <Flex justify="space-between">
                 <PageName.Mobile text={pageTitle} />
                 <Flex padding={5} onClick={() => setOpen(true)} className={styles.Cursor}>
-                    <CiSearch size={20} color={getThemeColor('Gray1')} />
+                    <CiSearch strokeWidth={1.5} size={20} color={getThemeColor('Gray1')} />
                 </Flex>
             </Flex>
             <div className={searchClassName}>
