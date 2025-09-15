@@ -2,10 +2,13 @@ import React, { useRef } from 'react';
 import styles from './SearchInput.module.scss';
 import { MdCancel } from 'react-icons/md';
 import { CiSearch } from 'react-icons/ci';
+import classNames from 'classnames';
 
-type SearchInputProps = React.InputHTMLAttributes<HTMLInputElement>;
+type SearchInputProps = React.InputHTMLAttributes<HTMLInputElement> & {
+    fullWidth?: boolean;
+};
 
-const SearchInput = ({ value, onChange, ...props }: SearchInputProps) => {
+const SearchInput = ({ value, onChange, fullWidth, ...props }: SearchInputProps) => {
     const inputRef = useRef<HTMLInputElement>(null);
 
     const clearHandler = () => {
@@ -16,8 +19,12 @@ const SearchInput = ({ value, onChange, ...props }: SearchInputProps) => {
         }
     };
 
+    const searchInputClassName = classNames(styles.SearchInputWrapper, {
+        [styles.FullWidth]: fullWidth,
+    });
+
     return (
-        <div className={styles.SearchInputWrapper}>
+        <div className={searchInputClassName}>
             <input ref={inputRef} value={value} onChange={onChange} {...props} />
             <div className={styles.SearchIcons}>
                 <CiSearch />

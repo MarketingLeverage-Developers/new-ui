@@ -1,9 +1,11 @@
 .SearchInputWrapper {
     border-radius: 8px;
-    padding: 12px 32px;
-    height: 46px;
+    padding: 6px 32px;
+    height: 100%;
     border: 1px solid var(--Gray5);
     outline: none;
+    display: flex;
+    align-items: center;
 
     position: relative;
 
@@ -15,7 +17,7 @@
         border: none;
         outline: none; /* input 자체의 파란 아웃라인 제거 */
         width: 100%;
-        height: 18px;
+        height: 100%;
         background-color: inherit;
 
         font-size: 15px;
@@ -45,10 +47,14 @@
         justify-content: space-between;
         align-items: center;
         position: absolute;
-        padding: 14px 16px;
+        padding: 5px;
         top: 0;
         // transform: translateY(50%);
         right: 0;
         color: var(--Gray2);
     }
+}
+
+.FullWidth {
+    flex: 1;
 }
