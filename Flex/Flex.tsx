@@ -6,6 +6,7 @@ import type { PaddingSize } from '@/shared/types/css/PaddingSize';
 import type { CSSVariables } from '@/shared/types/css/CSSVariables';
 import { toCssPadding } from '@/shared/utils/css/toCssPadding';
 import type { CSSLength } from '@/shared/types';
+import Item from './Item/Item';
 // 테스트2
 export type FlexProps = React.HTMLAttributes<HTMLDivElement> & {
     children: React.ReactNode;
@@ -58,3 +59,5 @@ const Flex = ({
 };
 
 export default Flex;
+
+Flex.Item = Item;
