@@ -1,0 +1,117 @@
+.Wrap {
+    position: relative;
+}
+
+.Scroller {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    gap: var(--gap, 0);
+    scroll-snap-type: x var(--snap-strength, proximity);
+
+    &[data-snap='none'] {
+        scroll-snap-type: none;
+    }
+    &[data-snap='proximity'] {
+        --snap-strength: proximity;
+    }
+    &[data-snap='mandatory'] {
+        --snap-strength: mandatory;
+    }
+}
+
+/* 스크롤바 숨김(옵션) */
+.hideScrollbar {
+    scrollbar-width: none;
+}
+.hideScrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+.Item {
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+}
+
+/* ==== 페이드: 수동 모드(start/end/both) ==== */
+.Scroller[data-scrollable='true'] {
+    &[data-fade='end'] {
+        -webkit-mask-image: linear-gradient(
+            to right,
+            black 0,
+            black calc(100% - var(--fade-size, 20px)),
+            transparent 100%
+        );
+        mask-image: linear-gradient(to right, black 0, black calc(100% - var(--fade-size, 20px)), transparent 100%);
+    }
+    &[data-fade='start'] {
+        -webkit-mask-image: linear-gradient(to right, transparent 0, black var(--fade-size, 20px), black 100%);
+        mask-image: linear-gradient(to right, transparent 0, black var(--fade-size, 20px), black 100%);
+    }
+    &[data-fade='both'] {
+        -webkit-mask-image: linear-gradient(
+            to right,
+            transparent 0,
+            black var(--fade-size, 20px),
+            black calc(100% - var(--fade-size, 20px)),
+            transparent 100%
+        );
+        mask-image: linear-gradient(
+            to right,
+            transparent 0,
+            black var(--fade-size, 20px),
+            black calc(100% - var(--fade-size, 20px)),
+            transparent 100%
+        );
+    }
+}
+
+/* ==== 페이드: 자동 모드(auto) ==== */
+/* 넘칠 때만 적용, 위치에 따라 왼/오/양쪽 동적 토글 */
+.Scroller[data-fade='auto'][data-scrollable='true'] {
+    /* 시작(왼쪽) 끝에 닿음 → 오른쪽만 페이드 */
+    &[data-at-start='true'][data-at-end='false'] {
+        -webkit-mask-image: linear-gradient(
+            to right,
+            black 0,
+            black calc(100% - var(--fade-size, 20px)),
+            transparent 100%
+        );
+        mask-image: linear-gradient(to right, black 0, black calc(100% - var(--fade-size, 20px)), transparent 100%);
+    }
+    /* 끝(오른쪽) 닿음 → 왼쪽만 페이드 */
+    &[data-at-start='false'][data-at-end='true'] {
+        -webkit-mask-image: linear-gradient(to right, transparent 0, black var(--fade-size, 20px), black 100%);
+        mask-image: linear-gradient(to right, transparent 0, black var(--fade-size, 20px), black 100%);
+    }
+    /* 중간 → 양쪽 페이드 */
+    &[data-at-start='false'][data-at-end='false'] {
+        -webkit-mask-image: linear-gradient(
+            to right,
+            transparent 0,
+            black var(--fade-size, 20px),
+            black calc(100% - var(--fade-size, 20px)),
+            transparent 100%
+        );
+        mask-image: linear-gradient(
+            to right,
+            transparent 0,
+            black var(--fade-size, 20px),
+            black calc(100% - var(--fade-size, 20px)),
+            transparent 100%
+        );
+    }
+    /* 양쪽 모두 닿음 = 넘치지 않음 → 페이드 없음 */
+    &[data-at-start='true'][data-at-end='true'] {
+        -webkit-mask-image: none;
+        mask-image: none;
+    }
+}
+
+/* 넘치지 않으면 어떤 모드에서도 페이드 제거 */
+.Scroller[data-scrollable='false'] {
+    -webkit-mask-image: none;
+    mask-image: none;
+}
