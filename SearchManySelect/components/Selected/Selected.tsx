@@ -1,16 +1,17 @@
 import React, { useMemo } from 'react';
 import styles from './Selected.module.scss';
 import { useManySelect } from '@/shared/headless/ManySelect/ManySelect';
-import { useSearchManySelect } from '../../SearchManySelect';
 import { MdCancel } from 'react-icons/md';
+import { useQuerySearch } from '@/shared/headless/QuerySearch/QuerySearch';
+import type { SelectItem } from '../../SearchManySelect';
 
 const Selected = () => {
-    const { label, data } = useSearchManySelect();
+    const { label, data } = useQuerySearch<SelectItem>();
     const { manySelectValue, toggleManySelectValue } = useManySelect();
 
     const labelMap = useMemo(() => {
         const map = new Map<string, string>();
-        data.forEach((i) => map.set(i.uid, i.label));
+        data.forEach((i: any) => map.set(i.uid, i.label));
         return map;
     }, [data]);
 

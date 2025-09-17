@@ -15,7 +15,7 @@ const Select = () => {
 
     const { filtered } = useHangulSearch<SelectItem>(data, query, (it) => String(it.label ?? ''));
 
-    filtered.sort((a, b) => a.label.localeCompare(b.label, ['ko', 'en'], { sensitivity: 'base' }));
+    // filtered.sort((a, b) => a.label.localeCompare(b.label, ['ko', 'en'], { sensitivity: 'base' }));
 
     const onSelectHandler = (uid: string) => {
         if (isActive(uid)) changeSelectValue('');
