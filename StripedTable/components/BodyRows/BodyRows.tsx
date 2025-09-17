@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { Row } from '../Row/Row';
 import { Cell } from '../Cell/Cell';
 import { RowDetailsProvider, useDetailsRenderer, useTableContext } from '@/shared/headless/Table/Table';
+import type { CSSLength } from '@/shared/types';
 
-export const BodyRows: React.FC = () => {
+export const BodyRows = ({ height }: { height?: CSSLength }) => {
     const { state } = useTableContext();
     const renderDetails = useDetailsRenderer();
     const [openRow, setOpenRow] = useState<string | null>(null);
@@ -53,7 +54,7 @@ export const BodyRows: React.FC = () => {
                 return (
                     <React.Fragment key={row.key}>
                         <RowDetailsProvider value={{ row, ri, opened, hasHidden, toggle: toggle(row.key) }}>
-                            <Row>
+                            <Row height={height}>
                                 {row.cells.map((cell, ci) => (
                                     <Cell
                                         key={`cell-${cell.key}-${ci}`}
