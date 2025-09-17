@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import styles from './SingleDatePicker.module.scss';
-import { DayPicker } from 'react-day-picker';
+import { DayPicker, type DayPickerProps } from 'react-day-picker';
 import { ko } from 'react-day-picker/locale';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 
 type SingleDatePickerProps = {
     date: Date;
     onChangeDate: (value: Date) => void;
-};
+} & Omit<DayPickerProps, 'mode' | 'selected' | 'onSelect' | 'month'>;
 
-const SingleDatePicker = ({ date, onChangeDate }: SingleDatePickerProps) => {
+const SingleDatePicker = ({ date, onChangeDate, ...props }: SingleDatePickerProps) => {
     const [currentMonth, setCurrentMonth] = useState<Date>(new Date());
 
     const getMonthYear = (monthOffset: number) => {
@@ -46,15 +46,18 @@ const SingleDatePicker = ({ date, onChangeDate }: SingleDatePickerProps) => {
                     </button>
                 </div>
             </div>
+
             <DayPicker
                 locale={ko}
                 mode="single"
                 month={currentMonth}
                 showOutsideDays
                 selected={date}
-                onSelect={onChangeDate}
-                required
+                onSelect={(d?: Date) => d && onChangeDate(d)}
+                required={true as const}
+                {...props}
             />
+
             <div className={styles.Legend}>
                 <div className={styles.Item}>
                     <span className={styles.DotToday}></span>

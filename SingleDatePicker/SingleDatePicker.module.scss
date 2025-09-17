@@ -53,7 +53,8 @@
                 border-radius: 50%;
             }
 
-            &.rdp-day.rdp-outside > .rdp-day_button {
+            &.rdp-day.rdp-outside > .rdp-day_button,
+            &.rdp-day.rdp-disabled > .rdp-day_button {
                 color: var(--Gray4);
             }
 
