@@ -9,7 +9,7 @@ type DoubleDatePickerProps = {
     onChange: (r: DateRange | undefined) => void; // "적용" 시에만 호출
 } & Omit<DayPickerProps, 'mode' | 'selected' | 'onSelect' | 'month'>;
 
-const DoubleDatePicker = ({ range, onChange }: DoubleDatePickerProps) => {
+const DoubleDatePicker = ({ range, onChange, ...props }: DoubleDatePickerProps) => {
     // 캘린더 좌측 기준 월
     const [currentMonth, setCurrentMonth] = useState<Date>(new Date());
     // 사용자가 캘린더에서 고르는 임시 범위 (적용 누르기 전까지 부모에 반영 X)
@@ -90,6 +90,7 @@ const DoubleDatePicker = ({ range, onChange }: DoubleDatePickerProps) => {
                     showOutsideDays
                     selected={tempRange}
                     onSelect={setTempRange} // 여기서 바로 부모 onChange 호출하지 않음
+                    {...props}
                 />
             </div>
 
