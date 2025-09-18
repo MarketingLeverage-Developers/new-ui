@@ -1,6 +1,18 @@
 import React, { type JSX } from 'react';
 import Table from '@/shared/headless/Table/Table';
-import { Body, BodyRows, Cell, ColGroup, Content, GroupHeader, Header, HeaderRows, Row, Toggle } from './components';
+import {
+    Body,
+    BodyRows,
+    Cell,
+    ColGroup,
+    Content,
+    GroupHeader,
+    Header,
+    HeaderRows,
+    Row,
+    ScrollContainer,
+    Toggle,
+} from './components';
 import styles from './StripedTable.module.scss';
 import DetailsRows from './components/DetailsRows/DetailsRows';
 
@@ -18,12 +30,14 @@ type StripedTableComponent = {
     Details: typeof Table.Details;
     DetailsRows: typeof DetailsRows;
     Content: typeof Content;
+    ScrollContainer: typeof ScrollContainer;
 };
 
 const StripedTable = (<T,>(props: React.ComponentProps<typeof Table<T>>) => (
     <Table<T> {...props} className={styles.StripedTable} />
 )) as StripedTableComponent;
 
+StripedTable.ScrollContainer = ScrollContainer;
 StripedTable.Body = Body;
 StripedTable.BodyRows = BodyRows;
 StripedTable.Cell = Cell;
