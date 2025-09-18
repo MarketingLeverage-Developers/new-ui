@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
 import styles from './DoubleDatePicker.module.scss';
-import { DayPicker, type DateRange } from 'react-day-picker';
+import { DayPicker, type DateRange, type DayPickerProps } from 'react-day-picker';
 import { ko } from 'react-day-picker/locale';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 
 type DoubleDatePickerProps = {
     range: DateRange; // 확정된 범위(부모에서 관리)
     onChange: (r: DateRange | undefined) => void; // "적용" 시에만 호출
-};
+} & Omit<DayPickerProps, 'mode' | 'selected' | 'onSelect' | 'month'>;
 
 const DoubleDatePicker = ({ range, onChange }: DoubleDatePickerProps) => {
     // 캘린더 좌측 기준 월
