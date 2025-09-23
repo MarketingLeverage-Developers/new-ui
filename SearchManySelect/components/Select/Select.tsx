@@ -1,5 +1,5 @@
 import Dropdown, { useDropdown } from '@/shared/headless/Dropdown/Dropdown';
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import styles from './Select.module.scss';
 import ManySelect, { useManySelect } from '@/shared/headless/ManySelect/ManySelect';
 import { FaCheck } from 'react-icons/fa';
@@ -15,6 +15,16 @@ const Select = () => {
 
     const { filtered } = useHangulSearch<SelectItem>(data, query, (it) => String(it.label ?? ''));
 
+    const uniqueFiltered = useMemo(() => {
+        const seen = new Set<string>();
+        return filtered.filter((it) => {
+            const id = String(it?.uuid ?? '');
+            if (!id || seen.has(id)) return false;
+            seen.add(id);
+            return true;
+        });
+    }, [filtered]);
+
     const checkBoxClassName = (uid: string) =>
         classNames(styles.CheckBox, {
             [styles.Active]: isChecked(uid),
@@ -23,17 +33,19 @@ const Select = () => {
     // 모달이 닫힌 상태인데 query 값 갱신되면
     useEffect(() => {
         if (!isOpen && query.length > 1) open();
-    }, [query]);
+    }, [isOpen, open, query]);
 
     return (
         <Dropdown.Content matchTriggerWidth>
             <div className={styles.SelectWrapper}>
                 <div className={styles.Select}>
-                    {filtered.length === 0 && <div className={styles.Empty}>결과가 없습니다</div>}
-                    {filtered.map((item) => (
-                        <ManySelect.Item key={item.uid} value={item.uid}>
-                            <div className={styles.Item} onClick={() => toggleManySelectValue(item.uid)}>
-                                <div className={checkBoxClassName(item.uid)}>{isChecked(item.uid) && <FaCheck />}</div>
+                    {uniqueFiltered.length === 0 && <div className={styles.Empty}>결과가 없습니다</div>}
+                    {uniqueFiltered.map((item) => (
+                        <ManySelect.Item key={item.uuid} value={item.uuid}>
+                            <div className={styles.Item} onClick={() => toggleManySelectValue(item.uuid)}>
+                                <div className={checkBoxClassName(item.uuid)}>
+                                    {isChecked(item.uuid) && <FaCheck />}
+                                </div>
                                 <span>{item.label}</span>
                             </div>
                         </ManySelect.Item>

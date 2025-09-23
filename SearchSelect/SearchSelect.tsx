@@ -8,7 +8,7 @@ import { QuerySearch } from '@/shared/headless/QuerySearch/QuerySearch';
 
 export type SelectItem = {
     label: string;
-    uid: string;
+    uuid: string;
 };
 
 type SearchSelectProps = {

@@ -11,7 +11,7 @@ const Selected = () => {
 
     const labelMap = useMemo(() => {
         const map = new Map<string, string>();
-        data.forEach((i: any) => map.set(i.uid, i.label));
+        data.forEach((i) => map.set(i.uuid, i.label));
         return map;
     }, [data]);
 
