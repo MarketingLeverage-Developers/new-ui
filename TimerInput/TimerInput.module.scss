@@ -1,0 +1,14 @@
+.TimerInput {
+    position: relative;
+    width: 100%;
+}
+
+.Timer {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 15px;
+    color: var(--Red1); /* iOS 레드 계열 */
+    pointer-events: none; /* 클릭/포커스 방해 금지 */
+}
