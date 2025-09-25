@@ -4,7 +4,7 @@
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
     background-color: rgba(0, 0, 0, 0.3); // 필요 없으면 제거 가능
-    z-index: 10;
+    z-index: 999;
 }
 
 .Center {
