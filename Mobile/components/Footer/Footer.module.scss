@@ -1,6 +1,12 @@
 .Footer {
-    background-color: var(--White1);
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 0;
+    // background-color: var(--White1);
+    // display: grid;
+    // grid-template-columns: repeat(5, 1fr);
+    // gap: 0;
+
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 100;
 }
