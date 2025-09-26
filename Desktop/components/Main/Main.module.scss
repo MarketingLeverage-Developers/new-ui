@@ -1,11 +1,13 @@
-/* Block: main */
 .main {
     grid-area: main;
     position: relative;
 
-    // sticky 적용을 위해서는  overflow hidden 을 풀어야함
-    // overflow: visible;
-    overflow-y: hidden;
+    /* ✅ 핵심: Grid 아이템이 내부 스크롤을 가지려면 min-height:0 필요 */
+    min-height: 0;
+
+    /* sticky 적용을 위해서는  overflow hidden 을 풀어야함 */
+    /* overflow: visible; */
+    overflow-y: auto;
 
     &::-webkit-scrollbar {
         width: 6px;
