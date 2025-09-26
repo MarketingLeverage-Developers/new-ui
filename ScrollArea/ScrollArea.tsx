@@ -73,14 +73,13 @@ const ScrollArea: React.FC<ScrollAreaProps> = ({
     };
 
     return (
-        <div className={cn(styles.Wrap, className)}>
+        <div className={cn(styles.Wrap, className)} style={cssVariables}>
             <div
                 ref={ref}
                 className={cn(styles.Scroller, hideScrollbar && styles.hideScrollbar, contentClassName)}
                 data-fade={fade}
                 data-snap={snap}
                 onWheel={onWheel}
-                style={{ ...cssVariables }}
             >
                 {React.Children.map(children, (child, i) => (
                     <div key={`item-${i}`} className={styles.Item}>
