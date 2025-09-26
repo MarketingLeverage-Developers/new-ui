@@ -2,8 +2,10 @@
     grid-area: main; /* 핵심: 메인을 그리드의 'main' 영역에 배치 */
     position: relative;
 
+    min-height: 0;
+
     /* sticky를 쓰려면 부모 overflow가 visible이어야 함 */
-    overflow-y: hidden; /* 필요 시 스크롤 전략은 다음 스텝에서 다룸 */
+    overflow-y: auto; /* 필요 시 스크롤 전략은 다음 스텝에서 다룸 */
     /* Grid 자식이므로 flex: 1은 불필요 */
     /* 레이아웃 문제 예방: 그리드 자식 스크롤 시 min-height:0 권장 (여기선 hidden이므로 생략 가능) */
     /* min-height: 0; */
