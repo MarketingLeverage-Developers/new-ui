@@ -2,11 +2,13 @@
     grid-area: main;
     position: relative;
 
+    /* 자식들의 z-index 계산을 이 컨테이너 안에서 독립적으로 처리 */
+    isolation: isolate;
+
     /* ✅ 핵심: Grid 아이템이 내부 스크롤을 가지려면 min-height:0 필요 */
     min-height: 0;
 
-    /* sticky 적용을 위해서는  overflow hidden 을 풀어야함 */
-    /* overflow: visible; */
+    /* 기본은 내부 스크롤 가능 */
     overflow-y: auto;
 
     &::-webkit-scrollbar {
@@ -19,4 +21,10 @@
     }
 
     background-color: var(--background-color, var(--Gray7));
+}
+
+/* ✅ 오버레이가 렌더링되면(main 내부에 data-overlay-root가 존재) 스크롤 잠금 */
+.main:has([data-overlay-root]) {
+    overflow: hidden;
+    overscroll-behavior: contain;
 }

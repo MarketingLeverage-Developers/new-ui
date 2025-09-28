@@ -1,17 +1,14 @@
+// 기능: Main 영역 위에 블러 오버레이와 중앙 컨텐츠를 띄움
 import React from 'react';
 import styles from './BlurOverlay.module.scss';
 
 type BlurOverlayProps = {
     centerNode?: React.ReactNode;
-    children?: React.ReactNode;
 };
 
-const BlurOverlay: React.FC<BlurOverlayProps> = ({ centerNode = false, children }) => (
-    <div className={styles.BlurOverlay}>
-        {children}
-        <div className={styles.OverlayContent}>
-            <div className={styles.Center}>{centerNode}</div>
-        </div>
+const BlurOverlay: React.FC<BlurOverlayProps> = ({ centerNode = false }) => (
+    <div data-overlay-root className={styles.BlurOverlay}>
+        <div className={styles.Center}>{centerNode}</div>
     </div>
 );
 
