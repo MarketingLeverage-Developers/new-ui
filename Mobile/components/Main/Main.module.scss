@@ -2,6 +2,8 @@
     grid-area: main; /* 핵심: 메인을 그리드의 'main' 영역에 배치 */
     position: relative;
 
+    isolation: isolate;
+
     min-height: 0;
 
     /* sticky를 쓰려면 부모 overflow가 visible이어야 함 */
@@ -11,4 +13,8 @@
     /* min-height: 0; */
 
     background-color: var(--background-color, #fafafa);
+}
+.Main:has([data-overlay-root]) {
+    overflow: hidden;
+    overscroll-behavior: contain;
 }
