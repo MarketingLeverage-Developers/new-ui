@@ -1,35 +1,35 @@
 .ToggleSearchInput {
     position: relative;
     width: 100%;
-}
-.SearchInput {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 0 8px;
-    background: var(--White1);
-    z-index: 10;
+    height: 35px; // 높이 봐서 조정
+    overflow: hidden;
 
-    opacity: 0;
-    pointer-events: none;
+    .SearchInput {
+        position: absolute;
+        display: flex;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        transform: translateX(100%);
+        background-color: var(--White1);
+        opacity: 0;
+        pointer-events: none;
+        gap: 8px;
+        transition: transform 200ms ease-out, opacity 150ms ease;
 
-    // transform: translateX(100%);
-    // transition: transform 1s ease, 0.5s ease;
-}
+        &.Active {
+            transform: translateX(0);
+            opacity: 1;
+            pointer-events: auto;
+        }
+    }
 
-.Open {
-    transform: translateX(0);
-    opacity: 1;
-    pointer-events: auto;
-}
-
-// display none 으로 해둬서 애니메이션이 안나옴
-.Off {
-    display: none;
-}
-
-.Cursor {
-    cursor: pointer;
+    .MagnifyIcon,
+    .ArrowIcon {
+        width: 20px;
+        height: 20px;
+        display: block;
+        fill: var(--Gray1);
+    }
 }
