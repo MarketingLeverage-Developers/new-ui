@@ -7,11 +7,11 @@ import Close from './components/Close';
 
 type FullScreenModalProps = {
     children: React.ReactNode;
-};
+} & React.ComponentProps<typeof Modal>;
 
-export const FullScreenModal = ({ children }: FullScreenModalProps) => (
+export const FullScreenModal = ({ children, ...rest }: FullScreenModalProps) => (
     <nav className={styles.FullScreenModal}>
-        <Modal>{children}</Modal>
+        <Modal {...rest}>{children}</Modal>
     </nav>
 );
 
