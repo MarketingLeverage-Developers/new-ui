@@ -7,9 +7,9 @@ import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
 type RoundedPasswordProps = {
     status?: Status;
     helperText?: React.ReactNode;
-    wrapperStyle?: React.CSSProperties; // 래퍼 스타일
-    wrapperClassName?: string; //  래퍼 클래스
-    inputStyle?: React.CSSProperties; //  인풋 스타일
+    wrapperStyle?: React.CSSProperties; // 다은 추가
+    wrapperClassName?: string; // 다은 추가
+    inputStyle?: React.CSSProperties; // 다은 추가
 } & InputHTMLAttributes<HTMLInputElement>;
 
 const isFilled = (v: unknown) =>
@@ -20,10 +20,9 @@ const RoundedPassword: React.FC<RoundedPasswordProps> = ({
     helperText,
     value,
     onBlur,
-    wrapperClassName,
-    wrapperStyle,
-    inputStyle,
-    className,
+    wrapperClassName, // 다은 추가
+    wrapperStyle, // 다은 추가
+    inputStyle, // 다은 추가
     ...props
 }) => {
     const [touched, setTouched] = useState(false);
@@ -32,7 +31,7 @@ const RoundedPassword: React.FC<RoundedPasswordProps> = ({
     const filled = isFilled(value);
     const showFeedback = touched || filled;
 
-    const cn = classNames(styles.RoundedPassword, wrapperClassName, {
+    const cn = classNames(styles.RoundedPassword, {
         [styles.Error]: showFeedback && status === STATUS.ERROR,
         [styles.Success]: showFeedback && status === STATUS.SUCCESS,
         [styles.Touched]: touched,
@@ -42,18 +41,17 @@ const RoundedPassword: React.FC<RoundedPasswordProps> = ({
         setTouched(true);
         onBlur?.(e);
     };
-
-    const { style: styleFromProps, ...restProps } = props;
-
+    const { style: styleFromProps, ...restProps } = props; // 다은 추가
     return (
         <div className={cn} style={wrapperStyle}>
+            {/* 다은 추가 - style={wrapperStyle} */}
             <input
-                {...restProps}
+                {...props}
                 type={visible ? 'text' : 'password'}
                 value={value}
                 onBlur={handleBlur}
-                className={classNames(styles.Input, className)}
-                style={{ ...styleFromProps, ...inputStyle }}
+                className={styles.Input}
+                style={{ ...styleFromProps, ...inputStyle }} // 다은 추가
             />
             <button
                 type="button"
