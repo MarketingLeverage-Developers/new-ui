@@ -12,7 +12,7 @@
     /* 레이아웃 문제 예방: 그리드 자식 스크롤 시 min-height:0 권장 (여기선 hidden이므로 생략 가능) */
     /* min-height: 0; */
 
-    background-color: var(--background-color, #fafafa);
+    background-color: var(--background-color, var(--Gray7));
 }
 .Main:has([data-overlay-root]) {
     overflow: hidden;
