@@ -7,6 +7,9 @@ import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
 type RoundedPasswordProps = {
     status?: Status;
     helperText?: React.ReactNode;
+    wrapperStyle?: React.CSSProperties; // 다은 추가
+    wrapperClassName?: string; // 다은 추가
+    inputStyle?: React.CSSProperties; // 다은 추가
 } & InputHTMLAttributes<HTMLInputElement>;
 
 const isFilled = (v: unknown) =>
@@ -17,6 +20,9 @@ const RoundedPassword: React.FC<RoundedPasswordProps> = ({
     helperText,
     value,
     onBlur,
+    wrapperClassName, // 다은 추가
+    wrapperStyle, // 다은 추가
+    inputStyle, // 다은 추가
     ...props
 }) => {
     const [touched, setTouched] = useState(false);
@@ -35,15 +41,17 @@ const RoundedPassword: React.FC<RoundedPasswordProps> = ({
         setTouched(true);
         onBlur?.(e);
     };
-
+    const { style: styleFromProps, ...restProps } = props; // 다은 추가
     return (
-        <div className={cn}>
+        <div className={cn} style={wrapperStyle}>
+            {/* 다은 추가 - style={wrapperStyle} */}
             <input
                 {...props}
                 type={visible ? 'text' : 'password'}
                 value={value}
                 onBlur={handleBlur}
                 className={styles.Input}
+                style={{ ...styleFromProps, ...inputStyle }} // 다은 추가
             />
             <button
                 type="button"
