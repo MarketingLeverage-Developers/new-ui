@@ -12,6 +12,20 @@
     pointer-events: auto;
 }
 
+@media (prefers-color-scheme: light) {
+    .BlurOverlay {
+        backdrop-filter: blur(6px); /* 다크 모드에서는 살짝 줄임 */
+        -webkit-backdrop-filter: blur(6px);
+        background-color: rgba(0, 0, 0, 0.5); /* 더 진하게 */
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    .BlurOverlay {
+        background-color: rgba(255, 255, 255, 0.3); /* 밝은 오버레이 */
+    }
+}
+
 .Center {
     /* 중앙 배치 */
     position: absolute;

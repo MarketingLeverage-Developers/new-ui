@@ -3,6 +3,7 @@ import styles from './DoubleDatePicker.module.scss';
 import { DayPicker, type DateRange, type DayPickerProps } from 'react-day-picker';
 import { ko } from 'react-day-picker/locale';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
+import { useDropdown } from '@/shared/headless/Dropdown/Dropdown';
 
 type DoubleDatePickerProps = {
     range: DateRange; // 확정된 범위(부모에서 관리)
@@ -14,6 +15,7 @@ const DoubleDatePicker = ({ range, onChange, ...props }: DoubleDatePickerProps) 
     const [currentMonth, setCurrentMonth] = useState<Date>(new Date());
     // 사용자가 캘린더에서 고르는 임시 범위 (적용 누르기 전까지 부모에 반영 X)
     const [tempRange, setTempRange] = useState<DateRange | undefined>(range);
+    const { close } = useDropdown();
 
     // 외부 range가 바뀌면 임시 범위도 동기화
     useEffect(() => {
@@ -55,11 +57,13 @@ const DoubleDatePicker = ({ range, onChange, ...props }: DoubleDatePickerProps) 
     // 적용: 임시 범위를 부모에 확정 반영
     const handleApply = () => {
         onChange(tempRange);
+        close();
     };
 
     // 취소: 임시 선택을 확정값으로 롤백
     const handleCancel = () => {
         setTempRange(range);
+        close();
     };
 
     const isApplyDisabled = !(tempRange?.from && tempRange?.to);
