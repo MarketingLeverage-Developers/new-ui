@@ -11,4 +11,6 @@
     font-size: 15px;
     color: var(--Red1); /* iOS 레드 계열 */
     pointer-events: none; /* 클릭/포커스 방해 금지 */
+    display: flex;
+    align-items: center;
 }

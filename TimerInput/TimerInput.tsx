@@ -2,11 +2,13 @@ import React, { useEffect, useMemo, useRef, useState, type ComponentProps } from
 import styles from './TimerInput.module.scss';
 import RoundedInput from '../RoundedInput/RoundedInput';
 import { getThemeColor } from '@/shared/utils/css/getThemeColor';
+import { IoMdCheckmarkCircle } from 'react-icons/io';
 
 type TimerInputProps = {
     startTime?: number;
     duration?: number;
     onExpire?: () => void;
+    confirmed?: boolean;
 } & ComponentProps<typeof RoundedInput>;
 
 const clamp = (n: number, min = 0) => (n < min ? min : n);
@@ -18,7 +20,7 @@ const formatMMSS = (msLeft: number) => {
     return `${m}:${s.toString().padStart(2, '0')}`;
 };
 
-const TimerInput = ({ startTime, duration = 180, onExpire, ...props }: TimerInputProps) => {
+const TimerInput = ({ startTime, duration = 180, onExpire, confirmed, ...props }: TimerInputProps) => {
     const now = Date.now();
     const start = startTime ?? now;
     const end = start + duration * 1000;
@@ -38,25 +40,29 @@ const TimerInput = ({ startTime, duration = 180, onExpire, ...props }: TimerInpu
 
     // 1초 간격으로 now 기반 계산(드리프트 방지)
     useEffect(() => {
+        if (confirmed) {
+            if (intervalRef.current) {
+                clearInterval(intervalRef.current);
+                intervalRef.current = null;
+            }
+            return; // 확인되면 새로 만들지 않음
+        }
+
         const tick = () => {
             const left = end - Date.now();
             setMsLeft(left > 0 ? left : 0);
-
-            // 만료 처리 (한 번만)
             if (left <= 0 && !expiredRef.current) {
                 expiredRef.current = true;
                 onExpire?.();
             }
         };
-        // 첫 렌더에서 한 번 보정
         tick();
         intervalRef.current = window.setInterval(tick, 1000);
 
         return () => {
             if (intervalRef.current) clearInterval(intervalRef.current);
-            if (rafRef.current) clearTimeout(rafRef.current);
         };
-    }, [end, onExpire]);
+    }, [end, onExpire, confirmed]);
 
     return (
         <div className={styles.TimerInput} style={{ ...props.style }}>
@@ -66,8 +72,12 @@ const TimerInput = ({ startTime, duration = 180, onExpire, ...props }: TimerInpu
                 placeholder={props.placeholder}
             />
             {startTime && (
-                <span className={styles.Timer} aria-live="polite" aria-label={`남은 시간 ${display}`}>
-                    {display}
+                <span
+                    className={styles.Timer}
+                    aria-live="polite"
+                    aria-label={confirmed ? '인증 완료' : `남은 시간 ${display}`}
+                >
+                    {confirmed ? <IoMdCheckmarkCircle color={getThemeColor('Green1')} size={16} /> : display}
                 </span>
             )}
         </div>
