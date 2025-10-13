@@ -30,8 +30,8 @@ const SearchInput = ({ value, onChange, fullWidth, ...props }: SearchInputProps)
                 <CiSearch />
             </div>
             {String(value ?? inputRef.current?.value ?? '').length > 0 && (
-                <div className={styles.CancelIcons}>
-                    <MdCancel style={{ cursor: 'pointer' }} onClick={clearHandler} />
+                <div className={styles.CancelIcons} onClick={clearHandler}>
+                    <MdCancel style={{ cursor: 'pointer' }} />
                 </div>
             )}
         </div>
