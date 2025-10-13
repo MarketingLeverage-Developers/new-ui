@@ -1,20 +1,41 @@
+/* 기능: 모바일 메인 컨테이너와 스크롤/오버레이 레이어링 제어 */
 .Main {
-    grid-area: main; /* 핵심: 메인을 그리드의 'main' 영역에 배치 */
-    position: relative;
-
+    grid-area: main;
+    position: relative; /* 오버레이(absolute)의 기준 */
     isolation: isolate;
-
     min-height: 0;
-
-    /* sticky를 쓰려면 부모 overflow가 visible이어야 함 */
-    overflow-y: auto; /* 필요 시 스크롤 전략은 다음 스텝에서 다룸 */
-    /* Grid 자식이므로 flex: 1은 불필요 */
-    /* 레이아웃 문제 예방: 그리드 자식 스크롤 시 min-height:0 권장 (여기선 hidden이므로 생략 가능) */
-    /* min-height: 0; */
-
+    min-width: 0; /* ✅ 가로 스크롤 허용 (그리드 자식 기본값 방지) */
     background-color: var(--background-color, var(--Gray7));
 }
-.Main:has([data-overlay-root]) {
+
+/* 실제 스크롤은 별도 래퍼가 담당 */
+.MainScroller {
+    min-height: 0;
+    min-width: 0; /* ✅ 내부 컨텐츠 넓을 때 확장 대신 스크롤 */
+    width: 100%;
+    height: 100%;
+
+    /* ✅ 세로/가로 모두 스크롤 허용 */
+    overflow-y: auto;
+    overflow-x: auto;
+
+    /* (선택) iOS/WebView 부드러운 스크롤 */
+    -webkit-overflow-scrolling: touch;
+
+    /* 스크롤바 스타일(웹뷰/크롬 기반) */
+    scrollbar-gutter: stable both-edges;
+    &::-webkit-scrollbar {
+        width: 6px;
+        height: 6px; /* ✅ 가로 스크롤바도 표시 */
+    }
+    &::-webkit-scrollbar-thumb {
+        background-color: rgba(0, 0, 0, 0.2);
+        border-radius: 3px;
+    }
+}
+
+/* ✅ 오버레이 존재 시 스크롤 래퍼만 잠금 (X/Y 모두 잠금) */
+.Main:has([data-overlay-root]) .MainScroller {
     overflow: hidden;
     overscroll-behavior: contain;
 }
