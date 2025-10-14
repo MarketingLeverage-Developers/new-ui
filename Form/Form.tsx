@@ -10,13 +10,13 @@ type FormProps = {
     maxWidth?: CSSLength;
 } & React.HTMLAttributes<HTMLDivElement>; // ✅ HTMLFormElement 기준으로 수정
 
-const Form = ({ maxWidth, ...props }: FormProps) => {
+const Form = ({ maxWidth, style, ...props }: FormProps) => {
     const cssVariables: CSSVariables = {
         '--max-width': toCssUnit(maxWidth),
     };
 
     // ✅ <form> 태그로 변경
-    return <div {...props} className={styles.Form} style={{ ...cssVariables }} />;
+    return <div {...props} className={styles.Form} style={{ ...cssVariables, ...style }} />;
 };
 
 export default Form;

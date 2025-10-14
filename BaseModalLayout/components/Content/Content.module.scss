@@ -1,0 +1,14 @@
+.Content {
+    display: flex;
+    gap: var(--gap, 0);
+    flex-direction: var(--flex-direction, row);
+    align-items: var(--align-items, stretch);
+    justify-content: var(--justify-content, start);
+    flex-wrap: var(--wrap, nowrap);
+    width: var(--width, auto);
+    padding: var(--padding, 20px);
+    margin: var(--margin);
+    flex: 1 1 auto;
+    // min-height: 0;
+    overflow: hidden;
+}

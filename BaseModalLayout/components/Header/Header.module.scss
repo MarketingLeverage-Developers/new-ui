@@ -1,0 +1,21 @@
+.Header {
+    display: flex;
+    gap: var(--gap, 0);
+    flex-direction: var(--flex-direction);
+    align-items: var(--align-items);
+    justify-content: var(--justify-content);
+    flex-wrap: var(--wrap);
+    padding: var(--padding, 20px);
+    margin: var(--margin);
+    width: 100%;
+    height: auto;
+
+    border-bottom: 1px solid var(--Gray6);
+}
+
+.Title {
+    font-size: var(--font-size, 24px);
+    font-weight: 600;
+    color: var(--Black1);
+    margin-bottom: var(--margin-bottom);
+}

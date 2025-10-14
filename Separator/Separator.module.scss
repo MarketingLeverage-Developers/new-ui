@@ -1,5 +1,5 @@
 .Separator {
-    background-color: var(--Gray5);
+    background-color: var(--bar-color, --Gray5);
     width: 1px;
     height: 100%;
 }

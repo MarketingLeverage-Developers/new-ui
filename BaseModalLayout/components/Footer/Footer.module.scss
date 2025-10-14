@@ -1,0 +1,12 @@
+.Footer {
+    display: flex;
+    gap: var(--gap, 0);
+    flex-direction: var(--flex-direction, row);
+    align-items: var(--align-items, stretch);
+    justify-content: var(--justify-content, start);
+    flex-wrap: var(--wrap, 'nowrap');
+    padding: var(--padding, 20px);
+    margin: var(--margin);
+    height: auto;
+    border-top: 1px solid var(--Gray6);
+}
