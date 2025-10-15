@@ -8,11 +8,13 @@ import { toCssUnit } from '@/shared/utils';
 
 type FormProps = {
     maxWidth?: CSSLength;
+    height?: string | number;
 } & React.HTMLAttributes<HTMLDivElement>; // ✅ HTMLFormElement 기준으로 수정
 
-const Form = ({ maxWidth, style, ...props }: FormProps) => {
+const Form = ({ maxWidth, height = 'auto', style, ...props }: FormProps) => {
     const cssVariables: CSSVariables = {
         '--max-width': toCssUnit(maxWidth),
+        '--height': toCssUnit(height),
     };
 
     // ✅ <form> 태그로 변경
