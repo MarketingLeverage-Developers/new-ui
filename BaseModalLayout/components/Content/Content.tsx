@@ -16,18 +16,18 @@ type ContentProps = {
     padding?: PaddingSize | number;
     margin?: PaddingSize | number;
     width?: string | number;
-    // height?: string | number;
+    height?: string | number;
 } & React.HTMLAttributes<HTMLDivElement>;
 
 const Content = ({
     children,
-    direction,
+    direction = 'column',
     align,
     justify,
     gap,
     wrap,
     width,
-    // height = 'auto',
+    height = 'auto',
     style,
     className,
     padding,
@@ -41,7 +41,7 @@ const Content = ({
         '--wrap': wrap,
         '--gap': toCssUnit(gap),
         '--width': toCssUnit(width),
-        // '--height': toCssUnit(height),
+        '--height': toCssUnit(height),
         '--padding': toCssPadding(padding),
         '--margin': toCssPadding(margin),
     };
