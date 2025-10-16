@@ -9,13 +9,13 @@ type BaseTooltipProps = {
     children: React.ReactNode;
     /** Tooltip 방향 (기본: top) */
     side?: 'top' | 'right' | 'bottom' | 'left';
-};
+} & React.HTMLAttributes<HTMLDivElement>;
 
-export const BaseTooltip: React.FC<BaseTooltipProps> = ({ label, children, side = 'top' }) => (
+export const BaseTooltip: React.FC<BaseTooltipProps> = ({ label, children, side = 'top', ...props }) => (
     <Tooltip.Provider delayDuration={150} skipDelayDuration={300}>
         <Tooltip.Root>
             <Tooltip.Trigger asChild>
-                <div>{children}</div>
+                <div {...props}>{children}</div>
             </Tooltip.Trigger>
 
             <Tooltip.Portal container={document.getElementById('root')!}>
