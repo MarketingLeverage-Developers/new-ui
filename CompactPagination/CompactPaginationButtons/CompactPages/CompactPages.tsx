@@ -8,15 +8,17 @@ type CompactPagesProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
 
 const CompactPages = ({ onPagesClick, ...props }: CompactPagesProps) => {
     const { value, setPage } = usePagination();
-    const { page, total } = value;
+    const { page, total, size } = value;
 
-    const handlePages = (PagesValue: number) => {
-        const newPageValue = setPage(PagesValue);
-        onPagesClick && onPagesClick(newPageValue);
-    };
+    const totalPage = Math.max(1, Math.ceil(total / size));
+
+    // const handlePages = (PagesValue: number) => {
+    //     const newPageValue = setPage(PagesValue);
+    //     onPagesClick && onPagesClick(newPageValue);
+    // };
     return (
         <div className={styles.CompactPages}>
-            <span>{page}</span> <span>/ {total}</span>
+            <span>{page}</span> <span>/ {totalPage}</span>
         </div>
     );
 };
