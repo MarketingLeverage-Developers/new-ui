@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './Header.module.scss';
-import { FirstLine, SecondLine, ThirdLine } from './components';
+import { FirstLine, SecondLine } from './components';
 import PublicPageHeaderContent from './components/PublicPageHeaderContent/PublicPageHeaderContent';
 
 type HeaderProps = {
@@ -15,5 +15,5 @@ export const Header = ({ children }: HeaderProps) => (
 
 Header.FirstLine = FirstLine;
 Header.SecondLine = SecondLine;
-Header.ThirdLine = ThirdLine;
+
 Header.PublicPageHeaderContent = PublicPageHeaderContent;

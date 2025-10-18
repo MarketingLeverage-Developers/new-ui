@@ -1,16 +1,22 @@
-// 기능: 메인 컨테이너(.main) - 내부 스크롤과 오버레이 분리
+// 기능: 메인 컨테이너(.main) - 내부 스크롤과 오버레이 분리 + 정적 속성(FilterLine) 타입 안전 부여
 import React from 'react';
 import styles from './Main.module.scss';
 import type { HexColor } from '@/shared/types/css/HexColor';
 import type { ThemeColorVar } from '@/shared/types/css/ThemeColorTokens';
 import type { CSSVariables } from '@/shared/types/css/CSSVariables';
+import { FilterLine } from './components/FilterLine/FilterLine';
 
 type MainProps = {
     children?: React.ReactNode;
     bgColor?: HexColor | ThemeColorVar;
 };
 
-export const Main: React.FC<MainProps> = ({ children, bgColor }) => {
+// Main 컴포넌트에 정적 속성(FilterLine)을 붙일 것이므로 이를 포함한 타입을 선언
+type MainComponent = React.FC<MainProps> & {
+    FilterLine: typeof FilterLine;
+};
+
+const MainBase: React.FC<MainProps> = ({ children, bgColor }) => {
     // CSS 변수 주입
     const cssVariables: CSSVariables = {
         '--background-color': bgColor,
@@ -40,3 +46,8 @@ export const Main: React.FC<MainProps> = ({ children, bgColor }) => {
         </main>
     );
 };
+
+// 정적 속성(FilterLine)을 타입 안전하게 합치기
+export const Main: MainComponent = Object.assign(MainBase, {
+    FilterLine,
+});
