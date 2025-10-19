@@ -1,41 +1,38 @@
-/* 기능: 메인 컨테이너와 스크롤/오버레이 레이어링 제어 */
 .main {
     grid-area: main;
-    position: relative; /* 오버레이(absolute)의 기준 */
-    isolation: isolate; /* z-index 독립 */
+    position: relative;
+    isolation: isolate;
     min-height: 0;
-    min-width: 0; /* ✅ 가로 스크롤 허용 (그리드 자식 기본값 방지) */
+    min-width: 0;
     background-color: var(--background-color, var(--Gray7));
 }
 
-/* 실제 스크롤은 별도 래퍼가 담당 */
 .mainScroller {
     min-height: 0;
-    min-width: 0; /* ✅ 내부 컨텐츠가 넓을 때 확장 대신 스크롤 */
+    min-width: 0;
     width: 100%;
     height: 100%;
-
-    /* ✅ 세로/가로 모두 스크롤 지원 */
     overflow-y: auto;
     overflow-x: auto;
-
-    /* (선택) iOS/WebView 관성 스크롤 */
     -webkit-overflow-scrolling: touch;
 
-    /* 스크롤바 스타일 */
-    scrollbar-gutter: stable both-edges; /* 주로 세로축에 영향 */
+    scrollbar-gutter: stable both-edges;
     &::-webkit-scrollbar {
         width: 6px;
         height: 6px;
-    } /* ✅ 가로바 높이도 지정 */
+    }
     &::-webkit-scrollbar-thumb {
         background-color: rgba(0, 0, 0, 0.2);
         border-radius: 3px;
     }
 }
 
-/* ✅ 오버레이 존재 시 스크롤 래퍼만 잠금 (X/Y 모두 잠금) */
-.main:has([data-overlay-root]) .mainScroller {
-    overflow: hidden;
-    overscroll-behavior: contain;
+/* ✅ 이 래퍼 하나면 끝:
+   - inline-block 이라 shrink-to-fit 규칙으로 폭 계산이 안정적
+   - min-width:100% 로 화면보다 좁아지진 않음
+   - 내부 본문이 min-width 때문에 넓어지면 이 래퍼가 함께 넓어져 scrollWidth를 대표 */
+.mainRow {
+    display: inline-block;
+    min-width: 100%;
+    height: 100%;
 }
