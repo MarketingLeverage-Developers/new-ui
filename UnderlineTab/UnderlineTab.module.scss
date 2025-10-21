@@ -1,0 +1,8 @@
+.UnderlineTab {
+    display: flex;
+    align-items: center;
+    position: relative;
+    height: 41px;
+    box-sizing: border-box;
+    border-bottom: 2px solid var(--Gray6, #eee);
+}
