@@ -1,0 +1,32 @@
+.Item {
+    position: relative;
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 0;
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 130%;
+    cursor: pointer;
+    color: var(--Gray3, #a3a3a3);
+
+    &::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0px;
+        height: 2px;
+        background: transparent;
+        transform: translateY(2px);
+    }
+
+    &.Active {
+        color: var(--Gray1, #161616);
+
+        &::after {
+            background: currentColor;
+        }
+    }
+}

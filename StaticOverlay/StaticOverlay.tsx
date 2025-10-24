@@ -4,10 +4,11 @@ import styles from './StaticOverlay.module.scss';
 
 type StaticOverlayProps = {
     centerNode?: React.ReactNode;
+    zIndex: number;
 };
 
-const StaticOverlay: React.FC<StaticOverlayProps> = ({ centerNode = false }) => (
-    <div data-overlay-root className={styles.StaticOverlay}>
+const StaticOverlay: React.FC<StaticOverlayProps> = ({ centerNode = false, zIndex }) => (
+    <div data-overlay-root className={styles.StaticOverlay} style={{ zIndex }}>
         <div className={styles.Center}>{centerNode}</div>
     </div>
 );

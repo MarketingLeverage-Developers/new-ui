@@ -8,7 +8,7 @@
     background-color: rgba(0, 0, 0, 0.3); // 필요 없으면 제거 가능
 
     /* 항상 최상단으로 */
-    z-index: var(--z-overlay, 10000);
+    z-index: var(--z-overlay, 10002);
     pointer-events: auto;
 }
 

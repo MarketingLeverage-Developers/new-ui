@@ -1,0 +1,96 @@
+.Wrapper {
+    display: flex;
+    width: 100%;
+    gap: 12px;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 2px solid var(--Gray6, #eee);
+}
+
+.TabList {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    overflow-x: auto;
+    white-space: nowrap;
+    padding-bottom: 2px;
+}
+
+.TabItem {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+}
+
+.TabButton {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    height: 32px;
+    padding: 0 6px;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+    color: var(--Gray3);
+    font-size: 13px;
+    font-weight: 500;
+    outline: none;
+
+    /* 밑줄: 기본은 투명 */
+    &::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0px;
+        height: 2px;
+        border-radius: 1px;
+        background: transparent;
+        transform: translateY(2px);
+    }
+
+    &:focus-visible {
+        outline: 2px solid rgba(0, 0, 0, 0.1);
+        outline-offset: 2px;
+    }
+}
+
+.Active {
+    color: var(--Black1);
+
+    &::after {
+        background: currentColor; /* 텍스트 색과 동일 */
+    }
+}
+
+.Close {
+    margin-left: 2px;
+    opacity: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    line-height: 1;
+    font-size: 14px;
+    padding: 0 4px;
+}
+.TabItem:hover .Close {
+    opacity: 1;
+}
+
+.Add {
+    margin-left: 4px;
+    width: 24px;
+    height: 24px;
+    border: 1px solid var(--Gray6, #eee);
+    background: #f7f7f7;
+    border-radius: 6px;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.Panel {
+    min-height: 80px; /* 필요 시 조절 */
+}
+.Label {
+    pointer-events: none;
+}
