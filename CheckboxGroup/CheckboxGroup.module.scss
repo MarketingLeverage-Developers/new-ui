@@ -1,0 +1,35 @@
+.Category {
+    cursor: pointer;
+    user-select: none;
+    outline: none;
+    background-color: transparent;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.Content {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: var(--padding, 0px);
+}
+
+.ItemWrapper {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.Item {
+    width: 19px;
+    height: 19px;
+    border-radius: 4px;
+    background-color: var(--Gray5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    outline: none;
+}
