@@ -39,7 +39,7 @@ const Category: React.FC<CategoryProps> = ({
     const allChecked = total > 0 && checkedCount === total;
 
     const checkboxCss: CSSVariables = {
-        '--backgroundColor': bgColor,
+        '--background-color': bgColor,
         '--color': color,
     };
 

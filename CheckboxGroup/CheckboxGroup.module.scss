@@ -20,7 +20,7 @@
     width: 24px;
     height: 24px;
     border-radius: 6px;
-    background: var(--backgroundColor);
+    background: var(--background-color);
     box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.06);
     display: flex;
     align-items: center;
@@ -45,10 +45,10 @@
     width: 19px;
     height: 19px;
     border-radius: 4px;
-    background-color: var(--Gray5);
+    background-color: var(--background-color, var(--Gray5));
     display: flex;
     align-items: center;
     justify-content: center;
-    border: none;
+    border: 1px solid var(--border-color, var(--Gray5));
     outline: none;
 }
