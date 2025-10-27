@@ -5,41 +5,45 @@ import { useCheckboxGroup } from '../CheckboxGroupContext';
 import styles from '../CheckboxGroup.module.scss';
 
 export type ItemProps = {
-    id: string;
+    value: string;
     children: React.ReactNode;
-    disabled?: boolean;
-    onTriggerClick?: (value: boolean) => void;
 };
 
-const Item: React.FC<ItemProps> = ({ id, children, disabled, onTriggerClick }) => {
-    const { checked, setChecked, registerId, unregisterId } = useCheckboxGroup();
+const Item: React.FC<ItemProps> = ({ value, children }) => {
+    const { checked, setChecked, registerItem, unregisterItem, currentCategory } = useCheckboxGroup();
 
     useEffect(() => {
-        registerId(id, disabled);
-        return () => unregisterId(id);
-    }, [id, disabled, registerId, unregisterId]);
+        if (!currentCategory) {
+            // 그룹 안에는 있지만 카테고리 바깥에 아이템이 놓였을 때 개발자 친화적 경고
+            if (process.env.NODE_ENV !== 'production') {
+                console.warn(
+                    '[CheckboxGroup] Item must be placed inside <CheckboxGroup.Category /> to support all-check.'
+                );
+            }
+            return;
+        }
+        registerItem(currentCategory, value);
+        return () => unregisterItem(currentCategory, value);
+    }, [currentCategory, value, registerItem, unregisterItem]);
 
-    const isChecked = useMemo(() => checked.has(id), [checked, id]);
+    const isChecked = useMemo(() => checked.has(value), [checked, value]);
 
     const onChange = (next: boolean) => {
         setChecked((prev) => {
             const base = new Set(prev as Set<string>);
-            if (next) base.add(id);
-            else base.delete(id);
+            if (next) base.add(value);
+            else base.delete(value);
             return base;
         });
     };
 
     return (
-        <Toggle value={isChecked} onChange={onChange}>
-            <div className={styles.ItemWrapper}>
-                {/* TODO: disabled에 대한 처리는 어떻게 할 것인가 */}
-                <Toggle.Trigger disabled={disabled} onTriggerClick={onTriggerClick} className={styles.Item}>
-                    {isChecked && <FaCheck size={10} />}
-                </Toggle.Trigger>
+        <div className={styles.ItemWrapper}>
+            <Toggle value={isChecked} onChange={onChange}>
+                <Toggle.Trigger className={styles.Item}>{isChecked && <FaCheck size={10} />}</Toggle.Trigger>
                 <span>{children}</span>
-            </div>
-        </Toggle>
+            </Toggle>
+        </div>
     );
 };
 

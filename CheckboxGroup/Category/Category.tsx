@@ -1,70 +1,89 @@
 import React, { useMemo } from 'react';
-import { useCheckboxGroup } from '../CheckboxGroupContext';
+import { useCheckboxGroup, CheckboxGroupCtx } from '../CheckboxGroupContext';
 import { FaCheck } from 'react-icons/fa';
 import styles from '../CheckboxGroup.module.scss';
+import type { CSSVariables } from '@/shared/types/css/CSSVariables';
+import type { PaddingSize } from '@/shared/types/css/PaddingSize';
+import { toCssPadding } from '@/shared/utils/css/toCssPadding';
 
 export type CategoryProps = {
+    /** 카테고리 키 (안 주면 title 사용) — 가능하면 안정적인 고유값 권장 */
+    id?: string;
     title: string;
+    selectAll?: boolean;
     bgColor?: string;
+    color?: string;
+    padding?: PaddingSize;
+    children?: React.ReactNode;
 };
 
-const Category: React.FC<CategoryProps> = ({ title, bgColor = '#FFF3B7' }) => {
-    const { checked, setChecked, allIds, disabledIds } = useCheckboxGroup();
+const Category: React.FC<CategoryProps> = ({
+    id,
+    title,
+    selectAll = true,
+    bgColor = '#FFF3B7',
+    color = '#BD7018',
+    padding,
+    children,
+}) => {
+    const parentCtx = useCheckboxGroup();
+    const categoryKey = id ?? title;
 
-    const enabledIds = useMemo(() => Array.from(allIds).filter((id) => !disabledIds.has(id)), [allIds, disabledIds]);
+    const enabledIds = useMemo(
+        () => Array.from(parentCtx.categories.get(categoryKey) ?? []),
+        [parentCtx.categories, categoryKey]
+    );
+
     const total = enabledIds.length;
-    const checkedCount = enabledIds.reduce((acc, id) => acc + (checked.has(id) ? 1 : 0), 0);
+    const checkedCount = enabledIds.reduce((acc, x) => acc + (parentCtx.checked.has(x) ? 1 : 0), 0);
     const allChecked = total > 0 && checkedCount === total;
-    const noneChecked = checkedCount === 0;
-    const someChecked = !allChecked && !noneChecked;
+
+    const checkboxCss: CSSVariables = {
+        '--backgroundColor': bgColor,
+        '--color': color,
+    };
+
+    const contentCss: CSSVariables = {
+        '--padding': toCssPadding(padding),
+    };
 
     const onToggleParent = () => {
-        setChecked((prev) => {
+        if (!selectAll) return; // 전체선택 비활성화 시 무시
+        parentCtx.setChecked((prev) => {
             const base = new Set(prev as Set<string>);
-            if (allChecked) {
-                enabledIds.forEach((id) => base.delete(id));
-            } else {
-                enabledIds.forEach((id) => base.add(id));
-            }
+            if (allChecked) enabledIds.forEach((id) => base.delete(id));
+            else enabledIds.forEach((id) => base.add(id));
             return base;
         });
     };
 
+    // 같은 컨텍스트 타입을 재제공하되 currentCategory만 지정
+    const childCtx = {
+        ...parentCtx,
+        currentCategory: categoryKey,
+    };
+
     return (
-        <div
-            onClick={onToggleParent}
-            className={styles.Category}
-            style={{
-                cursor: 'pointer',
-                userSelect: 'none',
-                outline: 'none',
-                border: 'none',
-                background: 'transparent',
-                padding: 0,
-            }}
-        >
-            <span
-                aria-hidden
-                style={{
-                    width: 24,
-                    height: 24,
-                    borderRadius: 6,
-                    background: bgColor,
-                    display: 'grid',
-                    placeItems: 'center',
-                    boxShadow: 'inset 0 0 0 1px rgba(0,0,0,.06)',
-                }}
-            >
-                {allChecked ? (
-                    <FaCheck size={16} />
-                ) : someChecked ? (
-                    <svg viewBox="0 0 20 20" width="16" height="16">
-                        <rect x="4" y="9" width="12" height="2" rx="1" />
-                    </svg>
-                ) : null}
-            </span>
-            <span style={{ fontWeight: 600 }}>{title}</span>
-        </div>
+        <CheckboxGroupCtx.Provider value={childCtx}>
+            <div className={styles.CategoryWrapper}>
+                <div
+                    onClick={selectAll ? onToggleParent : undefined}
+                    className={styles.Category}
+                    style={{ cursor: selectAll ? 'pointer' : 'default' }}
+                >
+                    {selectAll ? (
+                        <span style={{ ...checkboxCss }} className={styles.CategoryCheckbox}>
+                            {allChecked ? <FaCheck size={16} color={color} /> : null}
+                        </span>
+                    ) : null}
+                    <span style={{ fontWeight: 600 }}>{title}</span>
+                </div>
+
+                <div className={styles.Content} style={{ ...contentCss }}>
+                    {children}
+                </div>
+            </div>
+        </CheckboxGroupCtx.Provider>
     );
 };
 

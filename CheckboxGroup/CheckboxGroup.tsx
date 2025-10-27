@@ -5,11 +5,10 @@ import Item from './Item/Item';
 import Content from './Content/Content';
 
 export type CheckboxGroupProps = {
-    /** controlled selected ids */
-    value?: string[];
-    /** uncontrolled default selected ids */
-    defaultValue?: string[];
-    onChange?: (ids: string[]) => void;
+    /** 외부에서 관리하는 체크된 ID 배열 */
+    value: string[];
+    /** 변경 시 호출 (다음 체크된 ID 배열) */
+    onChange: (ids: string[]) => void;
     children: React.ReactNode;
     className?: string;
 };
@@ -18,54 +17,44 @@ const CheckboxGroup: React.FC<CheckboxGroupProps> & {
     Category: typeof Category;
     Item: typeof Item;
     Content: typeof Content;
-} = ({ value, defaultValue = [], onChange, children, className }) => {
-    // registry of items
-    const [allIds, setAllIds] = useState<Set<string>>(new Set());
-    const [disabledIds, setDisabledIds] = useState<Set<string>>(new Set());
-
-    const registerId = useCallback((id: string, disabled?: boolean) => {
-        setAllIds((prev) => new Set(prev).add(id));
-        if (disabled) setDisabledIds((prev) => new Set(prev).add(id));
-    }, []);
-
-    const unregisterId = useCallback((id: string) => {
-        setAllIds((prev) => {
-            const n = new Set(prev);
-            n.delete(id);
-            return n;
-        });
-        setDisabledIds((prev) => {
-            const n = new Set(prev);
-            n.delete(id);
-            return n;
-        });
-    }, []);
-
-    // checked (controlled/uncontrolled)
-    const isControlled = Array.isArray(value);
-    const [internal, setInternal] = useState<Set<string>>(new Set(defaultValue));
-    const checked = useMemo(() => (isControlled ? new Set(value) : internal), [isControlled, value, internal]);
+} = ({ value, onChange, children, className }) => {
+    // 선택 상태 (controlled)
+    const checked = useMemo(() => new Set(value), [value]);
 
     const setChecked: React.Dispatch<React.SetStateAction<Set<string>>> = useCallback(
         (updater) => {
-            if (isControlled) {
-                const next =
-                    typeof updater === 'function' ? (updater as (prev: Set<string>) => Set<string>)(checked) : updater;
-                onChange?.(Array.from(next as Set<string>));
-            } else {
-                setInternal((prev) => {
-                    const next =
-                        typeof updater === 'function' ? (updater as (prev: Set<string>) => Set<string>)(prev) : updater;
-                    onChange?.(Array.from(next));
-                    return next;
-                });
-            }
+            const prev = new Set(value);
+            const next =
+                typeof updater === 'function' ? (updater as (prev: Set<string>) => Set<string>)(prev) : updater;
+            onChange(Array.from(next));
         },
-        [isControlled, checked, onChange]
+        [value, onChange]
     );
+    const [categories, setCategories] = useState<Map<string, Set<string>>>(new Map());
+    const registerItem = useCallback((category: string, id: string) => {
+        setCategories((prev) => {
+            const map = new Map(prev);
+            const set = new Set(map.get(category) ?? []);
+            set.add(id);
+            map.set(category, set);
+            return map;
+        });
+    }, []);
+
+    const unregisterItem = useCallback((category: string, id: string) => {
+        setCategories((prev) => {
+            const map = new Map(prev);
+            if (!map.has(category)) return map;
+            const set = new Set(map.get(category)!);
+            set.delete(id);
+            if (set.size === 0) map.delete(category);
+            else map.set(category, set);
+            return map;
+        });
+    }, []);
 
     return (
-        <CheckboxGroupCtx.Provider value={{ checked, setChecked, allIds, disabledIds, registerId, unregisterId }}>
+        <CheckboxGroupCtx.Provider value={{ checked, setChecked, categories, registerItem, unregisterItem }}>
             <div className={className} style={{ display: 'grid', gap: 8 }}>
                 {children}
             </div>
