@@ -2,8 +2,6 @@ import React, { useEffect, useRef, useState, type ChangeEvent } from 'react';
 import styles from './ProfileImageUploader.module.scss';
 import { IoMdCamera } from 'react-icons/io';
 import type { ImageItem, ImageItemInput } from '@/shared/headless/ImageUploader/ImageUploader';
-import EX_IMG from '@/shared/assets/images/profile-example.png';
-import SampleProfile from '@/shared/assets/images/profile-example.png';
 
 type ProfileImageUploaderProps = {
     value?: ImageItem[];
@@ -47,7 +45,9 @@ const ProfileImageUploader: React.FC<ProfileImageUploaderProps> = ({
         if (ownedObjectUrlRef.current) {
             try {
                 URL.revokeObjectURL(ownedObjectUrlRef.current);
-            } catch {}
+            } catch (e) {
+                //
+            }
             ownedObjectUrlRef.current = null;
         }
     };
@@ -75,8 +75,10 @@ const ProfileImageUploader: React.FC<ProfileImageUploaderProps> = ({
         const previewItem: ImageItem = { id: previewUrl, url: previewUrl, name: file.name, owned: true };
         const nextListPreview: ImageItem[] = [previewItem]; // 프로필은 단일만 유지
 
-        if (isControlled) onChange?.(nextListPreview);
-        else setInternalItems(nextListPreview);
+        // 언컨트롤드일 때는 내부 상태 갱신, 컨트롤드일 때는 부모가 value를 바꿀 것
+        if (!isControlled) setInternalItems(nextListPreview);
+        // 항상 부모 onChange 통지 (언/컨트롤드 공통)
+        onChange?.(nextListPreview);
 
         // 2) 서버 업로드 있으면 교체
         if (onResolveFiles) {
@@ -95,8 +97,10 @@ const ProfileImageUploader: React.FC<ProfileImageUploaderProps> = ({
                     };
                     const nextListServer: ImageItem[] = [serverItem];
 
-                    if (isControlled) onChange?.(nextListServer);
-                    else setInternalItems(nextListServer);
+                    // 언컨트롤드 시 내부 상태 갱신
+                    if (!isControlled) setInternalItems(nextListServer);
+                    // 항상 부모 onChange 통지 (언/컨트롤드 공통)
+                    onChange?.(nextListServer);
                 }
             } catch {
                 // 실패 시 프리뷰 유지
@@ -110,14 +114,9 @@ const ProfileImageUploader: React.FC<ProfileImageUploaderProps> = ({
                 {src ? (
                     <div className={styles.Image}>
                         <img src={src} alt="이미지 업로드" />
-                        {/* 실제 API 받을 때는 src 안에 src 로 바꾸면 된다 */}
                     </div>
                 ) : (
-                    // <img src={src} alt="profile" className={styles.Image} />
                     <div className={styles.Placeholder}>이미지 없음</div>
-                    // <div className={styles.Placeholder}>
-                    //     <img src={SampleProfile} alt="이미지 없음" />
-                    // </div>
                 )}
             </div>
 
