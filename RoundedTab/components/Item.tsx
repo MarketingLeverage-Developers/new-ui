@@ -13,8 +13,6 @@ export const Item = ({ style, ...props }: RoundedTabItemProps) => {
         [styles.Active]: isActive(props.value),
     });
 
-    console.log('밸류', selectValue, props.value);
-
     return (
         <Select.Item {...props} className={itemclassName} style={{ ...style }}>
             {props.children}
