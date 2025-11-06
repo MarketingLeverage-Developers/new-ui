@@ -1,0 +1,20 @@
+.RejectButton {
+    border: none;
+    border-radius: 8px;
+    background-color: var(--White1);
+    width: var(--width);
+    height: var(--height);
+    font-size: var(--font-size);
+    padding: var(--padding);
+    cursor: pointer;
+
+    // &:hover {
+    //     background-color: var(--Gray4);
+    // }
+
+    &.Disabled {
+        background-color: var(--Gray6);
+        color: var(--Gray3);
+        cursor: default;
+    }
+}
