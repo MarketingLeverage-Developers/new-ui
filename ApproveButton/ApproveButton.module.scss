@@ -1,0 +1,15 @@
+.ApproveButton {
+    border: none;
+    border-radius: 8px;
+    width: var(--width);
+    height: var(--height);
+    font-size: var(--font-size);
+    padding: var(--padding);
+    background: linear-gradient(90deg, #7ce0f0 0%, #1a73e8 100%);
+    cursor: pointer;
+
+    &.Disabled {
+        background: var(--Gray3);
+        cursor: default;
+    }
+}
