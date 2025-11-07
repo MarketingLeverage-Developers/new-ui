@@ -40,6 +40,7 @@ const Content = () => {
     return (
         <Dropdown.Content matchTriggerWidth>
             <div className={styles.ContentWrapper}>
+                <span className={styles.ContentTotal}>전체 ({filtered.length})</span>
                 <div className={styles.Select}>
                     {uniqueFiltered.length === 0 && <div className={styles.Empty}>결과가 없습니다</div>}
                     {uniqueFiltered.map((item) => (
