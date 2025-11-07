@@ -1,0 +1,58 @@
+.SearchInputWrapper {
+    border-radius: 8px;
+    padding: var(--padding);
+    height: 100%;
+    border: 1px solid var(--Gray5);
+    outline: none;
+    display: flex;
+    align-items: center;
+    flex: 1;
+    position: relative;
+
+    &:focus-within {
+        border: 1px solid var(--Primary1);
+    }
+
+    input {
+        border: none;
+        outline: none; /* input 자체의 파란 아웃라인 제거 */
+        width: 100%;
+        height: 100%;
+        background-color: inherit;
+
+        font-size: 15px;
+        color: var(--Black1);
+
+        &::placeholder {
+            color: var(--Gray3);
+        }
+    }
+
+    .SearchIcons {
+        justify-content: space-between;
+        position: absolute;
+        // padding: 14px 12px;
+        top: 50%;
+        transform: translateY(-40%);
+        right: 10px;
+
+        svg {
+            width: 15px;
+            height: 15px;
+            font-weight: 400;
+        }
+    }
+
+    .CancelIcons {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: absolute;
+        height: 100%;
+        padding: 5px;
+        top: 0;
+        // transform: translateY(50%);
+        right: 0;
+        color: var(--Gray2);
+    }
+}
