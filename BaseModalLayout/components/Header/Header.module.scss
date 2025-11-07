@@ -11,6 +11,10 @@
     height: auto;
 
     border-bottom: 1px solid var(--Gray6);
+
+    &.NoBorder {
+        border: none;
+    }
 }
 
 .Title {

@@ -19,6 +19,7 @@ type HeaderProps = {
     margin?: PaddingSize | number;
     marginBottom?: CSSLength;
     fontSize?: CSSLength;
+    noBorder?: boolean;
 } & Omit<React.HTMLAttributes<HTMLDivElement>, 'title'>;
 
 const Header = ({
@@ -34,6 +35,7 @@ const Header = ({
     margin,
     marginBottom,
     fontSize = 24,
+    noBorder = false,
     ...props
 }: HeaderProps) => {
     const cssVariables: CSSVariables = {
@@ -51,8 +53,12 @@ const Header = ({
         '--font-size': toCssUnit(fontSize),
     };
 
+    const wrapperHeader = classNames(styles.Header, className, {
+        [styles.NoBorder]: noBorder,
+    });
+
     return (
-        <div {...props} className={classNames(styles.Header, className)} style={{ ...cssVariables, ...style }}>
+        <div {...props} className={wrapperHeader} style={{ ...cssVariables, ...style }}>
             <div className={styles.Title} style={{ ...titleCssVariables }}>
                 {typeof title === 'string' ? <span>{title}</span> : title}
             </div>

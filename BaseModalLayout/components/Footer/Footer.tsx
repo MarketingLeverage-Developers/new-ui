@@ -15,6 +15,7 @@ type FooterProps = {
     wrap?: 'nowrap' | 'wrap' | 'wrap-reverse';
     padding?: PaddingSize | number;
     margin?: PaddingSize | number;
+    noBorder?: boolean;
 } & React.HTMLAttributes<HTMLDivElement>;
 
 const Footer = ({
@@ -28,6 +29,7 @@ const Footer = ({
     className,
     padding = { t: 10 },
     margin,
+    noBorder = false,
     ...props
 }: FooterProps) => {
     const cssVariables: CSSVariables = {
@@ -40,8 +42,12 @@ const Footer = ({
         '--margin': toCssPadding(margin),
     };
 
+    const wrapperFooter = classNames(styles.Footer, className, {
+        [styles.NoBorder]: noBorder,
+    });
+
     return (
-        <div {...props} className={classNames(styles.Footer, className)} style={{ ...cssVariables, ...style }}>
+        <div {...props} className={wrapperFooter} style={{ ...cssVariables, ...style }}>
             {children}
         </div>
     );
