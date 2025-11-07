@@ -9,11 +9,16 @@ type BaseTextAreaProps = Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, 'size
 type TextAreaAProps = BaseTextAreaProps & {
     height?: CSSLength;
     full?: boolean;
+    wrapperHeight?: CSSLength;
 };
 
-const TextArea = ({ height, full, ...props }: TextAreaAProps) => {
+const TextArea = ({ height, full, wrapperHeight = 212, ...props }: TextAreaAProps) => {
     const cssVariables: CSSVariables = {
         '--height': toCssUnit(height),
+    };
+
+    const wrapperCssVariables: CSSVariables = {
+        '--height': toCssUnit(wrapperHeight),
     };
 
     const combinedStyles = classNames(styles.TextArea, props.className, {
@@ -21,7 +26,7 @@ const TextArea = ({ height, full, ...props }: TextAreaAProps) => {
     });
 
     return (
-        <div className={styles.TextAreaWrapper}>
+        <div className={styles.TextAreaWrapper} style={{ ...wrapperCssVariables }}>
             <textarea {...props} className={combinedStyles} style={{ ...cssVariables, ...props.style }} />
         </div>
     );

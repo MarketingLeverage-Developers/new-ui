@@ -1,7 +1,7 @@
 .TextAreaWrapper {
     position: relative;
     width: 100%;
-    height: 212px;
+    height: var(--height, 212px);
     padding-right: 8px;
     box-sizing: border-box;
     border-radius: 8px;
