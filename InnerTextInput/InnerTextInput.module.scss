@@ -1,0 +1,78 @@
+.InnerTextInput {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid var(--Gray5);
+    border-radius: 8px;
+    background-color: #fff;
+    padding: 14px 16px;
+    min-height: 46px;
+    gap: 8px;
+
+    &:focus-within {
+        border: 1px solid var(--Primary1);
+    }
+
+    &.Error {
+        border: 1px solid var(--Red1);
+        color: var(--Red1);
+
+        .Helper {
+            color: var(--Red1);
+        }
+    }
+
+    &.Success {
+        border: 1px solid var(--Green1);
+        color: var(--Green1);
+
+        .Helper {
+            color: var(--Green1);
+        }
+    }
+
+    .InnerText,
+    .Unit {
+        white-space: nowrap;
+        line-height: 1.2;
+        font-size: 15px;
+        color: var(--Black1);
+    }
+
+    .InnerText {
+        font-weight: 500;
+    }
+
+    .Unit {
+        padding-left: 4px;
+        color: var(--Gray3);
+    }
+
+    .Input {
+        border: none;
+        outline: none;
+        background-color: transparent;
+
+        flex: 1;
+        min-width: 0;
+        text-align: right;
+
+        font-size: 15px;
+        color: var(--Black1);
+
+        &::placeholder {
+            color: var(--Gray3);
+        }
+    }
+
+    .Helper {
+        position: absolute;
+        left: 0;
+        top: calc(100% + 4px);
+        font-size: 13px;
+        line-height: 1.2;
+        color: var(--Gray2);
+    }
+}
