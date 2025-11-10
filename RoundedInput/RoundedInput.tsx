@@ -31,6 +31,7 @@ const RoundedInput: React.FC<RoundedInputProps> = ({
         [styles.Error]: showFeedback && status === STATUS.ERROR,
         [styles.Success]: showFeedback && status === STATUS.SUCCESS,
         [styles.Touched]: touched,
+        [styles.Disabled]: props.disabled,
     });
 
     const handleBlur: React.FocusEventHandler<HTMLInputElement> = (e) => {

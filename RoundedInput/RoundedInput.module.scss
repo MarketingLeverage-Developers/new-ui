@@ -32,6 +32,10 @@
         }
     }
 
+    &.Disabled {
+        background-color: var(--Gray6);
+    }
+
     input {
         border: none;
         outline: none; /* input 자체의 파란 아웃라인 제거 */
