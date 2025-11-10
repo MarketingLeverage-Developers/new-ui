@@ -9,7 +9,7 @@ type ConfirmProps = {
     onCancel: () => void;
     onConfirm: () => void;
     title: React.ReactNode;
-    description: React.ReactNode;
+    description?: React.ReactNode;
     icon?: string;
 };
 
