@@ -18,7 +18,6 @@ type ContentProps<T extends SelectItem> = {
     children?: React.ReactElement;
 };
 
-// 기본 아이템
 const DefaultItem = ({ item, onSelect }: SearchSelectItemProps) => (
     <div className={styles.Item} onClick={onSelect}>
         <span>{item.label}</span>
@@ -27,7 +26,7 @@ const DefaultItem = ({ item, onSelect }: SearchSelectItemProps) => (
 
 const Content = <T extends SelectItem>({ children }: ContentProps<T>) => {
     const { open, isOpen, close } = useDropdown();
-    const { query, data, setQuery } = useQuerySearch<SelectItem>();
+    const { query, data, setQuery, isSync } = useQuerySearch<SelectItem>();
     const { isActive, changeSelectValue } = useSelect();
 
     const { filtered } = useHangulSearch<SelectItem>(data, query, (it) => String(it.label ?? ''));
@@ -46,15 +45,17 @@ const Content = <T extends SelectItem>({ children }: ContentProps<T>) => {
         if (isActive(item.uuid)) changeSelectValue('');
         else changeSelectValue(item.uuid);
 
-        setQuery(String(item.label ?? ''));
+        setQuery(String(item.label ?? ''), { isSync: false });
 
         if (isOpen) close();
     };
 
     useEffect(() => {
+        if (isSync) return;
+
         if (!isOpen && query.length > 1) open();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [query]);
+    }, [query, isSync]);
 
     const baseItemElement = children ?? <DefaultItem item={{} as any} isActive={false} onSelect={() => {}} />;
 
