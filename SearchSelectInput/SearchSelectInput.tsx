@@ -6,25 +6,22 @@ import Dropdown from '@/shared/headless/Dropdown/Dropdown';
 import Content from './components/Content/Content';
 import Input from './components/Input/Input';
 
-type SearchSelectInputProps = {
+type SearchSelectInputProps<T extends SelectItem> = {
     children: React.ReactNode;
     label: string;
-    data: SelectItem[];
+    data: T[];
     placeholder: string;
 };
 
-const SearchSelectInput = ({ children, label, data }: SearchSelectInputProps) => {
-    const test = '';
-    return (
-        <Select>
-            <Dropdown>
-                <QuerySearch<SelectItem> label={label} data={data}>
-                    {children}
-                </QuerySearch>
-            </Dropdown>
-        </Select>
-    );
-};
+const SearchSelectInput = <T extends SelectItem>({ children, label, data }: SearchSelectInputProps<T>) => (
+    <Select>
+        <Dropdown>
+            <QuerySearch<T> label={label} data={data}>
+                {children}
+            </QuerySearch>
+        </Dropdown>
+    </Select>
+);
 
 export default SearchSelectInput;
 
