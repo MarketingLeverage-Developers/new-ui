@@ -13,18 +13,15 @@ type SearchSelectInputProps = {
     placeholder: string;
 };
 
-const SearchSelectInput = ({ children, label, data }: SearchSelectInputProps) => {
-    const test = '';
-    return (
-        <Select>
-            <Dropdown>
-                <QuerySearch<SelectItem> label={label} data={data}>
-                    {children}
-                </QuerySearch>
-            </Dropdown>
-        </Select>
-    );
-};
+const SearchSelectInput = ({ children, label, data }: SearchSelectInputProps) => (
+    <Select>
+        <Dropdown>
+            <QuerySearch<SelectItem> label={label} data={data}>
+                {children}
+            </QuerySearch>
+        </Dropdown>
+    </Select>
+);
 
 export default SearchSelectInput;
 

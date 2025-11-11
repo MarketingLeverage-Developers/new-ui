@@ -15,6 +15,13 @@
         padding-right: 11px;
         overflow-y: auto;
         max-height: 240px;
+        display: flex;
+        flex-direction: column;
+
+        &.IsSelectChildren {
+            gap: 20px;
+        }
+
         &::-webkit-scrollbar {
             width: 6px;
             height: 6px;
@@ -48,25 +55,6 @@
         &.Item:hover {
             background-color: var(--Primary2);
             cursor: pointer;
-        }
-
-        .CheckBox {
-            width: 20px;
-            height: 20px;
-            border-radius: 3px;
-            border: 1.5px solid var(--Gray5);
-            background-color: var(--White1);
-            outline: none;
-            font-size: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            &.Active {
-                background-color: var(--Primary1);
-                border: none;
-                color: var(--White1);
-            }
         }
     }
 }
