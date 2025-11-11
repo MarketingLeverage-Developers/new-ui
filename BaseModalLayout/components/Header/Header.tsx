@@ -9,6 +9,7 @@ import BaseModalClose from '@/shared/primitives/BaseModalClose/BaseModalClose';
 import type { CSSLength } from '@/shared/types';
 
 type HeaderProps = {
+    subTitle?: string;
     title: React.ReactNode | string;
     direction?: 'row' | 'row-reverse' | 'column' | 'column-reverse';
     align?: 'stretch' | 'center' | 'start' | 'end' | 'baseline';
@@ -23,6 +24,7 @@ type HeaderProps = {
 } & Omit<React.HTMLAttributes<HTMLDivElement>, 'title'>;
 
 const Header = ({
+    subTitle,
     title,
     direction,
     align,
@@ -59,8 +61,11 @@ const Header = ({
 
     return (
         <div {...props} className={wrapperHeader} style={{ ...cssVariables, ...style }}>
-            <div className={styles.Title} style={{ ...titleCssVariables }}>
-                {typeof title === 'string' ? <span>{title}</span> : title}
+            <div className={styles.TitleWrapper}>
+                <div className={styles.SubTitle}>{subTitle}</div>
+                <div className={styles.Title} style={{ ...titleCssVariables }}>
+                    {typeof title === 'string' ? <span>{title}</span> : title}
+                </div>
             </div>
             <BaseModalClose />
         </div>
