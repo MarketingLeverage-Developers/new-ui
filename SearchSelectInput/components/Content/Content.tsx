@@ -14,8 +14,8 @@ export type SearchSelectItemProps<T extends SelectItem = SelectItem> = {
     onSelect: () => void;
 };
 
-type ContentProps = {
-    children?: React.ReactElement<SearchSelectItemProps>;
+type ContentProps<T extends SelectItem> = {
+    children?: React.ReactElement;
 };
 
 // 기본 아이템
@@ -25,7 +25,7 @@ const DefaultItem = ({ item, onSelect }: SearchSelectItemProps) => (
     </div>
 );
 
-const Content: React.FC<ContentProps> = ({ children }) => {
+const Content = <T extends SelectItem>({ children }: ContentProps<T>) => {
     const { open, isOpen, close } = useDropdown();
     const { query, data, setQuery } = useQuerySearch<SelectItem>();
     const { isActive, changeSelectValue } = useSelect();
