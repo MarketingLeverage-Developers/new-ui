@@ -16,6 +16,7 @@ type DataCell = {
     render: (it: unknown, idx: number) => React.ReactElement;
 };
 type RenderCell = ToggleCell | DataCell;
+type RowClickArgs = ToggleClickArgs;
 
 export const BodyRows = ({
     height,
@@ -23,10 +24,12 @@ export const BodyRows = ({
     forceToggle = false,
     // [ADD] 토글 클릭 콜백
     onToggle,
+    onRowClick,
 }: {
     height?: CSSLength;
     forceToggle?: boolean;
     onToggle?: (args: ToggleClickArgs) => void;
+    onRowClick?: (args: RowClickArgs) => void;
 }) => {
     const { state } = useTableContext();
     const renderDetails = useDetailsRenderer();
@@ -88,7 +91,17 @@ export const BodyRows = ({
                 return (
                     <React.Fragment key={row.key}>
                         <RowDetailsProvider value={{ row, ri, opened, hasHidden, toggle: toggle(row.key) }}>
-                            <Row height={height}>
+                            <Row
+                                height={height}
+                                onClick={() => {
+                                    onRowClick?.({
+                                        item: row.item,
+                                        rowKey: row.key,
+                                        opened,
+                                        ri,
+                                    });
+                                }}
+                            >
                                 {renderCells.map((cell, ci) => {
                                     if (cell.type === 'toggle') {
                                         return (
