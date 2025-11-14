@@ -1,0 +1,85 @@
+.SummaryInfoBox {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.SummartInfoBoxHeader {
+    display: flex;
+    justify-content: space-between;
+
+    .TitleWrapper {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 20px;
+        font-weight: 500;
+        color: var(--Black1);
+        img {
+            width: 18px;
+            height: 18px;
+        }
+    }
+
+    .TimeWrpper {
+        color: var(--Gray2);
+        strong,
+        span {
+            color: var(--Gray1);
+        }
+        strong {
+            font-weight: 500;
+        }
+    }
+}
+
+.Content {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 20px;
+    background-color: var(--Gray7);
+    border-radius: 10px;
+}
+
+.Row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    color: var(--Black1);
+
+    img {
+        width: 18px;
+        height: 18px;
+    }
+
+    .textContent {
+        font-weight: 500;
+        font-size: 16px;
+    }
+
+    .DescriptionIcon {
+        align-self: flex-start;
+        margin-top: 4px;
+    }
+}
+
+.SizeBoxes {
+    display: flex;
+    gap: 6px;
+
+    div {
+        color: var(--Black1);
+        padding: 5px 11px;
+        box-sizing: border-box;
+        border: 1px solid var(--Gray5);
+        background-color: var(--White1);
+        border-radius: 6px;
+        font-weight: 500;
+    }
+}
+
+.LinkText {
+    text-decoration: underline;
+    cursor: pointer;
+}
