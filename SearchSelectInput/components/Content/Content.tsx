@@ -7,6 +7,8 @@ import { useHangulSearch } from '@/shared/hooks/client/useHangulSearch';
 import styles from './Content.module.scss';
 import type { SelectItem } from '@/shared/primitives/SearchSelect/SearchSelect';
 import classNames from 'classnames';
+import type { CSSVariables } from '@/shared/types/css/CSSVariables';
+import { toCssUnit } from '@/shared/utils';
 
 export type SearchSelectItemProps<T extends SelectItem = SelectItem> = {
     item: T;
@@ -16,6 +18,7 @@ export type SearchSelectItemProps<T extends SelectItem = SelectItem> = {
 
 type ContentProps<T extends SelectItem> = {
     children?: React.ReactElement;
+    height?: string | number;
 };
 
 const DefaultItem = ({ item, onSelect }: SearchSelectItemProps) => (
@@ -24,7 +27,7 @@ const DefaultItem = ({ item, onSelect }: SearchSelectItemProps) => (
     </div>
 );
 
-const Content = <T extends SelectItem>({ children }: ContentProps<T>) => {
+const Content = <T extends SelectItem>({ children, height = 'auto' }: ContentProps<T>) => {
     const { open, isOpen, close } = useDropdown();
     const { query, data, setQuery, isSync } = useQuerySearch<SelectItem>();
     const { isActive, changeSelectValue } = useSelect();
@@ -62,11 +65,18 @@ const Content = <T extends SelectItem>({ children }: ContentProps<T>) => {
     const selectGapClassNames = classNames(styles.Select, {
         [styles.IsSelectChildren]: children ? true : false,
     });
+
+    const cssVariables: CSSVariables = useMemo(
+        () => ({
+            '--height': toCssUnit(height),
+        }),
+        [height]
+    );
     return (
         <Dropdown.Content matchTriggerWidth>
             <div className={styles.ContentWrapper}>
                 <span className={styles.ContentTotal}>전체 ({filtered.length})</span>
-                <div className={selectGapClassNames}>
+                <div className={selectGapClassNames} style={{ ...cssVariables }}>
                     {uniqueFiltered.length === 0 && <div className={styles.Empty}>결과가 없습니다</div>}
                     {uniqueFiltered.map((item) => {
                         const active = isActive(item.uuid);
