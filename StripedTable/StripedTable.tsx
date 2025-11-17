@@ -1,3 +1,4 @@
+// 줄무늬 스타일을 입힌 Table 스킨 컴포넌트
 import React, { type JSX } from 'react';
 import Table from '@/shared/headless/Table/Table';
 import {
@@ -17,7 +18,9 @@ import styles from './StripedTable.module.scss';
 import DetailsRows from './components/DetailsRows/DetailsRows';
 
 type StripedTableComponent = {
+    // 제네릭 Table 래퍼
     <T>(props: React.ComponentProps<typeof Table<T>>): JSX.Element;
+    // 합성용 파츠들
     Body: typeof Body;
     BodyRows: typeof BodyRows;
     Cell: typeof Cell;
@@ -37,6 +40,7 @@ const StripedTable = (<T,>(props: React.ComponentProps<typeof Table<T>>) => (
     <Table<T> {...props} className={styles.StripedTable} />
 )) as StripedTableComponent;
 
+// 합성 컴포넌트 바인딩
 StripedTable.ScrollContainer = ScrollContainer;
 StripedTable.Body = Body;
 StripedTable.BodyRows = BodyRows;

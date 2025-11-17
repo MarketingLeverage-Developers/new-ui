@@ -1,3 +1,5 @@
-import Table from '@/shared/headless/Table/Table';
+// StripedTable 전용 tbody 래퍼
 import React from 'react';
+import Table from '@/shared/headless/Table/Table';
+
 export const Body = (props: React.ComponentProps<typeof Table.Body>) => <Table.Body {...props} />;

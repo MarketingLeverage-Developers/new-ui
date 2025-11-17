@@ -1,3 +1,4 @@
+// 셀 안에서 텍스트 정렬을 제어하는 래퍼
 import React from 'react';
 import styles from './Content.module.scss';
 import type { CSSVariables } from '@/shared/types/css/CSSVariables';
@@ -12,5 +13,5 @@ export const Content = ({ textAlign = 'left', ...props }: ContentProps) => {
         '--text-align': textAlign,
     };
 
-    return <div {...props} className={styles.Content} style={{ ...cssVaraibles }} />;
+    return <div {...props} className={styles.Content} style={{ ...cssVaraibles, ...props.style }} />;
 };

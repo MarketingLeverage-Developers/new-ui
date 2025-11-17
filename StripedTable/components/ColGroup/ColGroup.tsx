@@ -1,20 +1,14 @@
+// StripedTable/components/ColGroup/ColGroup.tsx
+// <colgroup> + 데이터 컬럼 <col> 정의 (토글 컬럼도 그냥 일반 컬럼으로 포함)
 import type Table from '@/shared/headless/Table/Table';
 import React from 'react';
 import { useTableContext } from '@/shared/headless/Table/Table';
 
-const TOGGLE_COL_WIDTH = 40;
-
-export const ColGroup = ({
-    // [ADD]
-    forceToggle = false,
-    ...props
-}: React.ComponentProps<typeof Table.ColGroup> & { forceToggle?: boolean }) => {
+export const ColGroup = (props: React.ComponentProps<typeof Table.ColGroup>) => {
     const { state } = useTableContext();
-    const expandable = state.hasHidden || state.rows.some((r) => r.hiddenCells.length > 0) || forceToggle;
 
     return (
         <colgroup>
-            {expandable && <col style={{ width: `${TOGGLE_COL_WIDTH}px` }} />}
             {state.columnRow.columns.map((_, i) => (
                 <col key={`col-${i}`} style={state.getColStyle(i)} {...props} />
             ))}
