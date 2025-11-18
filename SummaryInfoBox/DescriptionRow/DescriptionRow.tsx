@@ -40,7 +40,7 @@ const DescriptionRow = ({ text, icon = iconImg }: Props) => {
 
     return (
         <div className={styles.Row}>
-            <img src={icon} alt="" className={styles.DescriptionIcon} />
+            <img src={icon ?? iconImg} alt="" className={styles.DescriptionIcon} />
             <div>{text ? parseText(text) : '없음'}</div>
         </div>
     );

@@ -1,12 +1,12 @@
 import React from 'react';
 import styles from '../SummaryInfoBox.module.scss';
-import type { File } from '@/shared/types/common';
+import type { Image } from '@/shared/types/common';
 import icon from '@/shared/assets/images/file-icon.svg';
-import { IoMdCloseCircle } from 'react-icons/io';
 
-type Props = { file: File; onDeleteClick?: () => void };
-const FileRow = ({ file, onDeleteClick }: Props) => {
+type Props = { file: Image | undefined };
+const LogoRow = ({ file }: Props) => {
     const handleTextClick = async (fileUrl: string, fileName: string) => {
+        if (!fileUrl || !fileName) return;
         try {
             const response = await fetch(fileUrl);
             if (!response.ok) throw new Error('파일 요청 실패');
@@ -23,21 +23,24 @@ const FileRow = ({ file, onDeleteClick }: Props) => {
 
             URL.revokeObjectURL(blobUrl);
         } catch (error) {
-            console.error('파일 다운로드 실패:', error);
+            console.error('로고 다운로드 실패:', error);
         }
     };
 
     return (
         <div className={styles.Row}>
             <img src={icon} alt="" />
-            <div className={styles.FileBox}>
-                <span onClick={() => handleTextClick(file.filePath, file.originalFileName)}>
-                    {file.originalFileName}
-                </span>
-                {onDeleteClick && <IoMdCloseCircle className={styles.Icon} onClick={onDeleteClick} />}
-            </div>
+            {!file?.imageUrl || !file?.imageName ? (
+                '없음'
+            ) : (
+                <div className={styles.FileBox}>
+                    <span onClick={() => handleTextClick(file?.imageUrl ?? '', file?.imageName ?? '')}>
+                        {file?.imageName}
+                    </span>
+                </div>
+            )}
         </div>
     );
 };
 
-export default FileRow;
+export default LogoRow;

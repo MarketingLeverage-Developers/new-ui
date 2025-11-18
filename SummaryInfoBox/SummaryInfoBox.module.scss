@@ -79,6 +79,11 @@
     }
 }
 
+.LinkContent {
+    display: flex;
+    flex-direction: column;
+}
+
 .LinkText {
     text-decoration: underline;
     cursor: pointer;
@@ -93,10 +98,13 @@
     align-items: center;
     gap: 12px;
     cursor: pointer;
-
-    .Icon {
-        color: var(--Gray2);
-        width: 20px;
-        height: 20px;
+    font-size: 14px;
+    box-sizing: border-box;
+    line-height: 1;
+    border-radius: 8px;
+    span {
+        height: 18px;
+        display: flex;
+        align-items: center;
     }
 }
