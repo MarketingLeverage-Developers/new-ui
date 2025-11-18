@@ -1,10 +1,9 @@
 import React from 'react';
 import styles from '../SummaryInfoBox.module.scss';
 import type { Image } from '@/shared/types/common';
-import icon from '@/shared/assets/images/file-icon.svg';
 
-type Props = { file: Image | undefined };
-const LogoRow = ({ file }: Props) => {
+type Props = { icon: string; file: Image | undefined };
+const LogoRow = ({ icon, file }: Props) => {
     const handleTextClick = async (fileUrl: string, fileName: string) => {
         if (!fileUrl || !fileName) return;
         try {

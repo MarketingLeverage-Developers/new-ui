@@ -1,10 +1,11 @@
 import React from 'react';
 import styles from '../SummaryInfoBox.module.scss';
-import icon from '@/shared/assets/images/reference-link-icon.svg';
+
 type Props = {
+    icon: string;
     links: string[];
 };
-const LinksRow = ({ links }: Props) => (
+const LinksRow = ({ icon, links }: Props) => (
     <div className={styles.Row}>
         <img src={icon} alt="" className={styles.DescriptionIcon} />
         <div className={styles.LinkContent}>

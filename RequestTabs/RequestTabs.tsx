@@ -10,6 +10,8 @@ type Props = {
     value?: string;
     onChange?: (next: string, tabs: Tab[]) => void;
     maxTabs?: number;
+    initialCount?: number;
+    editable?: boolean;
 };
 
 const parseLabel = (label: string) => {
@@ -18,9 +20,24 @@ const parseLabel = (label: string) => {
     return { prefix: label || '탭', index: 1 };
 };
 
-const RequestTabs = ({ initialLabel, value: controlled, onChange, maxTabs = 5 }: Props) => {
+const RequestTabs = ({
+    initialLabel,
+    value: controlled,
+    onChange,
+    maxTabs = 5,
+    initialCount = 1,
+    editable = false,
+}: Props) => {
     const { prefix, index } = useMemo(() => parseLabel(initialLabel), [initialLabel]);
-    const initialTabs = useMemo<Tab[]>(() => [{ id: initialLabel, label: initialLabel }], [initialLabel]);
+    // const initialTabs = useMemo<Tab[]>(() => [{ id: initialLabel, label: initialLabel }], [initialLabel]);
+    const initialTabs = useMemo<Tab[]>(() => {
+        const arr: Tab[] = [];
+        for (let i = 1; i <= (initialCount ?? 1); i++) {
+            const label = `${prefix}${i}`;
+            arr.push({ id: label, label });
+        }
+        return arr;
+    }, [prefix, initialCount]);
     const [tabs, setTabs] = useState<Tab[]>(initialTabs);
     const [internalValue, setInternalValue] = useState(initialTabs[0].id);
     const isControlled = controlled !== undefined;
@@ -30,8 +47,8 @@ const RequestTabs = ({ initialLabel, value: controlled, onChange, maxTabs = 5 }:
     useEffect(() => {
         setTabs(initialTabs);
         setInternalValue(initialTabs[0].id);
-        setNextIndex(index + 1);
-    }, [initialTabs, index]);
+        setNextIndex((initialCount ?? 1) + 1);
+    }, [initialTabs, initialCount]);
 
     const setValue = (next: string) => {
         if (!isControlled) setInternalValue(next);
@@ -93,9 +110,11 @@ const RequestTabs = ({ initialLabel, value: controlled, onChange, maxTabs = 5 }:
                     );
                 })}
             </div>
-            <Flex align="center" justify="center" className={styles.Add} onClick={addTab}>
-                <FiPlus color="#7B7B7B" />
-            </Flex>
+            {editable && (
+                <Flex align="center" justify="center" className={styles.Add} onClick={addTab}>
+                    <FiPlus color="#7B7B7B" />
+                </Flex>
+            )}
         </div>
     );
 };

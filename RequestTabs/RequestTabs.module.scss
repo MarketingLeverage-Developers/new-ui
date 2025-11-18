@@ -14,6 +14,16 @@
     overflow-x: auto;
     white-space: nowrap;
     padding-bottom: 2px;
+    /* 스크롤바 숨기기 - Chrome, Safari, Edge */
+    &::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* 스크롤바 숨기기 - Firefox */
+    scrollbar-width: none;
+
+    /* 스크롤바 숨기기 - IE, Edge(legacy) */
+    -ms-overflow-style: none;
 }
 
 .TabItem {
@@ -86,6 +96,7 @@
     border-radius: 6px;
     cursor: pointer;
     line-height: 1;
+    min-width: 26px;
 }
 
 .Panel {

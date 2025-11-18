@@ -1,14 +1,15 @@
 import React from 'react';
 import styles from '../SummaryInfoBox.module.scss';
-import icon from '@/shared/assets/images/request-content-icon.svg';
+
 import moment from 'moment';
 import 'moment/dist/locale/ko';
 moment.locale('ko');
 
 type Props = {
+    icon: string;
     requestTime?: string;
 };
-const Header = ({ requestTime }: Props) => {
+const Header = ({ icon, requestTime }: Props) => {
     const date = moment(requestTime)?.format('YYYY.MM.DD (ddd)');
     const time = moment(requestTime)?.format('HH:mm');
     return (

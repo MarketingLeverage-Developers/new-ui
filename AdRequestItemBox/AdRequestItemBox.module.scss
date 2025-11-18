@@ -1,0 +1,63 @@
+.AdRequestItemBox {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    .Header {
+        color: var(--Black1);
+        font-size: 20px;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 16px;
+
+        img {
+            width: 18px;
+            height: 18px;
+        }
+    }
+
+    .Content {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        padding: 20px;
+        background-color: var(--Gray7);
+        border-radius: 10px;
+    }
+
+    .LabelWrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .Label {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .Title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            img {
+                width: 18px;
+                height: 18px;
+            }
+
+            .Icon {
+                font-size: 20px;
+                color: #a3a3a3;
+            }
+
+            span {
+                color: var(--Black1);
+                font-weight: 500;
+                font-size: 15px;
+            }
+        }
+    }
+}

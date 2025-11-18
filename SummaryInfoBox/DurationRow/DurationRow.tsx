@@ -2,7 +2,8 @@ import React from 'react';
 import moment from 'moment';
 import 'moment/dist/locale/ko';
 import styles from '../SummaryInfoBox.module.scss';
-import icon from '@/shared/assets/images/clock-icon.svg';
+import { PiAlarmLight } from 'react-icons/pi';
+
 moment.locale('ko');
 
 type Props = {
@@ -25,7 +26,7 @@ const DurationRow = ({ start, end }: Props) => {
 
     return (
         <div className={styles.Row}>
-            <img src={icon} alt="" />
+            <PiAlarmLight className={styles.Icon} />
             <span className={styles.textContent}>{displayText}</span>
         </div>
     );

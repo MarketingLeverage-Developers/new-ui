@@ -1,10 +1,9 @@
 import React from 'react';
 import styles from '../SummaryInfoBox.module.scss';
-import iconImg from '@/shared/assets/images/description-icon.svg';
 
-type Props = { icon?: string; text: string };
+type Props = { icon: string; text: string };
 
-const DescriptionRow = ({ text, icon = iconImg }: Props) => {
+const DescriptionRow = ({ text, icon }: Props) => {
     // URL + 줄바꿈 변환기
     const parseText = (input = ''): (string | React.ReactElement)[] => {
         const urlRegex = /(https?:\/\/[^\s]+)/g;
@@ -40,7 +39,7 @@ const DescriptionRow = ({ text, icon = iconImg }: Props) => {
 
     return (
         <div className={styles.Row}>
-            <img src={icon ?? iconImg} alt="" className={styles.DescriptionIcon} />
+            <img src={icon} alt="" className={styles.DescriptionIcon} />
             <div>{text ? parseText(text) : '없음'}</div>
         </div>
     );
