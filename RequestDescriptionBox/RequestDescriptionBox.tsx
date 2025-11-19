@@ -4,9 +4,10 @@ import React from 'react';
 import styles from './RequestDescriptionBox.module.scss';
 import type { HexColor } from '@/shared/types/css/HexColor';
 import type { ThemeColorVar } from '@/shared/types/css/ThemeColorTokens';
+import type { CSSLength } from '@/shared/types';
 
 type Props = {
-    height?: number;
+    height?: CSSLength;
     bgColor?: HexColor | ThemeColorVar;
     text: string;
 };
