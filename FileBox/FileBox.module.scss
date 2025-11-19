@@ -1,0 +1,28 @@
+.FileBox {
+    width: var(--width, 100%);
+    height: 38px;
+    border-radius: 8px;
+    border: 1px solid var(--Gray5);
+    padding: 9px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--White1);
+
+    span {
+        font-size: 14px;
+        line-height: 17px;
+        color: var(--Black1);
+        &:hover {
+            text-decoration: underline;
+            cursor: pointer;
+        }
+    }
+
+    .Delete {
+        color: var(--Gray2);
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+    }
+}
