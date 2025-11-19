@@ -24,7 +24,7 @@ const ImageModalBox = ({ width, height, image, showName = false, name }: Props) 
             <Modal.Trigger className={styles.ImageTrigger}>
                 <Flex direction="column">
                     {image ? (
-                        <img src={`${import.meta.env.VITE_API_URL}api${image}`} style={{ ...cssVariables }} />
+                        <img src={`${import.meta.env.VITE_API_URL}/api${image}`} style={{ ...cssVariables }} />
                     ) : (
                         <div>dd</div>
                     )}
@@ -34,7 +34,7 @@ const ImageModalBox = ({ width, height, image, showName = false, name }: Props) 
             <Portal>
                 <Modal.Backdrop className={styles.ImageModalBackdrop} />
                 <Modal.Content className={styles.ImageModalContent}>
-                    <img src={`${import.meta.env.VITE_API_URL}api${image}`} />
+                    <img src={`${import.meta.env.VITE_API_URL}/api${image}`} />
                 </Modal.Content>
             </Portal>
         </Modal>
