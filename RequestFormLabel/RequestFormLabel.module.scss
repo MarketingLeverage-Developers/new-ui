@@ -1,0 +1,43 @@
+.LabelWrapper {
+    width: 100%;
+    display: flex;
+    gap: var(--gap);
+    align-items: var(--align-items);
+    flex-direction: var(--flex-direction);
+
+    &.Column {
+        align-items: flex-start;
+
+        .Label {
+            width: 100%;
+        }
+
+        .Content {
+            width: 100%;
+            flex: none;
+        }
+    }
+}
+
+.Label {
+    width: 90px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-top: var(--padding-top);
+
+    span {
+        font-size: 15px;
+        font-weight: 500;
+        color: var(--Black1);
+    }
+
+    img {
+        width: 18px;
+        height: 18px;
+    }
+}
+
+.Content {
+    flex: 1;
+}
