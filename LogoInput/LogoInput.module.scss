@@ -1,0 +1,62 @@
+.LogoInputWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.LogoInput {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid var(--Gray4);
+    border-radius: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #fff;
+}
+
+.Placeholder {
+    color: var(--Gray2);
+    font-size: 14px;
+}
+
+.UploadButton {
+    background: none;
+    border: none;
+    font-size: 14px;
+    color: var(--Primary1);
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.Input {
+    display: none;
+}
+
+.HelperText {
+    font-size: 13px;
+    color: var(--Gray3);
+}
+
+.FileItem {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    border: 1px solid var(--Gray4);
+    border-radius: 6px;
+    font-size: 14px;
+    background: var(--White1);
+    width: fit-content;
+}
+
+.FileName {
+    flex: 1;
+    color: var(--Black1);
+}
+
+.DeleteBtn {
+    font-size: 14px;
+    cursor: pointer;
+    color: var(--Gray2);
+}

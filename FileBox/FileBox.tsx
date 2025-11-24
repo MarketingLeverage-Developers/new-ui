@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { type HTMLAttributes } from 'react';
 import styles from './FileBox.module.scss';
 import type { CSSVariables } from '@/shared/types/css/CSSVariables';
 import { toCssUnit } from '@/shared/utils';
@@ -9,7 +9,7 @@ type Props = {
     file: any;
     width?: CSSLength;
     onDeleteClick?: () => void;
-};
+} & HTMLAttributes<HTMLDivElement>;
 const FileBox = ({ file, width, onDeleteClick }: Props) => {
     const cssVariables: CSSVariables = {
         '--width': toCssUnit(width),
