@@ -1,0 +1,94 @@
+/* src/shared/primitives/RichTextEditor/RichTextEditor.module.scss */
+
+.editorRoot {
+    width: 100%;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+}
+
+.loading {
+    width: 100%;
+    min-height: 120px;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+    background-color: #f9fafb;
+    font-size: 14px;
+    color: #9ca3af;
+}
+
+/* 툴바 영역 */
+.toolbar {
+    display: flex;
+    gap: 4px;
+    padding: 8px;
+    border-bottom: 1px solid #e5e7eb;
+    background-color: #f9fafb;
+    align-items: center;
+}
+
+.toolbarButton {
+    padding: 4px 8px;
+    border-radius: 4px;
+    border: none;
+    font-size: 12px;
+    cursor: pointer;
+    background-color: #e5e7eb;
+    color: #111827;
+
+    &.active {
+        background-color: #111827;
+        color: #ffffff;
+    }
+}
+
+.toolbarButtonImage {
+    margin-left: 8px;
+}
+
+.toolbarButtonImageDisabled {
+    background-color: rgba(229, 231, 235, 0.5);
+    cursor: not-allowed;
+}
+
+.toolbarButtonClear {
+    margin-left: auto;
+    background-color: #f3f4f6;
+    color: #6b7280;
+}
+
+/* 에디터 영역 wrapper */
+.contentWrapper {
+    position: relative;
+    padding: 12px;
+    min-height: 120px;
+    max-height: 320px;
+    overflow-y: auto;
+}
+
+/* placeholder */
+.placeholder {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    pointer-events: none;
+    color: #9ca3af;
+    font-size: 14px;
+}
+
+/* 에디터 실제 내용 영역 */
+.editorContent {
+    outline: none;
+    font-size: 14px;
+    line-height: 1.5;
+
+    /* 에디터 안 이미지가 컨테이너 범위를 넘지 않도록 */
+    img {
+        max-width: 100%;
+        height: auto;
+        display: block;
+    }
+}
