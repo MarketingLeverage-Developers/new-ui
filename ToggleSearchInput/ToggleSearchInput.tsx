@@ -10,7 +10,7 @@ import BaseButton from '../BaseButton/BaseButton';
 
 type ToggleSearchInputProps = React.InputHTMLAttributes<HTMLInputElement> & {
     children: React.ReactNode;
-    onSearchHandler: () => void;
+    onSearchHandler?: () => void;
 };
 
 const ToggleSearchInput = ({ children, value, onChange, onSearchHandler, ...props }: ToggleSearchInputProps) => {
