@@ -42,7 +42,8 @@
         .rdp-weekday {
             color: var(--Gray2);
             text-align: center;
-            font-size: 12px;
+            font-size: 14px;
+            font-weight: 600;
 
             &:first-child {
                 color: #ff6363; // 일
