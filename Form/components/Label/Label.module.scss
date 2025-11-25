@@ -1,6 +1,14 @@
 .Label {
     display: flex;
-    flex-direction: column;
+
+    &.Vertical {
+        flex-direction: column;
+    }
+    &.Horizontal {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+    }
 
     .TextWrapper {
         display: flex;
