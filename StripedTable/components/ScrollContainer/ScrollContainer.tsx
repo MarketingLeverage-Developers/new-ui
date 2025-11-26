@@ -3,10 +3,10 @@ import React from 'react';
 
 type ScrollTableContainerProps = {
     children: React.ReactNode;
-    totalTableWidth: number;
+    totalTableWidth?: number;
 };
 
-export const ScrollContainer = ({ children, totalTableWidth }: ScrollTableContainerProps) => (
+export const ScrollContainer = ({ children, totalTableWidth = 0 }: ScrollTableContainerProps) => (
     <div
         style={{
             width: '100%',
