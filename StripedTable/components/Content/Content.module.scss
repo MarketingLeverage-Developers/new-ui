@@ -3,4 +3,9 @@
     box-sizing: border-box;
     height: auto;
     text-align: var(--text-align);
+
+    width: 100%; /* td 안에서 가로 공간을 꽉 채우도록 */
+    overflow: hidden; /* 넘치는 텍스트 숨김 */
+    white-space: nowrap; /* 한 줄로만 표시 */
+    text-overflow: ellipsis;
 }
