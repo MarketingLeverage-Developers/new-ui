@@ -3,6 +3,8 @@
 import Table from '@/shared/headless/TableX/Table';
 import React from 'react';
 import styles from './ColumnSelectBox.module.scss';
+import { FaCheck } from 'react-icons/fa';
+import classNames from 'classnames';
 
 export const ColumnSelectBox = (props: React.ComponentProps<typeof Table.ColumnSelectBox>) => {
     return (
@@ -14,6 +16,19 @@ export const ColumnSelectBox = (props: React.ComponentProps<typeof Table.ColumnS
             checkboxWrapperClassName={styles.CheckboxWrapper}
             checkboxWrapperCheckedClassName={styles.Checked}
             labelClassName={styles.Label}
+            itemNode={(label, checked) => <Checkbox label={label} checked={checked} />}
         />
+    );
+};
+
+const Checkbox = ({ label, checked }: { label: string; checked: boolean }) => {
+    const triggerClassName = classNames(styles.Checkbox, {
+        [styles.Active]: checked,
+    });
+    return (
+        <div className={styles.CheckboxWrapper}>
+            <div className={triggerClassName}>{checked && <FaCheck />}</div>
+            <div className={styles.Label}>{label}</div>
+        </div>
     );
 };

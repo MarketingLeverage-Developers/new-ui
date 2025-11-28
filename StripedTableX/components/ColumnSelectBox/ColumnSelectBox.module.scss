@@ -35,31 +35,31 @@
 }
 
 /* 체크박스 wrapper */
-.CheckboxWrapper {
-    width: 18px;
-    height: 18px;
-    aspect-ratio: 1/1;
-    // position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 4px;
+// .CheckboxWrapper {
+//     width: 18px;
+//     height: 18px;
+//     aspect-ratio: 1/1;
+//     // position: relative;
+//     display: flex;
+//     align-items: center;
+//     justify-content: center;
+//     border-radius: 4px;
 
-    box-sizing: border-box;
-    background-color: var(--White1);
-    transition: all 0.15s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+//     box-sizing: border-box;
+//     background-color: var(--White1);
+//     transition: all 0.15s ease;
+//     display: flex;
+//     align-items: center;
+//     justify-content: center;
 
-    border: 1px solid var(--Gray5);
+//     border: 1px solid var(--Gray5);
 
-    &.Checked {
-        background-color: var(--Primary1);
-        border-color: var(--Primary5);
-        border: 1px solid var(--Primary5);
-    }
-}
+//     &.Checked {
+//         background-color: var(--Primary1);
+//         border-color: var(--Primary5);
+//         border: 1px solid var(--Primary5);
+//     }
+// }
 
 /* 기본 체크박스 박스 */
 // .Checkbox {
@@ -73,3 +73,35 @@
 //     align-items: center;
 //     justify-content: center;
 // }
+
+.CheckboxWrapper {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+
+    .Label {
+        color: var(--Gray1);
+        font-size: 14px;
+    }
+
+    .Checkbox {
+        width: 20px;
+        height: 20px;
+        flex-shrink: 0;
+        border-radius: 4px;
+        border: 1.5px solid var(--Gray5);
+        background-color: var(--White1);
+
+        outline: none;
+        font-size: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        &.Active {
+            background-color: var(--Primary1);
+            border: none;
+            color: var(--White1);
+        }
+    }
+}
