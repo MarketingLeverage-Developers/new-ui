@@ -1,6 +1,6 @@
 // 줄무늬 스타일을 입힌 Table 스킨 컴포넌트
 import React, { type JSX } from 'react';
-import Table from '@/shared/headless/Table/Table';
+import Table from '@/shared/headless/TableX/Table';
 import {
     Body,
     BodyRows,
@@ -17,6 +17,7 @@ import {
 import styles from './StripedTable.module.scss';
 import DetailsRows from './components/DetailsRows/DetailsRows';
 import { ColumnSelectBox } from './components/ColumnSelectBox/ColumnSelectBox';
+import { View } from './components/View/View';
 
 type StripedTableComponent = {
     // 제네릭 Table 래퍼
@@ -36,6 +37,7 @@ type StripedTableComponent = {
     Content: typeof Content;
     ScrollContainer: typeof ScrollContainer;
     ColumnSelectBox: typeof ColumnSelectBox;
+    View: typeof View;
 };
 
 const StripedTable = (<T,>(props: React.ComponentProps<typeof Table<T>>) => (
@@ -57,5 +59,6 @@ StripedTable.Details = Table.Details;
 StripedTable.DetailsRows = DetailsRows;
 StripedTable.Content = Content;
 StripedTable.ColumnSelectBox = ColumnSelectBox;
+StripedTable.View = View;
 
 export default StripedTable;

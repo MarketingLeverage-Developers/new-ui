@@ -1,0 +1,17 @@
+.DetailsRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    // padding: 14px 12px;
+    height: 45px;
+
+    .Label {
+        font-size: 15px;
+        font-weight: 400;
+        color: var(--Gray2);
+    }
+
+    .Render {
+    }
+}
