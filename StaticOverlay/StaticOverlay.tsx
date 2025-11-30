@@ -4,7 +4,7 @@ import styles from './StaticOverlay.module.scss';
 
 type StaticOverlayProps = {
     centerNode?: React.ReactNode;
-    zIndex: number;
+    zIndex?: number;
 };
 
 const StaticOverlay: React.FC<StaticOverlayProps> = ({ centerNode = false, zIndex }) => (
