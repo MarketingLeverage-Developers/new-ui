@@ -15,7 +15,15 @@ type DataCell = {
 
 type RowClickArgs = ToggleClickArgs;
 
-export const BodyRows = ({ height, onRowClick }: { height?: CSSLength; onRowClick?: (args: RowClickArgs) => void }) => {
+export const BodyRows = ({
+    height,
+    onRowClick,
+    getRowStyle,
+}: {
+    height?: CSSLength;
+    onRowClick?: (args: RowClickArgs) => void;
+    getRowStyle?: (row: unknown, index: number) => { backgroundColor?: string };
+}) => {
     const { state } = useTableContext();
     const renderDetails = useDetailsRenderer();
     const [openRow, setOpenRow] = useState<string | null>(null);
@@ -59,7 +67,13 @@ export const BodyRows = ({ height, onRowClick }: { height?: CSSLength; onRowClic
         <>
             {state.rows.map((row, ri) => {
                 const opened = openRow === row.key;
-                const bg = ri % 2 === 0 ? 'var(--Gray7)' : 'var(--White1)';
+
+                // 기본 배경색 (줄무늬)
+                const defaultBg = ri % 2 === 0 ? 'var(--Gray7)' : 'var(--White1)';
+
+                // 조건부 스타일 적용
+                const customStyle = getRowStyle?.(row.item, ri);
+                const bg = customStyle?.backgroundColor || defaultBg;
 
                 const dataCells: DataCell[] = row.cells.map<DataCell>((c) => ({
                     key: c.key,
