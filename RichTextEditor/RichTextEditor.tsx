@@ -24,6 +24,7 @@ type RichTextEditorProps = {
 
 const RichTextEditor: React.FC<RichTextEditorProps> = ({ value, onChange, placeholder, onUploadImages }) => {
     const fileInputRef = useRef<HTMLInputElement | null>(null);
+    const [isEmpty, setIsEmpty] = React.useState(true);
 
     const editor = useEditor({
         extensions: [
@@ -36,6 +37,10 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ value, onChange, placeh
             if (html !== value) {
                 onChange(html);
             }
+            setIsEmpty(ed.getText().length === 0);
+        },
+        onCreate: ({ editor: ed }) => {
+            setIsEmpty(ed.getText().length === 0);
         },
     });
 
@@ -46,8 +51,10 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ value, onChange, placeh
         const currentHtml = editor.getHTML();
         if (value !== currentHtml) {
             editor.commands.setContent(value || '', { emitUpdate: false });
+            // emitUpdate: false 이므로 onUpdate가 안 불려서 직접 갱신
+            setIsEmpty(editor.getText().length === 0);
         }
-    }, [value, editor, value]);
+    }, [value, editor]);
 
     const insertImage = (imageUrl: string): void => {
         if (!editor) return;
@@ -117,7 +124,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ value, onChange, placeh
     const isItalicActive = editor.isActive('italic');
     const isBulletListActive = editor.isActive('bulletList');
     const isOrderedListActive = editor.isActive('orderedList');
-    const isEmpty = editor.getText().length === 0;
+    // const isEmpty = editor.getText().length === 0;
     const canUploadImage = Boolean(onUploadImages);
 
     return (
