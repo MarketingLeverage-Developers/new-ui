@@ -11,9 +11,18 @@ type LabelProps = {
     subText?: string;
     marginBottom?: CSSLength;
     gap?: CSSLength;
+    required?: boolean;
 } & React.HTMLAttributes<HTMLDivElement>;
 
-export const Label = ({ type = 'vertical', text, subText, marginBottom = 0, gap = 8, ...props }: LabelProps) => {
+export const Label = ({
+    type = 'vertical',
+    text,
+    subText,
+    marginBottom = 0,
+    gap = 8,
+    required = false,
+    ...props
+}: LabelProps) => {
     const cssVariables: CSSVariables = {
         '--margin-bottom': toCssUnit(marginBottom),
         '--gap': toCssUnit(gap),
@@ -27,7 +36,10 @@ export const Label = ({ type = 'vertical', text, subText, marginBottom = 0, gap 
     return (
         <div {...props} className={labelClassName} style={{ ...cssVariables }}>
             <div className={styles.TextWrapper}>
-                <span className={styles.Text}>{text}</span>
+                <span className={styles.Text}>
+                    {text}
+                    {required && <span className={styles.Required}>*</span>}
+                </span>
                 <span className={styles.SubText}>{subText}</span>
             </div>
 
