@@ -6,6 +6,7 @@ import {
     BodyRows,
     Cell,
     ColGroup,
+    ColumnSelectBoxPortal,
     Content,
     GroupHeader,
     Header,
@@ -37,6 +38,7 @@ type StripedTableComponent = {
     Content: typeof Content;
     ScrollContainer: typeof ScrollContainer;
     ColumnSelectBox: typeof ColumnSelectBox;
+    ColumnSelectBoxPortal: typeof ColumnSelectBoxPortal;
     View: typeof View;
 };
 
@@ -59,6 +61,7 @@ StripedTable.Details = Table.Details;
 StripedTable.DetailsRows = DetailsRows;
 StripedTable.Content = Content;
 StripedTable.ColumnSelectBox = ColumnSelectBox;
+StripedTable.ColumnSelectBoxPortal = ColumnSelectBoxPortal;
 StripedTable.View = View;
 
 export default StripedTable;
