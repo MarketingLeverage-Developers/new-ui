@@ -33,6 +33,8 @@
 .Item {
     flex: 0 0 auto;
     scroll-snap-align: start;
+    display: flex;
+    gap: 8px;
 }
 
 /* 이하 페이드 관련은 그대로 */
