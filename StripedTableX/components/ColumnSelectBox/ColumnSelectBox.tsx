@@ -1,5 +1,5 @@
 import Table from '@/shared/headless/TableX/Table';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useLayoutEffect } from 'react';
 import { createPortal } from 'react-dom';
 import styles from './ColumnSelectBox.module.scss';
 import { FaCheck } from 'react-icons/fa';
@@ -8,7 +8,7 @@ import classNames from 'classnames';
 export const ColumnSelectBox = (props: React.ComponentProps<typeof Table.ColumnSelectBox>) => {
     const [portalTarget, setPortalTarget] = useState<HTMLElement | null>(null);
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         const portalId = 'column-select-box-portal';
 
         const findPortal = () => {
