@@ -8,6 +8,7 @@ import { toCssUnit } from '@/shared/utils';
 import { toCssPadding } from '@/shared/utils/css/toCssPadding';
 import ScrollerWrapper from './components/ScrollerWrapper/ScrollerWrapper';
 import Content from './components/Content/Content';
+import BaseModalFormTemplate from './components/BaseModalFormTemplate/BaseModalFormTemplate';
 
 type BaseModalLayoutProps = {
     children: React.ReactNode;
@@ -45,3 +46,4 @@ BaseModalLayout.Header = Header;
 BaseModalLayout.Footer = Footer;
 BaseModalLayout.Content = Content;
 BaseModalLayout.ScrollerWrapper = ScrollerWrapper;
+BaseModalLayout.FormTemplate = BaseModalFormTemplate;
