@@ -1,6 +1,6 @@
-/* 기능: Main을 덮는 블러 레이어 */
+/* 기능: Main을 덮는 정적 레이어 */
 .StaticOverlay {
-    position: absolute;
+    position: fixed;
     inset: 0;
 
     background-color: var(--Gray7);
@@ -9,18 +9,6 @@
     z-index: var(--z-overlay, 10002);
     pointer-events: auto;
 }
-
-// @media (prefers-color-scheme: light) {
-//     .StaticOverlay {
-//         background-color: var(--White1);
-//     }
-// }
-
-// @media (prefers-color-scheme: dark) {
-//     .StaticOverlay {
-//         background-color: var(--White1);
-//     }
-// }
 
 .Center {
     /* 중앙 배치 */
