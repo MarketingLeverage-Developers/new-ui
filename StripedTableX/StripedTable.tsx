@@ -19,6 +19,7 @@ import styles from './StripedTable.module.scss';
 import DetailsRows from './components/DetailsRows/DetailsRows';
 import { ColumnSelectBox } from './components/ColumnSelectBox/ColumnSelectBox';
 import { View } from './components/View/View';
+import SearchColumnSelectBox from './components/SearchColumnSelectBox/SearchColumnSelectBox';
 
 type StripedTableComponent = {
     // 제네릭 Table 래퍼
@@ -39,6 +40,7 @@ type StripedTableComponent = {
     ScrollContainer: typeof ScrollContainer;
     ColumnSelectBox: typeof ColumnSelectBox;
     ColumnSelectBoxPortal: typeof ColumnSelectBoxPortal;
+    SearchColumnSelectBox: typeof ColumnSelectBox;
     View: typeof View;
 };
 
@@ -63,5 +65,6 @@ StripedTable.Content = Content;
 StripedTable.ColumnSelectBox = ColumnSelectBox;
 StripedTable.ColumnSelectBoxPortal = ColumnSelectBoxPortal;
 StripedTable.View = View;
+StripedTable.SearchColumnSelectBox = SearchColumnSelectBox;
 
 export default StripedTable;
