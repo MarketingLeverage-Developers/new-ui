@@ -10,6 +10,7 @@ export const ScrollContainer = ({ children, totalTableWidth = 0 }: ScrollTableCo
     <div
         style={{
             width: '100%',
+            minWidth: 0,
             overflowX: 'auto',
             paddingBottom: '10px',
             display: 'grid',
