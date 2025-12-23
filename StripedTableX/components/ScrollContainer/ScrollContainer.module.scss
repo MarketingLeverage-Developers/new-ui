@@ -1,0 +1,26 @@
+.ScrollContainer {
+    width: 100%;
+    min-width: 0;
+    display: grid;
+    overscroll-behavior: auto;
+    padding-bottom: 10px;
+    overflow-x: auto;
+
+    /* ✅ Thin Scrollbar Default */
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.1) transparent;
+
+    &::-webkit-scrollbar {
+        width: 4px;
+        height: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+}

@@ -1,20 +1,18 @@
-// 가로 스크롤이 필요한 테이블을 감싸는 컨테이너
 import React from 'react';
+import styles from './ScrollContainer.module.scss';
 
 type ScrollTableContainerProps = {
     children: React.ReactNode;
     totalTableWidth?: number;
+    maxHeight?: string | number;
 };
 
-export const ScrollContainer = ({ children, totalTableWidth = 0 }: ScrollTableContainerProps) => (
+export const ScrollContainer = ({ children, totalTableWidth = 0, maxHeight }: ScrollTableContainerProps) => (
     <div
+        className={styles.ScrollContainer}
         style={{
-            width: '100%',
-            minWidth: 0,
-            overflowX: 'auto',
-            paddingBottom: '10px',
-            display: 'grid',
-            overscrollBehavior: 'auto',
+            maxHeight,
+            overflowY: maxHeight ? 'auto' : undefined,
         }}
     >
         <div style={{ minWidth: `${totalTableWidth}px` }}>{children}</div>

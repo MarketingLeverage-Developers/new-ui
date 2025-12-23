@@ -1,4 +1,9 @@
 .Th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background-color: var(--White1);
+
     text-align: left;
     box-sizing: border-box;
     font-size: 15px;
