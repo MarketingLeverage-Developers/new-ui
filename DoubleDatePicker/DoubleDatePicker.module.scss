@@ -100,22 +100,23 @@
             // }
 
             &.rdp-day.rdp-selected.rdp-range_start {
-                background-color: #fff5eb;
+                // background-color: #fff5eb;
+                background-color: var(--Primary5);
                 border-radius: 50% 0 0 50%;
             }
             &.rdp-day.rdp-selected.rdp-range_end {
-                background-color: #fff5eb;
+                background-color: var(--Primary5);
                 border-radius: 0 50% 50% 0;
             }
 
             &.rdp-selected:not(.rdp-range_start):not(.rdp-range_end) .rdp-day_button {
-                background-color: #fff5eb;
+                background-color: var(--Primary5);
                 color: var(--Black1);
                 border-radius: 0;
             }
 
             &.rdp-today:not(.rdp-selected) .rdp-day_button {
-                background-color: #fff5eb;
+                background-color: var(--Primary5);
             }
         }
     }
