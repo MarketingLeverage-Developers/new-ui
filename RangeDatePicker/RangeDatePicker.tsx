@@ -1,10 +1,14 @@
+// RangeDatePicker.tsx
 import { useEffect, useMemo, useState } from 'react';
 import styles from './RageDatePicker.module.scss';
 import { DayPicker, type DateRange, type DayPickerProps } from 'react-day-picker';
 import { ko } from 'react-day-picker/locale';
-import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
-import { IoMdWarning } from 'react-icons/io';
-import { useDropdown } from '@/shared/headless/Dropdown/Dropdown';
+import { IoIosArrowDown, IoMdWarning } from 'react-icons/io';
+import { IoCaretBackSharp, IoCaretForwardSharp } from 'react-icons/io5';
+
+// ✅ 회사 headless
+import Dropdown, { useDropdown } from '@/shared/headless/Dropdown/Dropdown';
+import Select from '@/shared/headless/Select/Select';
 
 type PresetKey =
     | 'YESTERDAY'
@@ -27,6 +31,47 @@ type RangeDatePickerProps = {
     onChange: (r: DateRange | undefined) => void;
 } & Omit<DayPickerProps, 'mode' | 'selected' | 'onSelect' | 'month' | 'numberOfMonths'>;
 
+/** ✅ Dropdown 내부 close를 정확히 쓰기 위한 메뉴 컴포넌트 */
+const YearMenu = ({ years, activeValue }: { years: number[]; activeValue: string }) => {
+    const { close } = useDropdown();
+    return (
+        <div className={styles.SelectMenuInner}>
+            {years.map((y) => (
+                <Select.Item
+                    key={y}
+                    value={String(y)}
+                    className={`${styles.SelectItem} ${String(y) === activeValue ? styles.SelectItemActive : ''}`}
+                    onClick={() => close()}
+                    role="menuitem"
+                    tabIndex={0}
+                >
+                    {y}
+                </Select.Item>
+            ))}
+        </div>
+    );
+};
+
+const MonthMenu = ({ months, activeValue }: { months: number[]; activeValue: string }) => {
+    const { close } = useDropdown();
+    return (
+        <div className={styles.SelectMenuInner}>
+            {months.map((m) => (
+                <Select.Item
+                    key={m}
+                    value={String(m)}
+                    className={`${styles.SelectItem} ${String(m) === activeValue ? styles.SelectItemActive : ''}`}
+                    onClick={() => close()}
+                    role="menuitem"
+                    tabIndex={0}
+                >
+                    {m + 1}월
+                </Select.Item>
+            ))}
+        </div>
+    );
+};
+
 const RangeDatePicker = ({ range, onChange, ...props }: RangeDatePickerProps) => {
     const [currentMonth, setCurrentMonth] = useState<Date>(range?.from ?? new Date());
     const [tempRange, setTempRange] = useState<DateRange | undefined>(range);
@@ -36,8 +81,6 @@ const RangeDatePicker = ({ range, onChange, ...props }: RangeDatePickerProps) =>
 
     const [fromError, setFromError] = useState<boolean>(false);
     const [toError, setToError] = useState<boolean>(false);
-
-    const { close } = useDropdown();
 
     const pad2 = (n: number) => String(n).padStart(2, '0');
     const formatIso = (d?: Date) => (d ? `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}` : '');
@@ -63,18 +106,16 @@ const RangeDatePicker = ({ range, onChange, ...props }: RangeDatePickerProps) =>
     };
 
     const computeError = (value: string) => {
-        if (!value) return false; // 빈값은 에러 아님
+        if (!value) return false;
         return !parseIso(value);
     };
 
-    // ✅ “적용 버튼” 대신 여기서 확정 처리
     const commitRange = (next: DateRange | undefined) => {
         setTempRange(next);
-        onChange(next); // ✅ 부모에 즉시 반영
+        onChange(next);
     };
 
     useEffect(() => {
-        // 부모 range 변경 시 동기화 (단, 이때 onChange 다시 호출 X)
         setTempRange(range);
         setCurrentMonth(range?.from ?? new Date());
 
@@ -89,7 +130,6 @@ const RangeDatePicker = ({ range, onChange, ...props }: RangeDatePickerProps) =>
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [range]);
 
-    // 캘린더에서 선택하면 즉시 commit
     const handleSelectRange = (r: DateRange | undefined) => {
         commitRange(r);
 
@@ -105,7 +145,6 @@ const RangeDatePicker = ({ range, onChange, ...props }: RangeDatePickerProps) =>
         if (r?.from) setCurrentMonth(r.from);
     };
 
-    // ✅ input 둘 다 유효하면 즉시 commit
     const applyInputsIfComplete = (nextFrom: string, nextTo: string) => {
         const from = parseIso(nextFrom);
         const to = parseIso(nextTo);
@@ -220,23 +259,6 @@ const RangeDatePicker = ({ range, onChange, ...props }: RangeDatePickerProps) =>
         });
     };
 
-    const handleCancel = () => {
-        // 취소가 필요 없다면 이 함수 자체를 제거해도 됨
-        setTempRange(range);
-        setCurrentMonth(range?.from ?? new Date());
-
-        const nextFrom = formatIso(range?.from);
-        const nextTo = formatIso(range?.to);
-
-        setFromInput(nextFrom);
-        setToInput(nextTo);
-
-        setFromError(computeError(nextFrom));
-        setToError(computeError(nextTo));
-
-        close();
-    };
-
     const handleClickPreset = (key: PresetKey) => {
         const next = presetRanges[key];
 
@@ -288,6 +310,10 @@ const RangeDatePicker = ({ range, onChange, ...props }: RangeDatePickerProps) =>
         setFromError(false);
         setToError(false);
     };
+
+    // ✅ headless select value
+    const yearValue = String(currentMonth.getFullYear());
+    const monthValue = String(currentMonth.getMonth()); // 0~11
 
     return (
         <div className={styles.Root}>
@@ -378,37 +404,55 @@ const RangeDatePicker = ({ range, onChange, ...props }: RangeDatePickerProps) =>
 
                 <div className={styles.CalendarHeader}>
                     <button type="button" className={styles.NavButton} onClick={handlePrevMonth}>
-                        <IoIosArrowBack className={styles.NavIcon} />
+                        <IoCaretBackSharp className={styles.NavIcon} />
                     </button>
 
+                    {/* ✅ 커스텀 Headless Year/Month Select */}
                     <div className={styles.SelectGroup}>
-                        <select
-                            className={styles.Select}
-                            value={currentMonth.getFullYear()}
-                            onChange={(e) => handleYearChange(Number(e.target.value))}
-                        >
-                            {years.map((y) => (
-                                <option key={y} value={y}>
-                                    {y}
-                                </option>
-                            ))}
-                        </select>
+                        {/* YEAR */}
+                        <Dropdown>
+                            <Select value={yearValue} onChange={(v) => handleYearChange(Number(v))}>
+                                <Dropdown.Trigger className={styles.SelectTrigger} role="button" tabIndex={0}>
+                                    <Select.Display className={styles.SelectLabel} render={(v) => <span>{v}</span>} />
+                                    <IoIosArrowDown className={styles.Arrow} />
+                                </Dropdown.Trigger>
 
-                        <select
-                            className={styles.Select}
-                            value={currentMonth.getMonth()}
-                            onChange={(e) => handleMonthChange(Number(e.target.value))}
-                        >
-                            {months.map((m) => (
-                                <option key={m} value={m}>
-                                    {m + 1}월
-                                </option>
-                            ))}
-                        </select>
+                                <Dropdown.Content
+                                    className={styles.SelectMenu}
+                                    placement="bottom-start"
+                                    offset={6}
+                                    matchTriggerWidth
+                                >
+                                    <YearMenu years={years} activeValue={yearValue} />
+                                </Dropdown.Content>
+                            </Select>
+                        </Dropdown>
+
+                        {/* MONTH */}
+                        <Dropdown>
+                            <Select value={monthValue} onChange={(v) => handleMonthChange(Number(v))}>
+                                <Dropdown.Trigger className={styles.SelectTrigger} role="button" tabIndex={0}>
+                                    <Select.Display
+                                        className={styles.SelectLabel}
+                                        render={(v) => <span>{Number(v) + 1}월</span>}
+                                    />
+                                    <IoIosArrowDown className={styles.Arrow} />
+                                </Dropdown.Trigger>
+
+                                <Dropdown.Content
+                                    className={styles.SelectMenu}
+                                    placement="bottom-start"
+                                    offset={6}
+                                    matchTriggerWidth
+                                >
+                                    <MonthMenu months={months} activeValue={monthValue} />
+                                </Dropdown.Content>
+                            </Select>
+                        </Dropdown>
                     </div>
 
                     <button type="button" className={styles.NavButton} onClick={handleNextMonth}>
-                        <IoIosArrowForward className={styles.NavIcon} />
+                        <IoCaretForwardSharp className={styles.NavIcon} />
                     </button>
                 </div>
 
