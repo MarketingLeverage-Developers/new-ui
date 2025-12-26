@@ -1,3 +1,83 @@
-.BasicTable {
+.container {
     width: 100%;
+}
+
+.header {
+    background-color: var(--Gray6);
+}
+
+/* Header cell */
+.headerCell {
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--Gray1);
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+
+    &:first-child {
+        justify-content: flex-start;
+        padding-left: 18px;
+    }
+}
+
+.body {
+    max-height: 520px;
+    overflow: auto;
+}
+
+// /* 스크롤바 */
+// .body::-webkit-scrollbar {
+//     height: 12px;
+//     width: 12px;
+// }
+
+// .body::-webkit-scrollbar-track {
+//     background: #f3f3f3;
+//     border-radius: 999px;
+// }
+
+// .body::-webkit-scrollbar-thumb {
+//     background: #cfcfcf;
+//     border-radius: 999px;
+// }
+
+// .body::-webkit-scrollbar-thumb:hover {
+//     background: #b8b8b8;
+// }
+
+/* row */
+.row {
+    border-bottom: 1px solid var(--Gray5);
+
+    &:nth-child(odd) .cell {
+        background: transparent;
+    }
+
+    &:nth-child(even) .cell {
+        background: transparent;
+    }
+}
+
+/* cell */
+.cell {
+    font-size: 15px;
+    height: 44px;
+    // padding: 14px 16px;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--Black1);
+}
+
+/* selection */
+.selected {
+    background: rgba(59, 130, 246, 0.12) !important;
+}
+
+.ghost {
+    pointer-events: none;
 }
