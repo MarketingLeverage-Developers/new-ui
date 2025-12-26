@@ -1,0 +1,325 @@
+.Root {
+    display: flex;
+    justify-content: center;
+    border: 1px solid var(--Primary1);
+    border-radius: 20px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    background-color: var(--White1);
+    width: 578px;
+    // width: 100%;
+    height: 388px;
+    overflow: hidden;
+}
+
+/* 좌우 프리셋 */
+.LeftPreset,
+.RightMonths {
+    display: flex;
+    flex-direction: column;
+    // gap: 6px;
+    font-weight: 400;
+    overflow-y: auto;
+    width: 100%;
+
+    &::-webkit-scrollbar {
+        width: 0px;
+    }
+}
+
+.LeftPreset {
+    border-right: 1px solid var(--Gray5);
+}
+
+.RightMonths {
+    border-left: 1px solid var(--Gray5);
+}
+
+.PresetItem {
+    border: none;
+    background: transparent;
+    text-align: left;
+    padding: 10px 12px;
+    cursor: pointer;
+
+    font-size: 15px;
+    color: var(--Gray1);
+}
+
+/* 우측 월 Item */
+.MonthItem {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    text-align: left;
+    padding: 10px 12px;
+    font-size: 15px;
+    color: var(--Gray1);
+}
+
+.PresetItem:hover,
+.PresetItemActive,
+.MonthItem:hover,
+.MonthItemActive {
+    background: var(--Gray6);
+}
+
+/* 중앙 */
+.Center {
+    display: flex;
+    flex-direction: column;
+}
+
+/* 상단 시작/종료 */
+.TopInputs {
+    display: flex;
+    gap: 14px;
+    color: var(--Gray2);
+    padding: 12px 8px 8px 8px;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--Gray5);
+}
+
+.InputBlock {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.InputLabel {
+    font-size: 13px;
+    color: var(--Gray2);
+}
+
+.InputBox {
+    width: 159px;
+    height: 44px;
+    border-radius: 8px;
+    border: 1px solid var(--Gray5);
+    background: var(--White1);
+    color: var(--Black1);
+    font-size: 15px;
+    font-weight: 400;
+    text-align: center;
+    outline: none;
+
+    padding-right: 32px;
+}
+.InputWrap {
+    position: relative;
+    width: 159px;
+}
+
+.InputError {
+    border-color: var(--Red1);
+}
+
+.WarningIcon {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--Red1);
+    font-size: 18px;
+    pointer-events: none;
+}
+
+/* 캘린더 헤더 */
+.CalendarHeader {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    height: 58px;
+}
+
+.NavButton {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 10px;
+}
+
+.NavButton:hover {
+    background: #f3f3f3;
+}
+
+.NavIcon {
+    font-size: 18px;
+    color: var(--Gray1);
+}
+
+.SelectGroup {
+    display: flex;
+    justify-content: center;
+    gap: 21px;
+}
+
+.Select {
+    height: 36px;
+    padding: 0 10px;
+    border-radius: 4px;
+    border: none;
+    background: var(--White1);
+    outline: none;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--Black1);
+}
+
+.CalendarBody {
+    padding: 4px 0;
+}
+
+/* 하단 버튼 */
+.BottomBar {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 14px;
+}
+
+.CancelButton,
+.ApplyButton {
+    padding: 6px 10px;
+    font-size: 14px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.CancelButton {
+    background-color: var(--White1);
+    border: 1px solid #d5d5d5;
+    color: var(--Gray1);
+}
+
+.ApplyButton {
+    background-color: var(--Primary1);
+    color: #fff;
+}
+
+.ApplyButton:disabled,
+.ApplyButton[aria-disabled='true'] {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+:global {
+    .rdp {
+        --rdp-cell-size: 26px;
+    }
+    .rdp-month {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+    }
+
+    .rdp-nav {
+        display: none; /* 커스텀 헤더 사용 */
+    }
+
+    .rdp-caption,
+    .rdp-caption_label {
+        display: none;
+    }
+
+    .rdp-month_grid {
+        // border-collapse: separate;
+        border-spacing: 0;
+        width: 100%;
+        padding: 12px;
+    }
+
+    .rdp-weekday {
+        color: var(--Gray2);
+        text-align: center;
+        font-size: 15px;
+        font-weight: 400;
+        height: 20px;
+
+        &:first-child {
+            color: #ff6363;
+        }
+
+        &:last-child {
+            color: #778eff;
+        }
+    }
+
+    .rdp-day {
+        text-align: center;
+        width: 35px;
+        height: 35px;
+
+        .rdp-day_button {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            border: none;
+            border-radius: 0;
+            color: var(--Gray1);
+            background-color: inherit;
+            font-size: 15px;
+            font-weight: 400;
+        }
+
+        // .rdp-day_button.rdp-selected.rdp-range_middle {
+        //     width: 100%;
+        // }
+
+        &.rdp-outside .rdp-day_button {
+            color: var(--Gray4);
+        }
+
+        /* start/end 동그라미 */
+        &.rdp-range_start .rdp-day_button,
+        &.rdp-range_end .rdp-day_button {
+            background-color: var(--Primary1);
+            color: var(--White1);
+            border-radius: 45%;
+        }
+
+        /* range 영역 배경(알약 느낌) */
+        &.rdp-day.rdp-selected.rdp-range_start {
+            background-color: var(--Primary1);
+            border-radius: 45% 0 0 45%;
+        }
+
+        &.rdp-day.rdp-selected.rdp-range_end {
+            background-color: var(--Primary1);
+            border-radius: 0 45% 45% 0;
+        }
+
+        &.rdp-selected:not(.rdp-range_start):not(.rdp-range_end) .rdp-day_button {
+            background-color: var(--Primary1);
+            color: var(--White1);
+            border-radius: 0;
+        }
+
+        &.rdp-today:not(.rdp-selected) .rdp-day_button {
+            background-color: var(--Primary1);
+            color: var(--White1);
+        }
+    }
+
+    /* range 시작/끝 좌우 알약 확장 */
+    .rdp-day.rdp-range_start::before {
+        left: 50%;
+        right: -2px;
+        border-top-right-radius: 999px;
+        border-bottom-right-radius: 999px;
+    }
+
+    .rdp-day.rdp-range_end::before {
+        left: -2px;
+        right: 50%;
+        border-top-left-radius: 999px;
+        border-bottom-left-radius: 999px;
+    }
+}

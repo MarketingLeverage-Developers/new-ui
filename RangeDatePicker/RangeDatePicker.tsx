@@ -1,0 +1,452 @@
+import { useEffect, useMemo, useState } from 'react';
+import styles from './RageDatePicker.module.scss';
+import { DayPicker, type DateRange, type DayPickerProps } from 'react-day-picker';
+import { ko } from 'react-day-picker/locale';
+import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
+import { IoMdWarning } from 'react-icons/io';
+import { useDropdown } from '@/shared/headless/Dropdown/Dropdown';
+
+type PresetKey =
+    | 'YESTERDAY'
+    | 'TODAY'
+    | 'THIS_MONTH'
+    | 'LAST_MONTH'
+    | 'LAST_7_DAYS'
+    | 'LAST_3_MONTHS'
+    | 'LAST_6_MONTHS'
+    | 'LAST_12_MONTHS'
+    | 'THIS_YEAR'
+    | 'LAST_YEAR'
+    | 'Q1'
+    | 'Q2'
+    | 'Q3'
+    | 'Q4';
+
+type RangeDatePickerProps = {
+    range: DateRange;
+    onChange: (r: DateRange | undefined) => void;
+} & Omit<DayPickerProps, 'mode' | 'selected' | 'onSelect' | 'month' | 'numberOfMonths'>;
+
+const RangeDatePicker = ({ range, onChange, ...props }: RangeDatePickerProps) => {
+    const [currentMonth, setCurrentMonth] = useState<Date>(range?.from ?? new Date());
+    const [tempRange, setTempRange] = useState<DateRange | undefined>(range);
+
+    const [fromInput, setFromInput] = useState<string>('');
+    const [toInput, setToInput] = useState<string>('');
+
+    const [fromError, setFromError] = useState<boolean>(false);
+    const [toError, setToError] = useState<boolean>(false);
+
+    const { close } = useDropdown();
+
+    const pad2 = (n: number) => String(n).padStart(2, '0');
+    const formatIso = (d?: Date) => (d ? `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}` : '');
+
+    const startOfMonth = (d: Date) => new Date(d.getFullYear(), d.getMonth(), 1);
+    const endOfMonth = (d: Date) => new Date(d.getFullYear(), d.getMonth() + 1, 0);
+
+    const parseIso = (value: string): Date | undefined => {
+        const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
+        if (!m) return undefined;
+
+        const y = Number(m[1]);
+        const mo = Number(m[2]);
+        const d = Number(m[3]);
+
+        if (mo < 1 || mo > 12) return undefined;
+        if (d < 1 || d > 31) return undefined;
+
+        const dt = new Date(y, mo - 1, d);
+        if (dt.getFullYear() !== y || dt.getMonth() !== mo - 1 || dt.getDate() !== d) return undefined;
+
+        return dt;
+    };
+
+    const computeError = (value: string) => {
+        if (!value) return false; // 빈값은 에러 아님
+        return !parseIso(value);
+    };
+
+    // ✅ “적용 버튼” 대신 여기서 확정 처리
+    const commitRange = (next: DateRange | undefined) => {
+        setTempRange(next);
+        onChange(next); // ✅ 부모에 즉시 반영
+    };
+
+    useEffect(() => {
+        // 부모 range 변경 시 동기화 (단, 이때 onChange 다시 호출 X)
+        setTempRange(range);
+        setCurrentMonth(range?.from ?? new Date());
+
+        const nextFrom = formatIso(range?.from);
+        const nextTo = formatIso(range?.to);
+
+        setFromInput(nextFrom);
+        setToInput(nextTo);
+
+        setFromError(computeError(nextFrom));
+        setToError(computeError(nextTo));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [range]);
+
+    // 캘린더에서 선택하면 즉시 commit
+    const handleSelectRange = (r: DateRange | undefined) => {
+        commitRange(r);
+
+        const nextFrom = formatIso(r?.from);
+        const nextTo = formatIso(r?.to);
+
+        setFromInput(nextFrom);
+        setToInput(nextTo);
+
+        setFromError(false);
+        setToError(false);
+
+        if (r?.from) setCurrentMonth(r.from);
+    };
+
+    // ✅ input 둘 다 유효하면 즉시 commit
+    const applyInputsIfComplete = (nextFrom: string, nextTo: string) => {
+        const from = parseIso(nextFrom);
+        const to = parseIso(nextTo);
+        if (!from || !to) return;
+
+        const realFrom = from <= to ? from : to;
+        const realTo = from <= to ? to : from;
+
+        commitRange({ from: realFrom, to: realTo });
+        setCurrentMonth(realFrom);
+    };
+
+    const today = useMemo(() => new Date(), []);
+
+    const presetRanges = useMemo((): Record<PresetKey, DateRange> => {
+        const startOfYear = (d: Date) => new Date(d.getFullYear(), 0, 1);
+        const endOfYear = (d: Date) => new Date(d.getFullYear(), 11, 31);
+
+        const addDays = (d: Date, n: number) => {
+            const x = new Date(d);
+            x.setDate(x.getDate() + n);
+            return x;
+        };
+
+        const subMonths = (d: Date, n: number) => {
+            const x = new Date(d);
+            x.setMonth(x.getMonth() - n);
+            return x;
+        };
+
+        const subYears = (d: Date, n: number) => {
+            const x = new Date(d);
+            x.setFullYear(x.getFullYear() - n);
+            return x;
+        };
+
+        const startOfQuarter = (d: Date, quarter: 1 | 2 | 3 | 4) => new Date(d.getFullYear(), (quarter - 1) * 3, 1);
+        const endOfQuarter = (d: Date, quarter: 1 | 2 | 3 | 4) => new Date(d.getFullYear(), quarter * 3, 0);
+
+        const y = addDays(today, -1);
+
+        return {
+            YESTERDAY: { from: y, to: y },
+            TODAY: { from: today, to: today },
+            THIS_MONTH: { from: startOfMonth(today), to: endOfMonth(today) },
+            LAST_MONTH: { from: startOfMonth(subMonths(today, 1)), to: endOfMonth(subMonths(today, 1)) },
+            LAST_7_DAYS: { from: addDays(today, -6), to: today },
+            LAST_3_MONTHS: { from: startOfMonth(subMonths(today, 2)), to: today },
+            LAST_6_MONTHS: { from: startOfMonth(subMonths(today, 5)), to: today },
+            LAST_12_MONTHS: { from: startOfMonth(subMonths(today, 11)), to: today },
+            THIS_YEAR: { from: startOfYear(today), to: endOfYear(today) },
+            LAST_YEAR: { from: startOfYear(subYears(today, 1)), to: endOfYear(subYears(today, 1)) },
+            Q1: { from: startOfQuarter(today, 1), to: endOfQuarter(today, 1) },
+            Q2: { from: startOfQuarter(today, 2), to: endOfQuarter(today, 2) },
+            Q3: { from: startOfQuarter(today, 3), to: endOfQuarter(today, 3) },
+            Q4: { from: startOfQuarter(today, 4), to: endOfQuarter(today, 4) },
+        };
+    }, [today]);
+
+    const presets = useMemo(
+        () =>
+            [
+                { key: 'YESTERDAY', label: '어제' },
+                { key: 'TODAY', label: '오늘' },
+                { key: 'THIS_MONTH', label: '이번 달' },
+                { key: 'LAST_MONTH', label: '지난 달' },
+                { key: 'LAST_7_DAYS', label: '지난 7일' },
+                { key: 'LAST_3_MONTHS', label: '지난 3개월' },
+                { key: 'LAST_6_MONTHS', label: '지난 6개월' },
+                { key: 'LAST_12_MONTHS', label: '지난 12개월' },
+                { key: 'THIS_YEAR', label: '이번 연도' },
+                { key: 'LAST_YEAR', label: '지난 연도' },
+                { key: 'Q1', label: '1분기' },
+                { key: 'Q2', label: '2분기' },
+                { key: 'Q3', label: '3분기' },
+                { key: 'Q4', label: '4분기' },
+            ] as const,
+        []
+    );
+
+    const isSameDay = (a?: Date, b?: Date) => {
+        if (!a || !b) return false;
+        return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
+    };
+
+    const isSameRange = (a?: DateRange, b?: DateRange) => {
+        if (!a?.from && !b?.from) return true;
+        if (!a?.from || !b?.from) return false;
+        const fromSame = isSameDay(a.from, b.from);
+        const toSame = (!a.to && !b.to) || (a.to && b.to ? isSameDay(a.to, b.to) : false);
+        return fromSame && toSame;
+    };
+
+    const activePreset = useMemo(
+        () => (Object.keys(presetRanges) as PresetKey[]).find((k) => isSameRange(tempRange, presetRanges[k])) ?? null,
+        [presetRanges, tempRange]
+    );
+
+    const handlePrevMonth = () => {
+        setCurrentMonth((prev) => {
+            const x = new Date(prev);
+            x.setMonth(x.getMonth() - 1);
+            return x;
+        });
+    };
+
+    const handleNextMonth = () => {
+        setCurrentMonth((prev) => {
+            const x = new Date(prev);
+            x.setMonth(x.getMonth() + 1);
+            return x;
+        });
+    };
+
+    const handleCancel = () => {
+        // 취소가 필요 없다면 이 함수 자체를 제거해도 됨
+        setTempRange(range);
+        setCurrentMonth(range?.from ?? new Date());
+
+        const nextFrom = formatIso(range?.from);
+        const nextTo = formatIso(range?.to);
+
+        setFromInput(nextFrom);
+        setToInput(nextTo);
+
+        setFromError(computeError(nextFrom));
+        setToError(computeError(nextTo));
+
+        close();
+    };
+
+    const handleClickPreset = (key: PresetKey) => {
+        const next = presetRanges[key];
+
+        commitRange(next);
+        setCurrentMonth(next.from ?? new Date());
+
+        setFromInput(formatIso(next.from));
+        setToInput(formatIso(next.to));
+
+        setFromError(false);
+        setToError(false);
+    };
+
+    const years = useMemo(() => {
+        const y = currentMonth.getFullYear();
+        return Array.from({ length: 11 }, (_, i) => y - 5 + i);
+    }, [currentMonth]);
+
+    const months = useMemo(() => Array.from({ length: 12 }, (_, i) => i), []);
+
+    const handleYearChange = (y: number) => {
+        setCurrentMonth((prev) => new Date(y, prev.getMonth(), 1));
+    };
+
+    const handleMonthChange = (m: number) => {
+        setCurrentMonth((prev) => new Date(prev.getFullYear(), m, 1));
+    };
+
+    const sideMonths = useMemo(() => {
+        const y = currentMonth.getFullYear();
+        return Array.from({ length: 12 }, (_, idx) => 11 - idx).map((m) => {
+            const d = new Date(y, m, 1);
+            return { key: `${y}.${pad2(m + 1)}`, date: d, label: `${y}.${pad2(m + 1)}` };
+        });
+    }, [currentMonth]);
+
+    const isSameMonth = (a: Date, b: Date) => a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth();
+
+    const handleClickSideMonth = (date: Date) => {
+        const from = startOfMonth(date);
+        const to = endOfMonth(date);
+
+        commitRange({ from, to });
+        setCurrentMonth(from);
+
+        setFromInput(formatIso(from));
+        setToInput(formatIso(to));
+
+        setFromError(false);
+        setToError(false);
+    };
+
+    return (
+        <div className={styles.Root}>
+            <aside className={styles.LeftPreset}>
+                {presets.map((p) => {
+                    const isActive = activePreset === (p.key as PresetKey);
+                    return (
+                        <button
+                            key={p.key}
+                            type="button"
+                            className={`${styles.PresetItem} ${isActive ? styles.PresetItemActive : ''}`}
+                            onClick={() => handleClickPreset(p.key as PresetKey)}
+                        >
+                            {p.label}
+                        </button>
+                    );
+                })}
+            </aside>
+
+            <section className={styles.Center}>
+                <div className={styles.TopInputs}>
+                    <div className={styles.InputBlock}>
+                        <div className={styles.InputLabel}>시작일</div>
+
+                        <div className={styles.InputWrap}>
+                            <input
+                                className={`${styles.InputBox} ${fromError ? styles.InputError : ''}`}
+                                type="text"
+                                inputMode="numeric"
+                                value={fromInput}
+                                onChange={(e) => {
+                                    const v = e.target.value;
+                                    setFromInput(v);
+
+                                    const err = computeError(v);
+                                    setFromError(err);
+
+                                    if (!err) applyInputsIfComplete(v, toInput);
+                                }}
+                                onBlur={() => {
+                                    const err = computeError(fromInput);
+                                    setFromError(err);
+                                    if (!err) applyInputsIfComplete(fromInput, toInput);
+                                }}
+                                placeholder="YYYY-MM-DD"
+                            />
+                            {fromError && (
+                                <span className={styles.WarningIcon} aria-hidden="true">
+                                    <IoMdWarning />
+                                </span>
+                            )}
+                        </div>
+                    </div>
+
+                    <div className={styles.InputBlock}>
+                        <div className={styles.InputLabel}>종료일</div>
+
+                        <div className={styles.InputWrap}>
+                            <input
+                                className={`${styles.InputBox} ${toError ? styles.InputError : ''}`}
+                                type="text"
+                                inputMode="numeric"
+                                value={toInput}
+                                onChange={(e) => {
+                                    const v = e.target.value;
+                                    setToInput(v);
+
+                                    const err = computeError(v);
+                                    setToError(err);
+
+                                    if (!err) applyInputsIfComplete(fromInput, v);
+                                }}
+                                onBlur={() => {
+                                    const err = computeError(toInput);
+                                    setToError(err);
+                                    if (!err) applyInputsIfComplete(fromInput, toInput);
+                                }}
+                                placeholder="YYYY-MM-DD"
+                            />
+                            {toError && (
+                                <span className={styles.WarningIcon} aria-hidden="true">
+                                    <IoMdWarning />
+                                </span>
+                            )}
+                        </div>
+                    </div>
+                </div>
+
+                <div className={styles.CalendarHeader}>
+                    <button type="button" className={styles.NavButton} onClick={handlePrevMonth}>
+                        <IoIosArrowBack className={styles.NavIcon} />
+                    </button>
+
+                    <div className={styles.SelectGroup}>
+                        <select
+                            className={styles.Select}
+                            value={currentMonth.getFullYear()}
+                            onChange={(e) => handleYearChange(Number(e.target.value))}
+                        >
+                            {years.map((y) => (
+                                <option key={y} value={y}>
+                                    {y}
+                                </option>
+                            ))}
+                        </select>
+
+                        <select
+                            className={styles.Select}
+                            value={currentMonth.getMonth()}
+                            onChange={(e) => handleMonthChange(Number(e.target.value))}
+                        >
+                            {months.map((m) => (
+                                <option key={m} value={m}>
+                                    {m + 1}월
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+
+                    <button type="button" className={styles.NavButton} onClick={handleNextMonth}>
+                        <IoIosArrowForward className={styles.NavIcon} />
+                    </button>
+                </div>
+
+                <div className={styles.CalendarBody}>
+                    <DayPicker
+                        locale={ko}
+                        mode="range"
+                        month={currentMonth}
+                        numberOfMonths={1}
+                        showOutsideDays
+                        fixedWeeks
+                        selected={tempRange}
+                        onSelect={handleSelectRange}
+                        {...props}
+                    />
+                </div>
+            </section>
+
+            <aside className={styles.RightMonths}>
+                {sideMonths.map((m) => {
+                    const active = tempRange?.from
+                        ? isSameMonth(tempRange.from, m.date)
+                        : isSameMonth(currentMonth, m.date);
+
+                    return (
+                        <button
+                            key={m.key}
+                            type="button"
+                            className={`${styles.MonthItem} ${active ? styles.MonthItemActive : ''}`}
+                            onClick={() => handleClickSideMonth(m.date)}
+                        >
+                            {m.label}
+                        </button>
+                    );
+                })}
+            </aside>
+        </div>
+    );
+};
+
+export default RangeDatePicker;
