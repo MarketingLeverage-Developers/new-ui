@@ -6,7 +6,6 @@ import { ko } from 'react-day-picker/locale';
 import { IoIosArrowDown, IoMdWarning } from 'react-icons/io';
 import { IoCaretBackSharp, IoCaretForwardSharp } from 'react-icons/io5';
 
-// ✅ 회사 headless
 import Dropdown, { useDropdown } from '@/shared/headless/Dropdown/Dropdown';
 import Select from '@/shared/headless/Select/Select';
 
@@ -31,7 +30,6 @@ type RangeDatePickerProps = {
     onChange: (r: DateRange | undefined) => void;
 } & Omit<DayPickerProps, 'mode' | 'selected' | 'onSelect' | 'month' | 'numberOfMonths'>;
 
-/** ✅ Dropdown 내부 close를 정확히 쓰기 위한 메뉴 컴포넌트 */
 const YearMenu = ({ years, activeValue }: { years: number[]; activeValue: string }) => {
     const { close } = useDropdown();
     return (
@@ -85,11 +83,16 @@ const RangeDatePicker = ({ range, onChange, ...props }: RangeDatePickerProps) =>
     const pad2 = (n: number) => String(n).padStart(2, '0');
     const formatIso = (d?: Date) => (d ? `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}` : '');
 
+    const weekdayKo = (d: Date) => {
+        const map = ['일', '월', '화', '수', '목', '금', '토'] as const;
+        return map[d.getDay()];
+    };
+
     const startOfMonth = (d: Date) => new Date(d.getFullYear(), d.getMonth(), 1);
     const endOfMonth = (d: Date) => new Date(d.getFullYear(), d.getMonth() + 1, 0);
 
     const parseIso = (value: string): Date | undefined => {
-        const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
+        const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value.trim());
         if (!m) return undefined;
 
         const y = Number(m[1]);
@@ -108,6 +111,12 @@ const RangeDatePicker = ({ range, onChange, ...props }: RangeDatePickerProps) =>
     const computeError = (value: string) => {
         if (!value) return false;
         return !parseIso(value);
+    };
+
+    const weekdayLabel = (value: string) => {
+        const d = parseIso(value);
+        if (!d) return '';
+        return `(${weekdayKo(d)})`;
     };
 
     const commitRange = (next: DateRange | undefined) => {
@@ -311,9 +320,11 @@ const RangeDatePicker = ({ range, onChange, ...props }: RangeDatePickerProps) =>
         setToError(false);
     };
 
-    // ✅ headless select value
     const yearValue = String(currentMonth.getFullYear());
-    const monthValue = String(currentMonth.getMonth()); // 0~11
+    const monthValue = String(currentMonth.getMonth());
+
+    const fromWeekday = !fromError ? weekdayLabel(fromInput) : '';
+    const toWeekday = !toError ? weekdayLabel(toInput) : '';
 
     return (
         <div className={styles.Root}>
@@ -360,6 +371,13 @@ const RangeDatePicker = ({ range, onChange, ...props }: RangeDatePickerProps) =>
                                 }}
                                 placeholder="YYYY-MM-DD"
                             />
+
+                            {!!fromWeekday && (
+                                <span className={styles.WeekdaySuffix} aria-hidden="true">
+                                    {fromWeekday}
+                                </span>
+                            )}
+
                             {fromError && (
                                 <span className={styles.WarningIcon} aria-hidden="true">
                                     <IoMdWarning />
@@ -393,6 +411,13 @@ const RangeDatePicker = ({ range, onChange, ...props }: RangeDatePickerProps) =>
                                 }}
                                 placeholder="YYYY-MM-DD"
                             />
+
+                            {!!toWeekday && (
+                                <span className={styles.WeekdaySuffix} aria-hidden="true">
+                                    {toWeekday}
+                                </span>
+                            )}
+
                             {toError && (
                                 <span className={styles.WarningIcon} aria-hidden="true">
                                     <IoMdWarning />
@@ -407,9 +432,7 @@ const RangeDatePicker = ({ range, onChange, ...props }: RangeDatePickerProps) =>
                         <IoCaretBackSharp className={styles.NavIcon} />
                     </button>
 
-                    {/* ✅ 커스텀 Headless Year/Month Select */}
                     <div className={styles.SelectGroup}>
-                        {/* YEAR */}
                         <Dropdown>
                             <Select value={yearValue} onChange={(v) => handleYearChange(Number(v))}>
                                 <Dropdown.Trigger className={styles.SelectTrigger} role="button" tabIndex={0}>
@@ -428,7 +451,6 @@ const RangeDatePicker = ({ range, onChange, ...props }: RangeDatePickerProps) =>
                             </Select>
                         </Dropdown>
 
-                        {/* MONTH */}
                         <Dropdown>
                             <Select value={monthValue} onChange={(v) => handleMonthChange(Number(v))}>
                                 <Dropdown.Trigger className={styles.SelectTrigger} role="button" tabIndex={0}>

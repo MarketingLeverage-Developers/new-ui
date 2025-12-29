@@ -35,7 +35,11 @@
 }
 
 .PresetItem {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     border: none;
+    width: 100%;
     background: transparent;
     text-align: left;
     padding: 10px 12px;
@@ -47,6 +51,9 @@
 
 /* 우측 월 Item */
 .MonthItem {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     border: none;
     background: transparent;
     cursor: pointer;
@@ -90,27 +97,43 @@
     color: var(--Gray2);
 }
 
-.InputBox {
-    width: 159px;
-    height: 44px;
-    border-radius: 8px;
-    border: 1px solid var(--Gray5);
-    background: var(--White1);
-    color: var(--Black1);
-    font-size: 15px;
-    font-weight: 400;
-    text-align: center;
-    outline: none;
-    padding-right: 32px;
-}
-
 .InputWrap {
     position: relative;
     width: 159px;
-}
+    .InputBox {
+        width: 159px;
+        height: 44px;
+        border-radius: 8px;
+        border: 1px solid var(--Gray5);
+        background: var(--White1);
+        color: var(--Black1);
+        font-size: 15px;
+        font-weight: 400;
+        text-align: center;
+        outline: none;
+        padding-right: 32px;
 
-.InputError {
-    border-color: var(--Red1);
+        &.InputBox:focus {
+            border: 1px solid var(--Primary1);
+        }
+    }
+
+    .InputError {
+        border-color: var(--Red1);
+    }
+
+    .WeekdaySuffix {
+        position: absolute;
+        right: 30px;
+        top: 50%;
+        transform: translateY(-50%);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--Black1);
+        font-size: 15px;
+        pointer-events: none;
+    }
 }
 
 .WarningIcon {
