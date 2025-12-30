@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom';
 import classNames from 'classnames';
 import { FaCheck } from 'react-icons/fa';
 import { useColumnVisibilityControl } from '@/shared/headless/AirTable/hooks/useColumnVisibilityControl';
-import styles from './ColumnVisibilityControls.module.scss';
+import styles from './ColumnvisibilityControls.module.scss';
 import BaseButton from '@/shared/primitives/BaseButton/BaseButton';
 import { getThemeColor } from '@/shared/utils/css/getThemeColor';
 import Flex from '@/shared/primitives/Flex/Flex';
