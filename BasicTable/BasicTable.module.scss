@@ -1,18 +1,21 @@
 .root {
     width: 100%;
+
+    // display: flex;
+    // flex-direction: column;
 }
 
 /* ✅ header + body를 column으로 쌓고, body만 스크롤로 만들기 */
 .container {
     width: 100%;
-    flex: 1;
-    min-height: 0; /* ✅ body 스크롤의 핵심 */
-    display: flex;
-    flex-direction: column;
+    // flex: 1;
+    // min-height: 0; /* ✅ body 스크롤의 핵심 */
+    // display: flex;
+    // flex-direction: column;
 }
 
 .header {
-    flex: 0 0 auto;
+    // flex: 0 0 auto;
     background-color: var(--Gray6);
 }
 
@@ -26,16 +29,16 @@
     justify-content: center;
     user-select: none;
 
-    &:first-child {
-        justify-content: flex-start;
-        padding-left: 18px;
-    }
+    // &:first-child {
+    //     justify-content: flex-start;
+    //     padding-left: 18px;
+    // }
 }
 
 /* ✅ Body가 “남은 공간을 먹고” 그 안에서만 스크롤 */
 .body {
-    min-height: 0; /* ✅ 줄어들 수 있어야 overflow가 걸림 */
-    overflow: auto;
+    // min-height: 0; /* ✅ 줄어들 수 있어야 overflow가 걸림 */
+    // overflow: auto;
     max-height: var(--basic-table-body-max-height);
 
     /* Firefox fallback (버튼은 없음) */

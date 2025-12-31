@@ -1,4 +1,3 @@
-// src/shared/primitives/BasicTable/BasicTable.tsx
 import React, { useMemo } from 'react';
 import AirTable from '@/shared/headless/AirTable/AirTable';
 import styles from './BasicTable.module.scss';
@@ -16,20 +15,18 @@ export const BasicTable = <T,>({
     maxBodyHeight,
     fullHeight = false,
     showGhost = true,
+    style, // ✅ props에서 style을 꺼냅니다.
     ...props
 }: BasicTableProps<T>) => {
     const bodyStyle = useMemo(() => {
         if (!maxBodyHeight) return undefined;
-
         return {
             '--basic-table-body-max-height': `${maxBodyHeight}px`,
         } as React.CSSProperties;
     }, [maxBodyHeight]);
 
     return (
-        <AirTable {...props} style={{ display: 'flex', height: '100%' }}>
-            {/* ✅✅✅ 여기 추가: AirTable Context 안에서 렌더해야 portal로 쏠 수 있음 */}
-
+        <AirTable {...props}>
             <ColumnVisibilityControls<T> portalId="column-select-box-portal" />
 
             <AirTable.Container className={classNames(styles.container, fullHeight && styles.fullHeight)}>
