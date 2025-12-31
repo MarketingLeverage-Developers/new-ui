@@ -5,15 +5,14 @@ import ManySelect, { useManySelect } from '@/shared/headless/ManySelect/ManySele
 import { FaCheck } from 'react-icons/fa';
 import classNames from 'classnames';
 import { useQuerySearch } from '@/shared/headless/QuerySearch/QuerySearch';
-import type { SelectItem } from '../../SearchManySelect';
 import { useHangulSearch } from '@/shared/hooks/client/useHangulSearch';
 
-const Select = () => {
+const Select = ({ isDesc = false }: { isDesc?: boolean }) => {
     const { open, isOpen } = useDropdown();
-    const { query, data } = useQuerySearch<SelectItem>();
+    const { query, data } = useQuerySearch<any>();
     const { isChecked, toggleManySelectValue } = useManySelect();
 
-    const { filtered } = useHangulSearch<SelectItem>(data, query, (it) => String(it.label ?? ''));
+    const { filtered } = useHangulSearch<any>(data, query, (it) => String(it.label ?? ''));
 
     const uniqueFiltered = useMemo(() => {
         const seen = new Set<string>();
@@ -46,7 +45,10 @@ const Select = () => {
                                 <div className={checkBoxClassName(item.uuid)}>
                                     {isChecked(item.uuid) && <FaCheck />}
                                 </div>
-                                <span>{item.label}</span>
+                                <div className={styles.Text}>
+                                    <span className={styles.label}>{item.label}</span>{' '}
+                                    {isDesc && <span className={styles.description}>{item.description}</span>}
+                                </div>
                             </div>
                         </ManySelect.Item>
                     ))}

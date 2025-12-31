@@ -62,5 +62,26 @@
                 color: var(--White1);
             }
         }
+
+        .Text {
+            display: flex;
+            gap: 5px;
+            min-width: 0;
+
+            .label {
+                white-space: nowrap;
+                flex-shrink: 0;
+            }
+
+            .description {
+                color: var(--Gray3);
+                flex: 1;
+                min-width: 0;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                color: var(--Gray3);
+            }
+        }
     }
 }

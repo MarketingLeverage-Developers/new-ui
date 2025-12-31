@@ -3,10 +3,9 @@ import styles from './Selected.module.scss';
 import { useManySelect } from '@/shared/headless/ManySelect/ManySelect';
 import { MdCancel } from 'react-icons/md';
 import { useQuerySearch } from '@/shared/headless/QuerySearch/QuerySearch';
-import type { SelectItem } from '../../SearchManySelect';
 
 const Selected = () => {
-    const { label, data } = useQuerySearch<SelectItem>();
+    const { label, data } = useQuerySearch<any>();
     const { manySelectValue, toggleManySelectValue } = useManySelect();
 
     const labelMap = useMemo(() => {

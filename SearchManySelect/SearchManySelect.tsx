@@ -7,32 +7,31 @@ import ManySelect from '@/shared/headless/ManySelect/ManySelect';
 import Selected from './components/Selected/Selected';
 import { QuerySearch } from '@/shared/headless/QuerySearch/QuerySearch';
 
-export type SelectItem = {
-    label: string;
-    uuid: string;
-};
+export type SelectItem = { label: string; uuid: string };
 
-type SearchManySelectProps = {
+type SearchManySelectProps<T> = {
     children: React.ReactNode;
     label: string;
-    data: SelectItem[];
+    data: T[];
 };
 
-export const SearchManySelect = ({ children, label, data }: SearchManySelectProps) => (
-    // const [query, setQuery] = useState('');
-    // const value = React.useMemo(() => ({ query, setQuery, label, data }), [query, label, data]);
+type SearchManySelectComponent = (<T = SelectItem>(props: SearchManySelectProps<T>) => React.ReactElement) & {
+    Selected: typeof Selected;
+    Input: typeof SearchInput;
+    Select: typeof Select;
+};
 
+export const SearchManySelect = (({ children, label, data }) => (
     <div className={styles.SearchManySelect}>
-        {/* <span className={styles.Title}>{label} 설정</span> */}
         <ManySelect>
             <Dropdown>
-                <QuerySearch<SelectItem> label={label} data={data}>
+                <QuerySearch label={label} data={data}>
                     {children}
                 </QuerySearch>
             </Dropdown>
         </ManySelect>
     </div>
-);
+)) as SearchManySelectComponent;
 
 SearchManySelect.Selected = Selected;
 SearchManySelect.Input = SearchInput;
