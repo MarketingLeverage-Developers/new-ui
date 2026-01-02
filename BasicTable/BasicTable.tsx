@@ -10,11 +10,7 @@ type BasicTableProps<T> = React.ComponentProps<typeof AirTable<T>> & {
     maxBodyHeight?: number;
     fullHeight?: boolean;
     showGhost?: boolean;
-
-    /** ✅ 컬럼 숨김/보이기 UI 표시 여부 */
     showColumnVisibilityControls?: boolean;
-
-    /** ✅ 추가: 헤더 표시 여부 */
     showHeader?: boolean;
 };
 
@@ -22,8 +18,8 @@ export const BasicTable = <T,>({
     maxBodyHeight,
     fullHeight = false,
     showGhost = true,
-    showColumnVisibilityControls = true, // ✅ 기본값 true (기존 유지)
-    showHeader = true, // ✅ 기본값 true (기존 유지)
+    showColumnVisibilityControls = true,
+    showHeader = true,
     style,
     ...props
 }: BasicTableProps<T>) => {
@@ -36,11 +32,9 @@ export const BasicTable = <T,>({
 
     return (
         <AirTable {...props}>
-            {/* ✅ 필요할 때만 렌더 */}
             {showColumnVisibilityControls && <ColumnVisibilityControls<T> portalId="column-select-box-portal" />}
 
             <AirTable.Container className={classNames(styles.container, fullHeight && styles.fullHeight)}>
-                {/* ✅✅✅ 헤더도 옵션으로 숨길 수 있게 */}
                 {showHeader && <AirTable.Header className={styles.header} headerCellClassName={styles.headerCell} />}
 
                 <AirTable.Body
@@ -49,6 +43,8 @@ export const BasicTable = <T,>({
                     rowClassName={styles.row}
                     cellClassName={styles.cell}
                     selectedCellClassName={styles.selected}
+                    detailRowClassName={styles.detailRow}
+                    detailCellClassName={styles.detailCell}
                 />
 
                 {showGhost && <AirTable.Ghost className={styles.ghost} />}
