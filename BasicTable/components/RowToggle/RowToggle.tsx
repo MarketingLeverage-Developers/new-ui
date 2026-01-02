@@ -5,6 +5,10 @@ import type { CellRenderMeta } from '@/shared/headless/AirTable/AirTable';
 
 export type RowToggleProps<T> = {
     meta: CellRenderMeta<T>;
+
+    /** ✅ rowKey는 optional (기존 코드 호환) */
+    rowKey?: string;
+
     onToggle?: () => void;
     className?: string;
     style?: React.CSSProperties;
@@ -12,8 +16,19 @@ export type RowToggleProps<T> = {
     disabled?: boolean;
 };
 
-const RowToggle = <T,>({ meta, onToggle, className, style, size = 16, disabled = false }: RowToggleProps<T>) => {
-    const isOpen = useMemo(() => meta.isRowExpanded(meta.rowKey), [meta]);
+const RowToggle = <T,>({
+    meta,
+    rowKey,
+    onToggle,
+    className,
+    style,
+    size = 16,
+    disabled = false,
+}: RowToggleProps<T>) => {
+    // ✅ rowKey가 없으면 meta.rowKey로 fallback
+    const targetRowKey = rowKey ?? meta.rowKey;
+
+    const isOpen = useMemo(() => meta.isRowExpanded(targetRowKey), [meta, targetRowKey]);
 
     return (
         <button
@@ -23,7 +38,6 @@ const RowToggle = <T,>({ meta, onToggle, className, style, size = 16, disabled =
             aria-expanded={isOpen}
             aria-disabled={disabled}
             disabled={disabled}
-            // ✅ 셀의 onMouseDown(선택/토글)과 충돌 방지
             onMouseDown={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
@@ -33,7 +47,7 @@ const RowToggle = <T,>({ meta, onToggle, className, style, size = 16, disabled =
                 e.stopPropagation();
                 if (disabled) return;
 
-                meta.toggleRowExpanded(meta.rowKey);
+                meta.toggleRowExpanded(targetRowKey);
                 onToggle?.();
             }}
         >
