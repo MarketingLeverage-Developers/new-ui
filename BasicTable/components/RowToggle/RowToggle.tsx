@@ -16,7 +16,7 @@ export type RowToggleProps<T> = {
     disabled?: boolean;
 };
 
-const RowToggle = <T,>({
+const RowToggleComponent = <T,>({
     meta,
     rowKey,
     onToggle,
@@ -59,5 +59,8 @@ const RowToggle = <T,>({
         </button>
     );
 };
+
+/** ✅✅✅ 핵심: 제네릭 컴포넌트 타입을 명시해서 TS 추론 꼬임 방지 */
+const RowToggle: <T>(props: RowToggleProps<T>) => React.ReactElement = RowToggleComponent;
 
 export default RowToggle;
