@@ -45,6 +45,8 @@
         }
 
         .CheckBox {
+            flex: 0 0 20px;
+            flex-shrink: 0;
             width: 20px;
             height: 20px;
             border-radius: 3px;
@@ -64,6 +66,8 @@
         }
 
         .Text {
+            flex: 1;
+            min-width: 0;
             display: flex;
             gap: 5px;
             min-width: 0;

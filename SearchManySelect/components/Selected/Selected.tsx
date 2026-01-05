@@ -18,7 +18,7 @@ const Selected = () => {
         <div className={styles.Selected}>
             {label && <span className={styles.Label}>선택된 {label}</span>}
             {manySelectValue.map((item, idx) => (
-                <div className={styles.Item} key={idx}>
+                <div className={styles.Item} key={`${item}-${idx}`}>
                     <span>{labelMap.get(item)}</span>
                     <MdCancel style={{ cursor: 'pointer' }} onClick={() => toggleManySelectValue(item)} />
                 </div>
