@@ -44,8 +44,8 @@
     text-align: left;
     padding: 10px 12px;
     cursor: pointer;
-
     font-size: 15px;
+    font-weight: 400;
     color: var(--Gray1);
 }
 
@@ -60,6 +60,7 @@
     text-align: left;
     padding: 10px 12px;
     font-size: 15px;
+    font-weight: 400;
     color: var(--Gray1);
 }
 
@@ -89,11 +90,11 @@
 .InputBlock {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 8px;
 }
 
 .InputLabel {
-    font-size: 13px;
+    font-size: 15px;
     color: var(--Gray2);
 }
 
@@ -154,15 +155,16 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 21px;
+    gap: 46px;
     height: 58px;
+    padding: 20px 8px 14px;
 }
 
 .NavButton {
     border: none;
     background: transparent;
     cursor: pointer;
-    padding: 6px;
+    padding: 8px 9px;
     border-radius: 4px;
     display: flex;
     align-items: center;
@@ -174,37 +176,57 @@
 }
 
 .NavIcon {
-    font-size: 18px;
+    // font-size: 18px;
+    svg {
+        width: 8px;
+        height: 4px;
+    }
     color: var(--Gray1);
 }
 
-/* ✅ 기존 SelectWrapper/Select는 네이티브 select용이라 이제 필요 없음 */
-/* ✅ Headless Select + Dropdown 스타일 */
 .SelectGroup {
     display: flex;
     justify-content: center;
     gap: 21px;
-}
+    height: 32px;
 
-.SelectTrigger {
-    height: 36px;
-    width: 92px;
-    padding: 8px 32px 8px 12px;
-    border-radius: 4px;
-    background: var(--White1);
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    position: relative;
-    user-select: none;
+    .SelectTrigger {
+        width: 91px;
+        padding: 8px 32px 8px 12px;
+        border-radius: 4px;
+        background: var(--White1);
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        position: relative;
+        user-select: none;
+        border: none;
 
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--Black1);
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--Black1);
 
-    &:hover {
-        background: var(--Gray6);
+        &:hover {
+            background: var(--Gray6);
+        }
+    }
+
+    .InlineSelectWrap {
+        position: relative;
+    }
+
+    .SelectMenuInline {
+        position: absolute;
+        top: calc(100% + 6px);
+        left: 0;
+        width: 100%;
+        background: var(--White1);
+        border: 1px solid var(--Gray5);
+        // border-radius: 8px;
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+        padding: 6px 0;
+        z-index: 2;
     }
 }
 
@@ -232,6 +254,8 @@
 .SelectMenuInner {
     max-height: 220px;
     overflow: auto;
+    display: flex;
+    flex-direction: column;
 
     &::-webkit-scrollbar {
         width: 0px;
@@ -243,6 +267,7 @@
     cursor: pointer;
     font-size: 13px;
     color: var(--Black1);
+    border: none;
 
     &:hover {
         background: var(--Gray6);
@@ -254,9 +279,9 @@
     font-weight: 600;
 }
 
-.CalendarBody {
-    padding: 4px 0;
-}
+// .CalendarBody {
+//     padding: 4px 0;
+// }
 
 /* 하단 버튼 (현재 코드에선 안 쓰는 듯 하지만 기존 유지) */
 .BottomBar {
@@ -296,6 +321,7 @@
     .rdp {
         --rdp-cell-size: 26px;
     }
+
     .rdp-month {
         display: flex;
         justify-content: center;
@@ -315,7 +341,7 @@
     .rdp-month_grid {
         border-spacing: 0;
         width: 100%;
-        padding: 12px;
+        padding: 0px 8px;
     }
 
     .rdp-weekday {
@@ -336,8 +362,12 @@
 
     .rdp-day {
         text-align: center;
-        width: 35px;
-        height: 35px;
+        width: 30px;
+        height: 30px;
+
+        /* ✅ 뎁스용: 배경(pill) 깔 수 있게 */
+        position: relative;
+        overflow: visible;
 
         .rdp-day_button {
             width: 100%;
@@ -346,55 +376,90 @@
             border: none;
             border-radius: 0;
             color: var(--Gray1);
-            background-color: inherit;
+            background-color: transparent; /* ✅ td 배경이 보이게 */
             font-size: 15px;
             font-weight: 400;
+
+            /* ✅ 숫자 레이어를 위로 */
+            position: relative;
+            z-index: 2;
         }
 
         &.rdp-outside .rdp-day_button {
             color: var(--Gray4);
         }
 
+        /* ✅ range 배경(pill)은 td(.rdp-day)에 깔아야 자연스럽게 이어짐 */
+        &.rdp-selected {
+            background-color: var(--Primary1);
+        }
+
+        &.rdp-selected .rdp-day_button {
+            color: var(--White1);
+        }
+
+        /* ✅ 가운데는 그냥 사각으로 이어지는 배경 */
+        &.rdp-selected:not(.rdp-range_start):not(.rdp-range_end) {
+            border-radius: 0;
+        }
+
+        /* ✅ td 자체를 pill 모양으로(좌/우 캡) */
+        &.rdp-selected.rdp-range_start {
+            border-radius: 999px 0 0 999px;
+        }
+        &.rdp-selected.rdp-range_end {
+            border-radius: 0 999px 999px 0;
+        }
+
+        /* ✅ 하루만 선택(시작=끝)은 전체 pill */
+        &.rdp-selected.rdp-range_start.rdp-range_end {
+            border-radius: 999px;
+        }
+
+        /* ✅ start/end "원" 강조는 버튼에 따로 올림 (뎁스 3) */
         &.rdp-range_start .rdp-day_button,
         &.rdp-range_end .rdp-day_button {
             background-color: var(--Primary1);
             color: var(--White1);
-            border-radius: 45%;
+            border-radius: 999px;
+
+            /* 살짝 떠있는 느낌(선택) */
+            // box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
+            z-index: 3;
         }
 
-        &.rdp-day.rdp-selected.rdp-range_start {
-            background-color: var(--Primary1);
-            border-radius: 45% 0 0 45%;
-        }
-
-        &.rdp-day.rdp-selected.rdp-range_end {
-            background-color: var(--Primary1);
-            border-radius: 0 45% 45% 0;
-        }
-
-        &.rdp-selected:not(.rdp-range_start):not(.rdp-range_end) .rdp-day_button {
-            background-color: var(--Primary1);
-            color: var(--White1);
-            border-radius: 0;
-        }
-
+        /* ✅ 오늘 (선택 X) */
         &.rdp-today:not(.rdp-selected) .rdp-day_button {
             background-color: var(--Primary1);
             color: var(--White1);
+            border-radius: 999px;
         }
-    }
 
-    .rdp-day.rdp-range_start::before {
-        left: 50%;
-        right: -2px;
-        border-top-right-radius: 999px;
-        border-bottom-right-radius: 999px;
-    }
+        /* ✅ 네가 이미 써둔 ::before를 "진짜" pill 연결 배경으로 사용 */
+        &.rdp-range_start::before,
+        &.rdp-range_end::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            background: var(--Primary1);
+            z-index: 1;
+        }
 
-    .rdp-day.rdp-range_end::before {
-        left: -2px;
-        right: 50%;
-        border-top-left-radius: 999px;
-        border-bottom-left-radius: 999px;
+        /* start 셀의 오른쪽 절반 연결 */
+        &.rdp-range_start::before {
+            left: 50%;
+            right: 0;
+            border-top-right-radius: 999px;
+            border-bottom-right-radius: 999px;
+        }
+
+        /* end 셀의 왼쪽 절반 연결 */
+        &.rdp-range_end::before {
+            left: 0;
+            right: 50%;
+            border-top-left-radius: 999px;
+            border-bottom-left-radius: 999px;
+        }
     }
 }

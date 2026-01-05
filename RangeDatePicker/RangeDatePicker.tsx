@@ -1,12 +1,12 @@
 // RangeDatePicker.tsx
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import styles from './RageDatePicker.module.scss';
 import { DayPicker, type DateRange, type DayPickerProps } from 'react-day-picker';
 import { ko } from 'react-day-picker/locale';
 import { IoIosArrowDown, IoMdWarning } from 'react-icons/io';
 import { IoCaretBackSharp, IoCaretForwardSharp } from 'react-icons/io5';
 
-import Dropdown, { useDropdown } from '@/shared/headless/Dropdown/Dropdown';
+import { useDropdown } from '@/shared/headless/Dropdown/Dropdown';
 import Select from '@/shared/headless/Select/Select';
 
 type PresetKey =
@@ -326,6 +326,29 @@ const RangeDatePicker = ({ range, onChange, ...props }: RangeDatePickerProps) =>
     const fromWeekday = !fromError ? weekdayLabel(fromInput) : '';
     const toWeekday = !toError ? weekdayLabel(toInput) : '';
 
+    const [isYearOpen, setIsYearOpen] = useState(false);
+    const [isMonthOpen, setIsMonthOpen] = useState(false);
+
+    const yearWrapRef = useRef<HTMLDivElement | null>(null);
+    const monthWrapRef = useRef<HTMLDivElement | null>(null);
+
+    // 바깥 클릭 시 닫기
+    useEffect(() => {
+        const onPointerDown = (e: PointerEvent) => {
+            const t = e.target as Node | null;
+            if (!t) return;
+
+            if (yearWrapRef.current?.contains(t)) return;
+            if (monthWrapRef.current?.contains(t)) return;
+
+            setIsYearOpen(false);
+            setIsMonthOpen(false);
+        };
+
+        window.addEventListener('pointerdown', onPointerDown, { capture: true });
+        return () => window.removeEventListener('pointerdown', onPointerDown, true);
+    }, []);
+
     return (
         <div className={styles.Root}>
             <aside className={styles.LeftPreset}>
@@ -433,44 +456,79 @@ const RangeDatePicker = ({ range, onChange, ...props }: RangeDatePickerProps) =>
                     </button>
 
                     <div className={styles.SelectGroup}>
-                        <Dropdown>
-                            <Select value={yearValue} onChange={(v) => handleYearChange(Number(v))}>
-                                <Dropdown.Trigger className={styles.SelectTrigger} role="button" tabIndex={0}>
-                                    <Select.Display className={styles.SelectLabel} render={(v) => <span>{v}</span>} />
-                                    <IoIosArrowDown className={styles.Arrow} />
-                                </Dropdown.Trigger>
+                        {/* Year - 인라인 메뉴(포탈 X) */}
+                        <div className={styles.InlineSelectWrap} ref={yearWrapRef}>
+                            <button
+                                type="button"
+                                className={styles.SelectTrigger}
+                                onClick={() => {
+                                    setIsYearOpen((v) => !v);
+                                    setIsMonthOpen(false);
+                                }}
+                            >
+                                <span className={styles.SelectLabel}>{yearValue}</span>
+                                <IoIosArrowDown className={styles.Arrow} />
+                            </button>
 
-                                <Dropdown.Content
-                                    className={styles.SelectMenu}
-                                    placement="bottom-start"
-                                    offset={6}
-                                    matchTriggerWidth
-                                >
-                                    <YearMenu years={years} activeValue={yearValue} />
-                                </Dropdown.Content>
-                            </Select>
-                        </Dropdown>
+                            {isYearOpen && (
+                                <div className={styles.SelectMenuInline} role="menu">
+                                    <div className={styles.SelectMenuInner}>
+                                        {years.map((y) => (
+                                            <button
+                                                key={y}
+                                                type="button"
+                                                className={`${styles.SelectItem} ${
+                                                    String(y) === yearValue ? styles.SelectItemActive : ''
+                                                }`}
+                                                onClick={() => {
+                                                    handleYearChange(y);
+                                                    setIsYearOpen(false);
+                                                }}
+                                            >
+                                                {y}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
 
-                        <Dropdown>
-                            <Select value={monthValue} onChange={(v) => handleMonthChange(Number(v))}>
-                                <Dropdown.Trigger className={styles.SelectTrigger} role="button" tabIndex={0}>
-                                    <Select.Display
-                                        className={styles.SelectLabel}
-                                        render={(v) => <span>{Number(v) + 1}월</span>}
-                                    />
-                                    <IoIosArrowDown className={styles.Arrow} />
-                                </Dropdown.Trigger>
+                        {/* Month - 인라인 메뉴(포탈 X) */}
+                        <div className={styles.InlineSelectWrap} ref={monthWrapRef}>
+                            <button
+                                type="button"
+                                className={styles.SelectTrigger}
+                                onClick={() => {
+                                    setIsMonthOpen((v) => !v);
+                                    setIsYearOpen(false);
+                                }}
+                            >
+                                <span className={styles.SelectLabel}>{Number(monthValue) + 1}월</span>
+                                <IoIosArrowDown className={styles.Arrow} />
+                            </button>
 
-                                <Dropdown.Content
-                                    className={styles.SelectMenu}
-                                    placement="bottom-start"
-                                    offset={6}
-                                    matchTriggerWidth
-                                >
-                                    <MonthMenu months={months} activeValue={monthValue} />
-                                </Dropdown.Content>
-                            </Select>
-                        </Dropdown>
+                            {isMonthOpen && (
+                                <div className={styles.SelectMenuInline} role="menu">
+                                    <div className={styles.SelectMenuInner}>
+                                        {months.map((m) => (
+                                            <button
+                                                key={m}
+                                                type="button"
+                                                className={`${styles.SelectItem} ${
+                                                    String(m) === monthValue ? styles.SelectItemActive : ''
+                                                }`}
+                                                onClick={() => {
+                                                    handleMonthChange(m);
+                                                    setIsMonthOpen(false);
+                                                }}
+                                            >
+                                                {m + 1}월
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
                     </div>
 
                     <button type="button" className={styles.NavButton} onClick={handleNextMonth}>
