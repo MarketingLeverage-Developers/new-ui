@@ -5,6 +5,7 @@ import RowToggle from './components/RowToggle/RowToggle';
 import classNames from 'classnames';
 import { ColumnVisibilityControls } from './components/ColumnVisibilityControls/ColumnVisibilityControls';
 import { Content } from './components/Content/Content';
+import Flex from '../Flex/Flex';
 
 type BasicTableProps<T> = React.ComponentProps<typeof AirTable<T>> & {
     height?: number;
@@ -29,7 +30,9 @@ export const BasicTable = <T,>({
     // };
 
     <AirTable {...props}>
-        {showColumnVisibilityControls && <ColumnVisibilityControls<T> portalId="column-select-box-portal" />}
+        <Flex justify="end" margin={{ b: 20 }}>
+            {showColumnVisibilityControls && <ColumnVisibilityControls<T> />}
+        </Flex>
 
         <AirTable.Container height={height} className={classNames(styles.container)}>
             {showHeader && <AirTable.Header className={styles.header} headerCellClassName={styles.headerCell} />}
