@@ -1,3 +1,4 @@
+// src/shared/primitives/BasicTable/BasicTable.tsx
 import React from 'react';
 import AirTable from '@/shared/headless/AirTable/AirTable';
 import styles from './BasicTable.module.scss';
@@ -9,27 +10,24 @@ import Flex from '../Flex/Flex';
 
 type BasicTableProps<T> = React.ComponentProps<typeof AirTable<T>> & {
     height?: number;
-    // fullHeight?: boolean;
     showGhost?: boolean;
     showColumnVisibilityControls?: boolean;
     showHeader?: boolean;
+
+    /** ✅✅✅ 추가 */
+    defaultExpandedRowKeys?: string[];
 };
 
 export const BasicTable = <T,>({
     height,
-    // fullHeight = false,
     showGhost = true,
     showColumnVisibilityControls = true,
     showHeader = true,
     style,
+    defaultExpandedRowKeys = [],
     ...props
 }: BasicTableProps<T>) => (
-    // const tableStyle: React.CSSProperties = {
-    //     ...style,
-    //     ...(height ? { height } : {}), // ✅✅✅ AirTable wrapper에도 적용
-    // };
-
-    <AirTable {...props}>
+    <AirTable {...props} defaultExpandedRowKeys={defaultExpandedRowKeys}>
         <Flex justify="end" margin={{ b: 20 }}>
             {showColumnVisibilityControls && <ColumnVisibilityControls<T> />}
         </Flex>
