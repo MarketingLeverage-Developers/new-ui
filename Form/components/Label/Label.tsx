@@ -9,6 +9,7 @@ type LabelProps = {
     type?: 'vertical' | 'horizontal';
     text: string;
     subText?: string;
+    subTextLink?: boolean;
     marginBottom?: CSSLength;
     gap?: CSSLength;
     required?: boolean;
@@ -21,6 +22,7 @@ export const Label = ({
     marginBottom = 0,
     gap = 8,
     required = false,
+    subTextLink = false,
     ...props
 }: LabelProps) => {
     const cssVariables: CSSVariables = {
@@ -40,7 +42,13 @@ export const Label = ({
                     {text}
                     {required && <span className={styles.Required}>*</span>}
                 </span>
-                <span className={styles.SubText}>{subText}</span>
+                {subText && subTextLink ? (
+                    <a className={styles.SubText} href={subText} target="_blank">
+                        {subText}
+                    </a>
+                ) : (
+                    <span className={styles.SubText}>{subText}</span>
+                )}
             </div>
 
             {props.children}
