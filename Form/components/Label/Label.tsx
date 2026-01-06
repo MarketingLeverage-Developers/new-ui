@@ -9,9 +9,10 @@ type LabelProps = {
     subText?: string;
     marginBottom?: CSSLength;
     gap?: CSSLength;
+    icon?: React.ReactNode;
 } & React.HTMLAttributes<HTMLDivElement>;
 
-export const Label = ({ text, subText, marginBottom = 0, gap = 8, ...props }: LabelProps) => {
+export const Label = ({ text, subText, marginBottom = 0, gap = 8, icon, ...props }: LabelProps) => {
     const cssVariables: CSSVariables = {
         '--margin-bottom': toCssUnit(marginBottom),
         '--gap': toCssUnit(gap),
@@ -19,9 +20,12 @@ export const Label = ({ text, subText, marginBottom = 0, gap = 8, ...props }: La
 
     return (
         <div {...props} className={styles.Label} style={{ ...cssVariables }}>
-            <div className={styles.TextWrapper}>
-                <span className={styles.Text}>{text}</span>
-                <span className={styles.SubText}>{subText}</span>
+            <div className={styles.IconWrapper}>
+                {icon && icon}
+                <div className={styles.TextWrapper}>
+                    <span className={styles.Text}>{text}</span>
+                    <span className={styles.SubText}>{subText}</span>
+                </div>
             </div>
 
             {props.children}
