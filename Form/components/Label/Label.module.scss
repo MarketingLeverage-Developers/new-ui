@@ -1,21 +1,30 @@
 .Label {
     display: flex;
-    flex-direction: column;
 
-    .IconWrapper {
-        display: flex;
+    &.Vertical {
+        flex-direction: column;
+    }
+    &.Horizontal {
+        flex-direction: row;
         align-items: center;
-        gap: 10px;
+        justify-content: space-between;
+    }
 
-        .TextWrapper {
-            display: flex;
-            flex-direction: column;
-            // gap: 2px;
-            .Text {
-                font-size: 15px;
-                font-weight: 500;
-                color: var(--Gray1);
-            }
+    .TextWrapper {
+        display: flex;
+        flex-direction: column;
+        // gap: 2px;
+        .Text {
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--Gray1);
+        }
+
+        .Required {
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--Red1);
+        }
 
             .SubText {
                 color: var(--Gray2);

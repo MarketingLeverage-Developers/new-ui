@@ -9,6 +9,7 @@ type TimerInputProps = {
     duration?: number;
     onExpire?: () => void;
     confirmed?: boolean;
+    setIsAvailableCode?: React.Dispatch<React.SetStateAction<boolean>>;
 } & ComponentProps<typeof RoundedInput>;
 
 const clamp = (n: number, min = 0) => (n < min ? min : n);
@@ -20,49 +21,87 @@ const formatMMSS = (msLeft: number) => {
     return `${m}:${s.toString().padStart(2, '0')}`;
 };
 
-const TimerInput = ({ startTime, duration = 180, onExpire, confirmed, ...props }: TimerInputProps) => {
+const TimerInput = ({
+    startTime,
+    duration = 180,
+    onExpire,
+    confirmed,
+    setIsAvailableCode,
+    ...props
+}: TimerInputProps) => {
     const now = Date.now();
     const start = startTime ?? now;
     const end = start + duration * 1000;
+
     const [msLeft, setMsLeft] = useState<number>(Math.max(end - now, 0));
     const expiredRef = useRef(false);
-    const rafRef = useRef<number | null>(null);
     const intervalRef = useRef<number | null>(null);
 
-    // 표시 문자열
     const display = useMemo(() => formatMMSS(msLeft), [msLeft]);
 
-    // end/start가 바뀌면 즉시 리셋
+    // startTime 기반 활성/비활성 제어
+    useEffect(() => {
+        // startTime이 없으면 비활성
+        if (!startTime) {
+            setIsAvailableCode?.(false);
+            return;
+        }
+
+        // confirmed면 비활성 (이미 완료)
+        if (confirmed) {
+            setIsAvailableCode?.(false);
+            return;
+        }
+
+        // startTime이 있고 confirmed가 아니면 기본 활성
+        setIsAvailableCode?.(true);
+    }, [startTime, confirmed, setIsAvailableCode]);
+
+    // end/start가 바뀌면 리셋 + 활성화
     useEffect(() => {
         expiredRef.current = false;
-        setMsLeft(Math.max(end - Date.now(), 0));
-    }, [start, end]);
 
-    // 1초 간격으로 now 기반 계산(드리프트 방지)
+        const left = Math.max(end - Date.now(), 0);
+        setMsLeft(left);
+
+        if (startTime && !confirmed) {
+            setIsAvailableCode?.(left > 0);
+        }
+    }, [startTime, end, confirmed, setIsAvailableCode]);
+
     useEffect(() => {
-        if (confirmed) {
+        // 타이머 자체가 활성 조건이 아닐 경우 interval 생성 X
+        if (!startTime || confirmed) {
             if (intervalRef.current) {
                 clearInterval(intervalRef.current);
                 intervalRef.current = null;
             }
-            return; // 확인되면 새로 만들지 않음
+            return;
         }
 
         const tick = () => {
             const left = end - Date.now();
-            setMsLeft(left > 0 ? left : 0);
+            const next = left > 0 ? left : 0;
+
+            setMsLeft(next);
+
+            // ✅ 남은 시간 기준으로 isAvailableCode 업데이트
+            setIsAvailableCode?.(next > 0);
+
             if (left <= 0 && !expiredRef.current) {
                 expiredRef.current = true;
+                setIsAvailableCode?.(false);
                 onExpire?.();
             }
         };
+
         tick();
         intervalRef.current = window.setInterval(tick, 1000);
 
         return () => {
             if (intervalRef.current) clearInterval(intervalRef.current);
         };
-    }, [end, onExpire, confirmed]);
+    }, [end, onExpire, confirmed, startTime, setIsAvailableCode]);
 
     return (
         <div className={styles.TimerInput} style={{ ...props.style }}>

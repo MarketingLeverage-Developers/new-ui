@@ -1,33 +1,30 @@
-/* 기능: Main을 덮는 블러 레이어 */
 .BlurOverlay {
-    position: absolute;
+    position: fixed;
     inset: 0;
 
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
-    background-color: rgba(0, 0, 0, 0.3); // 필요 없으면 제거 가능
+    background-color: rgba(0, 0, 0, 0.3);
 
-    /* 항상 최상단으로 */
     z-index: var(--z-overlay, 10002);
     pointer-events: auto;
 }
 
 @media (prefers-color-scheme: light) {
     .BlurOverlay {
-        backdrop-filter: blur(6px); /* 다크 모드에서는 살짝 줄임 */
+        backdrop-filter: blur(6px);
         -webkit-backdrop-filter: blur(6px);
-        background-color: rgba(0, 0, 0, 0.5); /* 더 진하게 */
+        background-color: rgba(0, 0, 0, 0.5);
     }
 }
 
 @media (prefers-color-scheme: dark) {
     .BlurOverlay {
-        background-color: rgba(255, 255, 255, 0.3); /* 밝은 오버레이 */
+        background-color: rgba(255, 255, 255, 0.3);
     }
 }
 
 .Center {
-    /* 중앙 배치 */
     position: absolute;
     top: 50%;
     left: 50%;

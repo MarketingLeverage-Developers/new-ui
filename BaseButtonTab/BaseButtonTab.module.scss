@@ -1,0 +1,24 @@
+.BaseButtonWrapper {
+    display: flex;
+    width: 100%;
+    gap: 8px;
+}
+
+.Item {
+    height: 40px;
+    display: flex;
+    // flex: 1;
+    width: 130px;
+    align-items: center;
+    justify-content: center;
+    color: var(--Gray1);
+    background-color: var(--White1);
+    border: 1px solid var(--Gray5);
+    border-radius: 8px;
+    font-size: 15px;
+
+    &.Active {
+        background-color: var(--active-color, var(--Primary1));
+        color: var(--White1);
+    }
+}

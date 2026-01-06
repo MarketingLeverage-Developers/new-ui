@@ -1,0 +1,75 @@
+.Trigger {
+    width: 40px;
+    height: 40px;
+    background-color: var(--Gray5);
+    border-radius: 8px;
+    cursor: pointer;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.Content {
+    padding: 16px;
+    border-radius: 16px;
+    background-color: var(--White1);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    min-width: 220px;
+    max-height: 60%;
+    overflow-y: auto;
+    scrollbar-width: none;
+}
+
+.Item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 6px;
+    border-radius: 8px;
+    cursor: pointer;
+
+    &:hover {
+        background-color: var(--Gray6);
+    }
+}
+
+/* 체크박스 wrapper */
+.CheckboxWrapper {
+    width: 18px;
+    height: 18px;
+    aspect-ratio: 1/1;
+    // position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+
+    box-sizing: border-box;
+    background-color: var(--White1);
+    transition: all 0.15s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid var(--Gray5);
+
+    &.Checked {
+        background-color: var(--Primary1);
+        border-color: var(--Primary5);
+        border: 1px solid var(--Primary5);
+    }
+}
+
+/* 기본 체크박스 박스 */
+// .Checkbox {
+//     width: 18px;
+//     height: 18px;
+//     border-radius: 4px;
+//     border: 1px solid var(--Gray4);
+//     background-color: var(--White1);
+//     transition: all 0.15s ease;
+//     display: flex;
+//     align-items: center;
+//     justify-content: center;
+// }

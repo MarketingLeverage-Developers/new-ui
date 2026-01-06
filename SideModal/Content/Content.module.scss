@@ -1,0 +1,27 @@
+.SideModalContent {
+    position: fixed;
+    top: 0 !important;
+    right: 0 !important;
+    left: auto !important;
+
+    height: 100vh;
+    background: white;
+
+    width: 0;
+    min-width: 0;
+    overflow: hidden;
+
+    transform: translateX(0) translateY(0);
+
+    transition: width 0.3s ease, min-width 0.3s ease;
+}
+
+.Open {
+    width: 580px;
+    min-width: 580px;
+}
+
+.Closed {
+    width: 0;
+    min-width: 0;
+}

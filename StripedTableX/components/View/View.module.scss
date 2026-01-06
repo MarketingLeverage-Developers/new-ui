@@ -1,0 +1,7 @@
+.View {
+    border-collapse: separate; /* 중요: collapse면 radius 깨짐 */
+    border-spacing: 0; /* 셀 간격 제거 */
+
+    width: 100%;
+    table-layout: fixed;
+}

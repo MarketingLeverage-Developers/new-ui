@@ -16,6 +16,7 @@ import {
 } from './components';
 import styles from './StripedTable.module.scss';
 import DetailsRows from './components/DetailsRows/DetailsRows';
+import { ColumnSelectBox } from './components/ColumnSelectBox/ColumnSelectBox';
 
 type StripedTableComponent = {
     // 제네릭 Table 래퍼
@@ -34,6 +35,7 @@ type StripedTableComponent = {
     DetailsRows: typeof DetailsRows;
     Content: typeof Content;
     ScrollContainer: typeof ScrollContainer;
+    ColumnSelectBox: typeof ColumnSelectBox;
 };
 
 const StripedTable = (<T,>(props: React.ComponentProps<typeof Table<T>>) => (
@@ -54,5 +56,6 @@ StripedTable.Toggle = Toggle;
 StripedTable.Details = Table.Details;
 StripedTable.DetailsRows = DetailsRows;
 StripedTable.Content = Content;
+StripedTable.ColumnSelectBox = ColumnSelectBox;
 
 export default StripedTable;

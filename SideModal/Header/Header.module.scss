@@ -1,0 +1,14 @@
+.SideModalHeader {
+    display: flex;
+    justify-content: space-between;
+    box-sizing: border-box;
+    align-items: center;
+    padding: 16px 28px;
+    border-bottom: 1px solid #e2e2e2;
+}
+
+.SideModalTitle {
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 1;
+}

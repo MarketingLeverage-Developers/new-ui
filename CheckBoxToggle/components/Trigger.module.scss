@@ -17,4 +17,10 @@
         border: none;
         color: var(--White1);
     }
+
+    &.Disabled {
+        background-color: var(--Gray6);
+        border: none;
+        color: var(--White1);
+    }
 }

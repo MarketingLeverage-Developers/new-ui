@@ -21,6 +21,7 @@ type HeaderProps = {
     marginBottom?: CSSLength;
     fontSize?: CSSLength;
     noBorder?: boolean;
+    onClose?: () => void;
 } & Omit<React.HTMLAttributes<HTMLDivElement>, 'title'>;
 
 const Header = ({
@@ -38,6 +39,7 @@ const Header = ({
     marginBottom,
     fontSize = 24,
     noBorder = false,
+    onClose,
     ...props
 }: HeaderProps) => {
     const cssVariables: CSSVariables = {
@@ -59,6 +61,10 @@ const Header = ({
         [styles.NoBorder]: noBorder,
     });
 
+    const handleOnCloe = () => {
+        if (onClose) onClose();
+    };
+
     return (
         <div {...props} className={wrapperHeader} style={{ ...cssVariables, ...style }}>
             <div className={styles.TitleWrapper}>
@@ -67,7 +73,7 @@ const Header = ({
                     {typeof title === 'string' ? <span>{title}</span> : title}
                 </div>
             </div>
-            <BaseModalClose />
+            <BaseModalClose onClick={handleOnCloe} />
         </div>
     );
 };

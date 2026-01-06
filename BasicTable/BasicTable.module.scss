@@ -1,0 +1,164 @@
+.root {
+    width: 100%;
+
+    // display: flex;
+    // flex-direction: column;
+}
+
+/* ✅ header + body를 column으로 쌓고, body만 스크롤로 만들기 */
+.container {
+    width: 100%;
+    // flex: 1;
+    // min-height: 0; /* ✅ body 스크롤의 핵심 */
+    // display: flex;
+    // flex-direction: column;
+}
+
+.header {
+    // flex: 0 0 auto;
+    background-color: var(--Gray6);
+}
+
+.headerCell {
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--Gray1);
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+
+    // &:first-child {
+    //     justify-content: flex-start;
+    //     padding-left: 18px;
+    // }
+}
+
+/* ✅ Body가 “남은 공간을 먹고” 그 안에서만 스크롤 */
+.body {
+    // min-height: 0; /* ✅ 줄어들 수 있어야 overflow가 걸림 */
+    // overflow: auto;
+    max-height: var(--basic-table-body-max-height);
+
+    /* Firefox fallback (버튼은 없음) */
+    scrollbar-width: auto; /* thin/auto */
+    scrollbar-color: #c9c9c9 transparent;
+}
+
+/* =========================
+   ✅ Scrollbar (WebKit)
+   - 이미지처럼: 위/아래 화살표 + 둥근 트랙 + 둥근 thumb
+   ========================= */
+
+.body::-webkit-scrollbar {
+    width: 18px; /* 전체 폭 (버튼 포함) */
+}
+
+.body::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+/* 트랙 “기둥” 느낌 */
+.body::-webkit-scrollbar-track-piece:vertical {
+    background: #f2f2f2;
+    border-radius: 999px;
+    margin: 18px 0; /* 위/아래 버튼 자리만큼 띄워서 이미지처럼 */
+}
+
+.body::-webkit-scrollbar-thumb:vertical {
+    background: #c9c9c9;
+    border-radius: 999px;
+
+    /* thumb를 트랙 안에서 더 ‘얇은 pill’처럼 보이게 */
+    border: 6px solid transparent;
+    background-clip: padding-box;
+}
+
+.body::-webkit-scrollbar-thumb:vertical:hover {
+    background: #b8b8b8;
+    background-clip: padding-box;
+}
+
+/* 위/아래 버튼 */
+.body::-webkit-scrollbar-button:single-button:vertical {
+    height: 18px;
+    background-color: transparent;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 10px 10px;
+}
+
+/* ▲ 위 화살표 */
+.body::-webkit-scrollbar-button:single-button:vertical:decrement {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23bdbdbd' d='M7 14l5-5 5 5z'/%3E%3C/svg%3E");
+}
+
+/* ▼ 아래 화살표 */
+.body::-webkit-scrollbar-button:single-button:vertical:increment {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23bdbdbd' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+}
+
+/* (옵션) 좌우 스크롤도 동일 톤으로 */
+.body::-webkit-scrollbar:horizontal {
+    height: 18px;
+}
+
+.body::-webkit-scrollbar-track-piece:horizontal {
+    background: #f2f2f2;
+    border-radius: 999px;
+    margin: 0 18px;
+}
+
+.body::-webkit-scrollbar-thumb:horizontal {
+    background: #c9c9c9;
+    border-radius: 999px;
+    border: 6px solid transparent;
+    background-clip: padding-box;
+}
+
+.body::-webkit-scrollbar-thumb:horizontal:hover {
+    background: #b8b8b8;
+    background-clip: padding-box;
+}
+
+.body::-webkit-scrollbar-button:single-button:horizontal {
+    width: 18px;
+    background-color: transparent;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 10px 10px;
+}
+
+/* ◀ */
+.body::-webkit-scrollbar-button:single-button:horizontal:decrement {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23bdbdbd' d='M14 7l-5 5 5 5z'/%3E%3C/svg%3E");
+}
+
+/* ▶ */
+.body::-webkit-scrollbar-button:single-button:horizontal:increment {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23bdbdbd' d='M10 7l5 5-5 5z'/%3E%3C/svg%3E");
+}
+
+.row {
+    // border-bottom: 1px solid var(--Gray5);
+}
+
+.cell {
+    font-size: 15px;
+    height: 44px;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--Black1);
+    border-bottom: 1px solid var(--Gray5);
+}
+
+.selected {
+    background: rgba(59, 130, 246, 0.12) !important;
+}
+
+.ghost {
+    pointer-events: none;
+}

@@ -1,6 +1,6 @@
 .BaseButton {
     background-color: var(--background-color, var(--Primary1));
-    color: var(--color, var(--White1));
+    color: var(--color, #fff);
     border: none;
     font-weight: 500;
     border-radius: var(--border-radius);
@@ -17,7 +17,7 @@
     cursor: pointer;
 
     &.Gradient {
-        background: linear-gradient(90deg, var(--Gradient1) 0%, var(--Gradient2) 100%);
+        background: var(--Gradient1);
     }
 
     &.Disabled {

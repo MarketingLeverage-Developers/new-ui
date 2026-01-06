@@ -1,12 +1,11 @@
 .Item {
     position: relative;
     display: flex;
-    flex: 1;
     align-items: center;
     justify-content: center;
-    padding: 10px 0;
-    font-size: 15px;
-    font-weight: 500;
+    padding: var(--padding);
+    font-size: var(--font-size, 15px);
+    font-weight: var(--font-weight, 500);
     line-height: 130%;
     cursor: pointer;
     color: var(--Gray3, #a3a3a3);
@@ -28,5 +27,9 @@
         &::after {
             background: currentColor;
         }
+    }
+
+    &.Full {
+        flex: 1;
     }
 }

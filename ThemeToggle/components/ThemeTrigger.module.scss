@@ -1,0 +1,45 @@
+.Toggle {
+    background-color: var(--Gray3);
+    width: 44px;
+    height: 24px;
+    border: none;
+    border-radius: 24px;
+    position: relative;
+    cursor: pointer;
+    outline: none;
+    transition: background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    padding: 2px;
+    display: flex;
+    align-items: center;
+
+    .Knob {
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        background-color: #fff;
+        border-radius: 50%;
+        top: 2px;
+        left: 2px;
+        transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+
+        /* Icon styling */
+        svg {
+            width: 14px;
+            height: 14px;
+            stroke-width: 2.5px;
+        }
+    }
+
+    &.Active {
+        background-color: var(--Primary1);
+
+        .Knob {
+            transform: translateX(20px);
+            background-color: var(--White1);
+        }
+    }
+}

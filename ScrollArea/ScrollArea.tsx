@@ -12,7 +12,7 @@ export type ScrollAreaProps = {
     className?: string;
     contentClassName?: string;
     gap?: number; // 아이템 간격(px)
-    fade?: Fade; // 'none' | 'start' | 'end' | 'both'
+    fade?: Fade; // 'none' | 'start' | 'end' | 'both' | 'auto'
     fadeSize?: number; // 페이드 길이(px), 기본 20
     snap?: Snap; // 스냅 동작
     hideScrollbar?: boolean; // 기본 true
@@ -72,6 +72,22 @@ const ScrollArea: React.FC<ScrollAreaProps> = ({
         ['--fade-size']: toCssUnit(fadeSize),
     };
 
+    // 1차: children 전체를 평탄화 (프래그먼트 포함)
+    const rawItems = React.Children.toArray(children);
+
+    // 2차: "래퍼 하나 + 그 안의 children"까지 평탄화
+    const items: React.ReactNode[] = (() => {
+        if (rawItems.length === 1) {
+            const only = rawItems[0];
+
+            // ✅ props 타입을 제네릭으로 지정해서 children 보장
+            if (React.isValidElement<{ children?: React.ReactNode }>(only) && only.props.children) {
+                return React.Children.toArray(only.props.children);
+            }
+        }
+        return rawItems;
+    })();
+
     return (
         <div className={cn(styles.Wrap, className)} style={cssVariables}>
             <div
@@ -81,7 +97,7 @@ const ScrollArea: React.FC<ScrollAreaProps> = ({
                 data-snap={snap}
                 onWheel={onWheel}
             >
-                {React.Children.map(children, (child, i) => (
+                {items.map((child, i) => (
                     <div key={`item-${i}`} className={styles.Item}>
                         {child}
                     </div>
