@@ -1,0 +1,48 @@
+.Wrapper {
+    display: inline-flex;
+    align-items: center;
+
+    button {
+        width: 28px;
+        height: 100%;
+        border: 1px solid var(--Gray5);
+        background: var(--White1);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+
+        &:disabled {
+            opacity: 0.4;
+            cursor: default;
+        }
+
+        svg {
+            font-size: 18px;
+        }
+
+        &.NavPrev {
+            border-radius: 10px 0px 0px 10px;
+        }
+        &.NavNext {
+            border-radius: 0px 10px 10px 0px;
+        }
+    }
+
+    .Trigger {
+        height: 34px;
+        display: inline-flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: var(--Gray6);
+        gap: 8px;
+        padding: 8px 12px;
+        font-size: 15px;
+        color: var(--Gray1);
+        cursor: pointer;
+    }
+
+    .Arrow {
+        font-size: 14px;
+    }
+}
