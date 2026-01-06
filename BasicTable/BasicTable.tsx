@@ -16,6 +16,7 @@ type BasicTableProps<T> = React.ComponentProps<typeof AirTable<T>> & {
 
     /** ✅✅✅ 추가 */
     defaultExpandedRowKeys?: string[];
+    filters: React.ReactNode;
 };
 
 export const BasicTable = <T,>({
@@ -25,10 +26,14 @@ export const BasicTable = <T,>({
     showHeader = true,
     style,
     defaultExpandedRowKeys = [],
+    filters,
     ...props
 }: BasicTableProps<T>) => (
     <AirTable {...props} defaultExpandedRowKeys={defaultExpandedRowKeys}>
-        <Flex justify="end" margin={{ b: 20 }}>
+        <Flex justify="space-between" margin={{ b: 20 }}>
+            <Flex gap={8} align="center">
+                {filters}
+            </Flex>
             {showColumnVisibilityControls && <ColumnVisibilityControls<T> />}
         </Flex>
 
