@@ -26,14 +26,14 @@
             color: var(--Red1);
         }
 
-            .SubText {
-                color: var(--Gray2);
-                font-size: 13px;
-                font-weight: 500;
-            }
+        .SubText {
+            color: var(--Gray2);
+            font-size: 13px;
+            font-weight: 500;
         }
     }
-    // gap: 6px;
     gap: var(--gap, 0);
     margin-bottom: var(--margin-bottom, 0);
 }
+// gap: 6px;
+// }
