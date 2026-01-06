@@ -1,7 +1,7 @@
 import Dropdown from '@/shared/headless/Dropdown/Dropdown';
 import React from 'react';
 import styles from './Trigger.module.scss';
-import { MdChevronLeft, MdChevronRight, MdOutlineKeyboardArrowDown } from 'react-icons/md';
+import { MdChevronLeft, MdChevronRight } from 'react-icons/md';
 
 type TriggerProps = {
     children: React.ReactNode;
@@ -20,7 +20,7 @@ export const Trigger = ({ children, onPrev, onNext, disabledPrev, disabledNext, 
         <Dropdown.Trigger {...props}>
             <div className={styles.Trigger}>
                 {children}
-                <MdOutlineKeyboardArrowDown className={styles.Arrow} />
+                {/* <MdOutlineKeyboardArrowDown className={styles.Arrow} /> */}
             </div>
         </Dropdown.Trigger>
 

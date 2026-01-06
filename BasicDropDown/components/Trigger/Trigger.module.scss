@@ -7,6 +7,7 @@
         height: 100%;
         border: 1px solid var(--Gray5);
         background: var(--White1);
+
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -18,14 +19,15 @@
         }
 
         svg {
-            font-size: 18px;
+            font-size: 24px;
+            color: var(--Gray1);
         }
 
         &.NavPrev {
-            border-radius: 10px 0px 0px 10px;
+            border-radius: 8px 0px 0px 8px;
         }
         &.NavNext {
-            border-radius: 0px 10px 10px 0px;
+            border-radius: 0px 8px 8px 0px;
         }
     }
 
