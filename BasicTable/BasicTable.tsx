@@ -83,9 +83,17 @@ export const BasicTable = <T,>({
     return (
         <AirTable {...props} defaultExpandedRowKeys={defaultExpandedRowKeys}>
             {/* ✅ 톱니 Trigger */}
-            <Flex justify="end" margin={{ b: 16 }} gap={8}>
-                {actions}
-                <TableSettingTrigger open={settingsVisible} onToggle={handleToggleSettingsVisible} />
+
+            <Flex justify="space-between" margin={{ b: 12 }}>
+                <Flex align="center" gap={8}>
+                    {filterItems.map((item) => (
+                        <>{item.element}</>
+                    ))}
+                </Flex>
+                <Flex justify="end" gap={8}>
+                    {actions}
+                    <TableSettingTrigger open={settingsVisible} onToggle={handleToggleSettingsVisible} />
+                </Flex>
             </Flex>
 
             {/* ✅ 테이블 + 설정 UI */}
