@@ -13,12 +13,14 @@ type BaseModalFormTemplateProps = {
     modalValue: boolean;
     setModalValue: (open: boolean) => void;
     isBorder?: boolean;
+    subTitle?: string;
 };
 
 const BaseModalFormTemplate = ({
     modalValue,
     setModalValue,
     header,
+    subTitle,
     content,
     footer,
     isScrollerContain = true,
@@ -31,7 +33,7 @@ const BaseModalFormTemplate = ({
                 <StrictOverlay>
                     <BaseModalLayout width={450}>
                         <Form>
-                            <BaseModalLayout.Header title={header} noBorder={!isBorder} />
+                            <BaseModalLayout.Header title={header} subTitle={subTitle} noBorder={!isBorder} />
                             <BaseModalLayout.Content>
                                 {isScrollerContain && (
                                     <BaseModalLayout.ScrollerWrapper>{content}</BaseModalLayout.ScrollerWrapper>
