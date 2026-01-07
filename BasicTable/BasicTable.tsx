@@ -140,7 +140,7 @@ export const BasicTable = <T,>({
 
                                     borderLeft: '1px solid var(--Gray5)',
                                     background: 'var(--White1)',
-                                    overflow: 'hidden',
+                                    overflow: 'auto',
                                 }}
                             >
                                 {settingsTab === 'columns' && <ColumnVisibilityControlsPanel<T> />}
