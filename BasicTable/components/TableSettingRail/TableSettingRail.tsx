@@ -14,11 +14,13 @@ type Props = {
 };
 
 export const TableSettingRail = ({ open, tab, onSelectTab }: Props) => (
+    // ✅ TableSettingRail.tsx
+
     <div
         style={{
-            width: 42, // ✅ 오른쪽 끝 레일 폭
-            height: '100%',
-            borderLeft: '1px solid var(--Gray5)', // ✅ 테이블과 구분
+            width: 42,
+
+            borderLeft: '1px solid var(--Gray5)', // ✅ 여기만 border 존재해야 한다
             background: 'var(--White1)',
             display: 'flex',
             flexDirection: 'column',
@@ -26,6 +28,7 @@ export const TableSettingRail = ({ open, tab, onSelectTab }: Props) => (
             paddingTop: 10,
             gap: 10,
             flexShrink: 0,
+            overflow: 'auto',
         }}
     >
         {/* ✅ 노출 컬럼 */}

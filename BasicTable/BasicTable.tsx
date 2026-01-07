@@ -137,7 +137,7 @@ export const BasicTable = <T,>({
                                 style={{
                                     width: 260,
                                     flexShrink: 0,
-                                    height: '100%',
+
                                     borderLeft: '1px solid var(--Gray5)',
                                     background: 'var(--White1)',
                                     overflow: 'hidden',
