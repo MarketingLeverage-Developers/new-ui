@@ -162,3 +162,212 @@
 .ghost {
     pointer-events: none;
 }
+/* =========================
+   ✅ Table Setting Panel (공통)
+   ========================= */
+
+.PanelRoot {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+
+    padding: 16px;
+    background-color: var(--White1);
+}
+
+.PanelHeader {
+    flex: 0 0 auto;
+    background-color: var(--White1);
+    padding-bottom: 12px;
+}
+
+.PanelTitle {
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--Gray1);
+    margin-bottom: 12px;
+}
+
+.PanelBody {
+    flex: 1;
+    overflow-y: auto;
+
+    scrollbar-width: auto;
+    scrollbar-color: #c9c9c9 transparent;
+}
+
+/* =========================
+   ✅ Panel Scrollbar (WebKit)
+   ========================= */
+
+.PanelBody::-webkit-scrollbar {
+    width: 18px;
+}
+
+.PanelBody::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.PanelBody::-webkit-scrollbar-track-piece:vertical {
+    background: #f2f2f2;
+    border-radius: 999px;
+    margin: 18px 0;
+}
+
+.PanelBody::-webkit-scrollbar-thumb:vertical {
+    background: #c9c9c9;
+    border-radius: 999px;
+    border: 6px solid transparent;
+    background-clip: padding-box;
+}
+
+.PanelBody::-webkit-scrollbar-thumb:vertical:hover {
+    background: #b8b8b8;
+    background-clip: padding-box;
+}
+
+.PanelBody::-webkit-scrollbar-button:single-button:vertical {
+    height: 18px;
+    background-color: transparent;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 10px 10px;
+}
+
+.PanelBody::-webkit-scrollbar-button:single-button:vertical:decrement {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23bdbdbd' d='M7 14l5-5 5 5z'/%3E%3C/svg%3E");
+}
+
+.PanelBody::-webkit-scrollbar-button:single-button:vertical:increment {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23bdbdbd' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+}
+
+/* =========================
+   ✅ Search Input (공통)
+   ========================= */
+
+.PanelSearchWrap {
+    margin-bottom: 12px;
+}
+
+.PanelSearchInput {
+    width: 100%;
+    height: 34px;
+    padding: 0 12px;
+    border-radius: 8px;
+    border: 1px solid var(--Gray5);
+    background-color: var(--White1);
+
+    font-size: 13px;
+    color: var(--Gray1);
+
+    outline: none;
+
+    &::placeholder {
+        color: var(--Gray3);
+    }
+}
+
+/* =========================
+   ✅ Items (공통)
+   ========================= */
+
+.PanelItem {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 6px;
+    border-radius: 8px;
+    cursor: pointer;
+
+    &:hover {
+        background-color: var(--Gray6);
+    }
+}
+
+/* =========================
+   ✅ Checkbox (공통)
+   ========================= */
+
+.PanelCheckboxWrapper {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.PanelCheckboxLabel {
+    color: var(--Gray1);
+    font-size: 14px;
+}
+
+.PanelCheckbox {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    border-radius: 4px;
+    border: 1.5px solid var(--Gray5);
+    background-color: var(--White1);
+
+    outline: none;
+    font-size: 12px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.PanelCheckboxActive {
+    background-color: var(--Primary1);
+    border: none;
+    color: var(--White1);
+}
+/* =========================
+   ✅ Filter Panel Items (공통)
+   ========================= */
+
+.FilterItem {
+    display: flex;
+    flex-direction: column;
+
+    gap: 8px;
+
+    // padding: 12px 10px;
+    border-radius: 12px;
+    // background: var(--Gray7, #fafafa); /* ✅ 없으면 fallback */
+    // border: 1px solid var(--Gray5);
+
+    transition: background 0.15s ease;
+}
+
+.FilterItem:hover {
+    // background: var(--Gray6);
+}
+
+/* ✅ 라벨 */
+.FilterLabel {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--Gray1);
+
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* ✅ 라벨 왼쪽 점 같은 느낌 (없어도 됨) */
+.FilterLabel::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 999px;
+    background: var(--Primary1);
+    flex-shrink: 0;
+}
+
+/* ✅ 컨트롤 영역 */
+.FilterControl {
+    width: 100%;
+}
