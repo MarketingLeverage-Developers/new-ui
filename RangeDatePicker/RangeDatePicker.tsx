@@ -262,9 +262,13 @@ const RangeDatePicker = ({ range, onChange, ...props }: RangeDatePickerProps) =>
 
     const handleNextMonth = () => {
         setCurrentMonth((prev) => {
-            const x = new Date(prev);
-            x.setMonth(x.getMonth() + 1);
-            return x;
+            const next = new Date(prev);
+            next.setMonth(next.getMonth() + 1);
+
+            // ✅ next 달이 today 달보다 미래면 이동 금지
+            if (isAfterMonth(next, today)) return prev;
+
+            return next;
         });
     };
 
@@ -305,6 +309,12 @@ const RangeDatePicker = ({ range, onChange, ...props }: RangeDatePickerProps) =>
     }, [currentMonth]);
 
     const isSameMonth = (a: Date, b: Date) => a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth();
+
+    const isAfterMonth = (a: Date, b: Date) =>
+        // ✅ a가 b보다 "연/월 기준"으로 뒤면 true
+        a.getFullYear() > b.getFullYear() || (a.getFullYear() === b.getFullYear() && a.getMonth() > b.getMonth());
+
+    const isNextDisabled = useMemo(() => isSameMonth(currentMonth, today), [currentMonth, today]);
 
     const handleClickSideMonth = (date: Date) => {
         const from = startOfMonth(date);
@@ -531,7 +541,12 @@ const RangeDatePicker = ({ range, onChange, ...props }: RangeDatePickerProps) =>
                         </div>
                     </div>
 
-                    <button type="button" className={styles.NavButton} onClick={handleNextMonth}>
+                    <button
+                        type="button"
+                        className={styles.NavButton}
+                        onClick={handleNextMonth}
+                        disabled={isNextDisabled}
+                    >
                         <IoCaretForwardSharp className={styles.NavIcon} />
                     </button>
                 </div>
@@ -546,6 +561,8 @@ const RangeDatePicker = ({ range, onChange, ...props }: RangeDatePickerProps) =>
                         fixedWeeks
                         selected={tempRange}
                         onSelect={handleSelectRange}
+                        disabled={{ after: today }} // ✅ 미래 날짜 선택 막기
+                        toMonth={today}
                         {...props}
                     />
                 </div>

@@ -175,6 +175,11 @@
     background: var(--Gray6);
 }
 
+.NavButton:disabled {
+    cursor: not-allowed; // ✅ 금지 커서
+    opacity: 0.35; // ✅ 흐리게
+}
+
 .NavIcon {
     // font-size: 18px;
     svg {
