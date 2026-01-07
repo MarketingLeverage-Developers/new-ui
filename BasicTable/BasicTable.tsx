@@ -13,6 +13,7 @@ import { PinnedColumnControlsPanel } from './components/PinnedColumnControlsPane
 import TableSettingTrigger from './components/TableSettingTrigger/TableSettingTrigger';
 import { FilterControlsPanel } from './components/FilterControlsPanel/FilterControlsPanel';
 import Flex from '../Flex/Flex';
+import ExpandAllRowsButton from './components/ExpandAllRowButton/ExpandAllRowButton';
 
 export type TableFilterItem = {
     label: string;
@@ -30,6 +31,7 @@ type BasicTableProps<T> = React.ComponentProps<typeof AirTable<T>> & {
     /** ✅✅✅ 필터는 label+element 배열로 받는다 */
     filterItems?: TableFilterItem[];
     actions?: React.ReactNode;
+    showExpandAllRowsButton?: boolean;
 };
 
 export const BasicTable = <T,>({
@@ -40,6 +42,7 @@ export const BasicTable = <T,>({
     defaultExpandedRowKeys = [],
     filterItems = [],
     actions,
+    showExpandAllRowsButton,
     ...props
 }: BasicTableProps<T>) => {
     /** ✅✅✅ (1) 설정 UI 전체 표시 여부 */
@@ -92,6 +95,7 @@ export const BasicTable = <T,>({
                 </Flex>
                 <Flex justify="end" gap={8}>
                     {actions}
+                    {showExpandAllRowsButton && <ExpandAllRowsButton />}
                     <TableSettingTrigger open={settingsVisible} onToggle={handleToggleSettingsVisible} />
                 </Flex>
             </Flex>
