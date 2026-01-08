@@ -39,18 +39,21 @@ export const Label = ({
 
     return (
         <div {...props} className={labelClassName} style={{ ...cssVariables }}>
-            <div className={styles.TextWrapper}>
-                <span className={styles.Text}>
-                    {text}
-                    {required && <span className={styles.Required}>*</span>}
-                </span>
-                {subText && subTextLink ? (
-                    <a className={styles.SubText} href={subText} target="_blank">
-                        {subText}
-                    </a>
-                ) : (
-                    <span className={styles.SubText}>{subText}</span>
-                )}
+            <div className={styles.labelWrapper}>
+                {icon && icon}
+                <div className={styles.TextWrapper}>
+                    <span className={styles.Text}>
+                        {text}
+                        {required && <span className={styles.Required}>*</span>}
+                    </span>
+                    {subText && subTextLink ? (
+                        <a className={styles.SubText} href={subText} target="_blank">
+                            {subText}
+                        </a>
+                    ) : (
+                        <span className={styles.SubText}>{subText}</span>
+                    )}
+                </div>
             </div>
 
             {props.children}

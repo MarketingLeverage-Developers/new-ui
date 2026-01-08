@@ -10,26 +10,32 @@
         justify-content: space-between;
     }
 
-    .TextWrapper {
+    .labelWrapper {
         display: flex;
-        flex-direction: column;
-        // gap: 2px;
-        .Text {
-            font-size: 15px;
-            font-weight: 500;
-            color: var(--Gray1);
-        }
+        gap: 12px;
+        align-items: center;
 
-        .Required {
-            font-size: 15px;
-            font-weight: 500;
-            color: var(--Red1);
-        }
+        .TextWrapper {
+            display: flex;
+            flex-direction: column;
+            // gap: 2px;
+            .Text {
+                font-size: 15px;
+                font-weight: 500;
+                color: var(--Gray1);
+            }
 
-        .SubText {
-            color: var(--Gray2);
-            font-size: 13px;
-            font-weight: 500;
+            .Required {
+                font-size: 15px;
+                font-weight: 500;
+                color: var(--Red1);
+            }
+
+            .SubText {
+                color: var(--Gray2);
+                font-size: 13px;
+                font-weight: 500;
+            }
         }
     }
     gap: var(--gap, 0);
