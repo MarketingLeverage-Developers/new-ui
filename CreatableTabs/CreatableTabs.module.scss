@@ -1,0 +1,99 @@
+.Wrapper {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    border-bottom: 2px solid var(--Gray6, #eee);
+}
+
+.TabList {
+    display: flex;
+    align-items: center;
+    // gap: 12px;
+    overflow-x: auto;
+    white-space: nowrap;
+    // padding-bottom: 2px;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.TabItem {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+}
+
+.TabButton {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    padding: 8px 14px;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+
+    color: var(--Gray2);
+    font-size: 13px;
+    font-weight: 500;
+    outline: none;
+
+    &::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0px;
+        height: 2px;
+        border-radius: 1px;
+        background: transparent;
+        transform: translateY(2px);
+    }
+
+    &:focus-visible {
+        outline: 2px solid rgba(0, 0, 0, 0.1);
+        outline-offset: 2px;
+    }
+}
+
+.AddTabButton {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    // height: 32px;
+    padding: 10px 14px;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+
+    color: var(--Gray3);
+    font-size: 13px;
+    font-weight: 500;
+    outline: none;
+    background-color: var(--Gray7);
+}
+
+.Active {
+    color: var(--Black1);
+
+    &::after {
+        background: currentColor;
+    }
+}
+
+/* "서브 페이지 +"는 활성 밑줄 없이, 색도 연하게 두고 싶으면 */
+.AddTab {
+    color: var(--Gray4, #9a9a9a);
+
+    &::after {
+        background: transparent;
+    }
+}
+
+.Label {
+    pointer-events: none;
+}
