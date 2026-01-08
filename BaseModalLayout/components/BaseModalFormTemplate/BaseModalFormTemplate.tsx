@@ -14,6 +14,7 @@ type BaseModalFormTemplateProps = {
     setModalValue: (open: boolean) => void;
     isBorder?: boolean;
     subTitle?: string;
+    width?: string | number;
 };
 
 const BaseModalFormTemplate = ({
@@ -25,13 +26,14 @@ const BaseModalFormTemplate = ({
     footer,
     isScrollerContain = true,
     isBorder = true,
+    width = 450,
 }: BaseModalFormTemplateProps) => (
     <Modal value={modalValue} onChange={setModalValue}>
         <Portal>
             <Modal.Backdrop />
             <Modal.Content maxHeight={'80%'}>
                 <StrictOverlay>
-                    <BaseModalLayout width={450}>
+                    <BaseModalLayout width={width}>
                         <Form>
                             <BaseModalLayout.Header title={header} subTitle={subTitle} noBorder={!isBorder} />
                             <BaseModalLayout.Content>

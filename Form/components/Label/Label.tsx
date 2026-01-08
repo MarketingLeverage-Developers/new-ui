@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { type ReactNode } from 'react';
 import styles from './Label.module.scss';
 import type { CSSVariables } from '@/shared/types/css/CSSVariables';
 import { toCssUnit } from '@/shared/utils';
@@ -13,6 +13,7 @@ type LabelProps = {
     marginBottom?: CSSLength;
     gap?: CSSLength;
     required?: boolean;
+    icon?: ReactNode;
 } & React.HTMLAttributes<HTMLDivElement>;
 
 export const Label = ({
@@ -23,6 +24,7 @@ export const Label = ({
     gap = 8,
     required = false,
     subTextLink = false,
+    icon,
     ...props
 }: LabelProps) => {
     const cssVariables: CSSVariables = {
