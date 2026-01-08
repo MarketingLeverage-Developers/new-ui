@@ -7,4 +7,26 @@
 
     font-size: 13px;
     font-weight: 400;
+
+    max-height: 280px;
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    /* ✅ Firefox */
+    scrollbar-width: thin;
+    scrollbar-color: var(--Gray5) transparent;
+}
+
+/* ✅ Chrome, Edge, Safari */
+.Content::-webkit-scrollbar {
+    width: 4px; /* ✅ 스크롤바 두께 */
+}
+
+.Content::-webkit-scrollbar-thumb {
+    background-color: var(--Gray5); /* ✅ 스크롤 손잡이 색 */
+    border-radius: 999px; /* ✅ 둥글게 */
+}
+
+.Content::-webkit-scrollbar-track {
+    background: transparent; /* ✅ 트랙 배경 */
 }
