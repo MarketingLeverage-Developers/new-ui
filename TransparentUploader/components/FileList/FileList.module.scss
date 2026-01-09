@@ -1,0 +1,40 @@
+.FileList {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.FileItem {
+    padding: 9px 16px;
+    height: 38px;
+    background-color: var(--Gray6);
+    border-radius: 8px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .Text {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+
+        .Name {
+            font-size: 14px;
+            color: var(--Black1);
+            font-weight: 400;
+        }
+        .Size {
+            font-size: 14px;
+            color: var(--Gray2);
+            font-weight: 400;
+        }
+    }
+
+    .XMarkIcon {
+        width: 20px;
+        height: 20px;
+        color: var(--Gray2);
+        cursor: pointer;
+    }
+}

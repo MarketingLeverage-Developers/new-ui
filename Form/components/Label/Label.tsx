@@ -38,7 +38,7 @@ export const Label = ({
     });
 
     return (
-        <div {...props} className={labelClassName} style={{ ...cssVariables }}>
+        <div className={labelClassName} style={{ ...cssVariables }} {...props}>
             <div className={styles.labelWrapper}>
                 {icon && icon}
                 <div className={styles.TextWrapper}>
