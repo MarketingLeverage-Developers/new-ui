@@ -1,0 +1,60 @@
+.Box {
+    width: 100%;
+    height: auto;
+}
+
+.Button {
+    width: 100%;
+    background-color: inherit;
+    padding: 15px 0;
+    border: none;
+
+    color: var(--Gray5);
+    box-sizing: border-box;
+    cursor: pointer;
+
+    &.Active {
+        color: var(--Primary1);
+    }
+}
+
+.Visible {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 15px;
+    width: 100%;
+    border-bottom: 1px solid var(--Gray5);
+}
+
+.Chevron {
+    background-color: inherit;
+    // padding: 15px 0;
+    border: none;
+
+    color: var(--Gray5);
+    // box-sizing: border-box;
+    // cursor: pointer;
+
+    &.Active {
+        color: var(--Primary1);
+    }
+}
+
+.Hidden {
+    transition: all 0.3s ease-out, /* 높이 애니메이션 */ opacity 0.2s ease-out; /* 투명도 애니메이션 */
+
+    .Content {
+        gap: 15px;
+        padding: 15px 25px;
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+// .Content {
+//     gap: 15px;
+//     padding: 15px 25px;
+//     display: flex;
+//     flex-direction: column;
+// }
