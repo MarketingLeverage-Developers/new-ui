@@ -1,6 +1,6 @@
 .ImageList {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr); // 4개씩 고정
+    display: flex;
+    // grid-template-columns: repeat(4, 1fr); // 4개씩 고정
     gap: 8px; // 아이템 사이 간격
     place-items: center;
 }

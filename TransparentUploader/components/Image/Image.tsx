@@ -8,7 +8,9 @@ import FileUploader, { useFileUploader } from '@/shared/headless/FileUploader/Fi
 type DropzoneProps = { openFileDialog?: () => void } & React.HTMLAttributes<HTMLDivElement>;
 
 export const Image = ({ openFileDialog }: DropzoneProps) => (
-    <FileUploader.Dropzone>{() => <DropzoneRenderer />}</FileUploader.Dropzone>
+    <FileUploader.Dropzone mode={{ kind: 'image', accept: 'image/*', multiple: false }}>
+        {({ open }) => <DropzoneRenderer openFileDialog={open} />}
+    </FileUploader.Dropzone>
 );
 
 const DropzoneRenderer = ({ openFileDialog }: DropzoneProps) => {
