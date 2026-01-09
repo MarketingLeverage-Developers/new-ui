@@ -32,6 +32,9 @@ type BasicTableProps<T> = React.ComponentProps<typeof AirTable<T>> & {
     filterItems?: TableFilterItem[];
     actions?: React.ReactNode;
     showExpandAllRowsButton?: boolean;
+
+    /** ✅✅✅ 애니메이션 on/off */
+    enableAnimation?: boolean;
 };
 
 export const BasicTable = <T,>({
@@ -43,6 +46,7 @@ export const BasicTable = <T,>({
     filterItems = [],
     actions,
     showExpandAllRowsButton,
+    enableAnimation = false, // ✅✅✅ 기본 false
     ...props
 }: BasicTableProps<T>) => {
     /** ✅✅✅ (1) 설정 UI 전체 표시 여부 */
@@ -84,15 +88,18 @@ export const BasicTable = <T,>({
     }, []);
 
     return (
-        <AirTable {...props} defaultExpandedRowKeys={defaultExpandedRowKeys}>
-            {/* ✅ 톱니 Trigger */}
-
+        <AirTable
+            {...props}
+            defaultExpandedRowKeys={defaultExpandedRowKeys}
+            enableAnimation={enableAnimation} // ✅✅✅ 전달
+        >
             <Flex justify="space-between" margin={{ b: 12 }}>
                 <Flex align="center" gap={8}>
                     {filterItems.map((item) => (
-                        <>{item.element}</>
+                        <React.Fragment key={item.label}>{item.element}</React.Fragment>
                     ))}
                 </Flex>
+
                 <Flex justify="end" gap={8}>
                     {actions}
                     {showExpandAllRowsButton && <ExpandAllRowsButton />}
@@ -100,7 +107,6 @@ export const BasicTable = <T,>({
                 </Flex>
             </Flex>
 
-            {/* ✅ 테이블 + 설정 UI */}
             <div
                 className={classNames(styles.container)}
                 style={{
@@ -112,7 +118,6 @@ export const BasicTable = <T,>({
                     position: 'relative',
                 }}
             >
-                {/* ✅ 테이블 영역 */}
                 <div style={{ flex: 1, minWidth: 0, height: '100%' }}>
                     <AirTable.Container height="100%" className={classNames(styles.container)}>
                         {showHeader && (
@@ -132,30 +137,24 @@ export const BasicTable = <T,>({
                     </AirTable.Container>
                 </div>
 
-                {/* ✅ settingsVisible일 때만 rail/panel */}
                 {settingsVisible && (
                     <>
-                        {/* ✅ 패널 */}
                         {settingsOpen && (
                             <div
                                 style={{
                                     width: 260,
                                     flexShrink: 0,
-
                                     borderLeft: '1px solid var(--Gray5)',
                                     background: 'var(--White1)',
                                     overflow: 'auto',
                                 }}
                             >
                                 {settingsTab === 'columns' && <ColumnVisibilityControlsPanel<T> />}
-
                                 {settingsTab === 'pinned' && <PinnedColumnControlsPanel<T> />}
-
                                 {settingsTab === 'filters' && <FilterControlsPanel items={filterItems} />}
                             </div>
                         )}
 
-                        {/* ✅ rail */}
                         <TableSettingRail open={settingsOpen} tab={settingsTab} onSelectTab={handleSelectTab} />
                     </>
                 )}
