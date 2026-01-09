@@ -16,7 +16,7 @@ type Props = {
     repeatStartIndex?: number; // default 1
 
     value?: string;
-    onChange?: (next: string, tabs: Tab[]) => void;
+    onChange?: (next: string, tabs: Tab[], index: number) => void;
 
     /** 최대 탭 수(고정+반복 포함). 0/undefined면 제한 없음 */
     maxTabs?: number;
@@ -70,10 +70,11 @@ const CreatableTabs = ({
     }, [initialTabs, initialRepeatCount, repeatStartIndex]);
 
     const emitChange = (next: string, nextTabs: Tab[]) => {
-        if (!isControlled) setInternalValue(next);
-        onChange?.(next, nextTabs);
-    };
+        const index = nextTabs.findIndex((t) => t.id === next);
 
+        if (!isControlled) setInternalValue(next);
+        onChange?.(next, nextTabs, index);
+    };
     const addRepeatTab = () => {
         if (!repeatLabel) return;
 
