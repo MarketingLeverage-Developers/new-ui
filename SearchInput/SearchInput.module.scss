@@ -1,13 +1,15 @@
 .SearchInputWrapper {
     border-radius: 8px;
-    padding: 6px 32px;
-    height: 100%;
+    padding: 6px 12px 6px 32px; /* ✅ 왼쪽 돋보기 영역 유지 */
+    height: 35px;
+
     border: 1px solid var(--Gray5);
     outline: none;
+
     display: flex;
     align-items: center;
-
     position: relative;
+    box-sizing: border-box;
 
     &:focus-within {
         border: 1px solid var(--Primary1);
@@ -15,7 +17,7 @@
 
     input {
         border: none;
-        outline: none; /* input 자체의 파란 아웃라인 제거 */
+        outline: none;
         width: 100%;
         height: 100%;
         background-color: inherit;
@@ -23,18 +25,20 @@
         font-size: 15px;
         color: var(--Black1);
 
+        flex: 1;
+        min-width: 0;
+
         &::placeholder {
             color: var(--Gray3);
         }
     }
 
     .SearchIcons {
-        justify-content: space-between;
         position: absolute;
-        // padding: 14px 12px;
         top: 50%;
-        transform: translateY(-40%);
         left: 10px;
+        transform: translateY(-40%);
+
         svg {
             width: 15px;
             height: 15px;
@@ -42,17 +46,60 @@
         }
     }
 
-    .CancelIcons {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        position: absolute;
+    /* ✅ 오른쪽 슬롯: 항상 존재(폭 고정) */
+    .RightSlot {
+        flex: 0 0 58px; /* ✅ 이 폭은 항상 차지 */
         height: 100%;
-        padding: 5px;
-        top: 0;
-        // transform: translateY(50%);
-        right: 0;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        padding-left: 6px;
+        box-sizing: border-box;
+    }
+
+    /* ✅ 숨김은 "자리는 유지" */
+    .RightSlotHidden {
+        visibility: hidden; /* ✅ 공간 유지하면서 보이지만 않게 */
+        pointer-events: none;
+    }
+
+    .CancelButton {
+        width: 58px;
+        height: 100%;
+        border: none;
+        background: transparent;
         color: var(--Gray2);
+        cursor: pointer;
+
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        padding: 5px;
+        box-sizing: border-box;
+
+        svg {
+            width: 18px;
+            height: 18px;
+        }
+    }
+
+    .ActionButton {
+        width: 58px;
+        height: 28px;
+        padding: 0 8px;
+        border-radius: 6px;
+
+        border: none;
+        background: var(--Primary1);
+        color: var(--White1);
+
+        font-size: 13px;
+        cursor: pointer;
+
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        box-sizing: border-box;
     }
 }
 
