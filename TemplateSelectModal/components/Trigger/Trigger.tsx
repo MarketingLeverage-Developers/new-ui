@@ -6,20 +6,29 @@ import { getThemeColor } from '@/shared/utils/css/getThemeColor';
 import Flex from '@/shared/primitives/Flex/Flex';
 import { FaAngleRight } from 'react-icons/fa';
 import Modal from '@/shared/headless/Modal/Modal';
+import { Image } from '@/shared/primitives/Image/Image';
 
-export const Trigger = ({ imageUrl, onDeleteClick }: { imageUrl: string; onDeleteClick?: () => void }) => (
+export const Trigger = ({
+    imageUrl,
+    onDeleteClick,
+    templateImageUUID,
+}: {
+    imageUrl: string;
+    templateImageUUID: string;
+    onDeleteClick?: () => void;
+}) => (
     <Modal.Trigger>
         <div className={styles.ImageBox}>
-            {imageUrl && onDeleteClick ? (
+            {templateImageUUID ? (
                 <>
-                    <img src={imageUrl} />
+                    <Image width={'100%'} height={'100%'} src={imageUrl ?? ''} alt={'trigger'} />
                     <IoIosCloseCircle
                         color="#fff"
                         size={20}
                         className={styles.Icon}
                         onClick={(e) => {
                             e.stopPropagation();
-                            onDeleteClick();
+                            if (onDeleteClick) onDeleteClick();
                         }}
                     />
                 </>

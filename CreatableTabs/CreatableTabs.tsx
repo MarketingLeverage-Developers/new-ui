@@ -96,11 +96,11 @@ const CreatableTabs = ({
     return (
         <div className={styles.Wrapper}>
             <div className={styles.TabList} role="tablist" aria-label="Tabs">
-                {tabs.map((t) => {
+                {tabs.map((t, idx) => {
                     const selected = t.id === value;
 
                     return (
-                        <div key={t.id} className={styles.TabItem}>
+                        <div key={`${t.id}-${idx}`} className={styles.TabItem}>
                             <button
                                 role="tab"
                                 aria-selected={selected}

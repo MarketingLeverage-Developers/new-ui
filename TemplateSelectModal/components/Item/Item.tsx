@@ -9,22 +9,16 @@ type ItemProps = {
     value: string;
     label: React.ReactNode;
     children: React.ReactNode;
-
-    /** 외부에서 열린 상태를 제어 */
     opened: boolean;
-
-    /** 헤더 클릭 시 어떤 item을 열지 부모에게 알림 */
     onOpen: (value: string) => void;
 };
 
-export const ItemInner = ({ value, label, children, opened, onOpen }: ItemProps) => {
+const ItemInner = ({ value, label, children, opened, onOpen }: ItemProps) => {
     const { showAccordion, hideAccordion } = useAccordion();
 
-    const isActive = opened;
-
-    const boxClassName = classNames(styles.Box, { [styles.Active]: isActive });
-    const buttonClassName = classNames(styles.Button, { [styles.Active]: isActive });
-    const chevronClassName = classNames(styles.Chevron, { [styles.Active]: isActive });
+    const boxClassName = classNames(styles.Box, { [styles.Active]: opened });
+    const buttonClassName = classNames(styles.Button, { [styles.Active]: opened });
+    const chevronClassName = classNames(styles.Chevron, { [styles.Active]: opened });
 
     useEffect(() => {
         if (opened) showAccordion();
@@ -37,7 +31,7 @@ export const ItemInner = ({ value, label, children, opened, onOpen }: ItemProps)
                 className={buttonClassName}
                 onBeforeToggle={() => {
                     onOpen(value);
-                    return true; // 내부 toggle 막고, 외부 opened로만 제어
+                    return true;
                 }}
             >
                 <Accordion.Visible className={styles.Visible}>
@@ -56,11 +50,11 @@ export const ItemInner = ({ value, label, children, opened, onOpen }: ItemProps)
 };
 
 const withProvider =
-    <P extends object>(WrappedComponent: React.ComponentType<P>): React.FC<P> =>
+    <P extends object>(Wrapped: React.ComponentType<P>): React.FC<P> =>
     (props: P) =>
         (
             <Accordion>
-                <WrappedComponent {...(props as any)} />
+                <Wrapped {...(props as any)} />
             </Accordion>
         );
 
