@@ -1,3 +1,4 @@
+// TransparentUploader.Image
 import React from 'react';
 import styles from './Image.module.scss';
 import { getThemeColor } from '@/shared/utils/css/getThemeColor';
@@ -5,16 +6,16 @@ import Picture from '@/shared/assets/images/Picture.svg';
 import BaseButton from '@/shared/primitives/BaseButton/BaseButton';
 import FileUploader, { useFileUploader } from '@/shared/headless/FileUploader/FileUploader';
 
-type DropzoneProps = { openFileDialog?: () => void } & React.HTMLAttributes<HTMLDivElement>;
+const IMG_ACCEPT = 'image/*';
 
-export const Image = ({ openFileDialog }: DropzoneProps) => (
-    <FileUploader.Dropzone mode={{ kind: 'image', accept: 'image/*', multiple: false }}>
-        {({ open }) => <DropzoneRenderer openFileDialog={open} />}
+export const Image = () => (
+    <FileUploader.Dropzone mode={{ kind: 'image', accept: IMG_ACCEPT, multiple: true }}>
+        {() => <DropzoneRenderer />}
     </FileUploader.Dropzone>
 );
 
-const DropzoneRenderer = ({ openFileDialog }: DropzoneProps) => {
-    const { dragging } = useFileUploader();
+const DropzoneRenderer = () => {
+    const { dragging, openFileDialog } = useFileUploader();
 
     return (
         <div className={styles.ImageDropzoneContainer}>
@@ -30,6 +31,7 @@ const DropzoneRenderer = ({ openFileDialog }: DropzoneProps) => {
                         </p>
                     )}
                 </div>
+
                 <BaseButton
                     padding={{ y: 8, x: 12 }}
                     height={29}
@@ -37,12 +39,14 @@ const DropzoneRenderer = ({ openFileDialog }: DropzoneProps) => {
                     fontSize={13}
                     bgColor={getThemeColor('Primary1')}
                     textColor={getThemeColor('White1')}
-                    // onClick={openFileDialog}
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        openFileDialog({ kind: 'image', accept: IMG_ACCEPT, multiple: true });
+                    }}
                 >
                     파일 선택
                 </BaseButton>
             </div>
-            {/* <p className={styles.HelperText}>jpg, png, gif 파일만 등록할 수 있습니다.</p> */}
         </div>
     );
 };
