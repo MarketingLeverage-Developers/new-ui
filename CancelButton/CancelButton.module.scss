@@ -1,0 +1,18 @@
+.CancelButton {
+    width: var(--width);
+    height: var(--width);
+    color: var(--color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: var(--font-size);
+    border: none;
+    background-color: inherit;
+
+    &:hover {
+        border-radius: 6px;
+        background-color: var(--Gray5);
+    }
+}
