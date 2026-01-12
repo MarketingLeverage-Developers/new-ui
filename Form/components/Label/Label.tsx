@@ -14,6 +14,7 @@ type LabelProps = {
     gap?: CSSLength;
     required?: boolean;
     icon?: ReactNode;
+    cancel?: ReactNode;
 } & React.HTMLAttributes<HTMLDivElement>;
 
 export const Label = ({
@@ -25,6 +26,7 @@ export const Label = ({
     required = false,
     subTextLink = false,
     icon,
+    cancel,
     ...props
 }: LabelProps) => {
     const cssVariables: CSSVariables = {
@@ -39,21 +41,24 @@ export const Label = ({
 
     return (
         <div className={labelClassName} style={{ ...cssVariables }} {...props}>
-            <div className={styles.labelWrapper}>
-                {icon && icon}
-                <div className={styles.TextWrapper}>
-                    <span className={styles.Text}>
-                        {text}
-                        {required && <span className={styles.Required}>*</span>}
-                    </span>
-                    {subText && subTextLink ? (
-                        <a className={styles.SubText} href={subText} target="_blank">
-                            {subText}
-                        </a>
-                    ) : (
-                        <span className={styles.SubText}>{subText}</span>
-                    )}
+            <div className={styles.Top}>
+                <div className={styles.labelWrapper}>
+                    {icon && icon}
+                    <div className={styles.TextWrapper}>
+                        <span className={styles.Text}>
+                            {text}
+                            {required && <span className={styles.Required}>*</span>}
+                        </span>
+                        {subText && subTextLink ? (
+                            <a className={styles.SubText} href={subText} target="_blank">
+                                {subText}
+                            </a>
+                        ) : (
+                            <span className={styles.SubText}>{subText}</span>
+                        )}
+                    </div>
                 </div>
+                {cancel && cancel}
             </div>
 
             {props.children}
