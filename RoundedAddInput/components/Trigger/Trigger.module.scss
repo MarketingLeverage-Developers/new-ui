@@ -1,0 +1,15 @@
+.Trigger {
+    background: var(--Primary2);
+    border: none;
+    cursor: pointer;
+    padding: 4px 10px;
+    border-radius: 6px;
+
+    color: var(--Primary1);
+    font-size: 15px;
+    font-weight: 500;
+
+    &:hover {
+        opacity: 0.8;
+    }
+}

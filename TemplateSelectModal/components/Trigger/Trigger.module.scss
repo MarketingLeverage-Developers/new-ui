@@ -10,6 +10,10 @@
     background-color: #fff;
     position: relative;
 
+    &.isImage {
+        background-color: var(--Gray1);
+    }
+
     > img {
         width: 100%;
         height: 100%;

@@ -22,7 +22,7 @@ const FileItem = ({ item, index, actions }: FileItemProps) => (
     <div className={styles.FileItem}>
         <div className={styles.Text}>
             <span className={styles.Name}>{item.name}</span>
-            <span className={styles.Size}>{'3MB'}</span>
+            <span className={styles.Size}>{item.size}</span>
         </div>
 
         <FaCircleXmark className={styles.XMarkIcon} onClick={actions.remove} />

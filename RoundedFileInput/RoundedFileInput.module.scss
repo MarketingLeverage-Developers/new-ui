@@ -1,0 +1,81 @@
+.RoundedFileInput {
+    border-radius: 8px;
+    padding: 14px 16px;
+    height: 46px;
+    border: 1px solid var(--Gray5);
+    outline: none;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    position: relative;
+    cursor: pointer;
+
+    &:focus-within {
+        border: 1px solid var(--Primary1);
+    }
+
+    &.Error {
+        border: 1px solid var(--Red1);
+        color: var(--Red1);
+
+        .Helper {
+            color: var(--Red1);
+        }
+    }
+
+    &.Success {
+        border: 1px solid var(--Green1);
+        color: var(--Green1);
+
+        .Helper {
+            color: var(--Green1);
+        }
+    }
+
+    &.Disabled {
+        background-color: var(--Gray6);
+        cursor: not-allowed;
+
+        .Button {
+            color: var(--Gray3);
+            cursor: not-allowed;
+        }
+    }
+
+    input[type='file'] {
+        display: none;
+    }
+
+    .Placeholder {
+        font-size: 15px;
+        color: var(--Gray3);
+        flex: 1;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .Button {
+        background: none;
+        border: none;
+        padding: 0;
+        margin-left: 12px;
+        font-size: 15px;
+        color: var(--Primary1);
+        cursor: pointer;
+        flex-shrink: 0;
+
+        &:hover {
+            opacity: 0.8;
+        }
+    }
+
+    .Helper {
+        position: absolute;
+        left: 0;
+        top: calc(100% + 4px);
+        font-size: 13px;
+    }
+}

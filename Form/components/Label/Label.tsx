@@ -14,7 +14,7 @@ type LabelProps = {
     gap?: CSSLength;
     required?: boolean;
     icon?: ReactNode;
-    cancel?: ReactNode;
+    right?: ReactNode;
 } & React.HTMLAttributes<HTMLDivElement>;
 
 export const Label = ({
@@ -26,7 +26,7 @@ export const Label = ({
     required = false,
     subTextLink = false,
     icon,
-    cancel,
+    right,
     ...props
 }: LabelProps) => {
     const cssVariables: CSSVariables = {
@@ -58,7 +58,7 @@ export const Label = ({
                         )}
                     </div>
                 </div>
-                {cancel && cancel}
+                {right && right}
             </div>
 
             {props.children}

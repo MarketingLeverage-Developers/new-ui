@@ -1,6 +1,6 @@
 import Modal from '@/shared/headless/Modal/Modal';
 import React from 'react';
-import { Content, Trigger, Layout, Template, Item, TopPortal } from './components/intdex';
+import { Trigger, Layout, Template, Item, TopPortal } from './components/intdex';
 
 type TemplateSelectModalProps = {
     children: React.ReactNode;
@@ -17,7 +17,6 @@ const TemplateSelectModal = ({ children, value, onChange }: TemplateSelectModalP
 export default TemplateSelectModal;
 
 TemplateSelectModal.Trigger = Trigger;
-TemplateSelectModal.Content = Content;
 TemplateSelectModal.Item = Item;
 TemplateSelectModal.Layout = Layout;
 TemplateSelectModal.TopPortal = TopPortal;
