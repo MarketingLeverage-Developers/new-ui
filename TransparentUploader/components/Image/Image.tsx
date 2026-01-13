@@ -6,7 +6,7 @@ import Picture from '@/shared/assets/images/Picture.svg';
 import BaseButton from '@/shared/primitives/BaseButton/BaseButton';
 import FileUploader, { useFileUploader } from '@/shared/headless/FileUploader/FileUploader';
 
-const IMG_ACCEPT = 'image/*';
+const IMG_ACCEPT = 'image/jpeg,image/png,image/gif,.jpg,.jpeg,.png,.gif';
 
 export const Image = () => (
     <FileUploader.Dropzone mode={{ kind: 'image', accept: IMG_ACCEPT, multiple: true }}>
