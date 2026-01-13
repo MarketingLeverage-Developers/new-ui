@@ -2,14 +2,20 @@ import React from 'react';
 import styles from './Menu.module.scss';
 import { ExpandableItem, InnerItem, Item, Label, Section } from './components';
 
-type MenuProps = {
+type MenuProps = React.HTMLAttributes<HTMLDivElement> & {
     children?: React.ReactNode;
 };
 
-export const Menu = ({ children }: MenuProps) => <div className={styles.Menu}>{children}</div>;
+const MenuMain = React.forwardRef<HTMLDivElement, MenuProps>(({ children, className, ...props }, ref) => (
+    <div ref={ref} className={`${styles.Menu} ${className ?? ''}`} {...props}>
+        {children}
+    </div>
+));
 
-Menu.Section = Section;
-Menu.Item = Item;
-Menu.ExpandableItem = ExpandableItem;
-Menu.InnerItem = InnerItem;
-Menu.Label = Label;
+export const Menu = Object.assign(MenuMain, {
+    Section,
+    Item,
+    ExpandableItem,
+    InnerItem,
+    Label,
+});
