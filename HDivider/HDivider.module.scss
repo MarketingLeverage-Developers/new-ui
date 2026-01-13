@@ -1,0 +1,10 @@
+.HDivider {
+    margin: var(--spacing, 16px) 0;
+    border: none;
+    border-top: var(--thickness, 1px) solid var(--Gray5);
+    width: 100%;
+}
+
+.Dashed {
+    border-top-style: dashed;
+}
