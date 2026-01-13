@@ -24,4 +24,8 @@
         /* 필요하면 배경색도 */
         /* background-color: var(--Primary2); */
     }
+    &:hover {
+        background-color: var(--Primary2);
+        color: var(--Primary1);
+    }
 }

@@ -7,7 +7,7 @@ import type { CSSVariables } from '@/shared/types/css/CSSVariables';
 import { toCssPadding } from '@/shared/utils/css/toCssPadding';
 import type { CSSLength } from '@/shared/types';
 import Item from './Item/Item';
-// 테스트2
+
 export type FlexProps = React.HTMLAttributes<HTMLDivElement> & {
     children: React.ReactNode;
     direction?: 'row' | 'row-reverse' | 'column' | 'column-reverse';
@@ -20,6 +20,10 @@ export type FlexProps = React.HTMLAttributes<HTMLDivElement> & {
     height?: string | number;
     padding?: PaddingSize | number;
     margin?: PaddingSize | number;
+
+    flex?: CSSLength;
+    minWidth?: CSSLength;
+    minHeight?: CSSLength;
 };
 
 const Flex = ({
@@ -36,6 +40,9 @@ const Flex = ({
     className,
     padding,
     margin,
+    flex,
+    minWidth,
+    minHeight,
     ...props
 }: FlexProps) => {
     const cssVariables: CSSVariables = {
@@ -49,6 +56,10 @@ const Flex = ({
         '--padding': toCssPadding(padding),
         '--margin': toCssPadding(margin),
         '--max-width': toCssUnit(maxWidth),
+
+        '--flex': flex,
+        '--min-width': toCssUnit(minWidth),
+        '--min-height': toCssUnit(minHeight),
     };
 
     return (

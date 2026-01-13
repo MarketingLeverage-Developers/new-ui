@@ -1,3 +1,13 @@
 .Menu {
-    // width: 210px;
+    flex: 1;
+    overflow-y: auto;
+
+    // 스크롤바 커스텀 (필요시)
+    &::-webkit-scrollbar {
+        width: 4px;
+    }
+    &::-webkit-scrollbar-thumb {
+        background-color: var(--Gray5);
+        border-radius: 4px;
+    }
 }
