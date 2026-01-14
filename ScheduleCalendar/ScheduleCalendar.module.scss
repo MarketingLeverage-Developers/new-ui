@@ -1,0 +1,669 @@
+.container {
+    width: 100%;
+    height: 100%;
+}
+
+:global {
+    /* 일요일 빨간색, 토요일 파란색 */
+    .fc .fc-day-sun a {
+        color: var(--Red1);
+    }
+    .fc .fc-day-sat a {
+        color: var(--Blue1);
+    }
+
+    /* 헤더 툴바 */
+    .fc .fc-toolbar.fc-header-toolbar {
+        display: none;
+    }
+
+    /* 날짜변경 화살표 */
+    .fc .fc-button-primary span {
+        font-weight: 500;
+        font-size: 28px;
+    }
+
+    /* --- [헤더 영역] 요일 헤더는 배경/보더 없음 (테두리 박스 "위") --- */
+    .fc-theme-standard th {
+        border: 0;
+        font-weight: normal;
+        font-size: 16px;
+    }
+    .fc-col-header,
+    .fc-col-header-cell,
+    .fc-col-header-cell .fc-col-header-cell-cushion {
+        background: transparent;
+    }
+    .fc-theme-standard .fc-col-header th {
+        border: 0;
+        background: transparent;
+    }
+    .fc .fc-scrollgrid-section-sticky > * {
+        position: relative;
+    }
+
+    /* 월간 헤더 */
+    .fc-my-header-month {
+        display: inline-block;
+        padding: 12px 0;
+        font-weight: 700;
+        color: var(--Gray1);
+
+        &.sun {
+            color: var(--Red1);
+        }
+        &.sat {
+            color: var(--Blue1);
+        }
+    }
+
+    /* 주간/일간 공통 컨테이너 */
+    .fc-my-header {
+        text-align: center;
+    }
+
+    /* 주간 헤더 스타일 */
+    .fc-my-header-week {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+        padding: 8px 0;
+        .yoil {
+            font-size: 14px;
+            color: var(--Gray2, #666);
+        }
+        .yoil.sun {
+            color: var(--Red1);
+        }
+        .yoil.sat {
+            color: var(--Blue1);
+        }
+        .date {
+            font-size: 20px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            font-weight: 500;
+            color: var(--Gray1, #333);
+            &.today {
+                background: #1979f8;
+                color: #fff;
+            }
+            &.sun {
+                color: var(--Red1);
+            }
+            &.sat {
+                color: var(--Blue1);
+            }
+        }
+    }
+
+    /* 일간 헤더 스타일 (요청 반영: column + 시작 정렬) */
+    .fc-my-header-day {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        gap: 4px;
+        padding: 10px 0;
+        text-align: left;
+        .yoil {
+            font-size: 14px;
+            color: var(--Gray2, #666);
+        }
+        .yoil.sun {
+            color: var(--Red1);
+        }
+        .yoil.sat {
+            color: var(--Blue1);
+        }
+        .date {
+            font-size: 20px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            font-weight: 500;
+            color: var(--Gray1);
+
+            &.sun {
+                color: var(--Red1);
+            }
+            &.sat {
+                color: var(--Blue1);
+            }
+            &.today {
+                background: #1979f8;
+                color: #fff;
+            }
+        }
+    }
+    .fc .fc-col-header-cell-cushion:has(> .fc-my-header-day:only-child) {
+        display: flex;
+    }
+
+    .fc {
+        --fc-border-color: var(--Gray6);
+    }
+
+    /* 전체 스크롤그리드의 외곽선/배경 제거 (헤더 포함 박스 제거) */
+    .fc-theme-standard .fc-scrollgrid {
+        border: 0; /* ← 기존 border 제거 */
+        border-radius: 0; /* ← 기존 radius 제거 */
+        background: transparent; /* ← 배경 제거 */
+        overflow: visible; /* 바디에서 따로 클리핑 */
+    }
+
+    /* (월간 / 주간 / 일간 공통) 바디 섹션의 첫 번째 td에 카드 프레임 적용 */
+    .fc-scrollgrid-section.fc-scrollgrid-section-body > td {
+        border: 1px solid var(--Gray6); /* 외곽선 */
+        border-radius: 20px; /* 둥근 모서리 */
+        background: #fff;
+        overflow: hidden; /* 내부 클리핑 */
+    }
+
+    /* 일부 테마/브라우저에서 내부 컨테이너가 외곽을 벗어날 수 있어 보완 */
+    .fc-scrollgrid-section-body > td .fc-daygrid,         /* month */
+  .fc-scrollgrid-section-body > td .fc-timegrid,        /* week/day */
+  .fc-scrollgrid-section-body > td .fc-daygrid-body,    /* 일부 버전 */
+  .fc-scrollgrid-section-body > td .fc-timegrid-container {
+        background: #fff;
+    }
+
+    /* 날짜 셀 */
+    .fc .fc-daygrid-day-frame {
+        background: #ffffff;
+        padding: 10px 6px;
+    }
+    .fc .fc-daygrid-day-top {
+        flex-direction: row;
+        justify-content: end;
+        height: 30px;
+        padding: 0 10px;
+    }
+    .fc .fc-daygrid-day-number {
+        z-index: auto;
+        padding: 0;
+    }
+
+    /* 이벤트 막대 */
+    .fc-event {
+        padding: 3px 6px;
+        border-radius: 4px;
+        font-weight: 400;
+        font-size: 14px;
+    }
+    .fc-h-event {
+        display: flex;
+        align-items: center;
+        background: #fff6b2;
+        border: 1px solid #fff6b2;
+        height: 23px;
+        box-sizing: border-box;
+    }
+    .fc-h-event .fc-event-main {
+        color: var(--Gray1);
+    }
+
+    .fc-direction-ltr .fc-daygrid-more-link {
+        width: 100%;
+        color: var(--Gray2);
+        font-weight: 500;
+        padding: 5px 8px;
+        height: 23px;
+        box-sizing: border-box;
+        &:hover {
+            color: var(--Gray1);
+            background-color: var(--Gray6);
+        }
+    }
+
+    .fc-daygrid-dot-event {
+        height: 23px;
+        box-sizing: border-box;
+    }
+
+    .fc .fc-day-other .fc-daygrid-day-frame {
+        background: #f8f8f8;
+    }
+
+    /* 숫자 색만 별도 지정하고 싶으면 */
+    .fc-daygrid-day.fc-day-other .fc-daygrid-day-number {
+        color: #000000;
+    }
+
+    /* 내부 그리드선도 Gray6 사용 */
+    .fc .fc-theme-standard .fc-scrollgrid {
+        border-color: var(--Gray6);
+    }
+
+    .fc .fc-daygrid-day-frame {
+        // height: 140px;
+        min-height: 115px;
+        height: 100%;
+        // border: 1px solid var(--fc-border-color);
+        // border-collapse: collapse;
+    }
+
+    /* 시간축(좌측) */
+    .fc .fc-timegrid-axis {
+        color: var(--Gray3);
+        font-size: 12px;
+        font-weight: 500;
+    }
+    .fc .fc-timegrid-axis-cushion {
+        padding: 0 10px;
+    }
+
+    /* 그리드 보더 톤(진하게/연하게) */
+    .fc .fc-timegrid-slot,
+    .fc .fc-timegrid-col,
+    .fc .fc-timegrid-body,
+    .fc .fc-timegrid {
+        border-color: var(--Gray6);
+    }
+
+    /* all-day 영역 정리 */
+    .fc .fc-timegrid-allday {
+        background: #fff;
+    }
+    .fc .fc-timegrid-divider {
+        display: none; /* all-day와 시간그리드 사이 얇은 분리자 제거 */
+    }
+
+    /* 칼럼 padding 살짝 */
+    .fc .fc-timegrid-col-events {
+        padding: 2px 8px;
+    }
+
+    /* 기본 배경/텍스트 */
+    .fc .fc-v-event .fc-event-main {
+        color: var(--Gray1);
+        font-weight: 500;
+        font-size: 13px;
+        line-height: 1.2;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    /* 라벨(뱃지) 붙였을 때 간격 */
+    .fc .fc-v-event .fc-event-main > * {
+        vertical-align: middle;
+    }
+
+    /* 드래그/리사이즈 핸들 깔끔하게 */
+    .fc .fc-v-event .fc-event-resizer {
+        width: 6px;
+        margin-left: -3px;
+    }
+    .fc .fc-v-event .fc-event-resizer:before {
+        content: '';
+        display: block;
+        width: 100%;
+        height: 100%;
+    }
+
+    .fc .fc-v-event:hover {
+        filter: brightness(0.98);
+    }
+
+    .fc .cat-default:not(.fc-daygrid-dot-event) {
+        background: var(--Gray5);
+        border: 1px solid var(--Gray5);
+    }
+    .fc .cat-mk:not(.fc-daygrid-dot-event) {
+        background: #ffe7e5;
+        border: 1px solid #ffe7e5;
+    }
+    .fc .cat-ct:not(.fc-daygrid-dot-event) {
+        background: #fff6b2;
+        border: 1px solid #fff6b2;
+    }
+    .fc .cat-dev:not(.fc-daygrid-dot-event) {
+        background: #c5e0ff;
+        border: 1px solid #c5e0ff;
+    }
+    .fc .cat-co:not(.fc-daygrid-dot-event) {
+        background: #ffd4ae;
+        border: 1px solid #ffd4ae;
+    }
+
+    // 오늘 날짜 배경색 제거
+    .fc-timeGridWeek-view .fc-timegrid-col.fc-day-today,
+    .fc-timeGridWeek-view .fc-timegrid-col.fc-day-today .fc-timegrid-col-frame,
+    .fc-timeGridWeek-view .fc-daygrid-day.fc-day-today,
+    .fc-timeGridWeek-view .fc-daygrid-day.fc-day-today .fc-daygrid-day-frame,
+    .fc-timeGridDay-view .fc-timegrid-col.fc-day-today,
+    .fc-timeGridDay-view .fc-timegrid-col.fc-day-today .fc-timegrid-col-frame,
+    .fc-timeGridDay-view .fc-daygrid-day.fc-day-today,
+    .fc-timeGridDay-view .fc-daygrid-day.fc-day-today .fc-daygrid-day-frame {
+        background: transparent;
+    }
+
+    // (월간) 오늘 날짜 표시
+    .fc-dayGridMonth-view .fc-daygrid-day.fc-day-today .fc-daygrid-day-number {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: #1979f8;
+        color: #fff;
+        text-decoration: none;
+    }
+
+    /* 가운데(반시간) 구분선 제거, 정시 라인만 남기기 */
+    .fc-timeGridWeek-view .fc-timegrid-slot[data-time$=':30:00'],
+    .fc-timeGridDay-view .fc-timegrid-slot[data-time$=':30:00'] {
+        border-top: 0; /* 30분 라인 제거 */
+    }
+
+    /* 시간 섹션(하단) 외곽 border/라운드 제거하고 내부 격자만 보이게 */
+    .fc-timeGridWeek-view .fc-scrollgrid-section-body > td:has(.fc-timegrid-body),
+    .fc-timeGridDay-view .fc-scrollgrid-section-body > td:has(.fc-timegrid-body) {
+        border: 0;
+        border-radius: 0;
+        // border-top: 1px solid var(--Gray6);
+    }
+    .fc-timeGridWeek-view .fc-scrollgrid-section-body > td:has(.fc-daygrid-body),
+    .fc-timeGridDay-view .fc-scrollgrid-section-body > td:has(.fc-daygrid-body) {
+        border-radius: 0;
+        border-top: 0;
+        border-left: 0;
+        border-bottom: 0;
+
+        .fc-daygrid-day-frame {
+            border-bottom: 1px solid var(--Gray6);
+            // border-left: 1px solid var(--Gray6);
+        }
+    }
+
+    /* 1) timeGrid의 00:00 row에 붙는 날짜(각 칼럼 상단 숫자) 숨기기 */
+    .fc-timeGridWeek-view .fc-timegrid .fc-timegrid-day-top,
+    .fc-timeGridDay-view .fc-timegrid .fc-timegrid-day-top {
+        display: none;
+    }
+    /* 혹시 테마에 따라 숫자만 따로 렌더되면 이것도 같이 막아줌 */
+    .fc .fc-timegrid .fc-timegrid-day-number {
+        display: none;
+    }
+
+    /* 2) all-day 라벨(왼쪽 ‘all-day’ 텍스트) 숨기기 */
+    .fc-timeGridWeek-view .fc-scrollgrid-section-body .fc-timegrid-axis-cushion {
+        display: none; /* 텍스트만 제거 (셀 폭 유지) */
+    }
+    .fc-timeGridDay-view .fc-scrollgrid-section-body .fc-timegrid-axis-cushion {
+        display: none; /* 텍스트만 제거 (셀 폭 유지) */
+    }
+
+    /* all-day 행 안의 날짜 숫자(각 칼럼 좌상단 숫자) 숨기기 */
+    .fc-timeGridWeek-view .fc-scrollgrid-section-body .fc-daygrid-day-top {
+        display: none;
+    }
+    .fc-timeGridDay-view .fc-scrollgrid-section-body .fc-daygrid-day-top {
+        display: none;
+    }
+    .fc-timegrid-col-misc {
+        display: none;
+    }
+
+    .fc-scrollgrid > tbody > tr:nth-child(2) {
+        // height: 13px;
+    }
+
+    /* 슬롯 자체에 라벨을 보정해서 배치할 수 있게 */
+    .fc .fc-timegrid-slot {
+        position: relative;
+        height: 30px; /* 30분 = 24px (프로젝트 기준) */
+    }
+
+    /* 라벨: 격자 안쪽 좌측, 선과 약간 여백 */
+    .fc .fc-timegrid-slot[data-time$='00:00:00'] > .fc-timegrid-slot-label-frame {
+        display: none;
+    }
+
+    .fc-timeGridWeek-view .fc-timegrid-slot,
+    .fc-timeGridDay-view .fc-timegrid-slot {
+        border-top: 0;
+        position: relative; // ::before 기준
+    }
+
+    /* 타임슬롯 격자선은 ‘왼쪽 첫 번째(라벨) 컬럼’을 제외하고만 그리기 */
+    .fc .fc-timegrid-slots tr > td.fc-timegrid-slot:not(:first-child)::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0; /* 각 셀 안에서 전체 너비로 */
+        right: 0;
+        border-top: 1px solid var(--Gray6);
+        pointer-events: none;
+    }
+    /* 라벨이 있는 첫 번째 컬럼에는 선을 그리지 않기 */
+    .fc .fc-timegrid-slots tr > td.fc-timegrid-slot:first-child::before {
+        border-top: 0 !important;
+        content: none; /* 일부 브라우저 보완 */
+    }
+
+    /* 30분 라인은 표시하지 않음 */
+    .fc .fc-timegrid-slots tr > td.fc-timegrid-slot[data-time$=':30:00']:not(:first-child)::before {
+        border-top: 0;
+    }
+
+    .fc-timegrid-slots > table > tbody > tr:nth-child(odd) > td:has(.fc-timegrid-slot-label-frame) {
+        top: -15px;
+    }
+
+    .fc .fc-timegrid-axis-cushion,
+    .fc .fc-timegrid-slot-label-cushion {
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--Gray1);
+    }
+
+    .fc-theme-standard td,
+    .fc-theme-standard th {
+        border: 0;
+    }
+
+    .fc-scrollgrid-sync-table > tbody > tr > td {
+        border: 1px solid var(--fc-border-color);
+    }
+
+    .fc-timegrid-cols > table > tbody > tr > td:not(:first-child) {
+        border-right: 1px solid var(--fc-border-color);
+    }
+
+    .fc-timegrid-body::-webkit-scrollbar {
+        display: none;
+    }
+
+    .fc-scrollgrid-section.fc-scrollgrid-section-body .fc-scroller-harness:has(.fc-timegrid-body) {
+        overflow: auto;
+        height: 530px;
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+    .fc-scrollgrid-section.fc-scrollgrid-section-body .fc-scroller-harness:has(.fc-timegrid-body)::-webkit-scrollbar {
+        display: none;
+    }
+
+    .fc .fc-highlight {
+        background: transparent;
+    }
+
+    .fc-daygrid-event-dot {
+        margin-right: 4px;
+    }
+
+    /* 이벤트 래퍼: 가로 배치 + 말줄임 가능하도록 */
+    .ml-event {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        width: 100%;
+        min-width: 0; /* flex 안에서 줄어들 수 있게 */
+    }
+
+    .ml-event .time {
+        flex: 0 0 auto;
+    }
+
+    .ml-event .title {
+        flex: 1 1 auto;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .fc .fc-daygrid-block-event .fc-event-main {
+        min-width: 0;
+        max-width: 100%;
+        overflow: hidden;
+    }
+
+    .fc .fc-daygrid-block-event .ml-event {
+        min-width: 0;
+    }
+
+    .fc .fc-daygrid-event .fc-event-time,
+    .fc .fc-daygrid-event .fc-event-title {
+        min-width: 0;
+        max-width: 100%;
+    }
+
+    .ml-event {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        width: 100%;
+        min-width: 0; /* flex 컨테이너에서 줄임표 동작용 */
+    }
+
+    .ml-event .time {
+        flex: 0 0 auto;
+    }
+
+    .ml-event .title {
+        flex: 1 1 auto;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap; /* 한 줄 말줄임 */
+    }
+
+    .ml-event .chip {
+        height: 17px;
+        box-sizing: border-box;
+        border-radius: 6px;
+    }
+
+    /* ========== dayGrid: dot/block 이벤트(말줄임) ========== */
+    .fc .fc-daygrid-event .fc-event-time,
+    .fc .fc-daygrid-event .fc-event-title {
+        min-width: 0;
+        max-width: 100%;
+    }
+
+    .fc .fc-daygrid-block-event .fc-event-main {
+        min-width: 0;
+        max-width: 100%;
+        overflow: hidden;
+    }
+
+    /* ========== “더보기” 팝오버 스타일 ========== */
+    .fc .fc-popover.fc-more-popover {
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
+        overflow: hidden;
+        background: #fff;
+        width: 396px;
+        max-height: 410px;
+    }
+
+    .fc-theme-standard .fc-popover-header {
+        background: var(--White1);
+    }
+
+    .fc .fc-popover-title {
+        font-size: 20px;
+        color: var(--Gray1);
+    }
+
+    // TODO : 이거 X 버튼 위치에 요일이
+    .fc-popover-close.fc-icon.fc-icon-x {
+        display: none;
+    }
+
+    .fc .fc-more-popover .fc-popover-header {
+        padding: 10px 14px;
+        font-weight: 700;
+        font-size: 14px;
+        // border-bottom: 1px solid #eee;
+    }
+
+    .fc .fc-more-popover .fc-popover-body {
+        padding: 8px 10px;
+        background: #fff;
+    }
+
+    /* 팝오버 내부 이벤트 간격/말줄임 */
+    .fc .fc-more-popover .fc-daygrid-event-harness {
+        margin: 6px 0;
+    }
+
+    .fc .fc-more-popover .ml-event {
+        min-width: 0;
+        max-width: 262px;
+    }
+    .fc .fc-more-popover .ml-event .time {
+        flex: 0 0 auto;
+    }
+    .fc .fc-more-popover .ml-event .title {
+        flex: 1 1 auto;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .fc-direction-ltr .fc-daygrid-block-event:not(.fc-event-end),
+    .fc-direction-ltr .fc-daygrid-block-event:not(.fc-event-start) {
+        border-bottom-right-radius: 4px;
+        border-top-right-radius: 4px;
+        border-bottom-left-radius: 4px;
+        border-top-left-radius: 4px;
+    }
+
+    .fc-direction-ltr .fc-daygrid-event.fc-event-start,
+    .fc-direction-rtl .fc-daygrid-event.fc-event-end {
+        margin-left: 0;
+    }
+    .fc-direction-ltr .fc-daygrid-event.fc-event-end,
+    .fc-direction-rtl .fc-daygrid-event.fc-event-start {
+        margin-right: 0;
+    }
+}
+
+// view 전환 애니메이션
+.fcViewAnim {
+    animation: fcViewFadeIn 300ms ease-out both;
+    overflow: hidden;
+}
+
+@keyframes fcViewFadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}

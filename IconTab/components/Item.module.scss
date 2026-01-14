@@ -1,0 +1,22 @@
+.Item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 9px;
+    background: var(--White1);
+    cursor: pointer;
+    border-radius: 6px;
+    width: 36px;
+    font-size: 18px;
+
+    svg {
+        color: var(--Gray2);
+    }
+
+    &.Active {
+        background: var(--Gray6);
+        svg {
+            color: var(--Gray1);
+        }
+    }
+}

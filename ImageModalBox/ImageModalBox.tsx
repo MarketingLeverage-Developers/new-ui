@@ -6,6 +6,8 @@ import React from 'react';
 import Flex from '../Flex/Flex';
 import styles from './ImageModalBox.module.scss';
 import Portal from '@/shared/headless/Portal/Portal';
+import Text from '../Text/Text';
+import { getThemeColor } from '@/shared/utils/css/getThemeColor';
 
 type Props = {
     width?: CSSLength;
@@ -22,13 +24,15 @@ const ImageModalBox = ({ width, height, image, showName = false, name }: Props) 
     return (
         <Modal>
             <Modal.Trigger className={styles.ImageTrigger}>
-                <Flex direction="column">
+                <Flex direction="column" gap={4}>
                     {image ? (
                         <img src={`${import.meta.env.VITE_API_URL}/api${image}`} style={{ ...cssVariables }} />
-                    ) : (
-                        <div>dd</div>
+                    ) : null}
+                    {showName && (
+                        <Text fontSize={13} color={getThemeColor('Gray2')} fontWeight={500}>
+                            {name}
+                        </Text>
                     )}
-                    {showName && name}
                 </Flex>
             </Modal.Trigger>
             <Portal>
