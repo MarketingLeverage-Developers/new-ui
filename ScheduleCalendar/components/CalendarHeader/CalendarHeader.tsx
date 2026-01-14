@@ -14,6 +14,7 @@ type CalendarHeaderProps = {
     view?: CalendarView;
     onChangeView?: (v: CalendarView) => void;
     weekDates?: Date[];
+    viewListTab?: React.ReactNode;
 };
 
 const yoils = ['일', '월', '화', '수', '목', '금', '토'];
@@ -42,6 +43,7 @@ export const CalendarHeader = ({
     view,
     onChangeView,
     weekDates,
+    viewListTab,
 }: CalendarHeaderProps) => {
     const ctx = useMLCalendar();
 
@@ -140,16 +142,19 @@ export const CalendarHeader = ({
                 </Flex>
             </Flex>
 
-            <RoundedTab
-                value={currentView}
-                onChange={(v) => handleChangeView(v as CalendarView)}
-                aria-label="캘린더 뷰 전환"
-                divProps={{ style: { width: 'fit-content' } }}
-            >
-                <RoundedTab.Item value="dayGridMonth">월</RoundedTab.Item>
-                <RoundedTab.Item value="timeGridWeek">주</RoundedTab.Item>
-                <RoundedTab.Item value="timeGridDay">일</RoundedTab.Item>
-            </RoundedTab>
+            <Flex align="center" gap={36}>
+                {viewListTab && viewListTab}
+                <RoundedTab
+                    value={currentView}
+                    onChange={(v) => handleChangeView(v as CalendarView)}
+                    aria-label="캘린더 뷰 전환"
+                    divProps={{ style: { width: 'fit-content' } }}
+                >
+                    <RoundedTab.Item value="dayGridMonth">월</RoundedTab.Item>
+                    <RoundedTab.Item value="timeGridWeek">주</RoundedTab.Item>
+                    <RoundedTab.Item value="timeGridDay">일</RoundedTab.Item>
+                </RoundedTab>
+            </Flex>
         </Flex>
     );
 };

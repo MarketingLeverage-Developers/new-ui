@@ -585,13 +585,29 @@
         box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
         overflow: hidden;
         background: #fff;
+        width: 396px;
+        max-height: 410px;
+    }
+
+    .fc-theme-standard .fc-popover-header {
+        background: var(--White1);
+    }
+
+    .fc .fc-popover-title {
+        font-size: 20px;
+        color: var(--Gray1);
+    }
+
+    // TODO : 이거 X 버튼 위치에 요일이
+    .fc-popover-close.fc-icon.fc-icon-x {
+        display: none;
     }
 
     .fc .fc-more-popover .fc-popover-header {
         padding: 10px 14px;
         font-weight: 700;
         font-size: 14px;
-        border-bottom: 1px solid #eee;
+        // border-bottom: 1px solid #eee;
     }
 
     .fc .fc-more-popover .fc-popover-body {

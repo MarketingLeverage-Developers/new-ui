@@ -62,9 +62,11 @@ type CalendarTemplateProps = {
     sidebar?: SidebarDeps;
     calendar?: CalendarDeps;
     modal?: ModalDeps;
+    // CalendarHeader Props 을 따로 빼야할지도
+    viewListTab?: React.ReactNode;
 };
 
-export const CalendarTemplate = ({ provider, sidebar, calendar, modal }: CalendarTemplateProps) => {
+export const CalendarTemplate = ({ provider, sidebar, calendar, modal, viewListTab }: CalendarTemplateProps) => {
     const [selected, setSelected] = useState<FilterId[]>(sidebar?.initialValue ?? []);
     const [draft, setDraft] = useState<Draft | null>(null);
 
@@ -79,7 +81,7 @@ export const CalendarTemplate = ({ provider, sidebar, calendar, modal }: Calenda
             onEventSelect={provider?.onEventSelect}
             onEventsChange={provider?.onEventsChange}
         >
-            <ScheduleCalendar.CalendarHeader />
+            <ScheduleCalendar.CalendarHeader viewListTab={viewListTab && viewListTab} />
 
             <Grid cols={15} rowGap={32} colGap={24}>
                 <Grid.Col span={2} align="stretch">
