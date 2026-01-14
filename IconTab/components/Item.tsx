@@ -1,8 +1,7 @@
-import Select from '@/shared/headless/Select/Select';
-import { useSelect } from '@/shared/headless/Select/Select';
 import classNames from 'classnames';
 import React from 'react';
 import styles from './Item.module.scss';
+import Select, { useSelect } from '@/shared/headless/Select/Select';
 
 type ItemProps = {
     // icon: React.ReactNode;
