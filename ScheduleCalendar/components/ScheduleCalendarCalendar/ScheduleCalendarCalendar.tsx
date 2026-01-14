@@ -1,6 +1,4 @@
-'use client';
-
-import { useEffect, useMemo, useRef, useState, useCallback } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
@@ -42,6 +40,12 @@ const normalizeDay = (d: Date) => {
 const isSameDay = (a: Date, b: Date) =>
     a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
 
+/**
+ * FullCalendar 콜백(datesSet 등) 내부에서 React state를 즉시 업데이트하면
+ * FullCalendar 내부 flushSync와 충돌하여 경고/루프가 날 수 있음.
+ * - datesSet에서 ctx.setState는 microtask로 미루고
+ * - ctx->FC 동기화로 인해 발생한 datesSet은 무시(syncingRef)
+ */
 export const ScheduleCalendarCalendar = ({
     selected,
     onRequestCreate,
@@ -53,6 +57,15 @@ export const ScheduleCalendarCalendar = ({
 
     const [draftEvent, setDraftEvent] = useState<any | null>(null);
 
+    /** ctx->FC 동기화로 유발된 datesSet 무시용 */
+    const syncingRef = useRef(false);
+    const stopSyncLater = useCallback(() => {
+        // next tick에 해제 (FC 내부 flushSync/레이아웃 계산 끝난 다음)
+        setTimeout(() => {
+            syncingRef.current = false;
+        }, 0);
+    }, []);
+
     const filteredEvents = useMemo(() => {
         if (selected.length === 0) return ctx.events;
         const selectedSet = new Set(selected);
@@ -60,39 +73,50 @@ export const ScheduleCalendarCalendar = ({
     }, [ctx.events, selected]);
 
     /**
-     * 🔥 핵심: ctx -> FullCalendar 동기화는 "진짜 다를 때만" 수행
-     * - changeView는 view 다를 때만
-     * - gotoDate는 day-level로 다를 때만
+     * ✅ ctx -> FullCalendar 동기화 (진짜 다를 때만)
+     * - changeView / gotoDate는 datesSet을 발생시키므로 syncingRef로 보호
      */
     useEffect(() => {
         const api = calRef.current?.getApi();
         if (!api) return;
 
+        syncingRef.current = true;
+
         if (api.view.type !== ctx.view) {
             api.changeView(ctx.view);
         }
 
-        const apiDate = normalizeDay(api.getDate()); // FullCalendar 현재 기준 날짜
+        const apiDate = normalizeDay(api.getDate());
         const ctxDate = normalizeDay(ctx.currentDate);
 
         if (!isSameDay(apiDate, ctxDate)) {
             api.gotoDate(ctxDate);
         }
-    }, [ctx.view, ctx.currentDate]);
+
+        stopSyncLater();
+    }, [ctx.view, ctx.currentDate, stopSyncLater]);
 
     /**
-     * 🔥 핵심: FullCalendar -> ctx 업데이트도 "진짜 다를 때만" 수행
-     * datesSet은 changeView/gotoDate에도 발화하므로 반드시 가드 필요
+     * ✅ FullCalendar -> ctx 업데이트
+     * - datesSet은 changeView/gotoDate에도 발화하므로 syncingRef면 무시
+     * - state update는 microtask로 미뤄 flushSync 경고 방지
      */
     const handleDatesSet = useCallback(
         (arg: DatesSetArg) => {
+            if (syncingRef.current) return;
+
             const v = arg.view.type as CalendarView;
             const nextDate = normalizeDay(arg.view.currentStart);
 
-            if (ctx.view !== v) ctx.setView(v);
+            // microtask로 미루기
+            queueMicrotask(() => {
+                // view
+                if (ctx.view !== v) ctx.setView(v);
 
-            const cur = normalizeDay(ctx.currentDate);
-            if (!isSameDay(cur, nextDate)) ctx.setCurrentDate(nextDate);
+                // currentDate (day-level)
+                const cur = normalizeDay(ctx.currentDate);
+                if (!isSameDay(cur, nextDate)) ctx.setCurrentDate(nextDate);
+            });
         },
         [ctx]
     );
