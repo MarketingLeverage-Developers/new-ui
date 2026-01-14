@@ -1,6 +1,6 @@
 // src/shared/primitives/BasicTable/BasicTable.tsx
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import AirTable from '@/shared/headless/AirTable/AirTable';
 import styles from './BasicTable.module.scss';
 import RowToggle from './components/RowToggle/RowToggle';
@@ -79,6 +79,17 @@ export const BasicTable = <T,>({
         });
     }, []);
 
+    // ✅ rail의 실제 폭을 모르니 일단 "레일이 차지할 폭"을 고정값으로 둠
+    // 만약 TableSettingRail 실제 width가 다르면 이 값만 맞추면 됨
+    const RAIL_WIDTH = 44;
+    const PANEL_WIDTH = 260;
+
+    const reservedRightSpace = useMemo(() => {
+        if (!settingsVisible) return 0;
+        if (!settingsOpen) return RAIL_WIDTH;
+        return PANEL_WIDTH + RAIL_WIDTH;
+    }, [settingsOpen, settingsVisible]);
+
     return (
         <AirTable
             {...props}
@@ -121,7 +132,16 @@ export const BasicTable = <T,>({
                         position: 'relative',
                     }}
                 >
-                    <div style={{ flex: 1, minWidth: 0, height: '100%' }}>
+                    {/* ✅ 테이블 영역 (오른쪽 패널 공간만큼 paddingRight로 확보해서 겹침 방지) */}
+                    <div
+                        style={{
+                            flex: 1,
+                            minWidth: 0,
+                            height: '100%',
+                            paddingRight: reservedRightSpace,
+                            boxSizing: 'border-box',
+                        }}
+                    >
                         <AirTable.Container height="100%" className={classNames(styles.container)}>
                             {showHeader && (
                                 <AirTable.Header className={styles.header} headerCellClassName={styles.headerCell} />
@@ -140,16 +160,32 @@ export const BasicTable = <T,>({
                         </AirTable.Container>
                     </div>
 
+                    {/* ✅ 설정 패널: 테이블 영역 컨테이너를 기준으로 absolute 고정 => 높이 100% 확정 */}
                     {settingsVisible && (
-                        <>
+                        <div
+                            style={{
+                                position: 'absolute',
+                                top: 0,
+                                bottom: 0,
+                                right: 0,
+                                display: 'flex',
+                                height: '100%',
+                                minHeight: 0,
+                                overflow: 'hidden',
+                                zIndex: 10,
+                            }}
+                        >
                             {settingsOpen && (
                                 <div
                                     style={{
-                                        width: 260,
+                                        width: PANEL_WIDTH,
+                                        height: '100%',
+                                        minHeight: 0,
                                         flexShrink: 0,
                                         borderLeft: '1px solid var(--Gray5)',
                                         background: 'var(--White1)',
-                                        overflow: 'auto',
+                                        overflowY: 'auto',
+                                        overflowX: 'hidden',
                                     }}
                                 >
                                     {settingsTab === 'columns' && <ColumnVisibilityControlsPanel<T> />}
@@ -158,8 +194,17 @@ export const BasicTable = <T,>({
                                 </div>
                             )}
 
-                            <TableSettingRail open={settingsOpen} tab={settingsTab} onSelectTab={handleSelectTab} />
-                        </>
+                            <div
+                                style={{
+                                    width: RAIL_WIDTH,
+                                    height: '100%',
+                                    minHeight: 0,
+                                    flexShrink: 0,
+                                }}
+                            >
+                                <TableSettingRail open={settingsOpen} tab={settingsTab} onSelectTab={handleSelectTab} />
+                            </div>
+                        </div>
                     )}
                 </div>
             </Flex>
