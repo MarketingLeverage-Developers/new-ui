@@ -12,12 +12,14 @@ import CalendarModal from './components/CalendarModal/CalendarModal';
 import ScheduleCalendarCalendar from './components/ScheduleCalendarCalendar/ScheduleCalendarCalendar';
 
 // Types export
-
 type ScheduleCalendarProps = {
     children: React.ReactNode;
     initialView?: CalendarView;
     initialDate?: Date;
     initialEvents?: CalendarEvent[];
+
+    externalEvents?: CalendarEvent[]; // 추가
+
     onViewChange?: (view: CalendarView) => void;
     onDateChange?: (date: Date) => void;
     onEventSelect?: (event: CalendarEvent | null) => void;
@@ -29,6 +31,7 @@ export const ScheduleCalendar = ({
     initialView,
     initialDate,
     initialEvents,
+    externalEvents,
     onViewChange,
     onDateChange,
     onEventSelect,
@@ -39,6 +42,7 @@ export const ScheduleCalendar = ({
             initialView={initialView}
             initialDate={initialDate}
             initialEvents={initialEvents}
+            externalEvents={externalEvents}
             onViewChange={onViewChange}
             onDateChange={onDateChange}
             onEventSelect={onEventSelect}
