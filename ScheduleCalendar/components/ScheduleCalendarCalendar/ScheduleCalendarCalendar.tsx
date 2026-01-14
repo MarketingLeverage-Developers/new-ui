@@ -1,4 +1,6 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+'use client';
+
+import { useEffect, useMemo, useRef, useState, useCallback } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
@@ -24,12 +26,21 @@ type Draft = {
 
 type ScheduleCalendarCalendarProps = {
     selected: FilterId[];
-    onRequestCreate?: (draft: Draft) => void; // 날짜 클릭/드래그 시 “생성 요청”만 올려줌 (모달은 Template이 띄움)
+    onRequestCreate?: (draft: Draft) => void;
     renderEventItem?: (arg: EventContentArg) => React.ReactNode;
     calendarProps?: Partial<React.ComponentProps<typeof FullCalendar>>;
 };
 
 const getEventCategory = (e: CalendarEvent) => String(e.extendedProps?.category ?? '');
+
+const normalizeDay = (d: Date) => {
+    const nd = new Date(d);
+    nd.setHours(0, 0, 0, 0);
+    return nd;
+};
+
+const isSameDay = (a: Date, b: Date) =>
+    a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
 
 export const ScheduleCalendarCalendar = ({
     selected,
@@ -48,14 +59,43 @@ export const ScheduleCalendarCalendar = ({
         return ctx.events.filter((e) => selectedSet.has(getEventCategory(e) as FilterId));
     }, [ctx.events, selected]);
 
-    // Context(view/date) -> FullCalendar 동기화
+    /**
+     * 🔥 핵심: ctx -> FullCalendar 동기화는 "진짜 다를 때만" 수행
+     * - changeView는 view 다를 때만
+     * - gotoDate는 day-level로 다를 때만
+     */
     useEffect(() => {
         const api = calRef.current?.getApi();
         if (!api) return;
 
-        if (api.view.type !== ctx.view) api.changeView(ctx.view);
-        api.gotoDate(ctx.currentDate);
+        if (api.view.type !== ctx.view) {
+            api.changeView(ctx.view);
+        }
+
+        const apiDate = normalizeDay(api.getDate()); // FullCalendar 현재 기준 날짜
+        const ctxDate = normalizeDay(ctx.currentDate);
+
+        if (!isSameDay(apiDate, ctxDate)) {
+            api.gotoDate(ctxDate);
+        }
     }, [ctx.view, ctx.currentDate]);
+
+    /**
+     * 🔥 핵심: FullCalendar -> ctx 업데이트도 "진짜 다를 때만" 수행
+     * datesSet은 changeView/gotoDate에도 발화하므로 반드시 가드 필요
+     */
+    const handleDatesSet = useCallback(
+        (arg: DatesSetArg) => {
+            const v = arg.view.type as CalendarView;
+            const nextDate = normalizeDay(arg.view.currentStart);
+
+            if (ctx.view !== v) ctx.setView(v);
+
+            const cur = normalizeDay(ctx.currentDate);
+            if (!isSameDay(cur, nextDate)) ctx.setCurrentDate(nextDate);
+        },
+        [ctx]
+    );
 
     const handleSelectAllow = (info: { start: Date; end: Date; allDay?: boolean }) => {
         setDraftEvent({
@@ -69,12 +109,6 @@ export const ScheduleCalendarCalendar = ({
             extendedProps: { category: 'default', isDraft: true },
         });
         return true;
-    };
-
-    const handleDatesSet = (arg: DatesSetArg) => {
-        const v = arg.view.type as CalendarView;
-        ctx.setView(v);
-        ctx.setCurrentDate(arg.view.currentStart);
     };
 
     const emitCreateRequest = (next: Draft) => {
@@ -117,11 +151,12 @@ export const ScheduleCalendarCalendar = ({
     };
 
     return (
-        <div className={styles.fcViewAnim} key={ctx.view}>
+        <div className={styles.fcViewAnim}>
             <FullCalendar
                 ref={(r) => {
                     calRef.current = r;
                 }}
+                fixedWeekCount={false}
                 initialView={ctx.view}
                 initialDate={ctx.currentDate}
                 plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}

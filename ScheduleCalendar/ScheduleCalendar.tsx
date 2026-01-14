@@ -3,13 +3,14 @@ import type React from 'react';
 import styles from './ScheduleCalendar.module.scss';
 
 import MLCalendarProvider, { type CalendarEvent, type CalendarView } from '@/shared/headless/MLCalendar/MLCalendar';
-import CalendarSidebar from '../MLCalendar/MLCalendarSidebar/MLCalendarSidebar';
+
 import CalendarEventItem from './components/CalendarEnvetItem/CalendarEnvetItem';
 import CalendarDayHeader from './components/CalendarDayHeader/CalendarDayHeader';
 import { CalendarHeader } from './components/CalendarHeader/CalendarHeader';
 import { CalendarTemplate } from './components/CalendarTemplate/CalendarTemplate';
 import CalendarModal from './components/CalendarModal/CalendarModal';
 import ScheduleCalendarCalendar from './components/ScheduleCalendarCalendar/ScheduleCalendarCalendar';
+import { CalendarSidebar } from './components/CalendarSidebar/CalendarSidebar';
 
 // Types export
 type ScheduleCalendarProps = {

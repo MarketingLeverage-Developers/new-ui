@@ -66,14 +66,17 @@ export const CalendarHeader = ({
                     onClick={handleToday}
                     onMouseDown={preventSelect}
                     style={{
-                        background: 'transparent',
-                        border: '1px solid #ddd',
+                        background: getThemeColor('Gray6'),
+                        // border: '1px solid #ddd',
                         borderRadius: 6,
-                        padding: '2px 8px',
+                        padding: '7px 12px',
                         cursor: 'pointer',
+                        fontSize: '15px',
+                        fontWeight: '700',
+                        
                     }}
                 >
-                    오늘
+                    이번달
                 </div>
 
                 <Flex padding={{ x: 8, y: 7 }}>
