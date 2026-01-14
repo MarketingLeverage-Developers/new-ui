@@ -9,6 +9,7 @@ import CalendarDayHeader from './components/CalendarDayHeader/CalendarDayHeader'
 import { CalendarHeader } from './components/CalendarHeader/CalendarHeader';
 import { CalendarTemplate } from './components/CalendarTemplate/CalendarTemplate';
 import CalendarModal from './components/CalendarModal/CalendarModal';
+import ScheduleCalendarCalendar from './components/ScheduleCalendarCalendar/ScheduleCalendarCalendar';
 
 // Types export
 
@@ -52,8 +53,9 @@ ScheduleCalendar.Sidebar = CalendarSidebar;
 ScheduleCalendar.EventItem = CalendarEventItem;
 ScheduleCalendar.DayHeader = CalendarDayHeader;
 ScheduleCalendar.CalendarHeader = CalendarHeader;
+ScheduleCalendar.CalendarModal = CalendarModal;
+ScheduleCalendar.Calendar = ScheduleCalendarCalendar;
 ScheduleCalendar.Template = CalendarTemplate;
-ScheduleCalendar.CanlendarModal = CalendarModal;
 // ScheduleCalendar.useContext = useScheduleCalendar;
 
 // export { ScheduleCalendarSidebar, ScheduleCalendarEventItem, ScheduleCalendarDayHeader, ScheduleCalendarCalendarHeader, ScheduleCalendarTemplate };
