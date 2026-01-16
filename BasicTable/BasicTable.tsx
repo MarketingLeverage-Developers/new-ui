@@ -12,9 +12,13 @@ import { TableSettingRail } from './components/TableSettingRail/TableSettingRail
 import { PinnedColumnControlsPanel } from './components/PinnedColumnControlsPanel/PinnedColumnControlsPanel';
 import TableSettingTrigger from './components/TableSettingTrigger/TableSettingTrigger';
 import { FilterControlsPanel } from './components/FilterControlsPanel/FilterControlsPanel';
+import NoDataIcon from '@/shared/assets/images/no-data.png';
 
 import Flex from '../Flex/Flex';
 import ExpandAllRowsButton from './components/ExpandAllRowButton/ExpandAllRowButton';
+import Text from '../Text/Text';
+import { getThemeColor } from '@/shared/utils/css/getThemeColor';
+import { Image } from '../Image/Image';
 
 export type TableFilterItem = {
     label: string;
@@ -90,6 +94,8 @@ export const BasicTable = <T,>({
         return PANEL_WIDTH + RAIL_WIDTH;
     }, [settingsOpen, settingsVisible]);
 
+    const data = props.data;
+
     return (
         <AirTable
             {...props}
@@ -147,14 +153,24 @@ export const BasicTable = <T,>({
                                 <AirTable.Header className={styles.header} headerCellClassName={styles.headerCell} />
                             )}
 
-                            <AirTable.Body
-                                className={classNames(styles.body)}
-                                rowClassName={styles.row}
-                                cellClassName={styles.cell}
-                                selectedCellClassName={styles.selected}
-                                detailRowClassName={styles.detailRow}
-                                detailCellClassName={styles.detailCell}
-                            />
+                            {data.length ? (
+                                <AirTable.Body
+                                    className={classNames(styles.body)}
+                                    rowClassName={styles.row}
+                                    cellClassName={styles.cell}
+                                    selectedCellClassName={styles.selected}
+                                    detailRowClassName={styles.detailRow}
+                                    detailCellClassName={styles.detailCell}
+                                />
+                            ) : (
+                                // TODO : 임시 데이터 없음 UI
+                                <Flex direction="column" width={'100%'} align="center" padding={24} gap={8}>
+                                    <Image width={50} src={NoDataIcon} alt="" loading="lazy" />
+                                    <Text fontSize={15} textColor={getThemeColor('Gray1')}>
+                                        데이터가 없습니다.
+                                    </Text>
+                                </Flex>
+                            )}
 
                             {showGhost && <AirTable.Ghost className={styles.ghost} />}
                         </AirTable.Container>
