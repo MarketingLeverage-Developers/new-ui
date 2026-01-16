@@ -12,13 +12,12 @@ import { TableSettingRail } from './components/TableSettingRail/TableSettingRail
 import { PinnedColumnControlsPanel } from './components/PinnedColumnControlsPanel/PinnedColumnControlsPanel';
 import TableSettingTrigger from './components/TableSettingTrigger/TableSettingTrigger';
 import { FilterControlsPanel } from './components/FilterControlsPanel/FilterControlsPanel';
-import NoDataIcon from '@/shared/assets/images/no-data.png';
 
 import Flex from '../Flex/Flex';
 import ExpandAllRowsButton from './components/ExpandAllRowButton/ExpandAllRowButton';
 import Text from '../Text/Text';
 import { getThemeColor } from '@/shared/utils/css/getThemeColor';
-import { Image } from '../Image/Image';
+import { FaFileAlt } from 'react-icons/fa';
 
 export type TableFilterItem = {
     label: string;
@@ -165,7 +164,8 @@ export const BasicTable = <T,>({
                             ) : (
                                 // TODO : 임시 데이터 없음 UI
                                 <Flex direction="column" width={'100%'} align="center" padding={24} gap={8}>
-                                    <Image width={50} src={NoDataIcon} alt="" loading="lazy" />
+                                    {/* <Image width={50} src={NoDataIcon} alt="" loading="lazy" /> */}
+                                    <FaFileAlt fontSize={48} color={getThemeColor('Gray4')} />
                                     <Text fontSize={15} textColor={getThemeColor('Gray1')}>
                                         데이터가 없습니다.
                                     </Text>
