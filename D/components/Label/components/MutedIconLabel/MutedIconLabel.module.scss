@@ -55,15 +55,15 @@
     width: 100%;
 }
 
-/* ✅ column일 때만 children들을 1:1로 나누기 */
-.Column .Content {
-    display: flex;
-    gap: 10px;
-    align-items: stretch;
-}
+// /* ✅ column일 때만 children들을 1:1로 나누기 */
+// .Column .Content {
+//     display: flex;
+//     gap: 10px;
+//     align-items: stretch;
+// }
 
-/* ✅ children이 몇 개든 자동 1:1 */
-.Column .Content > * {
-    flex: 1 1 0;
-    min-width: 0;
-}
+// /* ✅ children이 몇 개든 자동 1:1 */
+// .Column .Content > * {
+//     flex: 1 1 0;
+//     min-width: 0;
+// }

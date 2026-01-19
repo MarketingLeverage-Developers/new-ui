@@ -43,15 +43,3 @@
     min-width: 0;
     width: 100%;
 }
-
-/* ✅ column일 때만 children들을 1:1로 나누기 */
-.Column .Content {
-    display: flex;
-    gap: 12px; /* ✅ fallback */
-    align-items: stretch;
-}
-
-.Column .Content > * {
-    flex: 1 1 0;
-    min-width: 0;
-}
