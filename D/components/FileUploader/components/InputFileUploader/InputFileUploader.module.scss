@@ -99,9 +99,9 @@
 /* ✅ 추가: 메시지 */
 .Message {
     padding: 0 2px; /* 살짝만 여백 (원하면 0으로) */
-    font-size: 12px;
+    font-size: 13px;
     line-height: 1.3;
-    color: var(--Gray3, #9ca3af);
+    color: var(--Gray2, #9ca3af);
 }
 
 /* ✅ 추가: 상태별 메시지 색 (원하면 토큰으로 교체) */
