@@ -4,6 +4,7 @@
     -webkit-appearance: none;
 
     width: 100%;
+    height: var(--height, 66px);
     min-height: 66px;
 
     border: 1px solid var(--Gray5, #e5e7eb);
@@ -22,7 +23,7 @@
 
     outline: none;
 
-    resize: vertical;
+    resize: none;
 
     font-family: 'Pretendard', sans-serif;
 

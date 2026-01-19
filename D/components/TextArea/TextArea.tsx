@@ -5,7 +5,7 @@ export type TextAreaVariant = 'base' | 'rounded';
 
 export type TextAreaCommonProps = TextareaHTMLAttributes<HTMLTextAreaElement>;
 
-export type TextAreaProps = { variant: 'base' } & TextAreaCommonProps;
+export type TextAreaProps = { variant: 'base' } & TextAreaCommonProps & { height?: string };
 
 const TextArea = (props: TextAreaProps) => {
     const { variant, ...rest } = props;
