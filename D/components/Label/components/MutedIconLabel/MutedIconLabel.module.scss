@@ -1,7 +1,9 @@
 .MutedIconLabel {
     display: inline-flex;
     align-items: center;
-    gap: 10px;
+
+    /* ✅ 변수로 통일 */
+    gap: var(--label-gap, 10px);
 
     color: var(--Gray1);
     font-size: 15px;

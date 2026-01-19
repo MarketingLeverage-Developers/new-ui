@@ -2,9 +2,10 @@ import React from 'react';
 import styles from './StrongIconLabel.module.scss';
 import type { LabelCommonProps } from '../../Label';
 import classNames from 'classnames';
+import type { CSSVariables } from '@/shared/types/css/CSSVariables';
 
 const StrongIconLabel = (props: LabelCommonProps) => {
-    const { icon, direction = 'row', children, className, text, ...rest } = props;
+    const { icon, direction = 'row', gap = 12, children, className, text, style, ...rest } = props;
 
     const rootClassName = classNames(
         styles.StrongIconLabel,
@@ -15,12 +16,12 @@ const StrongIconLabel = (props: LabelCommonProps) => {
         className
     );
 
-    const contentClassName = classNames(styles.Content, {
-        [styles.ContentEqual]: direction === 'column',
-    });
+    const cssVariables: CSSVariables = {
+        '--label-gap': `${gap}px`,
+    };
 
     return (
-        <div className={rootClassName} {...rest}>
+        <div className={rootClassName} {...rest} style={{ ...cssVariables, ...style }}>
             {icon ? (
                 <div className={styles.LabelLine}>
                     <span className={styles.Icon}>{icon}</span>
@@ -28,7 +29,7 @@ const StrongIconLabel = (props: LabelCommonProps) => {
                 </div>
             ) : null}
 
-            <div className={contentClassName}>{children}</div>
+            <div className={styles.Content}>{children}</div>
         </div>
     );
 };

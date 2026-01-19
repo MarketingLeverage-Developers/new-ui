@@ -2,9 +2,10 @@ import React from 'react';
 import styles from './MutedIconLabel.module.scss';
 import type { LabelCommonProps } from '../../Label';
 import classNames from 'classnames';
+import type { CSSVariables } from '@/shared/types/css/CSSVariables';
 
 const MutedIconLabel = (props: LabelCommonProps) => {
-    const { icon, direction = 'row', required = false, children, className, text, ...rest } = props;
+    const { icon, direction = 'row', required = false, gap = 10, children, className, text, style, ...rest } = props;
 
     const rootClassName = classNames(
         styles.MutedIconLabel,
@@ -15,8 +16,12 @@ const MutedIconLabel = (props: LabelCommonProps) => {
         className
     );
 
+    const cssVariables: CSSVariables = {
+        '--label-gap': `${gap}px`,
+    };
+
     return (
-        <div className={rootClassName} {...rest}>
+        <div className={rootClassName} {...rest} style={{ ...cssVariables, ...style }}>
             {icon ? (
                 <div className={styles.LabelLine}>
                     <span className={styles.Icon}>{icon}</span>

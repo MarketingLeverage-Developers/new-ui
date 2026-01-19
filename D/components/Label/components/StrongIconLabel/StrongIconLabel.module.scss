@@ -1,7 +1,9 @@
 .StrongIconLabel {
     display: inline-flex;
     align-items: center;
-    gap: 24px;
+
+    /* ✅ 모든 간격은 변수로 통일 */
+    gap: var(--label-gap, 12px);
 
     color: var(--Black1);
     font-size: 20px;
@@ -30,14 +32,12 @@
     line-height: 1;
 }
 
-/* ✅ 추가 */
 .LabelLine {
     display: inline-flex;
     align-items: center;
-    gap: 12px;
+    gap: 12px; /* ✅ fallback */
 }
 
-/* ✅ children wrapper */
 .Content {
     min-width: 0;
     width: 100%;
@@ -46,11 +46,10 @@
 /* ✅ column일 때만 children들을 1:1로 나누기 */
 .Column .Content {
     display: flex;
-    gap: 12px;
+    gap: 12px; /* ✅ fallback */
     align-items: stretch;
 }
 
-/* ✅ children이 몇 개든 자동 1:1 */
 .Column .Content > * {
     flex: 1 1 0;
     min-width: 0;
