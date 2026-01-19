@@ -18,7 +18,10 @@ export type BaseButtonProps = {
     fontSize?: CSSLength;
     width?: CSSLength;
     height?: CSSLength;
+
+    /** ✅ 색/그라디언트 모두 허용하려면 background로 받는 게 정석 */
     bgColor?: HexColor | ThemeColorVar;
+
     textColor?: HexColor | ThemeColorVar;
     gradient?: boolean;
     primary?: boolean;
@@ -48,7 +51,10 @@ const BaseButton = forwardRef<HTMLButtonElement, BaseButtonProps>((props, ref) =
         '--padding': padding ? toCssPadding(padding) : undefined,
         '--font-size': fontSize ? toCssUnit(fontSize) : undefined,
         '--border-radius': radius ? toCssUnit(radius) : undefined,
-        '--background-color': bgColor ?? undefined,
+
+        // ✅ 핵심: background로 넣기 (그라디언트/색 모두 OK)
+        '--background': bgColor ?? undefined,
+
         '--color': textColor ?? undefined,
     };
 

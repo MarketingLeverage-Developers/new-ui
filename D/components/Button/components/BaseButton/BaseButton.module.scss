@@ -1,5 +1,6 @@
 .BaseButton {
-    background-color: var(--background-color, var(--Primary2, #2d6cdf));
+    /* ✅ 핵심: background-color가 아니라 background */
+    background: var(--background, var(--Primary2, #2d6cdf));
     color: var(--color, var(--Primary1, #ffffff));
 
     border: none;
@@ -11,10 +12,8 @@
 
     cursor: pointer;
 
-    /* ✅ flex 컨테이너에서 자동으로 늘어나는 것 방지 */
     flex: 0 0 auto;
 
-    /* ✅ grid 컨테이너에서 stretch 방지 */
     justify-self: start;
     align-self: center;
 
@@ -52,7 +51,7 @@
 }
 
 .Primary {
-    background-color: var(--Primary1);
+    background: var(--Primary1);
     color: #fff;
 }
 
@@ -61,7 +60,7 @@
 }
 
 .Disabled {
-    background-color: var(--Gray6, #f2f3f5);
+    background: var(--Gray6, #f2f3f5);
     color: var(--Gray3, #9aa0a6);
     cursor: default;
 }
