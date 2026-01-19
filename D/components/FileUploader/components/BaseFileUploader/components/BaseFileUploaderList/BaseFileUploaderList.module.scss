@@ -1,6 +1,11 @@
 /* =========================
    FILE: bar 형태
 ========================= */
+.FileList {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
 
 .FileBar {
     width: 100%;
