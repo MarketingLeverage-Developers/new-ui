@@ -10,6 +10,7 @@ export type LabelCommonProps = HTMLAttributes<HTMLDivElement> & {
     icon?: ReactNode;
     text?: string;
     direction?: LabelDirection;
+    required?: boolean; // ✅ 추가 (optional)
     children: ReactNode;
 };
 

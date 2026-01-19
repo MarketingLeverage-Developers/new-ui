@@ -5,7 +5,7 @@
 
     color: var(--Gray1);
     font-size: 15px;
-    font-weight: 500;
+    font-weight: 400;
 }
 
 .Row {
@@ -32,6 +32,12 @@
 
 .Text {
     line-height: 1;
+}
+
+/* ✅ 추가 */
+.Required {
+    color: var(--Red1, #ef4444);
+    font-weight: 400;
 }
 
 /* ✅ 추가 */

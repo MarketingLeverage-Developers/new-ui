@@ -4,7 +4,7 @@ import type { LabelCommonProps } from '../../Label';
 import classNames from 'classnames';
 
 const MutedIconLabel = (props: LabelCommonProps) => {
-    const { icon, direction = 'row', children, className, text, ...rest } = props;
+    const { icon, direction = 'row', required = false, children, className, text, ...rest } = props;
 
     const rootClassName = classNames(
         styles.MutedIconLabel,
@@ -20,7 +20,11 @@ const MutedIconLabel = (props: LabelCommonProps) => {
             {icon ? (
                 <div className={styles.LabelLine}>
                     <span className={styles.Icon}>{icon}</span>
-                    <span className={styles.Text}>{text}</span>
+
+                    <span className={styles.Text}>
+                        {text}
+                        {required ? <span className={styles.Required}> (필수)</span> : null}
+                    </span>
                 </div>
             ) : null}
 
