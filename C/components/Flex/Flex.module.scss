@@ -1,0 +1,23 @@
+/* src/shared/primitives/Flex/Flex.module.scss */
+.Flex {
+    display: flex;
+
+    flex-direction: var(--flex-direction, row);
+    align-items: var(--align-items, stretch);
+    justify-content: var(--justify-content, flex-start);
+    flex-wrap: var(--wrap, nowrap);
+
+    gap: var(--gap, 0);
+
+    width: var(--width, auto);
+    height: var(--height, auto);
+    max-width: var(--max-width, none);
+
+    padding: var(--padding, 0);
+    margin: var(--margin, 0);
+
+    /* ✅✅✅ 추가: Flex 자체를 flex item으로도 사용 */
+    flex: var(--flex, initial);
+    min-width: var(--min-width, 0);
+    min-height: var(--min-height, 0);
+}
