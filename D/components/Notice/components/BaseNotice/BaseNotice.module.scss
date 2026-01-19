@@ -1,0 +1,49 @@
+.BaseNotice {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    padding: 14px 20px;
+    border-radius: 8px;
+    border: 1px solid transparent;
+
+    font-size: 15px;
+    font-weight: 400;
+}
+
+.Icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 18px;
+    height: 18px;
+}
+
+.Text {
+    line-height: 1.2;
+}
+
+.Default {
+    background-color: var(--White1);
+    border-color: var(--Gray5);
+    color: var(--Gray1);
+}
+
+.Info {
+    background-color: var(--Primary2);
+    border: none;
+    color: var(--Primary1);
+}
+
+.Error {
+    background-color: var(--Red2);
+    border: none;
+    color: var(--Red1);
+}
+
+.Warning {
+    background-color: #fff6b2;
+    border-color: var(--Gray6);
+    color: var(--Gray2);
+}

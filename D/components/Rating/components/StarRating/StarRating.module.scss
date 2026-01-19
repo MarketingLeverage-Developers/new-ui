@@ -1,0 +1,56 @@
+.StarRating {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+
+    user-select: none;
+}
+
+.StarButton {
+    all: revert;
+    appearance: none;
+    -webkit-appearance: none;
+
+    border: 0;
+    padding: 0;
+    margin: 0;
+
+    background: transparent;
+    cursor: pointer;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.Star {
+    /* ✅ 기본(비활성) 회색 */
+    background: #d9d9d9;
+
+    display: block;
+
+    /* ✅ 별 모양 마스크 (이미지랑 최대한 유사하게) */
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z'/%3E%3C/svg%3E");
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    -webkit-mask-size: contain;
+
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z'/%3E%3C/svg%3E");
+    mask-repeat: no-repeat;
+    mask-position: center;
+    mask-size: contain;
+}
+
+.Active .Star {
+    /* ✅ 스샷 느낌 오렌지 */
+    background: #ff7a00;
+}
+
+.Disabled {
+    opacity: 0.5;
+}
+
+.Disabled .StarButton,
+.ReadOnly .StarButton {
+    cursor: default;
+}

@@ -1,0 +1,10 @@
+.ButtonTab {
+    width: 100%;
+    display: flex;
+    align-items: center;
+
+    gap: 10px; /* 스샷은 간격이 꽤 있음 */
+
+    /* 바깥 프레임이 거의 없음 */
+    background: transparent;
+}

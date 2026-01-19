@@ -1,0 +1,59 @@
+.MutedIconLabel {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+
+    color: var(--Gray1);
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.Row {
+    flex-direction: row;
+}
+
+.Column {
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.Icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    color: var(--Gray3);
+
+    width: 18px;
+    height: 18px;
+}
+
+.Text {
+    line-height: 1;
+}
+
+/* ✅ 추가 */
+.LabelLine {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* ✅ children wrapper */
+.Content {
+    min-width: 0;
+    width: 100%;
+}
+
+/* ✅ column일 때만 children들을 1:1로 나누기 */
+.Column .Content {
+    display: flex;
+    gap: 10px;
+    align-items: stretch;
+}
+
+/* ✅ children이 몇 개든 자동 1:1 */
+.Column .Content > * {
+    flex: 1 1 0;
+    min-width: 0;
+}

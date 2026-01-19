@@ -1,0 +1,12 @@
+.Content {
+    min-width: 280px;
+    padding: 10px;
+
+    border: 1px solid var(--Gray5, #e5e7eb);
+    border-radius: 10px;
+    background: var(--White1, #fff);
+
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}

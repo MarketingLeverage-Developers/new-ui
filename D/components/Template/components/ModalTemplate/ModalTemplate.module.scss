@@ -1,0 +1,14 @@
+.ModalTemplate {
+    width: var(--modal-width, 800px);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    /* 모달 바디 내부에서 스크롤 컨트롤 할 때 필수 */
+    min-height: 0;
+
+    background-color: var(--White1);
+    border-radius: 20px;
+
+    padding: 32px;
+}

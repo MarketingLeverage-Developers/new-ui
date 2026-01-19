@@ -1,0 +1,47 @@
+.Item {
+    cursor: pointer;
+
+    border-bottom: 2px solid var(--Gray4);
+    background: transparent;
+
+    /* 스샷은 위아래 여백이 적고, 좌우도 덜 큼 */
+    padding: 10px 14px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    /* 스샷 폰트는 크고 굵음 */
+    font-size: 15px;
+    font-weight: 500;
+    // line-height: 130;
+
+    color: var(--Gray2, #9ca3af);
+
+    position: relative;
+    white-space: nowrap;
+}
+
+.Active {
+    color: var(--Black1, #111);
+    border-color: var(--Black1, #111);
+}
+
+/* 스샷처럼 밑줄이 "텍스트 아래"에 붙어 있고, 길이도 탭 폭 기준 */
+
+/* 스샷의 "서브 페이지 +" : 연회색 배경 + 살짝 큰 패딩 + 각진 라운드 */
+.Add {
+    background: #f1f1f1;
+
+    color: #c9c9c9;
+
+    /* 박스가 조금 더 커 보임 */
+    // padding: 12px 18px;
+
+    /* 밑줄 나오면 안 됨 (혹시 value가 active로 들어오는 상황 방지) */
+    border: none;
+    border-bottom: 2px solid var(--Gray4);
+    &::after {
+        display: none;
+    }
+}

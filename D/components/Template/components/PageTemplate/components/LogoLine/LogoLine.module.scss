@@ -1,0 +1,18 @@
+.LogoLine {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    padding: 16px 14px;
+
+    font-size: 17px;
+    font-weight: 500;
+
+    .Logo {
+        width: 32px;
+        height: 32px;
+    }
+
+    .Text {
+        font-size: 17px;
+    }
+}

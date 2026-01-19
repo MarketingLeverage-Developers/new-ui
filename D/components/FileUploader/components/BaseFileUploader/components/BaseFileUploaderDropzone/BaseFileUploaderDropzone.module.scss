@@ -1,0 +1,59 @@
+.Dropzone {
+    width: 100%;
+    border: 1px dashed var(--Gray4);
+    border-radius: 12px;
+    padding: 20px 22px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+
+    background-color: var(--White1, #fff);
+}
+
+.Left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+}
+
+.Icon {
+    width: 22px;
+    height: 22px;
+    border-radius: 6px;
+    background-color: var(--Gray6);
+    flex: 0 0 auto;
+}
+
+.IconImage {
+    /* 실제 아이콘 넣을 거면 여기에 */
+}
+
+.IconFile {
+    /* 실제 아이콘 넣을 거면 여기에 */
+}
+
+.Text {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--Gray2);
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.HiddenInput {
+    display: none;
+}
+
+.Disabled {
+    background-color: var(--Gray6);
+    border-color: var(--Gray5);
+}
+
+.Disabled .Text {
+    color: var(--Gray3);
+}

@@ -1,0 +1,29 @@
+.ModalTemplateHeader {
+    flex: 0 0 auto;
+
+    border-bottom: 1px solid var(--Gray5);
+    padding-bottom: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    .SubTitle {
+        font-size: 15px;
+        font-weight: 400;
+        color: var(--Gray2);
+    }
+    .Title {
+        font-size: 24px;
+        font-weight: 600;
+        color: var(--Black1);
+    }
+    .TitleInput {
+        height: 30px;
+        font-size: 24px;
+        box-sizing: border-box;
+        font-weight: 600;
+        color: var(--Gray3);
+        border: none;
+        outline: none;
+    }
+}

@@ -1,0 +1,176 @@
+.BaseCalendar {
+    width: 100%;
+}
+
+/* RDP Root */
+.RdpRoot {
+    width: 100%;
+}
+
+/* months/month wrapper */
+.Months {
+    width: 100%;
+}
+.Month {
+    width: 100%;
+}
+
+/* -------------------------
+   Caption / Nav
+------------------------- */
+/* ✅ < 2026년 1월 > row를 “달력과 동일한 7칸 그리드”로 */
+.CaptionRow {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    align-items: center;
+
+    /* Weekdays의 칼럼 시작점과 동일하게 */
+    margin-bottom: 12px;
+}
+
+/* ✅ 첫 칼럼(일요일)에 캡션을 딱 붙임 */
+.CaptionCell {
+    grid-column: 1 / 2;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+/* 기존 그대로 사용 */
+.CaptionLabel {
+    font-size: 20px;
+    font-weight: 500;
+}
+
+.NavHidden {
+    display: none;
+}
+
+.NavButton {
+    all: unset;
+    width: 20px;
+    height: 20px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+
+    color: var(--Black1, #111);
+}
+
+.NavButton:disabled {
+    opacity: 0.35;
+    cursor: default;
+}
+
+.NavIcon {
+    width: 20px;
+    height: 20px;
+    color: var(--Black1, #111);
+    display: block;
+}
+
+.ChevronLeft {
+    transform: rotate(135deg);
+}
+.ChevronRight {
+    transform: rotate(-45deg);
+}
+
+/* -------------------------
+   ✅ 요일 헤더 정렬
+------------------------- */
+.Weekdays {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    margin-bottom: 6px;
+}
+
+.Weekday {
+    text-align: center;
+    font-size: 12px;
+    font-weight: 700;
+    color: #8b8b8b;
+}
+
+.Weekday:first-child {
+    color: #ff4d4f;
+}
+.Weekday:last-child {
+    color: #1e67ff;
+}
+
+/* -------------------------
+   ✅ 날짜 영역 grid
+------------------------- */
+.Weeks {
+    width: 100%;
+    display: grid;
+    // gap: 8px;
+}
+
+.Week {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+}
+
+/* ✅ Day(버튼/셀)에 기본 형태 */
+.Day {
+    width: 100%;
+    height: 47px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 14px;
+    // font-weight: 700;
+
+    border-radius: 8px;
+    cursor: pointer;
+
+    background: transparent;
+    border: 1px solid transparent;
+}
+
+/* ✅ 밖의 달 / 비활성 */
+.DayOutside {
+    opacity: 0.35;
+}
+
+.DayDisabled {
+    opacity: 0.35;
+    cursor: default;
+}
+
+/* ✅ 포커스 */
+.Day:focus-visible {
+    outline: 2px solid rgba(30, 103, 255, 0.35);
+    outline-offset: 2px;
+}
+
+/* =========================================================
+   ✅ 핵심: 선택 클래스가 어디 붙든 "안 깨지게" 둘 다 잡기
+   - 어떤 경우: 선택 클래스가 Day 자체에 붙음 → .DaySelected
+   - 어떤 경우: 선택 클래스가 래퍼에 붙고, Day가 자식임 → .DaySelected .Day
+========================================================= */
+
+/* ✅ 버튼에 직접 적용되는 케이스까지 방어 */
+:global(.rdp-selected),
+:global(.rdp-day_selected button),
+:global(.rdp-selected button) {
+    background: var(--Primary2) !important;
+    border-radius: 8px !important;
+    color: var(--Primary1) !important;
+    border: 1px solid var(--Primary1);
+    font-weight: 600 !important;
+}
+
+:global(.rdp-day_button) {
+    width: 100%;
+    height: 100%;
+}

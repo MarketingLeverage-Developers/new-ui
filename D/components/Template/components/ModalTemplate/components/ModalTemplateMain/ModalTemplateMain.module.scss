@@ -1,0 +1,10 @@
+.ModalTemplateMain {
+    flex: 1 1 auto;
+
+    /* 내부에 스크롤 영역이 들어갈 수 있게 */
+    min-height: 0;
+
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}

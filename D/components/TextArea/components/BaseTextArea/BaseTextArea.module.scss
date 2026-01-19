@@ -1,0 +1,42 @@
+.BaseTextArea {
+    all: revert;
+    appearance: none;
+    -webkit-appearance: none;
+
+    width: 100%;
+    min-height: 66px;
+
+    border: 1px solid var(--Gray5, #e5e7eb);
+    border-radius: 12px;
+
+    background: var(--White1, #fff);
+    color: var(--Gray1, #111);
+
+    padding: 14px 16px;
+
+    box-sizing: border-box;
+
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 1.3;
+
+    outline: none;
+
+    resize: vertical;
+
+    font-family: 'Pretendard', sans-serif;
+
+    &::placeholder {
+        color: var(--Gray3, #9ca3af);
+    }
+
+    &:focus {
+        border-color: var(--Primary1, #2d6cdf);
+    }
+
+    &:disabled {
+        background: var(--Gray6, #f3f4f6);
+        color: var(--Gray3, #9ca3af);
+        cursor: not-allowed;
+    }
+}

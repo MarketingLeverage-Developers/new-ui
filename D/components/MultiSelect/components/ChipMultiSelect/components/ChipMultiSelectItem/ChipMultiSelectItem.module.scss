@@ -1,0 +1,72 @@
+.Item {
+    all: revert;
+    appearance: none;
+    -webkit-appearance: none;
+
+    width: 100%;
+    padding: 12px 14px;
+    box-sizing: border-box;
+
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    background: transparent;
+    cursor: pointer;
+
+    /* 리스트 느낌 */
+    border-radius: 10px;
+}
+
+.Item:hover {
+    background: rgba(0, 0, 0, 0.03);
+}
+
+.Checkbox {
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+
+    border: 1px solid var(--Gray5, #d1d5db);
+    background: var(--White1, #fff);
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    flex: 0 0 auto;
+}
+
+.Check {
+    width: 8px;
+    height: 4px;
+
+    border-left: 2px solid transparent;
+    border-bottom: 2px solid transparent;
+
+    transform: rotate(-45deg);
+    margin-top: -1px;
+}
+
+.Label {
+    flex: 1;
+    min-width: 0;
+
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--Black1, #111);
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.Checked .Checkbox {
+    border-color: var(--Primary1, #2d6cdf);
+    background: rgba(45, 108, 223, 0.08);
+}
+
+.Checked .Check {
+    border-left-color: var(--Primary1, #2d6cdf);
+    border-bottom-color: var(--Primary1, #2d6cdf);
+}
