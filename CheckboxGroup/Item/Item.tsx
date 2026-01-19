@@ -43,14 +43,12 @@ const Item: React.FC<ItemProps> = ({ value, children, bgColor, borderColor }) =>
     } as const;
 
     return (
-        <div className={styles.ItemWrapper}>
-            <Toggle value={isChecked} onChange={onChange}>
-                <Toggle.Trigger style={{ ...cssVariables }} className={styles.Item}>
-                    {isChecked && <FaCheck size={10} />}
-                </Toggle.Trigger>
+        <Toggle value={isChecked} onChange={onChange}>
+            <Toggle.Trigger style={{ ...cssVariables }} className={styles.ItemWrapper}>
+                <button className={styles.Item}>{isChecked && <FaCheck size={10} />}</button>
                 <span>{children}</span>
-            </Toggle>
-        </div>
+            </Toggle.Trigger>
+        </Toggle>
     );
 };
 
