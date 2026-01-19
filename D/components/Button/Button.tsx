@@ -4,18 +4,27 @@ import type { BaseButtonProps } from './components/BaseButton/BaseButton';
 
 import TextButton, { type TextButtonProps } from './components/TextButton/TextButton';
 
-export type ButtonVariant = 'base' | 'text';
+import BoxButton, { type BoxButtonProps } from './components/BoxButton/BoxButton';
 
-export type ButtonProps = ({ variant: 'base' } & BaseButtonProps) | ({ variant: 'text' } & TextButtonProps);
+export type ButtonVariant = 'base' | 'text' | 'box';
+
+export type ButtonProps =
+    | ({ variant: 'base' } & BaseButtonProps)
+    | ({ variant: 'text' } & TextButtonProps)
+    | ({ variant: 'box' } & BoxButtonProps);
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
     const { variant, ...rest } = props;
 
     if (variant === 'text') {
-        return <TextButton ref={ref} {...rest} />;
+        return <TextButton ref={ref} {...(rest as TextButtonProps)} />;
     }
 
-    return <BaseButton ref={ref} {...rest} />;
+    if (variant === 'box') {
+        return <BoxButton ref={ref} {...(rest as BoxButtonProps)} />;
+    }
+
+    return <BaseButton ref={ref} {...(rest as BaseButtonProps)} />;
 });
 
 Button.displayName = 'Button';
