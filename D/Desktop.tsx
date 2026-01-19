@@ -23,6 +23,7 @@ import { PageSizeSelect } from './components/PageSizeSelect/PageSizeSelect';
 import { ModalContainer } from './components/ModalContainer/ModalContainer';
 import Box from './components/Box/Box';
 import Accordion from './components/Accordion/Accordion';
+import Select from './components/Select/Select';
 
 type DesktopProps = {
     children: React.ReactNode;
@@ -53,3 +54,4 @@ Desktop.Calendar = Calendar;
 Desktop.Template = Template;
 Desktop.Box = Box;
 Desktop.Accordion = Accordion;
+Desktop.Select = Select;

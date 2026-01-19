@@ -1,0 +1,23 @@
+.Display {
+    height: 44px;
+    display: inline-flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--Gray7);
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: 7px;
+    font-size: 15px;
+    color: var(--Gray1);
+    cursor: pointer;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.Placeholder {
+    color: var(--Gray2);
+}
+
+.Arrow {
+    font-size: 20px;
+}
