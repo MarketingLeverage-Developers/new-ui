@@ -6,11 +6,12 @@ export type ModalTemplateHeaderProps = {
     className?: string;
     title?: string;
     subTitle?: string;
+    placeholder?: string;
     onTitleChange?: (title: string) => void;
 };
 
 const ModalTemplateHeader: React.FC<ModalTemplateHeaderProps> = (props) => {
-    const { className, title, subTitle, onTitleChange } = props;
+    const { className, title, subTitle, onTitleChange, placeholder } = props;
 
     const rootClassName = classNames(styles.ModalTemplateHeader, className);
 
@@ -18,7 +19,12 @@ const ModalTemplateHeader: React.FC<ModalTemplateHeaderProps> = (props) => {
         <div className={rootClassName}>
             <div className={styles.SubTitle}>{subTitle}</div>
             {onTitleChange ? (
-                <input value={title} onChange={(e) => onTitleChange?.(e.target.value)} className={styles.TitleInput} />
+                <input
+                    value={title}
+                    onChange={(e) => onTitleChange?.(e.target.value)}
+                    className={styles.TitleInput}
+                    placeholder={placeholder}
+                />
             ) : (
                 <div className={styles.Title}>{title}</div>
             )}

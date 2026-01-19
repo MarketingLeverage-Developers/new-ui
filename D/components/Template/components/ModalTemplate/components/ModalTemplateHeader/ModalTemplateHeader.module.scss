@@ -22,8 +22,12 @@
         font-size: 24px;
         box-sizing: border-box;
         font-weight: 600;
-        color: var(--Gray3);
+        color: var(--Gray2);
         border: none;
         outline: none;
+
+        &::placeholder {
+            color: var(--Gray3);
+        }
     }
 }

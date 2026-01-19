@@ -21,6 +21,7 @@ export type ModalTemplateProps = ModalTemplateExtraProps & {
 
     title?: string;
     subTitle?: string;
+    placeholder?: string;
     onTitleChange?: (title: string) => void;
     main?: React.ReactNode;
 
@@ -34,7 +35,7 @@ type ModalTemplateCompound = React.FC<ModalTemplateProps> & {
 };
 
 const ModalTemplateRoot: React.FC<ModalTemplateProps> = (props) => {
-    const { className, width, title, subTitle, onTitleChange, main, mainClassName } = props;
+    const { className, width, title, subTitle, onTitleChange, main, mainClassName, placeholder } = props;
 
     const cssVariables: CSSVariables = {
         '--modal-width': toCssUnit(width),
@@ -44,7 +45,13 @@ const ModalTemplateRoot: React.FC<ModalTemplateProps> = (props) => {
 
     return (
         <div className={rootClassName} style={cssVariables}>
-            {title ? <ModalTemplateHeader title={title} subTitle={subTitle} onTitleChange={onTitleChange} /> : null}
+            <ModalTemplateHeader
+                title={title}
+                subTitle={subTitle}
+                onTitleChange={onTitleChange}
+                placeholder={placeholder}
+            />
+
             {main ? <ModalTemplateMain className={mainClassName}>{main}</ModalTemplateMain> : null}
         </div>
     );
