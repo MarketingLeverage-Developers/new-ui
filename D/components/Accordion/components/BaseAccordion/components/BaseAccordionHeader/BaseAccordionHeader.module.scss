@@ -1,0 +1,48 @@
+.BaseAccordionHeader {
+    all: unset;
+    box-sizing: border-box;
+
+    width: 100%;
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 18px 20px;
+
+    border-bottom: 1px solid var(--Gray6, #e5e7eb);
+
+    color: var(--Black1, #111);
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.Left {
+    min-width: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.Right {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.RightSlot {
+    display: inline-flex;
+    align-items: center;
+}
+
+.Chevron {
+    width: 22px;
+    height: 22px;
+    color: var(--Gray2, #6b7280);
+    transition: transform 0.15s ease;
+}
+
+.Open {
+    transform: rotate(180deg);
+}
