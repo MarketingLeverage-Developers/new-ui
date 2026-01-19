@@ -163,7 +163,15 @@ export const BasicTable = <T,>({
                                 />
                             ) : (
                                 // TODO : 임시 데이터 없음 UI
-                                <Flex direction="column" width={'100%'} align="center" padding={24} gap={8}>
+                                <Flex
+                                    direction="column"
+                                    height={'100%'}
+                                    width={'100%'}
+                                    justify="center"
+                                    align="center"
+                                    padding={24}
+                                    gap={8}
+                                >
                                     {/* <Image width={50} src={NoDataIcon} alt="" loading="lazy" /> */}
                                     <FaFileAlt fontSize={48} color={getThemeColor('Gray4')} />
                                     <Text fontSize={15} textColor={getThemeColor('Gray1')}>
