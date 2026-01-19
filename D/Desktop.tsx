@@ -24,6 +24,7 @@ import { ModalContainer } from './components/ModalContainer/ModalContainer';
 import Box from './components/Box/Box';
 import Accordion from './components/Accordion/Accordion';
 import Select from './components/Select/Select';
+import Text from './components/Text/Text';
 
 type DesktopProps = {
     children: React.ReactNode;
@@ -55,3 +56,4 @@ Desktop.Template = Template;
 Desktop.Box = Box;
 Desktop.Accordion = Accordion;
 Desktop.Select = Select;
+Desktop.Text = Text;
