@@ -11,6 +11,8 @@
 
     position: relative;
 
+    background-color: var(--White1);
+
     &:focus-within {
         border: 1px solid var(--Primary1);
     }
