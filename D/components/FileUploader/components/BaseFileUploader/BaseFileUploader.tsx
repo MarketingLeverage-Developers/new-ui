@@ -10,7 +10,11 @@ type Props = BaseFileUploaderExtraProps & {
 
 const BaseFileUploader: React.FC<Props> = (props) => {
     const { children, className } = props;
-    return <div className={className}>{children}</div>;
+    return (
+        <div className={className} style={{ width: '100%' }}>
+            {children}
+        </div>
+    );
 };
 
 export default BaseFileUploader;
