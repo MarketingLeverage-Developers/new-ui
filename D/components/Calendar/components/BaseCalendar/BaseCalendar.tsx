@@ -14,10 +14,10 @@ export type BaseCalendarProps = DayPickerProps & BaseCalendarExtraProps;
 
 const WEEKDAY_KO_SHORT = ['일', '월', '화', '수', '목', '금', '토'] as const;
 
-const formatMonthLabel = (d: Date) => {
+const formatMonthLabelParts = (d: Date) => {
     const y = d.getFullYear();
     const m = d.getMonth() + 1;
-    return `${y}년 ${m}월`;
+    return { y, m };
 };
 
 const startOfMonth = (d: Date) => new Date(d.getFullYear(), d.getMonth(), 1);
@@ -102,7 +102,7 @@ const BaseCalendar: React.FC<BaseCalendarProps> = (props) => {
         // captionProps가 들고있는 month는 "표시용"
         // 실제 이동은 currentMonth/commitMonth 기반으로 처리
         const monthDate = getMonthCaptionDate(captionProps);
-        const label = formatMonthLabel(monthDate);
+        const { y, m } = formatMonthLabelParts(monthDate);
 
         return (
             <div className={styles.CaptionRow}>
@@ -117,7 +117,11 @@ const BaseCalendar: React.FC<BaseCalendarProps> = (props) => {
                         <MdKeyboardArrowLeft className={styles.NavIcon} aria-hidden />
                     </button>
 
-                    <div className={styles.CaptionLabel}>{label}</div>
+                    <div className={styles.CaptionLabel}>
+                        <span>{y}년</span>
+                        <span className={styles.MonthNumber}>{m}</span>
+                        <span>월</span>
+                    </div>
 
                     <button
                         type="button"

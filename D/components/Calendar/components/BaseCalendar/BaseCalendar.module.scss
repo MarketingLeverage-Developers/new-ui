@@ -40,8 +40,19 @@
 
 /* 기존 그대로 사용 */
 .CaptionLabel {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    white-space: nowrap;
     font-size: 20px;
     font-weight: 500;
+    color: var(--Gray1);
+}
+
+.MonthNumber {
+    display: inline-block;
+    width: 2ch; /* ✅ 1~12를 항상 같은 폭으로 */
+    text-align: right; /* 9는 오른쪽에 붙고 10은 꽉 차게 */
 }
 
 .NavHidden {
