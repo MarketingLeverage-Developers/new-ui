@@ -21,6 +21,7 @@ import { ListPagination } from './components/ListPagination/ListPagination';
 import { ListTable } from './components/ListTable/ListTable';
 import { PageSizeSelect } from './components/PageSizeSelect/PageSizeSelect';
 import { ModalContainer } from './components/ModalContainer/ModalContainer';
+import Box from './components/Box/Box';
 
 type DesktopProps = {
     children: React.ReactNode;
@@ -49,3 +50,4 @@ Desktop.MultiTab = MultiTab;
 Desktop.Rating = Rating;
 Desktop.Calendar = Calendar;
 Desktop.Template = Template;
+Desktop.Box = Box;
