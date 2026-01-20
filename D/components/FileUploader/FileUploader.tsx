@@ -19,8 +19,13 @@ import BaseAlterFileUploaderDropzone, {
     type BaseAlterFileUploaderDropzoneProps,
 } from './components/BaseAlterFileUploader/components/BaseAlterFileUploaderDropzone/BaseAlterFileUploaderDropzone';
 
+import type { BaseStackedFileUploaderExtraProps } from './components/BaseStackedFileUploader/BaseStackedFileUploader';
+
 export type FileUploaderVariant = 'base' | 'input' | 'base-stacked' | 'base-alter';
 export type FileUploaderType = 'image' | 'file';
+
+/** ✅ 서버에서 내려오는 "기존 파일 링크" 모델 */
+export type FileUploaderDefaultUrl = string;
 
 export type FileUploaderCommonProps = {
     type: FileUploaderType;
@@ -32,8 +37,16 @@ export type FileUploaderCommonProps = {
     maxCount?: number;
     maxFileSizeMB?: number;
 
+    /** ✅ 새로 선택한 파일들 (기존 방식 그대로) */
     value?: File[];
     onChange?: (files: File[]) => void;
+
+    /** ✅ 기존(서버) 파일 링크들 */
+    defaultUrls?: FileUploaderDefaultUrl[];
+    onDefaultUrlsChange?: (next: FileUploaderDefaultUrl[]) => void;
+
+    /** ✅ List에서 삭제 버튼 표시 여부 (상세에서 false로 사용) */
+    showRemove?: boolean;
 
     children: ReactNode;
 };
@@ -41,7 +54,9 @@ export type FileUploaderCommonProps = {
 export type FileUploaderProps =
     | ({ variant: 'base' } & FileUploaderCommonProps & BaseFileUploaderExtraProps)
     | ({ variant: 'input' } & FileUploaderCommonProps & BaseFileUploaderExtraProps)
-    | ({ variant: 'base-stacked' } & FileUploaderCommonProps & BaseFileUploaderExtraProps)
+    | ({ variant: 'base-stacked' } & FileUploaderCommonProps &
+          BaseFileUploaderExtraProps &
+          BaseStackedFileUploaderExtraProps)
     | ({ variant: 'base-alter' } & FileUploaderCommonProps & BaseFileUploaderExtraProps);
 
 /** 1) 공통 기능 Context */
@@ -52,7 +67,18 @@ export type FileUploaderContextValue = {
     accept?: string;
     multiple: boolean;
 
+    /** ✅ 새 파일들 */
     files: File[];
+
+    /** ✅ 기존(서버) 파일 링크들 */
+    defaultUrls: FileUploaderDefaultUrl[];
+    removeDefaultUrl: (url: FileUploaderDefaultUrl) => void;
+
+    /** ✅ 삭제 버튼 표시 여부 */
+    showRemove: boolean;
+
+    /** ✅ base-stacked 전용 옵션 (BaseStackedFileUploaderList에서만 사용) */
+    stackedListView?: BaseStackedFileUploaderExtraProps['stackedListView'];
 
     inputId: string;
     inputRef: React.RefObject<HTMLInputElement | null>;
@@ -66,7 +92,6 @@ export type FileUploaderContextValue = {
     maxCount: number;
     maxFileSizeMB: number;
 
-    /** ✅ Dropzone에서 바로 받고 싶을 때 */
     notifyChange?: (files: File[]) => void;
 };
 
@@ -118,13 +143,47 @@ const FileUploaderRoot: React.FC<FileUploaderProps> = (props) => {
         maxFileSizeMB,
         value,
         onChange,
+
+        defaultUrls,
+        onDefaultUrlsChange,
+
+        showRemove = true,
+
         children,
         className,
     } = props;
 
+    /** ✅ base-stacked 전용 옵션은 base-stacked일 때만 읽기 */
+    const stackedListView =
+        variant === 'base-stacked'
+            ? (props as { stackedListView?: BaseStackedFileUploaderExtraProps['stackedListView'] }).stackedListView
+            : undefined;
+
     const inputId = useId();
     const inputRef = useRef<HTMLInputElement | null>(null);
 
+    /** ✅ 기존 링크는 "컨트롤드/언컨트롤드" 둘 다 지원 */
+    const isDefaultUrlsControlled = Array.isArray(defaultUrls);
+    const [innerDefaultUrls, setInnerDefaultUrls] = useState<FileUploaderDefaultUrl[]>([]);
+    const resolvedDefaultUrls = isDefaultUrlsControlled ? (defaultUrls as FileUploaderDefaultUrl[]) : innerDefaultUrls;
+
+    const commitDefaultUrls = useCallback(
+        (next: FileUploaderDefaultUrl[]) => {
+            if (!isDefaultUrlsControlled) setInnerDefaultUrls(next);
+            onDefaultUrlsChange?.(next);
+        },
+        [isDefaultUrlsControlled, onDefaultUrlsChange]
+    );
+
+    const removeDefaultUrl = useCallback(
+        (url: FileUploaderDefaultUrl) => {
+            const next = resolvedDefaultUrls.filter((u) => u !== url);
+            commitDefaultUrls(next);
+        },
+        [commitDefaultUrls, resolvedDefaultUrls]
+    );
+
+    /** ✅ 기존 파일(value File[])은 기존대로 */
     const isControlled = Array.isArray(value);
     const [innerFiles, setInnerFiles] = useState<File[]>([]);
     const files = isControlled ? (value as File[]) : innerFiles;
@@ -176,7 +235,6 @@ const FileUploaderRoot: React.FC<FileUploaderProps> = (props) => {
             const filtered = picked.filter((f) => !isOverSize(f));
             if (filtered.length === 0) return;
 
-            // ✅ file 타입: multiple일 수 있으니 maxCount 기준으로 누적
             if (type === 'file') {
                 const merged = resolvedMultiple ? [...files, ...filtered] : filtered.slice(-1);
                 const next = merged.slice(0, resolvedMaxCount);
@@ -184,7 +242,6 @@ const FileUploaderRoot: React.FC<FileUploaderProps> = (props) => {
                 return;
             }
 
-            // ✅ image 타입
             const merged = [...files, ...filtered];
 
             if (resolvedMaxCount === 1) {
@@ -220,7 +277,16 @@ const FileUploaderRoot: React.FC<FileUploaderProps> = (props) => {
             disabled,
             accept: resolvedAccept,
             multiple: resolvedMultiple,
+
             files,
+
+            defaultUrls: resolvedDefaultUrls,
+            removeDefaultUrl,
+
+            showRemove,
+
+            stackedListView,
+
             inputId,
             inputRef,
             openFileDialog,
@@ -230,7 +296,6 @@ const FileUploaderRoot: React.FC<FileUploaderProps> = (props) => {
             maxCount: resolvedMaxCount,
             maxFileSizeMB: resolvedMaxFileSizeMB,
 
-            /** ✅ Dropzone에서 쓰고 싶으면 Root onChange 그대로 제공 */
             notifyChange: onChange,
         }),
         [
@@ -239,6 +304,10 @@ const FileUploaderRoot: React.FC<FileUploaderProps> = (props) => {
             resolvedAccept,
             resolvedMultiple,
             files,
+            resolvedDefaultUrls,
+            removeDefaultUrl,
+            showRemove,
+            stackedListView,
             inputId,
             openFileDialog,
             addFiles,
