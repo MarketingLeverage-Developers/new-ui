@@ -38,7 +38,7 @@ const InnerTextInput = forwardRef<HTMLInputElement, InnerTextInputProps>(
         return (
             <div className={cn} style={wrapperStyle}>
                 <span className={styles.InnerText}>{innerText}</span>
-                <input ref={ref} value={value} onBlur={handleBlur} className={styles.Input} {...props} />
+                <input ref={ref} value={value ?? ''} onBlur={handleBlur} className={styles.Input} {...props} />
                 {unit && <span className={styles.Unit}>{unit}</span>}
                 {showFeedback && helperText && <span className={styles.Helper}>{helperText}</span>}
             </div>

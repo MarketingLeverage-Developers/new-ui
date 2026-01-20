@@ -41,7 +41,7 @@ const RoundedInput: React.FC<RoundedInputProps> = ({
 
     return (
         <div className={cn} style={{ ...wrapperStyle }}>
-            <input {...props} value={value} onBlur={handleBlur} />
+            <input {...props} value={value ?? ''} onBlur={handleBlur} />
             {showFeedback && status !== STATUS.DEFAULT && helperText && (
                 <span className={styles.Helper}>{helperText}</span>
             )}
