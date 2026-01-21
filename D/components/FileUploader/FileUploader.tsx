@@ -1,13 +1,12 @@
-import React, { createContext, useCallback, useContext, useId, useMemo, useRef, useState, type ReactNode } from 'react';
+// src/shared/primitives/D/components/FileUploader/FileUploader.tsx
+
+import React, { createContext, useContext, useId, useMemo, useRef, useState, type ReactNode } from 'react';
 
 import BaseFileUploader, { type BaseFileUploaderExtraProps } from './components/BaseFileUploader/BaseFileUploader';
-
 import BaseFileUploaderDropzone, {
     type BaseFileUploaderDropzoneProps,
 } from './components/BaseFileUploader/components/BaseFileUploaderDropzone/BaseFileUploaderDropzone';
-
 import BaseFileUploaderList from './components/BaseFileUploader/components/BaseFileUploaderList/BaseFileUploaderList';
-
 import InputFileUploader, { type InputFileUploaderProps } from './components/InputFileUploader/InputFileUploader';
 
 import type { BaseStackedFileUploaderDropzoneProps } from './components/BaseStackedFileUploader/components/BaseStackedFileUploaderDropzone/BaseStackedFileUploaderDropzone';
@@ -21,15 +20,29 @@ import BaseAlterFileUploaderDropzone, {
 
 import type { BaseStackedFileUploaderExtraProps } from './components/BaseStackedFileUploader/BaseStackedFileUploader';
 
+/**
+ * ✅ 핵심: "중복 타입 정의"를 없애고, 프로젝트 공용 모델 타입을 그대로 재사용한다.
+ * - 여기서 ServerFile.fileType이 string 이었던 게 충돌 원인
+ * - 공용 타입(FileType, ServerImage, ServerFile)을 한 군데서만 정의하고 import해서 쓴다
+ */
+import type { FileType, ServerFile, ServerImage } from '@/shared/types/common/model';
+
 export type FileUploaderVariant = 'base' | 'input' | 'base-stacked' | 'base-alter';
 export type FileUploaderType = 'image' | 'file';
 
-/** ✅ 서버에서 내려오는 "기존 파일 링크" 모델 */
-export type FileUploaderDefaultUrl = string;
+export type FileUploaderValueByType = {
+    image: ServerImage[];
+    file: ServerFile[];
+};
 
-export type FileUploaderCommonProps = {
-    type: FileUploaderType;
+export type FileUploaderValue<T extends FileUploaderType> = FileUploaderValueByType[T];
 
+export type FileUploaderUploader<T extends FileUploaderType> = (params: {
+    type: T;
+    files: File[];
+}) => Promise<FileUploaderValue<T>>;
+
+export type FileUploaderCommonBaseProps = {
     disabled?: boolean;
     multiple?: boolean;
     accept?: string;
@@ -37,19 +50,26 @@ export type FileUploaderCommonProps = {
     maxCount?: number;
     maxFileSizeMB?: number;
 
-    /** ✅ 새로 선택한 파일들 (기존 방식 그대로) */
-    value?: File[];
-    onChange?: (files: File[]) => void;
-
-    /** ✅ 기존(서버) 파일 링크들 */
-    defaultUrls?: FileUploaderDefaultUrl[];
-    onDefaultUrlsChange?: (next: FileUploaderDefaultUrl[]) => void;
-
-    /** ✅ List에서 삭제 버튼 표시 여부 (상세에서 false로 사용) */
     showRemove?: boolean;
 
     children: ReactNode;
 };
+
+export type FileUploaderImageProps = FileUploaderCommonBaseProps & {
+    type: 'image';
+    value?: ServerImage[];
+    onChange?: (next: ServerImage[]) => void;
+    uploader?: FileUploaderUploader<'image'>;
+};
+
+export type FileUploaderFileProps = FileUploaderCommonBaseProps & {
+    type: 'file';
+    value?: ServerFile[];
+    onChange?: (next: ServerFile[]) => void;
+    uploader?: FileUploaderUploader<'file'>;
+};
+
+export type FileUploaderCommonProps = FileUploaderImageProps | FileUploaderFileProps;
 
 export type FileUploaderProps =
     | ({ variant: 'base' } & FileUploaderCommonProps & BaseFileUploaderExtraProps)
@@ -59,7 +79,6 @@ export type FileUploaderProps =
           BaseStackedFileUploaderExtraProps)
     | ({ variant: 'base-alter' } & FileUploaderCommonProps & BaseFileUploaderExtraProps);
 
-/** 1) 공통 기능 Context */
 export type FileUploaderContextValue = {
     type: FileUploaderType;
 
@@ -67,60 +86,47 @@ export type FileUploaderContextValue = {
     accept?: string;
     multiple: boolean;
 
-    /** ✅ 새 파일들 */
-    files: File[];
+    serverItems: ServerImage[] | ServerFile[];
 
-    /** ✅ 기존(서버) 파일 링크들 */
-    defaultUrls: FileUploaderDefaultUrl[];
-    removeDefaultUrl: (url: FileUploaderDefaultUrl) => void;
-
-    /** ✅ 삭제 버튼 표시 여부 */
     showRemove: boolean;
 
-    /** ✅ base-stacked 전용 옵션 (BaseStackedFileUploaderList에서만 사용) */
     stackedListView?: BaseStackedFileUploaderExtraProps['stackedListView'];
 
     inputId: string;
     inputRef: React.RefObject<HTMLInputElement | null>;
 
     openFileDialog: () => void;
-    addFiles: (picked: File[]) => void;
-    removeFile: (key: string) => void;
 
-    getFileKey: (file: File) => string;
+    addFiles: (picked: File[]) => void;
+
+    removeItem: (key: string) => void;
+
+    getItemKey: (item: ServerImage | ServerFile) => string;
 
     maxCount: number;
     maxFileSizeMB: number;
 
-    notifyChange?: (files: File[]) => void;
+    isUploading: boolean;
 };
 
 const FileUploaderContext = createContext<FileUploaderContextValue | null>(null);
 
 export const useFileUploader = () => {
     const ctx = useContext(FileUploaderContext);
-    if (!ctx) {
-        throw new Error("FileUploader.* must be used inside <FileUploader variant='...' ...>");
-    }
+    if (!ctx) throw new Error("FileUploader.* must be used inside <FileUploader variant='...' ...>");
     return ctx;
 };
 
-/** 2) variant 공유 Context */
-type FileUploaderVariantContextValue = {
-    variant: FileUploaderVariant;
-};
+type FileUploaderVariantContextValue = { variant: FileUploaderVariant };
 
 const FileUploaderVariantContext = createContext<FileUploaderVariantContextValue | null>(null);
 
 const useFileUploaderVariant = () => {
     const ctx = useContext(FileUploaderVariantContext);
-    if (!ctx) {
-        throw new Error("FileUploader.* must be used inside <FileUploader variant='...' ...>");
-    }
+    if (!ctx) throw new Error("FileUploader.* must be used inside <FileUploader variant='...' ...>");
     return ctx;
 };
 
-/** 3) 합성 컴포넌트 타입 */
 type FileUploaderCompound = React.FC<FileUploaderProps> & {
     Dropzone: React.FC<
         | BaseFileUploaderDropzoneProps
@@ -131,7 +137,6 @@ type FileUploaderCompound = React.FC<FileUploaderProps> & {
     List: React.FC;
 };
 
-/** 4) Root */
 const FileUploaderRoot: React.FC<FileUploaderProps> = (props) => {
     const {
         variant,
@@ -143,17 +148,12 @@ const FileUploaderRoot: React.FC<FileUploaderProps> = (props) => {
         maxFileSizeMB,
         value,
         onChange,
-
-        defaultUrls,
-        onDefaultUrlsChange,
-
+        uploader,
         showRemove = true,
-
         children,
         className,
     } = props;
 
-    /** ✅ base-stacked 전용 옵션은 base-stacked일 때만 읽기 */
     const stackedListView =
         variant === 'base-stacked'
             ? (props as { stackedListView?: BaseStackedFileUploaderExtraProps['stackedListView'] }).stackedListView
@@ -162,31 +162,15 @@ const FileUploaderRoot: React.FC<FileUploaderProps> = (props) => {
     const inputId = useId();
     const inputRef = useRef<HTMLInputElement | null>(null);
 
-    /** ✅ 기존 링크는 "컨트롤드/언컨트롤드" 둘 다 지원 */
-    const isDefaultUrlsControlled = Array.isArray(defaultUrls);
-    const [innerDefaultUrls, setInnerDefaultUrls] = useState<FileUploaderDefaultUrl[]>([]);
-    const resolvedDefaultUrls = isDefaultUrlsControlled ? (defaultUrls as FileUploaderDefaultUrl[]) : innerDefaultUrls;
-
-    const commitDefaultUrls = useCallback(
-        (next: FileUploaderDefaultUrl[]) => {
-            if (!isDefaultUrlsControlled) setInnerDefaultUrls(next);
-            onDefaultUrlsChange?.(next);
-        },
-        [isDefaultUrlsControlled, onDefaultUrlsChange]
-    );
-
-    const removeDefaultUrl = useCallback(
-        (url: FileUploaderDefaultUrl) => {
-            const next = resolvedDefaultUrls.filter((u) => u !== url);
-            commitDefaultUrls(next);
-        },
-        [commitDefaultUrls, resolvedDefaultUrls]
-    );
-
-    /** ✅ 기존 파일(value File[])은 기존대로 */
     const isControlled = Array.isArray(value);
-    const [innerFiles, setInnerFiles] = useState<File[]>([]);
-    const files = isControlled ? (value as File[]) : innerFiles;
+
+    const [innerValue, setInnerValue] = useState<ServerImage[] | ServerFile[]>(() =>
+        type === 'image' ? ([] as ServerImage[]) : ([] as ServerFile[])
+    );
+
+    const serverItems: ServerImage[] | ServerFile[] = isControlled ? (value as any) : innerValue;
+
+    const [isUploading, setIsUploading] = useState(false);
 
     const resolvedMultiple = useMemo(() => {
         if (variant === 'base-alter') return false;
@@ -206,65 +190,110 @@ const FileUploaderRoot: React.FC<FileUploaderProps> = (props) => {
 
     const resolvedMaxFileSizeMB = useMemo(() => maxFileSizeMB ?? (type === 'file' ? 500 : 50), [maxFileSizeMB, type]);
 
-    const getFileKey = useCallback((file: File) => `${file.name}_${file.size}_${file.lastModified}`, []);
+    const isOverSize = (file: File) => {
+        const maxBytes = resolvedMaxFileSizeMB * 1024 * 1024;
+        return file.size > maxBytes;
+    };
 
-    const commit = useCallback(
-        (next: File[]) => {
-            if (isControlled) {
-                onChange?.(next);
-                return;
-            }
-            setInnerFiles(next);
-            onChange?.(next);
-        },
-        [isControlled, onChange]
-    );
+    const getItemKey = (item: ServerImage | ServerFile) => {
+        if ('imageUUID' in item) return `img_${item.imageUUID}`;
+        return `file_${item.fileUUID}`;
+    };
 
-    const isOverSize = useCallback(
-        (file: File) => {
-            const maxBytes = resolvedMaxFileSizeMB * 1024 * 1024;
-            return file.size > maxBytes;
-        },
-        [resolvedMaxFileSizeMB]
-    );
+    const commit = (next: ServerImage[] | ServerFile[]) => {
+        if (!isControlled) setInnerValue(next);
+        onChange?.(next as any);
+    };
 
-    const addFiles = useCallback(
-        (picked: File[]) => {
-            if (disabled) return;
+    const makeServerImageFromLocalFile = (file: File): ServerImage => {
+        const tempUUID = `tmp_${file.name}_${file.size}_${file.lastModified}`;
+        const url = URL.createObjectURL(file);
 
-            const filtered = picked.filter((f) => !isOverSize(f));
-            if (filtered.length === 0) return;
+        return {
+            imageUUID: tempUUID,
+            imageName: file.name,
+            imageUrl: url,
+        };
+    };
 
-            if (type === 'file') {
-                const merged = resolvedMultiple ? [...files, ...filtered] : filtered.slice(-1);
-                const next = merged.slice(0, resolvedMaxCount);
+    const makeServerFileFromLocalFile = (file: File): ServerFile => {
+        const tempUUID = `tmp_${file.name}_${file.size}_${file.lastModified}`;
+        const url = URL.createObjectURL(file);
+
+        return {
+            fileUUID: tempUUID,
+            originalFileName: file.name,
+            storedFileName: file.name,
+            filePath: url,
+            fileType: (file.type || 'application/octet-stream') as unknown as FileType,
+        };
+    };
+
+    const mergeAndClamp = (current: any[], incoming: any[]) => {
+        const merged = resolvedMultiple ? [...current, ...incoming] : incoming.slice(-1);
+        return merged.slice(0, resolvedMaxCount);
+    };
+
+    const addFiles = async (picked: File[]) => {
+        if (disabled) return;
+
+        const filtered = picked.filter((f) => !isOverSize(f));
+        if (filtered.length === 0) return;
+
+        if (uploader) {
+            try {
+                setIsUploading(true);
+
+                if (type === 'image') {
+                    const uploaded = await (uploader as FileUploaderUploader<'image'>)({
+                        type: 'image',
+                        files: filtered,
+                    });
+                    const next = mergeAndClamp(serverItems as ServerImage[], uploaded as ServerImage[]);
+                    commit(next);
+                    return;
+                }
+
+                const uploaded = await (uploader as FileUploaderUploader<'file'>)({ type: 'file', files: filtered });
+                const next = mergeAndClamp(serverItems as ServerFile[], uploaded as ServerFile[]);
                 commit(next);
                 return;
+            } finally {
+                setIsUploading(false);
             }
+        }
 
-            const merged = [...files, ...filtered];
+        if (type === 'image') {
+            const current = (serverItems as ServerImage[]) ?? [];
+            const mapped = filtered.map(makeServerImageFromLocalFile);
+            const next = mergeAndClamp(current, mapped);
+            commit(next);
+            return;
+        }
 
-            if (resolvedMaxCount === 1) {
-                commit(merged.slice(-1));
-                return;
-            }
+        const current = (serverItems as ServerFile[]) ?? [];
+        const mapped = filtered.map(makeServerFileFromLocalFile);
+        const next = mergeAndClamp(current, mapped);
+        commit(next);
+    };
 
-            commit(merged.slice(0, resolvedMaxCount));
-        },
-        [commit, disabled, files, isOverSize, resolvedMaxCount, resolvedMultiple, type]
-    );
+    const removeItem = (key: string) => {
+        if (type === 'image') {
+            const current = (serverItems as ServerImage[]) ?? [];
+            const next = current.filter((it) => getItemKey(it) !== key);
+            commit(next);
+            return;
+        }
 
-    const removeFile = useCallback(
-        (key: string) => {
-            commit(files.filter((f) => getFileKey(f) !== key));
-        },
-        [commit, files, getFileKey]
-    );
+        const current = (serverItems as ServerFile[]) ?? [];
+        const next = current.filter((it) => getItemKey(it) !== key);
+        commit(next);
+    };
 
-    const openFileDialog = useCallback(() => {
-        if (disabled) return;
+    const openFileDialog = () => {
+        if (disabled || isUploading) return;
         inputRef.current?.click();
-    }, [disabled]);
+    };
 
     const Frame = useMemo(() => {
         if (variant === 'base-alter') return BaseAlterFileUploader;
@@ -277,45 +306,31 @@ const FileUploaderRoot: React.FC<FileUploaderProps> = (props) => {
             disabled,
             accept: resolvedAccept,
             multiple: resolvedMultiple,
-
-            files,
-
-            defaultUrls: resolvedDefaultUrls,
-            removeDefaultUrl,
-
+            serverItems,
             showRemove,
-
             stackedListView,
-
             inputId,
             inputRef,
             openFileDialog,
             addFiles,
-            removeFile,
-            getFileKey,
+            removeItem,
+            getItemKey,
             maxCount: resolvedMaxCount,
             maxFileSizeMB: resolvedMaxFileSizeMB,
-
-            notifyChange: onChange,
+            isUploading,
         }),
         [
             type,
             disabled,
             resolvedAccept,
             resolvedMultiple,
-            files,
-            resolvedDefaultUrls,
-            removeDefaultUrl,
+            serverItems,
             showRemove,
             stackedListView,
             inputId,
-            openFileDialog,
-            addFiles,
-            removeFile,
-            getFileKey,
             resolvedMaxCount,
             resolvedMaxFileSizeMB,
-            onChange,
+            isUploading,
         ]
     );
 
@@ -328,35 +343,25 @@ const FileUploaderRoot: React.FC<FileUploaderProps> = (props) => {
     );
 };
 
-/** 5) Dropzone 분기 */
 const FileUploaderDropzone: FileUploaderCompound['Dropzone'] = (props) => {
     const { variant } = useFileUploaderVariant();
 
-    if (variant === 'input') {
-        return <InputFileUploader {...(props as InputFileUploaderProps)} />;
-    }
-
-    if (variant === 'base-stacked') {
+    if (variant === 'input') return <InputFileUploader {...(props as InputFileUploaderProps)} />;
+    if (variant === 'base-stacked')
         return <BaseStackedFileUploaderDropzone {...(props as BaseStackedFileUploaderDropzoneProps)} />;
-    }
-
-    if (variant === 'base-alter') {
+    if (variant === 'base-alter')
         return <BaseAlterFileUploaderDropzone {...(props as BaseAlterFileUploaderDropzoneProps)} />;
-    }
 
     return <BaseFileUploaderDropzone {...(props as BaseFileUploaderDropzoneProps)} />;
 };
 
-/** 6) List */
 const FileUploaderList: React.FC = () => {
     const { variant } = useFileUploaderVariant();
 
     if (variant === 'input') return null;
     if (variant === 'base-alter') return null;
 
-    if (variant === 'base-stacked') {
-        return <BaseStackedFileUploaderList />;
-    }
+    if (variant === 'base-stacked') return <BaseStackedFileUploaderList />;
 
     return <BaseFileUploaderList />;
 };

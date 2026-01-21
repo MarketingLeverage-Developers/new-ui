@@ -14,17 +14,20 @@ export type InputFileUploaderProps = {
 const InputFileUploader: React.FC<InputFileUploaderProps> = (props) => {
     const { placeholder = '파일을 첨부해주세요', buttonText = '파일첨부', className, message } = props;
 
-    const { type, disabled, accept, multiple, files, inputId, inputRef, addFiles } = useFileUploader();
+    const { type, disabled, accept, multiple, serverItems, inputId, inputRef, addFiles, isUploading } =
+        useFileUploader();
 
     const displayText = useMemo(() => {
-        if (!files || files.length === 0) return placeholder;
+        const count = Array.isArray(serverItems) ? serverItems.length : 0;
+        if (count === 0) return placeholder;
 
         if (type === 'image') {
-            return `${files.length}개 파일 선택됨`;
+            return `${count}개 파일 선택됨`;
         }
 
-        return files[0]?.name ?? placeholder;
-    }, [files, placeholder, type]);
+        const first = serverItems[0] as any;
+        return first?.originalFileName ?? first?.storedFileName ?? placeholder;
+    }, [placeholder, serverItems, type]);
 
     const handlePick: React.ChangeEventHandler<HTMLInputElement> = (e) => {
         const picked = Array.from(e.target.files ?? []);
@@ -36,12 +39,12 @@ const InputFileUploader: React.FC<InputFileUploaderProps> = (props) => {
     };
 
     const handleOpen = () => {
-        if (disabled) return;
+        if (disabled || isUploading) return;
         inputRef.current?.click();
     };
 
     const rootClassName = classNames(styles.InputFileUploader, className, {
-        [styles.Disabled]: disabled,
+        [styles.Disabled]: disabled || isUploading,
     });
 
     return (
@@ -52,7 +55,7 @@ const InputFileUploader: React.FC<InputFileUploaderProps> = (props) => {
                     ref={inputRef}
                     type="file"
                     className={styles.HiddenInput}
-                    disabled={disabled}
+                    disabled={disabled || isUploading}
                     multiple={multiple}
                     accept={accept}
                     onChange={handlePick}
@@ -60,8 +63,13 @@ const InputFileUploader: React.FC<InputFileUploaderProps> = (props) => {
 
                 <div className={styles.LeftText}>{displayText}</div>
 
-                <button type="button" className={styles.AttachButton} onClick={handleOpen} disabled={disabled}>
-                    {buttonText}
+                <button
+                    type="button"
+                    className={styles.AttachButton}
+                    onClick={handleOpen}
+                    disabled={disabled || isUploading}
+                >
+                    {isUploading ? '업로드중...' : buttonText}
                 </button>
             </div>
 
