@@ -16,13 +16,16 @@ export type BaseFileUploaderDropzoneProps = Omit<HTMLAttributes<HTMLDivElement>,
 const BaseFileUploaderDropzone: React.FC<BaseFileUploaderDropzoneProps> = (props) => {
     const { guideText, buttonText = '파일 선택', className, ...rest } = props;
 
-    const { type, disabled, inputId, inputRef, accept, multiple, addFiles, openFileDialog } = useFileUploader();
+    const { type, disabled, isUploading, inputId, inputRef, accept, multiple, addFiles, openFileDialog } =
+        useFileUploader();
 
     const [isDragging, setIsDragging] = useState(false);
 
     const resolvedGuideText =
         guideText ??
         (type === 'image' ? '5개 이하의 이미지를 끌어오거나 (jpg, png, gif)' : '500MB 이하의 파일을 끌어오거나 (zip)');
+
+    const blocked = disabled || isUploading;
 
     const handleInputChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
         const list = e.target.files;
@@ -37,22 +40,22 @@ const BaseFileUploaderDropzone: React.FC<BaseFileUploaderDropzoneProps> = (props
 
     const handleDragEnter = useCallback<React.DragEventHandler<HTMLDivElement>>(
         (e) => {
-            if (disabled) return;
+            if (blocked) return;
             e.preventDefault();
             e.stopPropagation();
             setIsDragging(true);
         },
-        [disabled]
+        [blocked]
     );
 
     const handleDragOver = useCallback<React.DragEventHandler<HTMLDivElement>>(
         (e) => {
-            if (disabled) return;
+            if (blocked) return;
             e.preventDefault();
             e.stopPropagation();
             setIsDragging(true);
         },
-        [disabled]
+        [blocked]
     );
 
     const handleDragLeave = useCallback<React.DragEventHandler<HTMLDivElement>>((e) => {
@@ -63,7 +66,7 @@ const BaseFileUploaderDropzone: React.FC<BaseFileUploaderDropzoneProps> = (props
 
     const handleDrop = useCallback<React.DragEventHandler<HTMLDivElement>>(
         (e) => {
-            if (disabled) return;
+            if (blocked) return;
             e.preventDefault();
             e.stopPropagation();
             setIsDragging(false);
@@ -73,13 +76,13 @@ const BaseFileUploaderDropzone: React.FC<BaseFileUploaderDropzoneProps> = (props
 
             addFiles(Array.from(list));
         },
-        [addFiles, disabled]
+        [addFiles, blocked]
     );
 
     const rootClassName = classNames(
         styles.Dropzone,
         {
-            [styles.Disabled]: disabled,
+            [styles.Disabled]: blocked,
             [styles.Dragging]: isDragging,
         },
         className
@@ -99,8 +102,8 @@ const BaseFileUploaderDropzone: React.FC<BaseFileUploaderDropzoneProps> = (props
                 <div className={styles.Text}>{resolvedGuideText}</div>
             </div>
 
-            <Button variant="base" size="md" primary disabled={disabled} onClick={openFileDialog}>
-                {buttonText}
+            <Button variant="base" size="md" primary disabled={blocked} onClick={openFileDialog}>
+                {isUploading ? '업로드중...' : buttonText}
             </Button>
 
             <input
@@ -108,7 +111,7 @@ const BaseFileUploaderDropzone: React.FC<BaseFileUploaderDropzoneProps> = (props
                 ref={inputRef}
                 className={styles.HiddenInput}
                 type="file"
-                disabled={disabled}
+                disabled={blocked}
                 multiple={multiple}
                 accept={accept}
                 onChange={handleInputChange}

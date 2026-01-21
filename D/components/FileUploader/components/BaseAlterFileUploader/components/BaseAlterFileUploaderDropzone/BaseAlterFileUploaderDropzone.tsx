@@ -11,45 +11,52 @@ export type BaseAlterFileUploaderDropzoneProps = {
     guideText?: string;
     buttonText?: string;
     className?: string;
-    onChange?: (files: File[]) => void;
 };
 
 const BaseAlterFileUploaderDropzone: React.FC<BaseAlterFileUploaderDropzoneProps> = (props) => {
-    const { guideText, buttonText = '파일 선택', className, onChange } = props;
+    const { guideText, buttonText = '파일 선택', className } = props;
 
-    const { type, disabled, inputId, inputRef, accept, files, addFiles, openFileDialog } = useFileUploader();
+    const { type, disabled, accept, inputId, inputRef, openFileDialog, addFiles, serverItems, isUploading } =
+        useFileUploader();
 
     const [isDragging, setIsDragging] = useState(false);
 
-    const file = files?.[0];
+    const resolvedGuideText = guideText ?? '이미지를 업로드 해주세요';
 
     const previewUrl = useMemo(() => {
-        if (!file) return null;
         if (type !== 'image') return null;
-        return URL.createObjectURL(file);
-    }, [file, type]);
+
+        const first = (serverItems?.[0] ?? null) as { imageUrl?: string } | null;
+        if (!first?.imageUrl) return null;
+
+        return first.imageUrl;
+    }, [serverItems, type]);
 
     useEffect(
         () => () => {
-            if (previewUrl) URL.revokeObjectURL(previewUrl);
+            // ✅ FileUploader Root에서 objectURL을 만들기도 하고(로컬 tmp),
+            // ✅ 서버에서 내려온 URL일 수도 있다.
+            // ✅ revoke는 objectURL일 때만 안전하게 처리
+            if (previewUrl && previewUrl.startsWith('blob:')) {
+                URL.revokeObjectURL(previewUrl);
+            }
         },
         [previewUrl]
     );
 
-    const resolvedGuideText = guideText ?? '이미지를 업로드 해주세요';
-
     const commitPicked = useCallback(
         (picked: File[]) => {
+            // ✅ Root의 addFiles가 업로더(uploader) 있으면 업로드까지 처리함
             addFiles(picked);
-            onChange?.(picked);
         },
-        [addFiles, onChange]
+        [addFiles]
     );
 
     const handleInputChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
         const list = e.target.files;
         if (!list || list.length === 0) return;
 
+        // ✅ 단일 이미지(첫 번째만)
         const picked = [list[0]];
         commitPicked(picked);
 
@@ -58,22 +65,22 @@ const BaseAlterFileUploaderDropzone: React.FC<BaseAlterFileUploaderDropzoneProps
 
     const handleDragEnter = useCallback<React.DragEventHandler<HTMLDivElement>>(
         (e) => {
-            if (disabled) return;
+            if (disabled || isUploading) return;
             e.preventDefault();
             e.stopPropagation();
             setIsDragging(true);
         },
-        [disabled]
+        [disabled, isUploading]
     );
 
     const handleDragOver = useCallback<React.DragEventHandler<HTMLDivElement>>(
         (e) => {
-            if (disabled) return;
+            if (disabled || isUploading) return;
             e.preventDefault();
             e.stopPropagation();
             setIsDragging(true);
         },
-        [disabled]
+        [disabled, isUploading]
     );
 
     const handleDragLeave = useCallback<React.DragEventHandler<HTMLDivElement>>((e) => {
@@ -84,7 +91,7 @@ const BaseAlterFileUploaderDropzone: React.FC<BaseAlterFileUploaderDropzoneProps
 
     const handleDrop = useCallback<React.DragEventHandler<HTMLDivElement>>(
         (e) => {
-            if (disabled) return;
+            if (disabled || isUploading) return;
             e.preventDefault();
             e.stopPropagation();
             setIsDragging(false);
@@ -96,13 +103,13 @@ const BaseAlterFileUploaderDropzone: React.FC<BaseAlterFileUploaderDropzoneProps
             const picked = [list[0]];
             commitPicked(picked);
         },
-        [commitPicked, disabled]
+        [commitPicked, disabled, isUploading]
     );
 
     const rootClassName = classNames(
         styles.Dropzone,
         {
-            [styles.Disabled]: disabled,
+            [styles.Disabled]: disabled || isUploading,
             [styles.HasImage]: !!previewUrl,
             [styles.Dragging]: isDragging,
         },
@@ -117,12 +124,12 @@ const BaseAlterFileUploaderDropzone: React.FC<BaseAlterFileUploaderDropzoneProps
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
         >
-            {/* 업로드 전 UI: stacked 느낌 */}
+            {/* 업로드 전 UI */}
             <div className={styles.Stacked}>
                 <img className={styles.Icon} src={PictureIcon} alt="사진" />
                 <div className={styles.Text}>{resolvedGuideText}</div>
 
-                <Button variant="base" size="md" primary disabled={disabled} onClick={openFileDialog}>
+                <Button variant="base" size="md" primary disabled={disabled || isUploading} onClick={openFileDialog}>
                     {buttonText}
                 </Button>
             </div>
@@ -133,7 +140,7 @@ const BaseAlterFileUploaderDropzone: React.FC<BaseAlterFileUploaderDropzoneProps
                     type="button"
                     className={styles.ImageOverlay}
                     onClick={openFileDialog}
-                    disabled={disabled}
+                    disabled={disabled || isUploading}
                     aria-label="change image"
                 >
                     <img className={styles.Image} src={previewUrl} alt="uploaded" />
@@ -145,7 +152,7 @@ const BaseAlterFileUploaderDropzone: React.FC<BaseAlterFileUploaderDropzoneProps
                 ref={inputRef}
                 className={styles.HiddenInput}
                 type="file"
-                disabled={disabled}
+                disabled={disabled || isUploading}
                 multiple={false}
                 accept={accept}
                 onChange={handleInputChange}
