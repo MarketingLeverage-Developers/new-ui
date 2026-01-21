@@ -1,0 +1,14 @@
+/* CheckBoxDropdown/CheckBoxDropdown.module.scss */
+.Box {
+    width: var(--Width, 100%);
+    background-color: var(--BackgroundColor, #fff);
+}
+
+.Full {
+    width: 100%;
+}
+
+.Disabled {
+    opacity: 0.6;
+    pointer-events: none;
+}

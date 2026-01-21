@@ -1,0 +1,58 @@
+/* CheckBoxDropdown/Trigger/Trigger.module.scss */
+.Trigger {
+    width: 100%;
+    min-height: 40px;
+    padding: 10px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+    background: #fff;
+    cursor: pointer;
+}
+
+.Display {
+    flex: 1;
+    min-width: 0;
+    font-size: 14px;
+    color: #111827;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.Icon {
+    flex: 0 0 auto;
+    font-size: 20px;
+    color: #6b7280;
+}
+
+.Disabled {
+    cursor: not-allowed;
+}
+
+/* size */
+.Xxs {
+    min-height: 28px;
+    padding: 6px 10px;
+    font-size: 12px;
+}
+.Xs {
+    min-height: 32px;
+    padding: 7px 10px;
+}
+.Sm {
+    min-height: 36px;
+    padding: 8px 12px;
+}
+.Md {
+    min-height: 40px;
+    padding: 10px 12px;
+}
+.Lg {
+    min-height: 44px;
+    padding: 12px 14px;
+}
