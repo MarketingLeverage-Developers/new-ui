@@ -10,29 +10,34 @@
     gap: 12px;
 
     background-color: transparent;
+    min-width: 0;
+
+    transition:
+        background-color 0.15s ease,
+        border-color 0.15s ease,
+        box-shadow 0.15s ease;
 }
 
 .Left {
     display: flex;
     align-items: center;
     gap: 10px;
+
     min-width: 0;
+    flex: 1 1 auto;
 }
 
-.Icon {
-    width: 22px;
-    height: 22px;
-    border-radius: 6px;
-    background-color: var(--Gray6);
+/* ✅ 아이콘 “고정 크기” */
+.Left img {
+    width: 60px;
+    height: 60px;
+
+    /* flex 레이아웃에서 공간 부족해도 아이콘이 찌그러지지 않게 */
     flex: 0 0 auto;
-}
 
-.IconImage {
-    /* 실제 아이콘 넣을 거면 여기에 */
-}
-
-.IconFile {
-    /* 실제 아이콘 넣을 거면 여기에 */
+    /* svg/img 비율 유지 */
+    object-fit: contain;
+    display: block;
 }
 
 .Text {
@@ -43,17 +48,30 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+
+    min-width: 0;
 }
 
 .HiddenInput {
     display: none;
 }
 
+.Dragging {
+    border-color: var(--Gray2);
+    background-color: var(--Gray6);
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.04);
+}
+
 .Disabled {
     background-color: var(--Gray6);
     border-color: var(--Gray5);
+    cursor: not-allowed;
 }
 
 .Disabled .Text {
     color: var(--Gray3);
+}
+
+.Disabled img {
+    opacity: 0.65;
 }
