@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import TemplateSelectModal from '../../TemplateSelectModal';
-import type { TemplateListeItem } from '@/features/template/list/logic/types';
+import type { TemplateListItem } from '@/features/template/list/logic/types';
 import { BaseTooltip } from '@/shared/primitives/BaseTooltip/BaseTooltip';
 import { Image } from '@/shared/primitives/Image/Image';
 
 type Props = {
-    data: TemplateListeItem[];
+    data: TemplateListItem[];
     templateId: number | null;
     setTemplateId: (id: number | null) => void;
 
@@ -56,7 +56,7 @@ export const Template = ({
 
     const triggerUrl = templateImageUrl ? `${import.meta.env.VITE_API_URL}/api${templateImageUrl}` : '';
 
-    const handleSelect = (item: TemplateListeItem) => {
+    const handleSelect = (item: TemplateListItem) => {
         setTemplateId(item.id);
         setTemplateImageUUID(item?.images?.[0]?.imageUUID ?? '');
         setTemplateImageUrl(item?.images?.[0]?.imageUrl ?? '');
@@ -69,6 +69,7 @@ export const Template = ({
                 onClickCapture={() => {
                     onSetClick?.();
                 }}
+                style={{ width: '100%' }}
             >
                 <TemplateSelectModal.Trigger
                     imageUrl={triggerUrl}
