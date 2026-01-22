@@ -91,7 +91,9 @@ const BaseStackedFileUploaderDropzone: React.FC<BaseStackedFileUploaderDropzoneP
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
         >
-            {type === 'file' ? <img src={FolderIcon} alt="폴더" /> : <img src={PictureIcon} alt="사진" />}
+            <div className={styles.Icon}>
+                {type === 'file' ? <img src={FolderIcon} alt="폴더" /> : <img src={PictureIcon} alt="사진" />}
+            </div>
 
             <div className={styles.Text}>{resolvedGuideText}</div>
 
