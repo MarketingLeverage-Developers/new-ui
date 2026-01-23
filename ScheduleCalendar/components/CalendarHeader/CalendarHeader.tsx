@@ -62,7 +62,7 @@ export const CalendarHeader = ({
     return (
         <Flex align="center" justify="space-between" height={45}>
             <Flex align="center" gap={8}>
-                <div
+                {/* <div
                     onClick={handleToday}
                     onMouseDown={preventSelect}
                     style={{
@@ -77,7 +77,7 @@ export const CalendarHeader = ({
                     }}
                 >
                     이번달
-                </div>
+                </div> */}
 
                 <Flex padding={{ x: 8, y: 7 }}>
                     <GrFormPrevious
