@@ -9,7 +9,7 @@
     border: none;
     cursor: pointer;
 
-    span {
+    > span {
         font-size: 13px;
         font-weight: 500;
         color: var(--Gray2);
@@ -17,7 +17,7 @@
 
     &:hover {
         background-color: var(--Gray5);
-        span {
+        > span {
             color: var(--Gray1);
         }
     }
