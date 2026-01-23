@@ -55,6 +55,7 @@ export const Template = ({
     // const selected = useMemo(() => data.find((t) => t.id === templateId) ?? null, [data, templateId]);
 
     const triggerUrl = templateImageUrl ? `${import.meta.env.VITE_API_URL}/api${templateImageUrl}` : '';
+    const canDelete = Boolean(templateImageUUID || templateImageUrl);
 
     const handleSelect = (item: TemplateListItem) => {
         setTemplateId(item.id);
@@ -75,8 +76,12 @@ export const Template = ({
                     imageUrl={triggerUrl}
                     templateImageUUID={templateImageUUID}
                     onDeleteClick={
-                        triggerUrl
+                        canDelete
                             ? () => {
+                                  if (onDeleteClick) {
+                                      onDeleteClick();
+                                      return;
+                                  }
                                   setTemplateId(null);
                                   setTemplateImageUUID('');
                                   setTemplateImageUrl('');
