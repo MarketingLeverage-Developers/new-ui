@@ -7,6 +7,7 @@ import { useFileUploader } from '@/shared/primitives/D/components/FileUploader/F
 import Button from '@/shared/primitives/D/components/Button/Button';
 import FolderIcon from '@/shared/assets/images/Folder.svg';
 import PictureIcon from '@/shared/assets/images/Picture.svg';
+import { Common } from '@/shared/primitives/C/Common';
 
 export type BaseStackedFileUploaderDropzoneProps = Omit<HTMLAttributes<HTMLDivElement>, 'children'> & {
     guideText?: string;
@@ -92,7 +93,11 @@ const BaseStackedFileUploaderDropzone: React.FC<BaseStackedFileUploaderDropzoneP
             onDrop={handleDrop}
         >
             <div className={styles.Icon}>
-                {type === 'file' ? <img src={FolderIcon} alt="폴더" /> : <img src={PictureIcon} alt="사진" />}
+                {type === 'file' ? (
+                    <Common.Image src={FolderIcon} alt="폴더" width="100%" height="100%" fit="contain" />
+                ) : (
+                    <Common.Image src={PictureIcon} alt="사진" width="100%" height="100%" fit="contain" />
+                )}
             </div>
 
             <div className={styles.Text}>{resolvedGuideText}</div>

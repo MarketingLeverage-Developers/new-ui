@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import styles from './BaseFileUploaderList.module.scss';
 import { useFileUploader } from '@/shared/primitives/D/components/FileUploader/FileUploader';
+import { Common } from '@/shared/primitives/C/Common';
 
 type FileType = 'IMAGE' | 'ZIP' | 'VIDEO' | 'ETC';
 
@@ -24,6 +25,7 @@ const isFileType = (value: unknown): value is FileType =>
 
 const BaseFileUploaderList: React.FC = () => {
     const { type, serverItems, removeItem, getItemKey, showRemove } = useFileUploader();
+    const apiPrefix = import.meta.env.VITE_API_URL ? `${import.meta.env.VITE_API_URL}/api` : undefined;
 
     const previews = useMemo<PreviewItem[]>(() => {
         if (type === 'image') {
@@ -135,7 +137,16 @@ const BaseFileUploaderList: React.FC = () => {
                 return (
                     <div key={p.key} className={styles.ImageItem}>
                         <div className={styles.ImageThumb}>
-                            <img className={styles.ImageThumbImg} src={p.url} alt={p.name} />
+                            <Common.Image
+                                className={styles.ImageThumbImg}
+                                src={p.url}
+                                prefix={apiPrefix}
+                                alt={p.name}
+                                width="100%"
+                                height="100%"
+                                fit="cover"
+                                block
+                            />
 
                             {showRemove ? (
                                 <button

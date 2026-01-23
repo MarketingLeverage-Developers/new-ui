@@ -6,6 +6,7 @@ import { useFileUploader } from '@/shared/primitives/D/components/FileUploader/F
 
 import Button from '@/shared/primitives/D/components/Button/Button';
 import PictureIcon from '@/shared/assets/images/Picture.svg';
+import { Common } from '@/shared/primitives/C/Common';
 
 export type BaseAlterFileUploaderDropzoneProps = {
     guideText?: string;
@@ -115,6 +116,7 @@ const BaseAlterFileUploaderDropzone: React.FC<BaseAlterFileUploaderDropzoneProps
         },
         className
     );
+    const apiPrefix = import.meta.env.VITE_API_URL ? `${import.meta.env.VITE_API_URL}/api` : undefined;
 
     return (
         <div
@@ -126,7 +128,14 @@ const BaseAlterFileUploaderDropzone: React.FC<BaseAlterFileUploaderDropzoneProps
         >
             {/* 업로드 전 UI */}
             <div className={styles.Stacked}>
-                <img className={styles.Icon} src={PictureIcon} alt="사진" />
+                <Common.Image
+                    className={styles.Icon}
+                    src={PictureIcon}
+                    alt="사진"
+                    width={43}
+                    height={43}
+                    fit="contain"
+                />
                 <div className={styles.Text}>{resolvedGuideText}</div>
 
                 <Button variant="base" size="md" primary disabled={disabled || isUploading} onClick={openFileDialog}>
@@ -143,7 +152,16 @@ const BaseAlterFileUploaderDropzone: React.FC<BaseAlterFileUploaderDropzoneProps
                     disabled={disabled || isUploading}
                     aria-label="change image"
                 >
-                    <img className={styles.Image} src={previewUrl} alt="uploaded" />
+                    <Common.Image
+                        className={styles.Image}
+                        src={previewUrl}
+                        prefix={apiPrefix}
+                        alt="uploaded"
+                        width="100%"
+                        height="100%"
+                        fit="contain"
+                        block
+                    />
                 </button>
             ) : null}
 

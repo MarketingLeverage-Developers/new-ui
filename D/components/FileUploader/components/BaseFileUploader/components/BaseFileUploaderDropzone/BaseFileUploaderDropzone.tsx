@@ -7,6 +7,7 @@ import { useFileUploader } from '@/shared/primitives/D/components/FileUploader/F
 import Button from '@/shared/primitives/D/components/Button/Button';
 import FolderIcon from '@/shared/assets/images/Folder.svg';
 import PictureIcon from '@/shared/assets/images/Picture.svg';
+import { Common } from '@/shared/primitives/C/Common';
 
 export type BaseFileUploaderDropzoneProps = Omit<HTMLAttributes<HTMLDivElement>, 'children'> & {
     guideText?: string;
@@ -98,7 +99,11 @@ const BaseFileUploaderDropzone: React.FC<BaseFileUploaderDropzoneProps> = (props
             onDrop={handleDrop}
         >
             <div className={styles.Left}>
-                {type === 'file' ? <img src={FolderIcon} alt="폴더" /> : <img src={PictureIcon} alt="사진" />}
+                {type === 'file' ? (
+                    <Common.Image src={FolderIcon} alt="폴더" width={60} height={60} fit="contain" />
+                ) : (
+                    <Common.Image src={PictureIcon} alt="사진" width={60} height={60} fit="contain" />
+                )}
                 <div className={styles.Text}>{resolvedGuideText}</div>
             </div>
 

@@ -2,6 +2,7 @@ import React, { forwardRef } from 'react';
 import classNames from 'classnames';
 import styles from './BoxButton.module.scss';
 import { MdKeyboardArrowRight, MdClose } from 'react-icons/md';
+import { Common } from '@/shared/primitives/C/Common';
 
 export type BoxButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
     className?: string;
@@ -34,6 +35,7 @@ const BoxButton = forwardRef<HTMLButtonElement, BoxButtonProps>((props, ref) => 
     } = props;
 
     const rootClassName = classNames(styles.BoxButton, className);
+    const apiPrefix = import.meta.env.VITE_API_URL ? `${import.meta.env.VITE_API_URL}/api` : undefined;
 
     const handleRemoveClick: React.MouseEventHandler<HTMLButtonElement> = (e) => {
         // ✅ 버튼 클릭으로 이벤트 퍼지는거 차단
@@ -46,7 +48,18 @@ const BoxButton = forwardRef<HTMLButtonElement, BoxButtonProps>((props, ref) => 
 
     return (
         <button ref={ref} type={type} className={rootClassName} disabled={disabled} {...rest}>
-            {hasImage ? <img className={styles.Image} src={imageSrc} alt={imageAlt ?? ''} /> : null}
+            {hasImage ? (
+                <Common.Image
+                    className={styles.Image}
+                    src={imageSrc}
+                    prefix={apiPrefix}
+                    alt={imageAlt ?? ''}
+                    width="100%"
+                    height="100%"
+                    fit="cover"
+                    block
+                />
+            ) : null}
 
             {showRemove && hasImage && !disabled ? (
                 <button type="button" className={styles.RemoveButton} onClick={handleRemoveClick} aria-label="remove">
