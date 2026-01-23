@@ -12,7 +12,7 @@ export const ModalContainer = ({
     open: boolean;
     onChange: () => void;
     content: React.ReactNode;
-    width?: number;
+    width?: string | number;
     maxHeight?: string | number;
 }) => (
     <Modal
