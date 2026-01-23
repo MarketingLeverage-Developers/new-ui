@@ -12,6 +12,7 @@ import { Header } from './components/Header/Header';
 import { Main } from './components/Main/Main';
 import { Overlays } from './components/Overlays/Overlays';
 import styles from './PageTemplate.module.scss';
+import ProfileDropdown from '@/features/navigation/components/ProfileDropdown/ProfileDropdown';
 
 export type PageTemplateStateBase = {
     companyUuid?: string;
@@ -28,7 +29,7 @@ export type MainLayoutMode = 'auto' | 'fill';
 
 export type PageTemplateProps<
     S extends PageTemplateStateBase = PageTemplateStateBase,
-    A extends PageTemplateActionsBase = PageTemplateActionsBase
+    A extends PageTemplateActionsBase = PageTemplateActionsBase,
 > = {
     state: S;
     actions: A;
@@ -118,8 +119,7 @@ const PageTemplate = <S extends PageTemplateStateBase, A extends PageTemplateAct
 
                         <Flex.Item flex={1}>
                             <Flex justify="end">
-                                임시
-                                {/* <ProfileDropdown.Desktop /> */}
+                                <ProfileDropdown />
                             </Flex>
                         </Flex.Item>
                     </>
@@ -137,8 +137,7 @@ const PageTemplate = <S extends PageTemplateStateBase, A extends PageTemplateAct
 
                         <Flex.Item flex={1}>
                             <Flex justify="end">
-                                임시
-                                {/* <ProfileDropdown.Desktop /> */}
+                                <ProfileDropdown />
                             </Flex>
                         </Flex.Item>
                     </>

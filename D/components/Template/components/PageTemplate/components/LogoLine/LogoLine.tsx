@@ -4,7 +4,7 @@ import Logo from '@/shared/assets/images/logo.svg';
 
 export const LogoLine = () => (
     <div className={styles.LogoLine}>
-        <img src={Logo} alt="로고" />
-        <span>마케팅레버리지</span>
+        <img className={styles.Logo} src={Logo} alt="로고" />
+        <span className={styles.Text}>마레인트라넷</span>
     </div>
 );
