@@ -3,11 +3,14 @@ import classNames from 'classnames';
 import styles from './Image.module.scss';
 import type { CSSLength } from '@/shared/types';
 import { toCssUnit } from '@/shared/utils';
+import DefaultFallbackImage from '@/shared/assets/images/logo.svg';
 
 type ImageProps = React.HTMLAttributes<HTMLImageElement> & {
-    src: string;
-    alt: string;
+    src?: string;
+    alt?: string;
+    prefix?: string;
     fallbackSrc?: string;
+    fallbackText?: string;
     width?: CSSLength;
     height?: CSSLength;
     fit?: 'cover' | 'contain' | 'fill' | 'none' | 'scale-down';
@@ -29,7 +32,9 @@ type CSSVarStyle = React.CSSProperties & Record<`--${string}`, string | number |
 export const Image: React.FC<ImageProps> = ({
     src,
     alt,
-    fallbackSrc,
+    prefix,
+    fallbackSrc = DefaultFallbackImage,
+    fallbackText = '이미지 표시 불가',
     width,
     height,
     fit = 'cover',
@@ -43,16 +48,41 @@ export const Image: React.FC<ImageProps> = ({
     style,
     ...props
 }) => {
-    const [currentSrc, setCurrentSrc] = useState(src);
+    const normalizedSrc = typeof src === 'string' ? src.trim() : '';
+    const normalizedPrefix = typeof prefix === 'string' && prefix.trim().length > 0 ? prefix.trim() : undefined;
+    const isAbsolute = /^([a-z][a-z0-9+.-]*:)?\/\//i.test(normalizedSrc) || /^data:|^blob:/i.test(normalizedSrc);
+    const isAssetPath =
+        normalizedSrc.startsWith('/assets/') ||
+        normalizedSrc.startsWith('/src/') ||
+        normalizedSrc.startsWith('/@fs/');
+    const needsPrefix = Boolean(normalizedSrc) && !isAbsolute && !isAssetPath;
+    const shouldPrefix =
+        Boolean(normalizedPrefix) &&
+        needsPrefix &&
+        !normalizedSrc.startsWith(normalizedPrefix ?? '');
+    const joinPrefix = (base: string, path: string) => {
+        const trimmedBase = base.replace(/\/+$/, '');
+        const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+        const isApiPath = /^\/api(\/|$)/.test(normalizedPath);
+        if (trimmedBase.endsWith('/api') && isApiPath) {
+            return `${trimmedBase}${normalizedPath.slice(4)}`;
+        }
+        return `${trimmedBase}${normalizedPath}`;
+    };
+    const resolvedSrc =
+        shouldPrefix && normalizedPrefix ? joinPrefix(normalizedPrefix, normalizedSrc) : normalizedSrc;
+
+    const [currentSrc, setCurrentSrc] = useState(resolvedSrc);
     const [didFallback, setDidFallback] = useState(false);
+    const isTestEnv = import.meta.env.MODE !== 'production';
 
     useEffect(() => {
-        setCurrentSrc(src);
+        setCurrentSrc(resolvedSrc);
         setDidFallback(false);
-    }, [src]);
+    }, [resolvedSrc, fallbackSrc]);
 
     const handleError: React.ReactEventHandler<HTMLImageElement> = (e) => {
-        if (fallbackSrc && !didFallback) {
+        if (fallbackSrc && !didFallback && currentSrc !== fallbackSrc) {
             setDidFallback(true);
             setCurrentSrc(fallbackSrc);
         }
@@ -67,11 +97,32 @@ export const Image: React.FC<ImageProps> = ({
         '--fit': fit,
     };
 
+    const isFallback = Boolean(fallbackSrc) && currentSrc === fallbackSrc;
+    const showFallbackText = isTestEnv && isFallback && Boolean(fallbackText);
+    const shouldRender = Boolean(resolvedSrc) && (normalizedPrefix || !needsPrefix);
+
+    if (!shouldRender) return null;
+
+    if (showFallbackText) {
+        return (
+            <span
+                {...props}
+                role="img"
+                aria-label={alt ?? fallbackText}
+                className={classNames(styles.Image, { [styles.Block]: block }, styles.FallbackText, className)}
+                style={{ ...cssVars, ...style }}
+                onClick={onClick}
+            >
+                {fallbackText}
+            </span>
+        );
+    }
+
     return (
         <img
             {...props}
             src={currentSrc}
-            alt={alt}
+            alt={alt ?? ''}
             loading={loading}
             className={classNames(styles.Image, { [styles.Block]: block }, className)}
             style={{ ...cssVars, ...style }}
