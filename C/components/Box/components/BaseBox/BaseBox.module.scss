@@ -1,0 +1,26 @@
+.BaseBox {
+    display: flex;
+
+    flex-direction: var(--flex-direction, row);
+    align-items: var(--align-items, stretch);
+    justify-content: var(--justify-content, start);
+    flex-wrap: var(--wrap, nowrap);
+    gap: var(--gap, 0);
+
+    width: var(--width, auto);
+    max-width: var(--max-width, none);
+    height: var(--height, auto);
+
+    padding: var(--padding, 24px 20px);
+    margin: var(--margin, 0);
+
+    flex: var(--flex, initial);
+    min-width: var(--min-width, 0);
+    min-height: var(--min-height, 0);
+
+    /* ✅ background prop(--bg) 있으면 그걸 쓰고, 없으면 Gray7 */
+    background-color: var(--bg, var(--White1));
+
+    border-radius: var(--radius, 10px);
+    border: 1px solid var(--border-color, transparent);
+}

@@ -1,0 +1,17 @@
+.Image {
+    display: inline-block;
+
+    /* TSX에서 내려온 CSS 변수 사용 (없으면 기본값) */
+    width: var(--width, auto);
+    height: var(--height, auto);
+    border-radius: var(--radius, 0);
+    object-fit: var(--fit, cover);
+
+    max-width: 100%;
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+.Block {
+    display: block;
+}
