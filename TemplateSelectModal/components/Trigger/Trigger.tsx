@@ -39,7 +39,7 @@ export const Trigger = ({
                         />
                     </>
                 ) : (
-                    <Flex gap={10} align="center">
+                    <Flex gap={10} align="center" justify="center">
                         <Text fontSize={24} fontWeight={600} textColor={getThemeColor('Primary1')}>
                             템플릿 선택하기
                         </Text>
