@@ -7,6 +7,13 @@
     flex-direction: column;
     gap: 8px;
 
+    .TopRow {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+    }
+
     .SubTitle {
         font-size: 15px;
         font-weight: 400;
@@ -28,6 +35,24 @@
 
         &::placeholder {
             color: var(--Gray3);
+        }
+    }
+
+    .CloseButton {
+        all: unset;
+        box-sizing: border-box;
+        width: 28px;
+        height: 28px;
+        border-radius: 6px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--Gray2);
+        cursor: pointer;
+
+        &:hover {
+            background-color: var(--Gray5);
+            color: var(--Gray1);
         }
     }
 }
