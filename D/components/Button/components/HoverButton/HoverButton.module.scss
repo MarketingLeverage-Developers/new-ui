@@ -3,7 +3,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: transparent;
+    background-color: var(--bg, transparent);
     border-radius: 6px;
     padding: var(--padding);
     border: none;
@@ -12,13 +12,14 @@
     > span {
         font-size: 13px;
         font-weight: 500;
-        color: var(--Gray2);
+        color: var(--text-color, var(--Gray2));
     }
 
     &:hover {
-        background-color: var(--Gray5);
+        background-color: var(--hover-bg, var(--Gray5));
         > span {
-            color: var(--Gray1);
+            color: var(--text-hover-color, var(--Gray1));
+            --text-color: var(--text-hover-color, var(--Gray1));
         }
     }
 }
