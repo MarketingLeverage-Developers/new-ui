@@ -6,6 +6,7 @@ import type { CSSLength } from '@/shared/types';
 import type { CSSVariables } from '@/shared/types/css/CSSVariables';
 import { toCssUnit } from '@/shared/utils';
 
+import MainOverlay from '@/features/overlay/components/MainOverlay';
 import ModalTemplateHeader, {
     type ModalTemplateHeaderProps,
 } from './components/ModalTemplateHeader/ModalTemplateHeader';
@@ -18,6 +19,11 @@ export type ModalTemplateExtraProps = {
 export type ModalTemplateProps = ModalTemplateExtraProps & {
     /** ✅ module.scss에서 width 제어용 */
     width?: CSSLength;
+
+    isLoading?: boolean;
+    isError?: boolean;
+    isEmpty?: boolean;
+    onRetry?: () => void;
 
     title?: string;
     subTitle?: string;
@@ -36,7 +42,21 @@ type ModalTemplateCompound = React.FC<ModalTemplateProps> & {
 };
 
 const ModalTemplateRoot: React.FC<ModalTemplateProps> = (props) => {
-    const { className, width, title, subTitle, onTitleChange, onClose, main, mainClassName, placeholder } = props;
+    const {
+        className,
+        width,
+        title,
+        subTitle,
+        onTitleChange,
+        onClose,
+        main,
+        mainClassName,
+        placeholder,
+        isLoading,
+        isError,
+        isEmpty,
+        onRetry,
+    } = props;
 
     const cssVariables: CSSVariables = {
         '--modal-width': toCssUnit(width),
@@ -54,7 +74,13 @@ const ModalTemplateRoot: React.FC<ModalTemplateProps> = (props) => {
                 onClose={onClose}
             />
 
-            {main ? <ModalTemplateMain className={mainClassName}>{main}</ModalTemplateMain> : null}
+            {main ? (
+                <ModalTemplateMain className={mainClassName}>
+                    <MainOverlay isFetching={isLoading} isEmpty={isEmpty} hasError={isError} onRetry={onRetry}>
+                        {main}
+                    </MainOverlay>
+                </ModalTemplateMain>
+            ) : null}
         </div>
     );
 };
