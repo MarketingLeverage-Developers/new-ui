@@ -138,7 +138,7 @@ const BaseAlterFileUploaderDropzone: React.FC<BaseAlterFileUploaderDropzoneProps
                 />
                 <div className={styles.Text}>{resolvedGuideText}</div>
 
-                <Button variant="base" size="md" primary disabled={disabled || isUploading} onClick={openFileDialog}>
+                <Button variant="base" size="md" disabled={disabled || isUploading} onClick={openFileDialog}>
                     {buttonText}
                 </Button>
             </div>
