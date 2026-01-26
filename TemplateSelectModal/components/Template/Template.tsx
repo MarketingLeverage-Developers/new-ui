@@ -3,6 +3,13 @@ import TemplateSelectModal from '../../TemplateSelectModal';
 import type { TemplateListItem } from '@/features/template/list/logic/types';
 import { BaseTooltip } from '@/shared/primitives/BaseTooltip/BaseTooltip';
 import { Image } from '@/shared/primitives/Image/Image';
+import { Desktop } from '@/shared/primitives/D/Desktop';
+import Flex from '@/shared/primitives/Flex/Flex';
+import { getThemeColor } from '@/shared/utils/css/getThemeColor';
+import { requestImageUpload } from '@/features/image-upload/logic/service';
+import type { ServerImage } from '@/shared/types/common';
+
+const { FileUploader, TextArea, Calendar, Box, Button, Text, MultiSelect } = Desktop;
 
 type Props = {
     data: TemplateListItem[];
@@ -64,6 +71,15 @@ export const Template = ({
         setModalValue(false);
     };
 
+    const handleUploadedSelect = (items: ServerImage[]) => {
+        const first = items?.[0];
+        if (!first) return;
+        setTemplateId(null);
+        setTemplateImageUUID(first.imageUUID ?? '');
+        setTemplateImageUrl(first.imageUrl ?? '');
+        setModalValue(false);
+    };
+
     return (
         <TemplateSelectModal value={modalValue} onChange={setModalValue}>
             <div
@@ -93,36 +109,83 @@ export const Template = ({
 
             <TemplateSelectModal.TopPortal active>
                 <TemplateSelectModal.Layout noBorder header={'템플릿 선택'}>
-                    {data.map((item) => (
-                        <TemplateSelectModal.Item
-                            key={item.id}
-                            value={item.id.toString()}
-                            label={item.name}
-                            opened={openSet.has(item.id.toString())}
-                            onOpen={toggle}
-                        >
-                            {item.description ? (
-                                <BaseTooltip label={item.description}>
+                    <Flex gap={8} direction="column">
+                        {data.map((item) => (
+                            <TemplateSelectModal.Item
+                                key={item.id}
+                                value={item.id.toString()}
+                                label={item.name}
+                                opened={openSet.has(item.id.toString())}
+                                onOpen={toggle}
+                            >
+                                {item.description ? (
+                                    <BaseTooltip label={item.description}>
+                                        <Image
+                                            width={'100%'}
+                                            radius={8}
+                                            src={`${import.meta.env.VITE_API_URL}/api${item?.images[0]?.imageUrl ?? ''}`}
+                                            alt={item.name}
+                                            onClick={() => handleSelect(item)}
+                                            style={{ cursor: 'pointer' }}
+                                        />
+                                    </BaseTooltip>
+                                ) : (
                                     <Image
                                         width={'100%'}
                                         radius={8}
                                         src={`${import.meta.env.VITE_API_URL}/api${item?.images[0]?.imageUrl ?? ''}`}
                                         alt={item.name}
                                         onClick={() => handleSelect(item)}
-                                        style={{ cursor: 'pointer' }}
                                     />
-                                </BaseTooltip>
-                            ) : (
-                                <Image
-                                    width={'100%'}
-                                    radius={8}
-                                    src={`${import.meta.env.VITE_API_URL}/api${item?.images[0]?.imageUrl ?? ''}`}
-                                    alt={item.name}
-                                    onClick={() => handleSelect(item)}
-                                />
-                            )}
-                        </TemplateSelectModal.Item>
-                    ))}
+                                )}
+                            </TemplateSelectModal.Item>
+                        ))}
+                        <Flex gap={15} direction="column">
+                            <Flex padding={{ b: 15 }} style={{ borderBottom: `1px solid ${getThemeColor('Gray5')}` }}>
+                                <Text fontWeight={600} fontSize={18}>
+                                    새로운 템플릿으로 요청하기
+                                </Text>
+                            </Flex>
+                            <Flex padding={15}>
+                                <FileUploader
+                                    variant="base-stacked"
+                                    type="image"
+                                    multiple={false}
+                                    onChange={(next) => {
+                                        handleUploadedSelect(next as ServerImage[]);
+                                    }}
+                                    uploader={
+                                        async ({ files }) => {
+                                            const res = await requestImageUpload({
+                                                files,
+                                                meta: { category: 'image', referenceUUID: '' },
+                                            });
+                                            if (!res.ok) return [];
+                                            const body = (res.data?.body ?? []) as Array<{
+                                                fileUUID: string;
+                                                originalFileName: string;
+                                                storedFileName: string;
+                                                filePath: string;
+                                            }>;
+                                            return body.map((item) => ({
+                                                imageUUID: item.fileUUID,
+                                                imageName: item.storedFileName || item.originalFileName,
+                                                imageUrl: item.filePath,
+                                            }));
+                                        }
+
+                                        // await uploadSingleTemplateImage(files)
+                                    }
+                                >
+                                    <FileUploader.Dropzone
+                                        placeholder="이미지 파일을 첨부해주세요"
+                                        buttonText="파일첨부"
+                                        message="안녕하세요"
+                                    />
+                                </FileUploader>
+                            </Flex>
+                        </Flex>
+                    </Flex>
                 </TemplateSelectModal.Layout>
             </TemplateSelectModal.TopPortal>
         </TemplateSelectModal>
