@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import { RiDownload2Fill } from 'react-icons/ri';
 import styles from './BaseStackedFileUploaderList.module.scss';
 import { useFileUploader } from '@/shared/primitives/D/components/FileUploader/FileUploader';
 import { Common } from '@/shared/primitives/C/Common';
@@ -26,6 +27,7 @@ const isFileType = (value: unknown): value is FileType =>
 const BaseStackedFileUploaderList: React.FC = () => {
     const { type, serverItems, removeItem, getItemKey, showRemove } = useFileUploader();
     const apiPrefix = import.meta.env.VITE_API_URL ? `${import.meta.env.VITE_API_URL}/api` : undefined;
+    const apiOrigin = import.meta.env.VITE_API_URL;
 
     const previews = useMemo<PreviewItem[]>(() => {
         if (type === 'image') {
@@ -129,10 +131,19 @@ const BaseStackedFileUploaderList: React.FC = () => {
         );
     }
 
+    const resolveDownloadUrl = (url: string) => {
+        if (/^https?:\/\//i.test(url)) return url;
+        if (url.startsWith('/api/') && apiOrigin) return `${apiOrigin}${url}`;
+        if (apiPrefix) return `${apiPrefix}${url.startsWith('/') ? '' : '/'}${url}`;
+        return url;
+    };
+
     return (
         <div className={styles.ImageList}>
             {previews.map((p) => {
                 if (p.kind !== 'image') return null;
+
+                const downloadUrl = resolveDownloadUrl(p.url);
 
                 return (
                     <div key={p.key} className={styles.ImageItem}>
@@ -147,6 +158,21 @@ const BaseStackedFileUploaderList: React.FC = () => {
                                 fit="cover"
                                 block
                             />
+
+                            <div className={styles.ImageDim} />
+
+                            <div className={styles.ImageActions}>
+                                <a
+                                    className={styles.ImageDownload}
+                                    href={downloadUrl}
+                                    download
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    aria-label={`download ${p.name}`}
+                                >
+                                    <RiDownload2Fill />
+                                </a>
+                            </div>
 
                             {showRemove ? (
                                 <button
