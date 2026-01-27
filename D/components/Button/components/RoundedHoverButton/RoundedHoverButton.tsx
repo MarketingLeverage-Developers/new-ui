@@ -1,3 +1,4 @@
+import React from 'react';
 import styles from './RoundedHoverButton.module.scss';
 import type { CSSVariables } from '@/shared/types/css/CSSVariables';
 import { toCssUnit } from '@/shared/utils';
