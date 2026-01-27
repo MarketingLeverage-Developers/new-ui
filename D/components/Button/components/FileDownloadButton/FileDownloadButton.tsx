@@ -1,6 +1,7 @@
 import React from 'react';
-import Text from '../../../../Text/Text';
+
 import { getThemeColor } from '@/shared/utils/css/getThemeColor';
+import Text from '../../../Text/Text';
 
 export type FileDownloadButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
     text?: string;
