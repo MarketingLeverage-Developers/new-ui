@@ -1,0 +1,69 @@
+.ImageTagItem {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 264px;
+
+    .ImageContainer {
+        width: 100%;
+        aspect-ratio: 1/1;
+        border: 1px solid var(--Gray6);
+        border-radius: 8px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .Image {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+    }
+
+    .CheckBoxWrapper {
+        position: absolute;
+        top: 8px;
+        left: 8px;
+        z-index: 2;
+    }
+
+    .InfoContainer {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+
+        .Title {
+            color: var(--Black1);
+            font-size: 18px;
+            font-weight: 600;
+            line-height: 100%;
+
+            .Count {
+                color: var(--Gray1);
+                font-weight: 400;
+                line-height: 100%;
+            }
+        }
+
+        .SubTitle {
+            color: var(--Gray1);
+            font-size: 16px;
+            font-weight: 400;
+            line-height: 100%;
+        }
+    }
+
+    .TagContainer {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+
+        .Tag {
+            font-size: 13px;
+            font-weight: 500;
+            padding: 5px 8px;
+            border-radius: 4px;
+            background-color: var(--Gray5);
+            line-height: 1;
+        }
+    }
+}
