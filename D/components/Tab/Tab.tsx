@@ -11,13 +11,14 @@ import type { ButtonTabItemProps } from './components/ButtonTab/components/Butto
 import ButtonTabItem from './components/ButtonTab/components/ButtonTab/components/ButtonTabItem/ButtonTabItem';
 
 import RoundedTab from './components/RoundedTab/RoundedTab';
-import type { RoundedTabItemProps } from './components/RoundedTab/components/Item';
+import { RoundedTabItem, type RoundedTabItemProps } from './components/RoundedTab/components/Item';
 
 import UnderlineTab from './components/UnderlineTab/UnderlineTab';
-import type { UnderlineTabItemProps } from './components/UnderlineTab/components/Item';
+import { UnderlineTabItem, type UnderlineTabItemProps } from './components/UnderlineTab/components/Item';
 
 import IconTab from './components/IconTab/IconTab';
 import type { IconTabItemProps } from './components/IconTab/components/Item';
+import IconTabItem from './components/IconTab/components/Item';
 
 export type TabVariant = 'base' | 'button' | 'rounded' | 'underline' | 'icon';
 
@@ -40,7 +41,9 @@ const TabVariantContext = createContext<TabVariantContextValue | null>(null);
 const useTabVariant = () => {
     const ctx = useContext(TabVariantContext);
     if (!ctx) {
-        throw new Error("Tab.Item must be used inside <Tab variant='base' | 'button' | 'rounded' | 'underline' | 'icon'>");
+        throw new Error(
+            "Tab.Item must be used inside <Tab variant='base' | 'button' | 'rounded' | 'underline' | 'icon'>"
+        );
     }
     return ctx;
 };

@@ -5,3 +5,25 @@
     background: var(--Gray7);
     border-radius: 12px;
 }
+
+.Item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 4px;
+    padding: 7px 15px;
+    height: 27px;
+    flex-wrap: nowrap;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    color: var(--Gray2);
+}
+
+.Active {
+    background-color: #fff;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    color: var(--Gray1);
+    background-color: var(--White1);
+    padding: 7px 15px;
+}

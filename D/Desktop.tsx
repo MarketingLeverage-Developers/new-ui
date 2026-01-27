@@ -27,6 +27,7 @@ import Box from './components/Box/Box';
 import Accordion from './components/Accordion/Accordion';
 import Select from './components/Select/Select';
 import Text from './components/Text/Text';
+import Toggle from './components/Toggle/Toggle';
 
 type DesktopProps = {
     children: React.ReactNode;
@@ -61,3 +62,4 @@ Desktop.Box = Box;
 Desktop.Accordion = Accordion;
 Desktop.Select = Select;
 Desktop.Text = Text;
+Desktop.Toggle = Toggle;
