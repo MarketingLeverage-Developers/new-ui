@@ -1,0 +1,19 @@
+.Display {
+    display: inline-flex;
+    gap: 8px;
+    align-items: center;
+    padding: 10px 12px;
+    background: var(--White1);
+    border: 1px solid var(--Gray5);
+    border-radius: 12px;
+    font-size: 14px;
+    color: var(--Gray1);
+    cursor: pointer;
+}
+
+.Content {
+}
+
+.Arrow {
+    font-size: 14px;
+}

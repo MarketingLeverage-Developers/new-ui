@@ -1,0 +1,17 @@
+.Display {
+    display: inline-flex;
+    gap: 8px;
+    align-items: center;
+
+    font-size: 14px;
+    color: var(--Gray1);
+
+    cursor: pointer;
+}
+
+.Content {
+}
+
+.Arrow {
+    font-size: 14px;
+}

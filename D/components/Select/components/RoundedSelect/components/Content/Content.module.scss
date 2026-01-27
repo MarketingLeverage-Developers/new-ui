@@ -1,0 +1,24 @@
+.Content {
+    background-color: var(--White1);
+    border-radius: 12px;
+    padding: 12px;
+    border: 1px solid var(--Gray5);
+    font-size: 13px;
+    font-weight: 400;
+    max-height: 280px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.Content::-webkit-scrollbar {
+    width: 4px;
+}
+
+.Content::-webkit-scrollbar-thumb {
+    background-color: var(--Gray5);
+    border-radius: 999px;
+}
+
+.Content::-webkit-scrollbar-track {
+    background: transparent;
+}

@@ -1,0 +1,21 @@
+.Selected {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 6px;
+}
+
+.Label {
+    color: var(--Gray2);
+    font-size: 14px;
+    width: 100%;
+}
+
+.Item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    border-radius: 8px;
+    background: var(--Gray7);
+}

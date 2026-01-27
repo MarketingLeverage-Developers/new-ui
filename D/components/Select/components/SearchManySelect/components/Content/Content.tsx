@@ -1,0 +1,60 @@
+import Dropdown, { useDropdown } from '@/shared/headless/Dropdown/Dropdown';
+import React, { useEffect, useMemo } from 'react';
+import styles from './Content.module.scss';
+import ManySelect, { useManySelect } from '@/shared/headless/ManySelect/ManySelect';
+import { FaCheck } from 'react-icons/fa';
+import classNames from 'classnames';
+import { useQuerySearch } from '@/shared/headless/QuerySearch/QuerySearch';
+import { useHangulSearch } from '@/shared/hooks/client/useHangulSearch';
+
+const SearchManySelectContent: React.FC<{ isDesc?: boolean }> = ({ isDesc = false }) => {
+    const { open, isOpen } = useDropdown();
+    const { query, data } = useQuerySearch<any>();
+    const { isChecked, toggleManySelectValue } = useManySelect();
+
+    const { filtered } = useHangulSearch<any>(data, query, (it) => String(it.label ?? ''));
+
+    const uniqueFiltered = useMemo(() => {
+        const seen = new Set<string>();
+        return filtered.filter((it) => {
+            const id = String(it?.uuid ?? '');
+            if (!id || seen.has(id)) return false;
+            seen.add(id);
+            return true;
+        });
+    }, [filtered]);
+
+    const checkBoxClassName = (uid: string) =>
+        classNames(styles.CheckBox, {
+            [styles.Active]: isChecked(uid),
+        });
+
+    useEffect(() => {
+        if (!isOpen && query.length > 1) open();
+    }, [isOpen, open, query]);
+
+    return (
+        <Dropdown.Content matchTriggerWidth>
+            <div className={styles.SelectWrapper}>
+                <div className={styles.Select}>
+                    {uniqueFiltered.length === 0 && <div className={styles.Empty}>결과가 없습니다</div>}
+                    {uniqueFiltered.map((item) => (
+                        <ManySelect.Item key={item.uuid} value={item.uuid}>
+                            <div className={styles.Item} onClick={() => toggleManySelectValue(item.uuid)}>
+                                <div className={checkBoxClassName(item.uuid)}>
+                                    {isChecked(item.uuid) && <FaCheck />}
+                                </div>
+                                <div className={styles.Text}>
+                                    <span className={styles.label}>{item.label}</span>{' '}
+                                    {isDesc && <span className={styles.description}>{item.description}</span>}
+                                </div>
+                            </div>
+                        </ManySelect.Item>
+                    ))}
+                </div>
+            </div>
+        </Dropdown.Content>
+    );
+};
+
+export default SearchManySelectContent;

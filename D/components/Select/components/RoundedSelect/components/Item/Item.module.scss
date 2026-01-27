@@ -1,0 +1,9 @@
+.Item {
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 10px;
+    &:hover {
+        background-color: var(--Primary2);
+        color: var(--Primary1);
+    }
+}
