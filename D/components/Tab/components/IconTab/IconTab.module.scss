@@ -1,0 +1,19 @@
+.IconTab {
+    display: inline-flex;
+    gap: var(--gap, 8px);
+}
+
+.Item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    color: var(--Gray2);
+}
+
+.Item.Active {
+    background: var(--Gray7);
+    color: var(--Primary1);
+}

@@ -1,0 +1,39 @@
+.UnderlineTab {
+    display: inline-flex;
+    gap: var(--gap, 0);
+    margin: var(--margin, 0);
+    border-bottom: 1px solid var(--Gray5);
+}
+
+.Item {
+    cursor: pointer;
+    padding: var(--padding, 10px 0);
+    font-size: var(--font-size);
+    font-weight: var(--font-weight);
+    color: var(--Gray2);
+    position: relative;
+}
+
+.Item::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -1px;
+    height: 2px;
+    background: transparent;
+    transition: background 0.2s;
+}
+
+.Item.Full {
+    flex: 1 1 0;
+    text-align: center;
+}
+
+.Item.Active {
+    color: var(--Primary1);
+}
+
+.Item.Active::after {
+    background: var(--Primary1);
+}

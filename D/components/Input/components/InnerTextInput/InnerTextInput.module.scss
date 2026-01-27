@@ -1,0 +1,41 @@
+.InnerTextInput {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid var(--Gray5);
+
+    &.Touched {
+        border-color: var(--Gray4);
+    }
+
+    &.Error {
+        border-color: var(--Error1);
+    }
+
+    &.Success {
+        border-color: var(--Success1);
+    }
+
+    .InnerText {
+        color: var(--Gray2);
+    }
+
+    .Input {
+        flex: 1;
+        border: none;
+        outline: none;
+        font-size: 15px;
+    }
+
+    .Unit {
+        color: var(--Gray3);
+        font-size: 14px;
+    }
+
+    .Helper {
+        color: var(--Error1);
+        font-size: 12px;
+    }
+}

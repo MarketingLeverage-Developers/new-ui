@@ -1,0 +1,13 @@
+.Item {
+    padding: 10px 14px;
+    border-radius: 10px;
+    cursor: pointer;
+    color: var(--Gray2);
+    background: transparent;
+}
+
+.Active {
+    background: var(--White1);
+    color: var(--Primary1);
+    font-weight: 600;
+}

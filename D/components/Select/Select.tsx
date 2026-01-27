@@ -65,7 +65,9 @@ const SelectVariantContext = createContext<SelectVariantContextValue | null>(nul
 const useSelectVariant = () => {
     const ctx = useContext(SelectVariantContext);
     if (!ctx) {
-        throw new Error("Select.* must be used inside <Select variant='base' | 'bare' ...>");
+        throw new Error(
+            "Select.* must be used inside <Select variant='base' | 'bare' | 'rounded' | 'border-rounded' | 'search' | 'search-many' ...>"
+        );
     }
     return ctx;
 };

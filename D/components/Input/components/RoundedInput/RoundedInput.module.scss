@@ -1,0 +1,36 @@
+.RoundedInput {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    input {
+        width: 100%;
+        padding: 12px 14px;
+        border-radius: 10px;
+        border: 1px solid var(--Gray5);
+        font-size: 15px;
+        outline: none;
+    }
+
+    &.Touched input {
+        border-color: var(--Gray4);
+    }
+
+    &.Error input {
+        border-color: var(--Error1);
+    }
+
+    &.Success input {
+        border-color: var(--Success1);
+    }
+
+    &.Disabled input {
+        background: var(--Gray7);
+        cursor: not-allowed;
+    }
+
+    .Helper {
+        font-size: 12px;
+        color: var(--Error1);
+    }
+}

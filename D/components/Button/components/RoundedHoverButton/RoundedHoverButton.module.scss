@@ -1,0 +1,24 @@
+.RoundedHoverButton {
+    width: var(--width, auto);
+    display: flex;
+    align-items: center;
+    background-color: transparent;
+    justify-content: center;
+    border-radius: 6px;
+    padding: var(--padding);
+    border: none;
+    cursor: pointer;
+
+    > span {
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--Gray2);
+    }
+
+    &:hover {
+        background-color: var(--Gray5);
+        > span {
+            color: var(--Gray1);
+        }
+    }
+}
