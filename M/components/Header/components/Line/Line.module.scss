@@ -1,8 +1,0 @@
-// src/shared/viewport/Mobile/Mobile.module.scss 같은 곳일 가능성 높음
-.Line {
-    display: grid;
-    padding: 10px 20px;
-    grid-template-columns: minmax(0, 1fr) auto;
-    column-gap: 8;
-    width: 100%;
-}

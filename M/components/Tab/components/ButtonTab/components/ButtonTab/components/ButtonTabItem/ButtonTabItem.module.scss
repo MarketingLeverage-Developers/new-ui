@@ -1,0 +1,23 @@
+.Item {
+    flex: 1 1 0;
+    height: 40px;
+    border-radius: 8px;
+    border: 1.5px solid var(--Gray5, #e5e7eb);
+    background: var(--White1, #fff);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1;
+    color: #8b8b8b;
+    cursor: pointer;
+    padding: 10px 12px;
+    transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease;
+}
+
+.Active {
+    background: #eaf2ff;
+    border-color: #1e67ff;
+    color: #1e67ff;
+}

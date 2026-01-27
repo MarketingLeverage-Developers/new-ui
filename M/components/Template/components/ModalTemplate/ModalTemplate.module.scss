@@ -1,0 +1,10 @@
+.ModalTemplate {
+    width: var(--modal-width, 100%);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    min-height: 0;
+    background-color: var(--White1);
+    border-radius: 12px;
+    padding: 20px;
+}

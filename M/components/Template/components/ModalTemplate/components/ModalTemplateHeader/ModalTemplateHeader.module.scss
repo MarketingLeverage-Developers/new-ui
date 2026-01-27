@@ -1,0 +1,46 @@
+.ModalTemplateHeader {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.ModalTopRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.SubTitle {
+    font-size: 12px;
+    color: var(--Gray3, #9ca3af);
+}
+
+.CloseButton {
+    all: unset;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    color: var(--Gray2, #6b7280);
+}
+
+.CloseButton:hover {
+    background: var(--Gray6, #f3f4f6);
+}
+
+.Title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--Black1, #111);
+}
+
+.TitleInput {
+    border: 1px solid var(--Gray5, #e5e7eb);
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-size: 16px;
+    outline: none;
+}

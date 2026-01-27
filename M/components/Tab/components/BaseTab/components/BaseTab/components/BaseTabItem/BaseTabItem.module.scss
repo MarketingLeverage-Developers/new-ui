@@ -1,0 +1,26 @@
+.Item {
+    cursor: pointer;
+    border-bottom: 2px solid var(--Gray4);
+    background: transparent;
+    padding: 8px 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--Gray2, #9ca3af);
+    position: relative;
+    white-space: nowrap;
+}
+
+.Active {
+    color: var(--Black1, #111);
+    border-color: var(--Black1, #111);
+}
+
+.Add {
+    background: #f1f1f1;
+    color: #c9c9c9;
+    border: none;
+    border-bottom: 2px solid var(--Gray4);
+}

@@ -1,0 +1,49 @@
+.FileChip {
+    all: revert;
+    appearance: none;
+    -webkit-appearance: none;
+
+    min-height: 34px;
+
+    border: 1px solid var(--Gray5, #e5e7eb);
+    border-radius: 8px;
+    background: var(--White1, #fff);
+
+    padding: 8px 10px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+
+    cursor: pointer;
+}
+
+.Left {
+    min-width: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.Name {
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--Black1, #111);
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.Size {
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--Gray3, #9ca3af);
+    flex: 0 0 auto;
+}
+
+.Disabled {
+    opacity: 0.5;
+    cursor: default;
+}
