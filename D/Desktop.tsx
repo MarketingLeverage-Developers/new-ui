@@ -28,6 +28,8 @@ import Accordion from './components/Accordion/Accordion';
 import Select from './components/Select/Select';
 import Text from './components/Text/Text';
 import Toggle from './components/Toggle/Toggle';
+import Item from './components/Item/Item';
+import Pagination from './components/Pagination/Pagination';
 
 type DesktopProps = {
     children: React.ReactNode;
@@ -63,3 +65,5 @@ Desktop.Accordion = Accordion;
 Desktop.Select = Select;
 Desktop.Text = Text;
 Desktop.Toggle = Toggle;
+Desktop.Item = Item;
+Desktop.Pagination = Pagination;
