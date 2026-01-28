@@ -37,7 +37,7 @@ export const Image: React.FC<ImageProps> = ({
     fallbackText = '이미지 표시 불가',
     width,
     height,
-    fit = 'cover',
+    fit = 'contain',
     block = false,
     radius,
     loading = 'lazy',

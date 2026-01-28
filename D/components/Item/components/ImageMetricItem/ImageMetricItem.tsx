@@ -23,7 +23,7 @@ const ImageMetricItem = ({
     imageSrc,
     imageAlt,
     imagePrefix,
-    imageFit = 'fill',
+    imageFit = 'contain',
     rating,
     metaTitle,
     metaSubtitle,

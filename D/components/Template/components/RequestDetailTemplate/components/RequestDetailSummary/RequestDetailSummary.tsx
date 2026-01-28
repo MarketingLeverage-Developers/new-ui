@@ -54,17 +54,20 @@ const RequestDetailSummary = ({
 
     return (
         <div className={styles.Wrapper}>
-            <Common.Image
-                src={resolvedImageSrc}
-                prefix={imagePrefix}
-                alt={imageAlt ?? `${title}-템플릿 이미지`}
-                fallbackText="이미지 없음"
-                radius={16}
-                width="100%"
-                height={imageHeight}
-                fit={imageFit}
-                // className={styles.Image}
-            />
+            <div className={styles.ImageWrapper}>
+                <Common.Image
+                    src={resolvedImageSrc}
+                    prefix={imagePrefix}
+                    alt={imageAlt ?? `${title}-템플릿 이미지`}
+                    fallbackText="이미지 없음"
+                    radius={16}
+                    width="100%"
+                    height={imageHeight}
+                    fit={imageFit}
+                    // className={styles.Image}
+                />
+            </div>
+
             <div className={styles.Content}>
                 <div className={styles.Header}>
                     <div className={styles.TitleBlock}>

@@ -22,4 +22,20 @@
             --text-color: var(--text-hover-color, var(--Gray1));
         }
     }
+
+    &:disabled,
+    &[aria-disabled='true'] {
+        cursor: not-allowed;
+        background-color: var(--Gray6);
+        opacity: 0.6;
+
+        > span {
+            color: var(--Gray3);
+        }
+    }
+
+    &:disabled:hover,
+    &[aria-disabled='true']:hover {
+        background-color: var(--Gray6);
+    }
 }
