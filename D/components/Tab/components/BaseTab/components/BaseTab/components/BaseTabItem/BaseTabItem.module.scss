@@ -10,6 +10,7 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    gap: 6px;
 
     /* 스샷 폰트는 크고 굵음 */
     font-size: 15px;
@@ -20,6 +21,29 @@
 
     position: relative;
     white-space: nowrap;
+}
+
+.Label {
+    display: inline-flex;
+    align-items: center;
+}
+
+.DeleteButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px;
+    border: none;
+    background: transparent;
+    color: inherit;
+    opacity: 0.6;
+    cursor: pointer;
+    line-height: 0;
+    transition: opacity 0.15s ease;
+
+    &:hover {
+        opacity: 1;
+    }
 }
 
 .Active {

@@ -112,12 +112,25 @@ const TabItem: React.FC<TabItemProps> = (props) => {
     return <BaseTabItem {...(props as BaseTabItemProps)} />;
 };
 
+const TabDeleteButtonItem: React.FC<TabItemProps> = (props) => {
+    const { variant } = useTabVariant();
+
+    if (variant === 'button') return null;
+    if (variant === 'rounded') return null;
+    if (variant === 'underline') return null;
+    if (variant === 'icon') return null;
+
+    return <BaseTabItem {...(props as BaseTabItemProps)} />;
+};
+
 type TabCompound = React.FC<TabProps> & {
     Item: React.FC<TabItemProps>;
+    DeleteButtonItem: React.FC<TabItemProps>;
 };
 
 const Tab = Object.assign(TabRoot, {
     Item: TabItem,
+    DeleteButtonItem: TabDeleteButtonItem,
 }) as TabCompound;
 
 export default Tab;

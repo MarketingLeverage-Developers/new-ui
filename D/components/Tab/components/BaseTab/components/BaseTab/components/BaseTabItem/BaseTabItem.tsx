@@ -1,5 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
+import { MdOutlineCancel } from 'react-icons/md';
 import styles from './BaseTabItem.module.scss';
 
 import Select, { useSelect } from '@/shared/headless/Select/Select';
@@ -9,10 +10,11 @@ export type BaseTabItemTone = 'default' | 'add';
 export type BaseTabItemProps = React.ComponentProps<typeof Select.Item> & {
     tone?: BaseTabItemTone;
     className?: string;
+    setDelete?: (value: string) => void;
 };
 
 const BaseTabItem: React.FC<BaseTabItemProps> = (props) => {
-    const { className, value, tone = 'default', children, onClick, ...rest } = props;
+    const { className, value, tone = 'default', children, onClick, setDelete, ...rest } = props;
 
     const { isActive } = useSelect();
     const active = tone === 'default' ? isActive(value) : false;
@@ -40,9 +42,25 @@ const BaseTabItem: React.FC<BaseTabItemProps> = (props) => {
         );
     }
 
+    const handleDeleteClick: React.MouseEventHandler<HTMLButtonElement> = (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        setDelete?.(value);
+    };
+
     return (
         <Select.Item value={value} {...rest} className={itemClassName} onClick={onClick}>
-            {children}
+            <span className={styles.Label}>{children}</span>
+            {setDelete ? (
+                <button
+                    type="button"
+                    aria-label="삭제"
+                    className={styles.DeleteButton}
+                    onClick={handleDeleteClick}
+                >
+                    <MdOutlineCancel />
+                </button>
+            ) : null}
         </Select.Item>
     );
 };
