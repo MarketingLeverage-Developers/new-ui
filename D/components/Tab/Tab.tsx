@@ -1,8 +1,10 @@
 import React, { createContext, useContext } from 'react';
 
 import BaseTab, { type BaseTabExtraProps } from './components/BaseTab/components/BaseTab/BaseTab';
-import type { BaseTabItemProps } from './components/BaseTab/components/BaseTab/components/BaseTabItem/BaseTabItem';
-import BaseTabItem from './components/BaseTab/components/BaseTab/components/BaseTabItem/BaseTabItem';
+import BaseTabItem, {
+    type BaseTabItemProps,
+    type BaseTabDeleteButtonItemProps,
+} from './components/BaseTab/components/BaseTab/components/BaseTabItem/BaseTabItem';
 
 import type Select from '@/shared/headless/Select/Select';
 
@@ -96,6 +98,7 @@ const TabRoot: React.FC<TabProps> = (props) => {
  */
 export type TabItemProps =
     | BaseTabItemProps
+    | BaseTabDeleteButtonItemProps
     | ButtonTabItemProps
     | RoundedTabItemProps
     | UnderlineTabItemProps
@@ -120,7 +123,7 @@ const TabDeleteButtonItem: React.FC<TabItemProps> = (props) => {
     if (variant === 'underline') return null;
     if (variant === 'icon') return null;
 
-    return <BaseTabItem {...(props as BaseTabItemProps)} />;
+    return <BaseTabItem {...(props as BaseTabDeleteButtonItemProps)} />;
 };
 
 type TabCompound = React.FC<TabProps> & {
