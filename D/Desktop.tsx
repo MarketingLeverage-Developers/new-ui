@@ -30,6 +30,7 @@ import Text from './components/Text/Text';
 import Toggle from './components/Toggle/Toggle';
 import Item from './components/Item/Item';
 import Pagination from './components/Pagination/Pagination';
+import Dropdown from './components/Dropdown/Dropdown';
 
 type DesktopProps = {
     children: React.ReactNode;
@@ -67,3 +68,4 @@ Desktop.Text = Text;
 Desktop.Toggle = Toggle;
 Desktop.Item = Item;
 Desktop.Pagination = Pagination;
+Desktop.Dropdown = Dropdown;

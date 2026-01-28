@@ -2,10 +2,13 @@ import React from 'react';
 import type { DayPickerProps } from 'react-day-picker';
 
 import BaseCalendar, { type BaseCalendarExtraProps } from './components/BaseCalendar/BaseCalendar';
+import MiniCalendar, { type MiniCalendarExtraProps } from './components/MiniCalendar/MiniCalendar';
 
-export type CalendarVariant = 'base';
+export type CalendarVariant = 'base' | 'mini';
 
-export type CalendarProps = { variant: 'base' } & DayPickerProps & BaseCalendarExtraProps;
+export type CalendarBaseProps = { variant: 'base' } & DayPickerProps & BaseCalendarExtraProps;
+export type CalendarMiniProps = { variant: 'mini' } & DayPickerProps & MiniCalendarExtraProps;
+export type CalendarProps = CalendarBaseProps | CalendarMiniProps;
 
 const defaultParseServerDateTime = (value: string | null | undefined): Date | undefined => {
     if (!value) return undefined;
@@ -33,7 +36,10 @@ const defaultFormatServerDateTime = (date: Date | undefined): string => {
 
 type CalendarMode = 'single' | 'range';
 
-type CalendarServerStringSingleProps = Omit<CalendarProps, 'selected' | 'onSelect' | 'month' | 'onMonthChange'> & {
+type CalendarServerStringSingleProps = Omit<
+    CalendarBaseProps,
+    'selected' | 'onSelect' | 'month' | 'onMonthChange'
+> & {
     mode: 'single';
 
     value?: string;
@@ -54,7 +60,10 @@ type CalendarServerStringRangeValue = {
     to?: string;
 };
 
-type CalendarServerStringRangeProps = Omit<CalendarProps, 'selected' | 'onSelect' | 'month' | 'onMonthChange'> & {
+type CalendarServerStringRangeProps = Omit<
+    CalendarBaseProps,
+    'selected' | 'onSelect' | 'month' | 'onMonthChange'
+> & {
     mode: 'range';
 
     value?: CalendarServerStringRangeValue;
@@ -81,7 +90,9 @@ const isServerStringRangeMode = (props: CalendarUnionProps): props is CalendarSe
 const Calendar: React.FC<CalendarUnionProps> = (props) => {
     const { variant, ...rest } = props;
 
-    if (variant !== 'base') return <BaseCalendar {...(rest as DayPickerProps)} />;
+    if (variant === 'mini') {
+        return <MiniCalendar {...(rest as DayPickerProps & MiniCalendarExtraProps)} />;
+    }
 
     if (isServerStringSingleMode(props)) {
         const {
