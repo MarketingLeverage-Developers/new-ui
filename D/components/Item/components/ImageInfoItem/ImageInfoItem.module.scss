@@ -1,0 +1,57 @@
+.ImageInfoItem {
+    width: 400px;
+    height: 550px;
+    border-radius: 20px;
+    background-color: var(--Gray2);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    justify-content: space-between;
+    cursor: pointer;
+    box-shadow:
+        0 1px 2px rgba(0, 0, 0, 0.06),
+        0 0 0 1px rgba(0, 0, 0, 0.02);
+
+    .Image {
+        width: 100%;
+        height: 100%;
+        img {
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            position: relative;
+            object-fit: contain;
+            border-radius: inherit;
+        }
+    }
+
+    .Info {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        height: 115px;
+        background-color: var(--White1);
+        padding: 30px 28px;
+        align-items: center;
+    }
+
+    .Texts {
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+        gap: 2px;
+
+        .Title {
+            color: var(--Black1);
+            font-weight: 600;
+            font-size: 24px;
+        }
+
+        .Count {
+            color: var(--Gray1);
+            font-size: 16px;
+            font-weight: 400;
+        }
+    }
+}
