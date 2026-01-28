@@ -1,0 +1,104 @@
+.ImageMetricItem {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px;
+    border: 1px solid var(--Gray6);
+    border-radius: 14px;
+    background: var(--White1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.Clickable {
+    cursor: pointer;
+}
+
+.ImageWrapper {
+    width: 100%;
+    height: 160px;
+    border-radius: 10px;
+    overflow: hidden;
+    background: var(--Gray6);
+}
+
+.Image {
+    width: 100%;
+    height: 100%;
+}
+
+.Content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.Rating {
+    display: flex;
+}
+
+.Body {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.Meta {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+}
+
+.MetaTitle {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--Black1);
+}
+
+.MetaSubtitle {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--Gray3);
+}
+
+.Metrics {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.MetricRow {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+}
+
+.MetricLabel {
+    width: 76px;
+    flex-shrink: 0;
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--Gray2);
+}
+
+.MetricValueWrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    flex: 1;
+}
+
+.MetricDivider {
+    width: 1px;
+    height: 20px;
+    background: var(--Gray6);
+}
+
+.MetricValue {
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--Black1);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

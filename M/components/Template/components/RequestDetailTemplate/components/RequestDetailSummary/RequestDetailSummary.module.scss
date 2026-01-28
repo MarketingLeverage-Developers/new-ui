@@ -1,0 +1,128 @@
+.Wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+    padding: 16px;
+    background: var(--White1);
+    border-radius: 12px;
+}
+
+.Content {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+}
+
+.Header {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.TitleBlock {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.Title {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--Black1);
+}
+
+.FeedbackBlock {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.FeedbackLabelRow {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.FeedbackLabel {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--Gray2);
+}
+
+.FeedbackValue {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--Gray2);
+}
+
+.TagList {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.ExpectedWorkTime {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--Black1);
+}
+
+.RequestButton {
+    height: 48px;
+    border-radius: 10px;
+    background: var(--Primary1);
+    border: none;
+    cursor: pointer;
+    padding: 12px 0;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--White1);
+}
+
+.Divider {
+    width: 100%;
+}
+
+.Summary {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.SummaryTitle {
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--Gray2);
+}
+
+.SummaryRows {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.SummaryRow {
+    display: flex;
+    gap: 10px;
+}
+
+.SummaryLabel {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--Black1);
+}
+
+.SummaryValue {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--Black1);
+}
+
+.SummaryNote {
+    font-size: 12px;
+    font-weight: 400;
+    color: #e88731;
+}

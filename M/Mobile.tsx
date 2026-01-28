@@ -17,6 +17,7 @@ import Tab from './components/Tab/Tab';
 import Text from './components/Text/Text';
 import Template from './components/Template/Template';
 import { ModalContainer } from './components/ModalContainer/ModalContainer';
+import Item from './components/Item/Item';
 
 type MobileProps = {
     children: React.ReactNode;
@@ -42,3 +43,4 @@ Mobile.Tab = Tab;
 Mobile.Text = Text;
 Mobile.Template = Template;
 Mobile.ModalContainer = ModalContainer;
+Mobile.Item = Item;
