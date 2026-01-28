@@ -52,14 +52,9 @@ export const Image: React.FC<ImageProps> = ({
     const normalizedPrefix = typeof prefix === 'string' && prefix.trim().length > 0 ? prefix.trim() : undefined;
     const isAbsolute = /^([a-z][a-z0-9+.-]*:)?\/\//i.test(normalizedSrc) || /^data:|^blob:/i.test(normalizedSrc);
     const isAssetPath =
-        normalizedSrc.startsWith('/assets/') ||
-        normalizedSrc.startsWith('/src/') ||
-        normalizedSrc.startsWith('/@fs/');
+        normalizedSrc.startsWith('/assets/') || normalizedSrc.startsWith('/src/') || normalizedSrc.startsWith('/@fs/');
     const needsPrefix = Boolean(normalizedSrc) && !isAbsolute && !isAssetPath;
-    const shouldPrefix =
-        Boolean(normalizedPrefix) &&
-        needsPrefix &&
-        !normalizedSrc.startsWith(normalizedPrefix ?? '');
+    const shouldPrefix = Boolean(normalizedPrefix) && needsPrefix && !normalizedSrc.startsWith(normalizedPrefix ?? '');
     const joinPrefix = (base: string, path: string) => {
         const trimmedBase = base.replace(/\/+$/, '');
         const normalizedPath = path.startsWith('/') ? path : `/${path}`;
@@ -69,8 +64,7 @@ export const Image: React.FC<ImageProps> = ({
         }
         return `${trimmedBase}${normalizedPath}`;
     };
-    const resolvedSrc =
-        shouldPrefix && normalizedPrefix ? joinPrefix(normalizedPrefix, normalizedSrc) : normalizedSrc;
+    const resolvedSrc = shouldPrefix && normalizedPrefix ? joinPrefix(normalizedPrefix, normalizedSrc) : normalizedSrc;
 
     const [currentSrc, setCurrentSrc] = useState(resolvedSrc);
     const [didFallback, setDidFallback] = useState(false);
@@ -99,9 +93,9 @@ export const Image: React.FC<ImageProps> = ({
 
     const isFallback = Boolean(fallbackSrc) && currentSrc === fallbackSrc;
     const showFallbackText = isTestEnv && isFallback && Boolean(fallbackText);
-    const shouldRender = Boolean(resolvedSrc) && (normalizedPrefix || !needsPrefix);
+    // const shouldRender = Boolean(resolvedSrc) && (normalizedPrefix || !needsPrefix);
 
-    if (!shouldRender) return null;
+    // if (!shouldRender) return null;
 
     if (showFallbackText) {
         return (

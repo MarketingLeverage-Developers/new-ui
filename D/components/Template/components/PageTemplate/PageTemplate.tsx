@@ -146,7 +146,7 @@ const PageTemplate = <S extends PageTemplateStateBase, A extends PageTemplateAct
 
             <Main>
                 <MainOverlay isFetching={isLoading} isEmpty={isEmpty} hasError={isError} onRetry={onRetry}>
-                    <Flex padding={{ y: 20, x: 24 }} direction="column" gap={24} style={mainWrapperStyle}>
+                    <Flex padding={{ y: 0, x: 0 }} direction="column" gap={24} style={mainWrapperStyle}>
                         {main}
                     </Flex>
                 </MainOverlay>

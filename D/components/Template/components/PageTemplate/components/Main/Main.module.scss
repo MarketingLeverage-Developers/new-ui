@@ -12,6 +12,7 @@
 
 .mainScroller {
     padding-top: 64px;
+
     position: relative;
     min-height: 0;
     min-width: 0;
@@ -21,7 +22,7 @@
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
 
-    scrollbar-gutter: stable both-edges;
+    // scrollbar-gutter: stable both-edges;
     &::-webkit-scrollbar {
         width: 6px;
         height: 6px;
