@@ -7,6 +7,14 @@
     background: var(--White1);
 }
 
+.ImageWrapper {
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+    overflow: hidden;
+    background-color: var(--Gray6);
+}
+
 .Image {
     background: var(--Gray2);
     display: block;

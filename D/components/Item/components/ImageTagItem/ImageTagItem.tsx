@@ -60,7 +60,7 @@ const ImageTagItem = ({
                 className={styles.Image}
                 width="100%"
                 height="100%"
-                fit="cover"
+                // fit="cover"
                 block
             />
         </div>
