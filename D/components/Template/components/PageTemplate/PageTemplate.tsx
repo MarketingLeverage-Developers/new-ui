@@ -13,6 +13,7 @@ import { Main } from './components/Main/Main';
 import { Overlays } from './components/Overlays/Overlays';
 import styles from './PageTemplate.module.scss';
 import ProfileDropdown from '@/features/navigation/components/ProfileDropdown/ProfileDropdown';
+import type { PaddingSize } from '@/shared/types/css/PaddingSize';
 
 export type PageTemplateStateBase = {
     companyUuid?: string;
@@ -51,6 +52,7 @@ export type PageTemplateProps<
     subSidebar?: React.ReactNode;
 
     mainLayout?: MainLayoutMode;
+    mainPadding?: PaddingSize | number;
 };
 
 export type PageTemplateExtraProps = {
@@ -76,6 +78,7 @@ const PageTemplate = <S extends PageTemplateStateBase, A extends PageTemplateAct
 
         filters,
         mainLayout = 'fill',
+        mainPadding = { y: 20, x: 24 },
 
         className,
     } = props;
@@ -146,7 +149,7 @@ const PageTemplate = <S extends PageTemplateStateBase, A extends PageTemplateAct
 
             <Main>
                 <MainOverlay isFetching={isLoading} isEmpty={isEmpty} hasError={isError} onRetry={onRetry}>
-                    <Flex padding={{ y: 0, x: 0 }} direction="column" gap={24} style={mainWrapperStyle}>
+                    <Flex padding={mainPadding} direction="column" gap={24} style={mainWrapperStyle}>
                         {main}
                     </Flex>
                 </MainOverlay>
