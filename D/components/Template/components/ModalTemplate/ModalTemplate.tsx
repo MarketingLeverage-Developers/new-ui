@@ -30,6 +30,7 @@ export type ModalTemplateProps = ModalTemplateExtraProps & {
     placeholder?: string;
     onTitleChange?: (title: string) => void;
     onClose?: () => void;
+    headerActions?: React.ReactNode;
     main?: React.ReactNode;
 
     headerClassName?: string;
@@ -49,6 +50,7 @@ const ModalTemplateRoot: React.FC<ModalTemplateProps> = (props) => {
         subTitle,
         onTitleChange,
         onClose,
+        headerActions,
         main,
         mainClassName,
         placeholder,
@@ -72,6 +74,7 @@ const ModalTemplateRoot: React.FC<ModalTemplateProps> = (props) => {
                 onTitleChange={onTitleChange}
                 placeholder={placeholder}
                 onClose={onClose}
+                actions={headerActions}
             />
 
             {main ? (

@@ -11,10 +11,11 @@ export type ModalTemplateHeaderProps = {
     placeholder?: string;
     onTitleChange?: (title: string) => void;
     onClose?: () => void;
+    actions?: React.ReactNode;
 };
 
 const ModalTemplateHeader: React.FC<ModalTemplateHeaderProps> = (props) => {
-    const { className, title, subTitle, onTitleChange, placeholder, onClose } = props;
+    const { className, title, subTitle, onTitleChange, placeholder, onClose, actions } = props;
     const { closeModal } = useModal();
     const handleClose = onClose ?? closeModal;
 
@@ -24,9 +25,12 @@ const ModalTemplateHeader: React.FC<ModalTemplateHeaderProps> = (props) => {
         <div className={rootClassName}>
             <div className={styles.TopRow}>
                 <div className={styles.SubTitle}>{subTitle}</div>
-                <button type="button" className={styles.CloseButton} onClick={handleClose} aria-label="close">
-                    <MdClose />
-                </button>
+                <div className={styles.Right}>
+                    {actions ? <div className={styles.Actions}>{actions}</div> : null}
+                    <button type="button" className={styles.CloseButton} onClick={handleClose} aria-label="close">
+                        <MdClose />
+                    </button>
+                </div>
             </div>
             {onTitleChange ? (
                 <input

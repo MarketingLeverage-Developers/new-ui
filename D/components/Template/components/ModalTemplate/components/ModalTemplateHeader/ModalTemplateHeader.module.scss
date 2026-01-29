@@ -13,6 +13,16 @@
         justify-content: space-between;
         gap: 12px;
     }
+    .Right {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .Actions {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
 
     .SubTitle {
         font-size: 15px;
