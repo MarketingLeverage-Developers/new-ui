@@ -2,7 +2,7 @@ import React, { createContext, useContext } from 'react';
 
 import type ManySelect from '@/shared/headless/ManySelect/ManySelect';
 
-import ChipMultiSelect from './components/ChipMultiSelect/ChipMultiSelect';
+import ChipMultiSelect, { type ChipMultiSelectProps } from './components/ChipMultiSelect/ChipMultiSelect';
 import type { ChipMultiSelectItemProps } from './components/ChipMultiSelect/components/ChipMultiSelectItem/ChipMultiSelectItem';
 import ChipMultiSelectItem from './components/ChipMultiSelect/components/ChipMultiSelectItem/ChipMultiSelectItem';
 import ChipMultiSelectContent, {
@@ -12,12 +12,14 @@ import ChipMultiSelectDisplay, {
     type ChipMultiSelectDisplayProps,
 } from './components/ChipMultiSelect/components/ChipMultiSelectDisplay/ChipMultiSelectDisplay';
 
-export type MultiSelectVariant = 'chip';
+export type MultiSelectVariant = 'chip' | 'plain';
 
 /** ✅ Input 패턴처럼 “공통 props”를 명시 */
 export type MultiSelectCommonProps = React.ComponentProps<typeof ManySelect>;
 
-export type MultiSelectProps = { variant: 'chip' } & MultiSelectCommonProps;
+export type MultiSelectProps =
+    | ({ variant: 'chip' } & ChipMultiSelectProps)
+    | ({ variant: Exclude<MultiSelectVariant, 'chip'> } & MultiSelectCommonProps);
 
 /** variant 공유 (지금은 chip만 있지만, 나중에 variant 늘릴 때 그대로 확장) */
 type MultiSelectVariantContextValue = {
@@ -50,7 +52,11 @@ const MultiSelectRoot: React.FC<MultiSelectProps> = (props) => {
     return (
         <MultiSelectVariantContext.Provider value={{ variant }}>
             {/* ✅ Dropdown + ManySelect 조합은 variant 컴포넌트 안에서 처리 */}
-            {variant === 'chip' ? <ChipMultiSelect {...(rest as MultiSelectCommonProps)} /> : null}
+            {variant === 'chip' ? (
+                <ChipMultiSelect {...(rest as ChipMultiSelectProps)} />
+            ) : (
+                null
+            )}
         </MultiSelectVariantContext.Provider>
     );
 };
