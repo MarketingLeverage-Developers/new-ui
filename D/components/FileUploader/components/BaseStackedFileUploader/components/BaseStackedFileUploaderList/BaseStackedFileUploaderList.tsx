@@ -1,8 +1,10 @@
 import React, { useMemo } from 'react';
 import { RiDownload2Fill } from 'react-icons/ri';
+import { FaCheck } from 'react-icons/fa';
 import styles from './BaseStackedFileUploaderList.module.scss';
 import { useFileUploader } from '@/shared/primitives/D/components/FileUploader/FileUploader';
 import { Common } from '@/shared/primitives/C/Common';
+import type { ServerImage } from '@/shared/types/common/model';
 
 type FileType = 'IMAGE' | 'ZIP' | 'VIDEO' | 'ETC';
 
@@ -12,6 +14,7 @@ type PreviewItem =
           key: string;
           name: string;
           url: string;
+          source: ServerImage;
       }
     | {
           kind: 'file';
@@ -24,7 +27,15 @@ type PreviewItem =
 const isFileType = (value: unknown): value is FileType =>
     value === 'IMAGE' || value === 'ZIP' || value === 'VIDEO' || value === 'ETC';
 
-const BaseStackedFileUploaderList: React.FC = () => {
+export type BaseStackedFileUploaderListProps = {
+    onSelect?: (item: ServerImage) => void;
+    selectedImageUUID?: string;
+};
+
+const BaseStackedFileUploaderList: React.FC<BaseStackedFileUploaderListProps> = ({
+    onSelect,
+    selectedImageUUID,
+}) => {
     const { type, serverItems, removeItem, getItemKey, showRemove } = useFileUploader();
     const apiPrefix = import.meta.env.VITE_API_URL ? `${import.meta.env.VITE_API_URL}/api` : undefined;
     const apiOrigin = import.meta.env.VITE_API_URL;
@@ -44,6 +55,7 @@ const BaseStackedFileUploaderList: React.FC = () => {
                     key: getItemKey(it),
                     name: it.imageName || 'image',
                     url: it.imageUrl,
+                    source: it,
                 }));
 
             return mapped;
@@ -117,7 +129,10 @@ const BaseStackedFileUploaderList: React.FC = () => {
                                     <button
                                         type="button"
                                         className={styles.FileBarRemove}
-                                        onClick={() => handleRemove(p.key)}
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleRemove(p.key);
+                                        }}
                                         aria-label="remove file"
                                     >
                                         <span className={styles.RemoveIcon}>×</span>
@@ -144,10 +159,27 @@ const BaseStackedFileUploaderList: React.FC = () => {
                 if (p.kind !== 'image') return null;
 
                 const downloadUrl = resolveDownloadUrl(p.url);
+                const isSelected = Boolean(selectedImageUUID) && p.source.imageUUID === selectedImageUUID;
 
                 return (
                     <div key={p.key} className={styles.ImageItem}>
-                        <div className={styles.ImageThumb}>
+                        <div
+                            className={`${styles.ImageThumb} ${isSelected ? styles.ImageThumbSelected : ''}`}
+                            onClick={onSelect ? () => onSelect(p.source) : undefined}
+                            style={onSelect ? { cursor: 'pointer' } : undefined}
+                            role={onSelect ? 'button' : undefined}
+                            tabIndex={onSelect ? 0 : undefined}
+                            onKeyDown={
+                                onSelect
+                                    ? (e) => {
+                                          if (e.key === 'Enter' || e.key === ' ') {
+                                              e.preventDefault();
+                                              onSelect(p.source);
+                                          }
+                                      }
+                                    : undefined
+                            }
+                        >
                             <Common.Image
                                 className={styles.ImageThumbImg}
                                 src={p.url}
@@ -159,6 +191,12 @@ const BaseStackedFileUploaderList: React.FC = () => {
                                 block
                             />
 
+                            {isSelected ? (
+                                <div className={styles.ImageSelectedOverlay} aria-hidden="true">
+                                    <FaCheck />
+                                </div>
+                            ) : null}
+
                             <div className={styles.ImageDim} />
 
                             <div className={styles.ImageActions}>
@@ -168,6 +206,7 @@ const BaseStackedFileUploaderList: React.FC = () => {
                                     download
                                     target="_blank"
                                     rel="noreferrer"
+                                    onClick={(e) => e.stopPropagation()}
                                     aria-label={`download ${p.name}`}
                                 >
                                     <RiDownload2Fill />
@@ -178,7 +217,10 @@ const BaseStackedFileUploaderList: React.FC = () => {
                                 <button
                                     type="button"
                                     className={styles.ImageRemove}
-                                    onClick={() => handleRemove(p.key)}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleRemove(p.key);
+                                    }}
                                     aria-label="remove image"
                                 >
                                     <span className={styles.RemoveIcon}>×</span>

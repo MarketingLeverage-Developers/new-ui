@@ -11,7 +11,9 @@ import InputFileUploader, { type InputFileUploaderProps } from './components/Inp
 
 import type { BaseStackedFileUploaderDropzoneProps } from './components/BaseStackedFileUploader/components/BaseStackedFileUploaderDropzone/BaseStackedFileUploaderDropzone';
 import BaseStackedFileUploaderDropzone from './components/BaseStackedFileUploader/components/BaseStackedFileUploaderDropzone/BaseStackedFileUploaderDropzone';
-import BaseStackedFileUploaderList from './components/BaseStackedFileUploader/components/BaseStackedFileUploaderList/BaseStackedFileUploaderList';
+import BaseStackedFileUploaderList, {
+    type BaseStackedFileUploaderListProps,
+} from './components/BaseStackedFileUploader/components/BaseStackedFileUploaderList/BaseStackedFileUploaderList';
 
 import BaseAlterFileUploader from './components/BaseAlterFileUploader/BaseAlterFileUploader';
 import BaseAlterFileUploaderDropzone, {
@@ -134,7 +136,7 @@ type FileUploaderCompound = React.FC<FileUploaderProps> & {
         | BaseStackedFileUploaderDropzoneProps
         | BaseAlterFileUploaderDropzoneProps
     >;
-    List: React.FC;
+    List: React.FC<BaseStackedFileUploaderListProps>;
 };
 
 const FileUploaderRoot: React.FC<FileUploaderProps> = (props) => {
@@ -355,13 +357,13 @@ const FileUploaderDropzone: FileUploaderCompound['Dropzone'] = (props) => {
     return <BaseFileUploaderDropzone {...(props as BaseFileUploaderDropzoneProps)} />;
 };
 
-const FileUploaderList: React.FC = () => {
+const FileUploaderList: React.FC<BaseStackedFileUploaderListProps> = (props) => {
     const { variant } = useFileUploaderVariant();
 
     if (variant === 'input') return null;
     if (variant === 'base-alter') return null;
 
-    if (variant === 'base-stacked') return <BaseStackedFileUploaderList />;
+    if (variant === 'base-stacked') return <BaseStackedFileUploaderList {...props} />;
 
     return <BaseFileUploaderList />;
 };
