@@ -41,9 +41,9 @@
 }
 
 .MonthNumber {
-    // display: inline-block;
-    // width: 2ch;
-    // text-align: right;
+    /* display: inline-block; */
+    /* width: 2ch; */
+    /* text-align: right; */
 }
 
 .NavHidden {
@@ -153,9 +153,10 @@
 }
 
 /* Selected day */
-:global(.rdp-selected),
-:global(.rdp-day_selected button),
-:global(.rdp-selected button) {
+/* (변경) 전역 선택자를 MiniCalendar 내부로만 스코프 제한 */
+.MiniCalendar :global(.rdp-selected),
+.MiniCalendar :global(.rdp-day_selected button),
+.MiniCalendar :global(.rdp-selected button) {
     background: var(--Primary1, #1e67ff) !important;
     border-radius: 8px !important;
     color: #fff !important;
@@ -163,7 +164,8 @@
     font-weight: 600 !important;
 }
 
-:global(.rdp-day_button) {
+/* (변경) 이것도 MiniCalendar 내부로만 스코프 제한 */
+.MiniCalendar :global(.rdp-day_button) {
     width: 100%;
     height: 100%;
 }
