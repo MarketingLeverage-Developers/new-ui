@@ -33,6 +33,10 @@
     }
 }
 
+.noScroll {
+    overflow: hidden;
+}
+
 .mainRow {
     display: flex;
     flex-direction: column;

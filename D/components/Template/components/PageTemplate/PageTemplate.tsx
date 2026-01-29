@@ -53,6 +53,7 @@ export type PageTemplateProps<
 
     mainLayout?: MainLayoutMode;
     mainPadding?: PaddingSize | number;
+    mainScrollable?: boolean;
 };
 
 export type PageTemplateExtraProps = {
@@ -79,6 +80,7 @@ const PageTemplate = <S extends PageTemplateStateBase, A extends PageTemplateAct
         filters,
         mainLayout = 'fill',
         mainPadding = { y: 20, x: 24 },
+        mainScrollable = true,
 
         className,
     } = props;
@@ -147,7 +149,7 @@ const PageTemplate = <S extends PageTemplateStateBase, A extends PageTemplateAct
                 )}
             </Header>
 
-            <Main>
+            <Main scrollable={mainScrollable}>
                 <MainOverlay isFetching={isLoading} isEmpty={isEmpty} hasError={isError} onRetry={onRetry}>
                     <Flex padding={mainPadding} direction="column" gap={24} style={mainWrapperStyle}>
                         {main}

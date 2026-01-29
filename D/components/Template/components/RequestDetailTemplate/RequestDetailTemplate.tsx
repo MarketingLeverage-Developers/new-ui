@@ -18,14 +18,22 @@ const RequestDetailTemplate = ({
     rightFlex = 1,
 }: RequestDetailTemplateProps) => (
     <Box width="100%" height="100%" wrap="wrap">
-        <Box direction="column" flex={leftFlex} style={{ borderRight: getThemeColor('Gray2') }}>
+        <Box direction="column" flex={leftFlex} style={{ borderRight: `1px solid ${getThemeColor('Gray6')}` }}>
             {left}
         </Box>
-        <Box direction="column" flex={rightFlex}>
-            <Box flex="0 0 auto" gap={8} background={getThemeColor('White1')} padding={{ x: 32, y: 14 }}>
+        <Box direction="column" flex={rightFlex} height="100%" style={{ minHeight: 0 }}>
+            <Box
+                flex="0 0 auto"
+                gap={8}
+                background={getThemeColor('White1')}
+                padding={{ x: 32, y: 14 }}
+                style={{ borderBottom: `1px solid ${getThemeColor('Gray6')}` }}
+            >
                 {rightHeader}
             </Box>
-            <Box background={getThemeColor('Gray2')}>{rightMain}</Box>
+            <Box flex={1} style={{ overflow: 'auto', minHeight: 0 }}>
+                {rightMain}
+            </Box>
         </Box>
     </Box>
 );

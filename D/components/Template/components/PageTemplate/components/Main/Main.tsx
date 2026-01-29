@@ -8,13 +8,14 @@ import { FilterLine } from './components/FilterLine/FilterLine';
 type MainProps = {
     children?: React.ReactNode;
     bgColor?: HexColor | ThemeColorVar;
+    scrollable?: boolean;
 };
 
 type MainComponent = React.FC<MainProps> & {
     FilterLine: typeof FilterLine;
 };
 
-const MainBase: React.FC<MainProps> = ({ children, bgColor }) => {
+const MainBase: React.FC<MainProps> = ({ children, bgColor, scrollable = true }) => {
     const cssVariables: CSSVariables = { '--background-color': bgColor };
 
     const childArray = React.Children.toArray(children);
@@ -31,7 +32,11 @@ const MainBase: React.FC<MainProps> = ({ children, bgColor }) => {
 
     return (
         <main className={styles.main} style={{ ...cssVariables }}>
-            <div className={`${styles.mainScroller} ${hasOverlay ? styles.isOverlayOpen : ''}`}>
+            <div
+                className={`${styles.mainScroller} ${hasOverlay ? styles.isOverlayOpen : ''} ${
+                    scrollable ? '' : styles.noScroll
+                }`}
+            >
                 <div className={styles.mainRow}>{contentNodes}</div>
             </div>
 
