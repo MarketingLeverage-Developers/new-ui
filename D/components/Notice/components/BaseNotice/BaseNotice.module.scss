@@ -1,6 +1,7 @@
 .BaseNotice {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
+    flex-wrap: wrap;
     gap: 8px;
 
     padding: 14px 20px;
@@ -21,7 +22,11 @@
 }
 
 .Text {
-    line-height: 1.2;
+    line-height: 1.4;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    min-width: 0;
 }
 
 .Default {
