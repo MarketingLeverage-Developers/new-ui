@@ -10,7 +10,7 @@
     font-size: 15px;
     font-weight: 500;
 
-    white-space: nowrap;
+    white-space: normal;
 }
 
 .Row {
@@ -50,12 +50,16 @@
     display: inline-flex;
     align-items: center;
     gap: 10px;
+    white-space: nowrap;
 }
 
 /* ✅ children wrapper */
 .Content {
     min-width: 0;
     width: 100%;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: break-word;
 }
 
 // /* ✅ column일 때만 children들을 1:1로 나누기 */
