@@ -1,0 +1,101 @@
+.DepartmentCard {
+    background: var(--White1, #ffffff);
+    border-radius: 20px;
+    padding: 24px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    transition:
+        box-shadow 0.2s ease,
+        transform 0.2s ease;
+    box-shadow: 0 4px 12px rgba(14, 28, 61, 0.06);
+}
+
+.DepartmentCard--clickable {
+    cursor: pointer;
+}
+
+.DepartmentCard--clickable:hover {
+    box-shadow: 0 10px 20px rgba(14, 28, 61, 0.1);
+    transform: translateY(-2px);
+}
+
+.Header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+.HeaderGroup {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.Chip {
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-transform: none;
+}
+
+.DepartmentName {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--Black1, #1b1d22);
+}
+
+.MemberGroup {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 14px;
+    color: var(--Gray8, #4f5361);
+}
+
+.MemberIcon {
+    width: 16px;
+    height: 16px;
+}
+
+.ActionSlot {
+    display: flex;
+}
+
+.Content {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.ContentRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-radius: 6px;
+    gap: 12px;
+    font-size: 13px;
+}
+
+.ContentRow:nth-child(1) {
+    background: var(--Gray7, #f3f5f7);
+}
+
+.ContentRow:nth-child(2) {
+    background: var(--White1, #ffffff);
+}
+
+.ContentLabel {
+    color: var(--Gray2, #6c7280);
+}
+
+.ContentValue {
+    font-weight: 600;
+    color: var(--Black1, #1b1d22);
+}
