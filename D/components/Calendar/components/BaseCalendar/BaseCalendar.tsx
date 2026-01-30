@@ -155,6 +155,7 @@ const BaseCalendar: React.FC<BaseCalendarProps> = (props) => {
 
                     months: styles.Months,
                     month: styles.Month,
+                    month_grid: styles.MonthGrid,
 
                     month_caption: styles.Caption,
                     caption_label: styles.CaptionLabel,
@@ -168,10 +169,14 @@ const BaseCalendar: React.FC<BaseCalendarProps> = (props) => {
                     week: styles.Week,
 
                     day: styles.Day,
-                    day_selected: styles.DaySelected,
-                    day_outside: styles.DayOutside,
-                    day_disabled: styles.DayDisabled,
-                    day_today: styles.DayToday,
+                    day_button: styles.DayButton,
+                    selected: styles.DaySelected,
+                    range_start: styles.DaySelected,
+                    range_middle: styles.DaySelected,
+                    range_end: styles.DaySelected,
+                    outside: styles.DayOutside,
+                    disabled: styles.DayDisabled,
+                    today: styles.DayToday,
                 }}
                 components={{
                     MonthCaption,
