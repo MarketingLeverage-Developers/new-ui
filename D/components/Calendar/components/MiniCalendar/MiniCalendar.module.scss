@@ -5,18 +5,22 @@
     background: #fff;
     box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
     border: 1px solid var(--Gray7);
-}
+    .RdpRoot {
+        width: 100%;
+    }
 
-.RdpRoot {
-    width: 100%;
-}
+    .Months {
+        width: 100%;
+    }
 
-.Months {
-    width: 100%;
-}
+    .Month {
+        width: 100%;
+    }
 
-.Month {
-    width: 100%;
+    .MonthGrid {
+        width: 100%;
+        border-collapse: collapse;
+    }
 }
 
 /* -------------------------
@@ -132,6 +136,21 @@
     color: #111;
 }
 
+.DayButton {
+    width: 100%;
+    height: 100%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: none;
+    border-radius: inherit;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+}
+
 .DayOutside {
     opacity: 0.35;
 }
@@ -147,25 +166,22 @@
     font-weight: 600;
 }
 
+.DaySelected {
+    background: var(--Primary1, #1e67ff);
+    border: 1px solid var(--Primary1, #1e67ff);
+    color: #fff;
+    font-weight: 600;
+}
+
+.DaySelected .DayButton {
+    color: #fff;
+}
+
+.DayDisabled .DayButton {
+    cursor: default;
+}
+
 .Day:focus-visible {
     outline: 2px solid rgba(30, 103, 255, 0.35);
     outline-offset: 2px;
-}
-
-/* Selected day */
-/* (변경) 전역 선택자를 MiniCalendar 내부로만 스코프 제한 */
-.MiniCalendar :global(.rdp-selected),
-.MiniCalendar :global(.rdp-day_selected button),
-.MiniCalendar :global(.rdp-selected button) {
-    background: var(--Primary1, #1e67ff) !important;
-    border-radius: 8px !important;
-    color: #fff !important;
-    border: 1px solid var(--Primary1, #1e67ff);
-    font-weight: 600 !important;
-}
-
-/* (변경) 이것도 MiniCalendar 내부로만 스코프 제한 */
-.MiniCalendar :global(.rdp-day_button) {
-    width: 100%;
-    height: 100%;
 }

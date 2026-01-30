@@ -3,7 +3,14 @@ import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import type { DateSelectArg, DatesSetArg, EventDropArg, EventContentArg } from '@fullcalendar/core';
+import type {
+    DateSelectArg,
+    DatesSetArg,
+    EventDropArg,
+    EventContentArg,
+    MoreLinkArg,
+    MoreLinkSimpleAction,
+} from '@fullcalendar/core';
 
 import { useMLCalendar, type CalendarEvent, type CalendarView } from '@/shared/headless/MLCalendar/MLCalendar';
 
@@ -54,6 +61,7 @@ export const ScheduleCalendarCalendar = ({
 }: ScheduleCalendarCalendarProps) => {
     const ctx = useMLCalendar();
     const calRef = useRef<FullCalendar | null>(null);
+    const viewRef = useRef<HTMLDivElement | null>(null);
 
     const [draftEvent, setDraftEvent] = useState<any | null>(null);
 
@@ -174,8 +182,107 @@ export const ScheduleCalendarCalendar = ({
         });
     };
 
+    const positionMorePopover = useCallback((popoverEl: HTMLElement, anchorEl?: HTMLElement | null) => {
+        const padding = 10;
+        const gap = 8;
+        const preferredMaxHeight = 410;
+        const viewportHeight = window.innerHeight;
+
+        const anchorRect = anchorEl?.getBoundingClientRect();
+        const fallbackMaxHeight = Math.max(0, Math.min(preferredMaxHeight, viewportHeight - padding * 2));
+
+        let placeBelow = true;
+        let maxHeight = fallbackMaxHeight;
+
+        if (anchorRect) {
+            const spaceBelow = Math.max(0, viewportHeight - padding - anchorRect.bottom - gap);
+            const spaceAbove = Math.max(0, anchorRect.top - padding - gap);
+
+            placeBelow = spaceBelow >= spaceAbove;
+            const availableSpace = (placeBelow ? spaceBelow : spaceAbove) || fallbackMaxHeight;
+            maxHeight = Math.max(0, Math.min(preferredMaxHeight, availableSpace));
+        }
+        popoverEl.style.setProperty('--fc-more-popover-max-height', `${maxHeight}px`);
+
+        const headerEl = popoverEl.querySelector<HTMLElement>('.fc-popover-header');
+        const headerHeight = headerEl?.getBoundingClientRect().height ?? 0;
+        popoverEl.style.setProperty('--fc-more-popover-body-max-height', `${Math.max(0, maxHeight - headerHeight)}px`);
+
+        const rect = popoverEl.getBoundingClientRect();
+        const overflowBottom = rect.bottom - (viewportHeight - padding);
+        const overflowTop = padding - rect.top;
+
+        if (overflowBottom <= 0 && overflowTop <= 0) {
+            return;
+        }
+
+        const originTop = popoverEl.offsetParent?.getBoundingClientRect().top ?? 0;
+        let targetTop = rect.top;
+
+        if (anchorRect) {
+            targetTop = placeBelow ? anchorRect.bottom + gap : anchorRect.top - gap - rect.height;
+        }
+
+        const maxTop = viewportHeight - padding - rect.height;
+        if (Number.isFinite(maxTop)) {
+            targetTop = Math.min(Math.max(targetTop, padding), maxTop);
+        } else {
+            targetTop = Math.max(targetTop, padding);
+        }
+
+        popoverEl.style.top = `${targetTop - originTop}px`;
+    }, []);
+
+    const scheduleMorePopoverAdjust = useCallback(
+        (anchorEl?: HTMLElement | null) => {
+            let attempts = 0;
+
+            const tryAdjust = () => {
+                attempts += 1;
+                const popoverEl = viewRef.current?.querySelector<HTMLElement>('.fc-popover.fc-more-popover');
+
+                if (popoverEl) {
+                    positionMorePopover(popoverEl, anchorEl);
+                    return;
+                }
+
+                if (attempts < 4) {
+                    requestAnimationFrame(tryAdjust);
+                }
+            };
+
+            requestAnimationFrame(tryAdjust);
+        },
+        [positionMorePopover]
+    );
+
+    const externalMoreLinkClick = calendarProps?.moreLinkClick;
+    const handleMoreLinkClick = useCallback(
+        (arg: MoreLinkArg): MoreLinkSimpleAction | void => {
+            let result: MoreLinkSimpleAction | void;
+
+            if (typeof externalMoreLinkClick === 'function') {
+                result = externalMoreLinkClick(arg);
+            } else {
+                result = externalMoreLinkClick as MoreLinkSimpleAction | undefined;
+            }
+
+            const shouldOpenPopover = !result || result === 'popover';
+
+            if (shouldOpenPopover) {
+                const anchor = (arg.jsEvent?.currentTarget || arg.jsEvent?.target) as HTMLElement | null;
+                scheduleMorePopoverAdjust(anchor);
+            }
+
+            return result;
+        },
+        [externalMoreLinkClick, scheduleMorePopoverAdjust]
+    );
+
+    const { moreLinkClick: _ignoredMoreLinkClick, ...restCalendarProps } = calendarProps ?? {};
+
     return (
-        <div className={styles.fcViewAnim}>
+        <div className={styles.fcViewAnim} ref={viewRef}>
             <FullCalendar
                 ref={(r) => {
                     calRef.current = r;
@@ -209,6 +316,7 @@ export const ScheduleCalendarCalendar = ({
                     weekday: 'long',
                 }}
                 moreLinkContent={(arg) => ({ html: `${arg.num}개 더보기` })}
+                moreLinkClick={handleMoreLinkClick}
                 locale="ko"
                 height="auto"
                 dayHeaderContent={(arg) => <CalendarDayHeader arg={arg} />}
@@ -224,7 +332,7 @@ export const ScheduleCalendarCalendar = ({
                     meridiem: 'short',
                     hour12: true,
                 }}
-                {...calendarProps}
+                {...restCalendarProps}
             />
         </div>
     );
