@@ -3,8 +3,6 @@
 .Root {
     display: flex;
     justify-content: center;
-    // border: 1px solid var(--Primary1);
-    // border-radius: 20px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
     background-color: var(--White1);
     width: 578px;
@@ -176,12 +174,11 @@
 }
 
 .NavButton:disabled {
-    cursor: not-allowed; // ✅ 금지 커서
-    opacity: 0.35; // ✅ 흐리게
+    cursor: not-allowed;
+    opacity: 0.35;
 }
 
 .NavIcon {
-    // font-size: 18px;
     svg {
         width: 8px;
         height: 4px;
@@ -228,7 +225,6 @@
         width: 100%;
         background: var(--White1);
         border: 1px solid var(--Gray5);
-        // border-radius: 8px;
         box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
         padding: 6px 0;
         z-index: 999;
@@ -242,18 +238,9 @@
 .Arrow {
     position: absolute;
     right: 10px;
-
     pointer-events: none;
     color: var(--Gray3);
     font-size: 16px;
-}
-
-.SelectMenu {
-    background: var(--White1);
-    border: 1px solid var(--Gray5);
-    border-radius: 8px;
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
-    padding: 6px 0;
 }
 
 .SelectMenuInner {
@@ -284,184 +271,155 @@
     font-weight: 600;
 }
 
-// .CalendarBody {
-//     padding: 4px 0;
-// }
+.CalendarBody {
+    padding: 4px 0; /* 필요하면 여백 조정, 없어도 무관 */
 
-/* 하단 버튼 (현재 코드에선 안 쓰는 듯 하지만 기존 유지) */
-.BottomBar {
-    display: flex;
-    justify-content: flex-end;
-    gap: 8px;
-    margin-top: 14px;
-}
-
-.CancelButton,
-.ApplyButton {
-    padding: 6px 10px;
-    font-size: 14px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-}
-
-.CancelButton {
-    background-color: var(--White1);
-    border: 1px solid #d5d5d5;
-    color: var(--Gray1);
-}
-
-.ApplyButton {
-    background-color: var(--Primary1);
-    color: #fff;
-}
-
-.ApplyButton:disabled,
-.ApplyButton[aria-disabled='true'] {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-
-:global {
-    .rdp {
-        --rdp-cell-size: 26px;
-    }
-
-    .rdp-month {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 100%;
-    }
-
-    .rdp-nav {
-        display: none;
-    }
-
-    .rdp-caption,
-    .rdp-caption_label {
-        display: none;
-    }
-
-    .rdp-month_grid {
-        border-spacing: 0;
-        width: 100%;
-        padding: 0px 8px;
-    }
-
-    .rdp-weekday {
-        color: var(--Gray2);
-        text-align: center;
-        font-size: 15px;
-        font-weight: 400;
-        height: 32px;
-
-        &:first-child {
-            color: #ff6363;
+    /* 이 안의 :global은 .CalendarBody 클래스 하위에 있는 요소에만 적용됩니다. */
+    :global {
+        .rdp {
+            --rdp-cell-size: 26px;
         }
 
-        &:last-child {
-            color: #778eff;
-        }
-    }
-
-    .rdp-day {
-        text-align: center;
-        width: 30px;
-        height: 30px;
-        position: relative;
-        overflow: visible;
-
-        .rdp-day_button {
-            display: block;
+        .rdp-months {
             width: 100%;
-            height: 100%;
-            padding: 0;
-            border: none;
-            border-radius: 0;
-            color: var(--Gray1);
-            background: transparent;
+        }
+
+        .rdp-month {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+        }
+
+        .rdp-nav {
+            display: none;
+        }
+
+        .rdp-caption,
+        .rdp-caption_label {
+            display: none;
+        }
+
+        .rdp-month_grid {
+            border-spacing: 0;
+            width: 100%;
+            padding: 0px 8px;
+        }
+
+        .rdp-weekday {
+            color: var(--Gray2);
+            text-align: center;
             font-size: 15px;
             font-weight: 400;
+            height: 32px;
+
+            &:first-child {
+                color: #ff6363;
+            }
+
+            &:last-child {
+                color: #778eff;
+            }
+        }
+
+        .rdp-day {
+            text-align: center;
+            width: 55px;
+            height: 30px;
             position: relative;
-            z-index: 2;
-        }
+            overflow: visible;
 
-        &.rdp-outside .rdp-day_button {
-            color: var(--Gray4);
-        }
+            .rdp-day_button {
+                display: block;
+                width: 100%;
+                height: 100%;
+                padding: 0;
+                border: none;
+                border-radius: 0;
+                color: var(--Gray1);
+                background: transparent;
+                font-size: 15px;
+                font-weight: 400;
+                position: relative;
+                z-index: 2;
+            }
 
-        /* range 몸통(슬림 바) */
-        &.rdp-selected::after {
-            content: '';
-            position: absolute;
-            left: 0;
-            right: 0;
-            top: 50%;
-            height: 28px; /* 몸통 두께 */
-            transform: translateY(-50%);
-            background: var(--Primary1);
-            z-index: 1;
-            border-radius: 0;
-        }
+            &.rdp-outside .rdp-day_button {
+                color: var(--Gray4);
+            }
 
-        &.rdp-selected .rdp-day_button {
-            color: var(--White1);
-        }
+            /* range 몸통(슬림 바) */
+            &.rdp-selected::after {
+                content: '';
+                position: absolute;
+                left: 0;
+                right: 0;
+                top: 50%;
+                height: 28px; /* 몸통 두께 */
+                transform: translateY(-50%);
+                background: var(--Primary1);
+                z-index: 1;
+                border-radius: 0;
+            }
 
-        /* start/end는 몸통 높이에 맞춰 캡슐 끝만 둥글게 */
-        &.rdp-selected.rdp-range_start::after {
-            border-radius: 999px 0 0 999px;
-        }
+            &.rdp-selected .rdp-day_button {
+                color: var(--White1);
+            }
 
-        &.rdp-selected.rdp-range_end::after {
-            border-radius: 0 999px 999px 0;
-        }
+            /* start/end는 몸통 높이에 맞춰 캡슐 끝만 둥글게 */
+            &.rdp-selected.rdp-range_start::after {
+                border-radius: 999px 0 0 999px;
+            }
 
-        &.rdp-selected.rdp-range_middle::after {
-            border-radius: 0;
-        }
+            &.rdp-selected.rdp-range_end::after {
+                border-radius: 0 999px 999px 0;
+            }
 
-        /* 단일 선택(시작=끝)은 완전 원 */
-        &.rdp-selected.rdp-range_start.rdp-range_end::after {
-            left: 50%;
-            right: auto;
-            top: 50%;
-            width: 32px;
-            height: 32px;
-            transform: translate(-50%, -50%);
-            border-radius: 50%;
-            background: var(--Primary1);
-        }
+            &.rdp-selected.rdp-range_middle::after {
+                border-radius: 0;
+            }
 
-        &.rdp-selected.rdp-range_start.rdp-range_end .rdp-day_button {
-            color: var(--White1);
-        }
+            /* 단일 선택(시작=끝)은 완전 원 */
+            &.rdp-selected.rdp-range_start.rdp-range_end::after {
+                left: 50%;
+                right: auto;
+                top: 50%;
+                width: 32px;
+                height: 32px;
+                transform: translate(-50%, -50%);
+                border-radius: 50%;
+                background: var(--Primary1);
+            }
 
-        /* today (선택 X) 완전 원 */
-        &.rdp-today:not(.rdp-selected)::after {
-            content: '';
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            width: 32px;
-            height: 32px;
-            transform: translate(-50%, -50%);
-            background: var(--Primary5);
-            border-radius: 50%;
-            z-index: 1;
-        }
+            &.rdp-selected.rdp-range_start.rdp-range_end .rdp-day_button {
+                color: var(--White1);
+            }
 
-        &.rdp-today:not(.rdp-selected) .rdp-day_button {
-            background: transparent;
-            color: var(--White1);
-            z-index: 2;
-        }
+            /* today (선택 X) 완전 원 */
+            &.rdp-today:not(.rdp-selected)::after {
+                content: '';
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                width: 32px;
+                height: 32px;
+                transform: translate(-50%, -50%);
+                background: var(--Primary5);
+                border-radius: 50%;
+                z-index: 1;
+            }
 
-        /* 사용 안 함 */
-        &.rdp-range_start::before,
-        &.rdp-range_end::before {
-            content: none;
+            &.rdp-today:not(.rdp-selected) .rdp-day_button {
+                background: transparent;
+                color: var(--White1);
+                z-index: 2;
+            }
+
+            /* 사용 안 함 */
+            &.rdp-range_start::before,
+            &.rdp-range_end::before {
+                content: none;
+            }
         }
     }
 }
