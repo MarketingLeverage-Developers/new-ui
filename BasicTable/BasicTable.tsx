@@ -31,6 +31,7 @@ type BasicTableProps<T> = React.ComponentProps<typeof AirTable<T>> & {
     showGhost?: boolean;
     showHeader?: boolean;
     defaultExpandedRowKeys?: string[];
+    persistExpandedRowKeys?: boolean;
 
     filterItems?: TableFilterItem[];
     actions?: React.ReactNode;
@@ -45,6 +46,7 @@ export const BasicTable = <T,>({
     showHeader = true,
     style,
     defaultExpandedRowKeys = [],
+    persistExpandedRowKeys = false,
     filterItems = [],
     actions,
     showExpandAllRowsButton,
@@ -99,6 +101,7 @@ export const BasicTable = <T,>({
         <AirTable
             {...props}
             defaultExpandedRowKeys={defaultExpandedRowKeys}
+            persistExpandedRowKeys={persistExpandedRowKeys}
             enableAnimation={enableAnimation}
             style={{
                 ...(style ?? {}),
