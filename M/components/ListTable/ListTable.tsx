@@ -15,6 +15,9 @@ type ListTableProps<T> = {
 
     /** ✅✅✅ 추가: 고정할 컬럼 key들 */
     pinnedColumnKeys?: string[];
+
+    pinnedHeaderBgColor?: string | ((colKey: string) => string | undefined);
+    pinnedHeaderTextColor?: string | ((colKey: string) => string | undefined);
 };
 
 export const ListTable = <T,>({
@@ -27,6 +30,8 @@ export const ListTable = <T,>({
     getRowStyle,
     storageKey,
     pinnedColumnKeys = [],
+    pinnedHeaderBgColor,
+    pinnedHeaderTextColor,
 }: ListTableProps<T>) => (
     <>
         {/* ✅ BasicTable로 교체하여 간결화 */}
@@ -41,6 +46,8 @@ export const ListTable = <T,>({
             storageKey={storageKey}
             fullHeight={true}
             pinnedColumnKeys={pinnedColumnKeys}
+            pinnedHeaderBgColor={pinnedHeaderBgColor}
+            pinnedHeaderTextColor={pinnedHeaderTextColor}
         />
         {/* </Flex.Item> */}
     </>

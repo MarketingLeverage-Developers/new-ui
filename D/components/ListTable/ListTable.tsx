@@ -27,6 +27,9 @@ type ListTableProps<T> = {
     actions?: React.ReactNode;
     showExpandAllRowsButton?: boolean;
     enableAnimation?: boolean;
+
+    pinnedHeaderBgColor?: string | ((colKey: string) => string | undefined);
+    pinnedHeaderTextColor?: string | ((colKey: string) => string | undefined);
 };
 
 export const ListTable = <T,>({
@@ -48,6 +51,8 @@ export const ListTable = <T,>({
     actions,
     showExpandAllRowsButton = false,
     enableAnimation = false,
+    pinnedHeaderBgColor,
+    pinnedHeaderTextColor,
 }: ListTableProps<T>) => (
     <BasicTable
         data={data}
@@ -68,5 +73,7 @@ export const ListTable = <T,>({
         actions={actions}
         showExpandAllRowsButton={showExpandAllRowsButton}
         enableAnimation={enableAnimation}
+        pinnedHeaderBgColor={pinnedHeaderBgColor}
+        pinnedHeaderTextColor={pinnedHeaderTextColor}
     />
 );
