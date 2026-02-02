@@ -5,17 +5,39 @@ type ListPaginationMode = 'pagination' | 'infinite';
 
 type Props = {
     total: number;
+    totalPages?: number;
     page: number;
     size: number;
     onChange: (page: number) => void;
     mode?: ListPaginationMode;
     isLoading?: boolean;
+    hasMore?: boolean;
+    lastPageCount?: number;
 };
 
-export const ListPagination = ({ total, page, size, onChange, mode = 'pagination', isLoading = false }: Props) => {
+export const ListPagination = ({
+    total,
+    totalPages,
+    page,
+    size,
+    onChange,
+    mode = 'pagination',
+    isLoading = false,
+    hasMore,
+    lastPageCount,
+}: Props) => {
     if (mode === 'infinite') {
         return (
-            <InfiniteScrollTrigger total={total} page={page} size={size} onChange={onChange} isLoading={isLoading} />
+            <InfiniteScrollTrigger
+                total={total}
+                totalPages={totalPages}
+                page={page}
+                size={size}
+                onChange={onChange}
+                isLoading={isLoading}
+                hasMore={hasMore}
+                lastPageCount={lastPageCount}
+            />
         );
     }
 
