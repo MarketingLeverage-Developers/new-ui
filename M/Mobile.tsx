@@ -1,6 +1,7 @@
 import React from 'react';
 import styles from './Mobile.module.scss';
 import { ListTable } from './components/ListTable/ListTable';
+import { ListInfiniteScroll } from './components/ListInfiniteScroll/ListInfiniteScroll';
 import { ListPagination } from './components/ListPagination/ListPagination';
 import { PageSizeSelect } from './components/PageSizeSelect/PageSizeSelect';
 import { PageTemplate } from './components/Template/components/PageTemplate/PageTemplate';
@@ -26,6 +27,7 @@ type MobileProps = {
 export const Mobile = ({ children }: MobileProps) => <div className={styles.Mobile}>{children}</div>;
 
 Mobile.ListTable = ListTable;
+Mobile.ListInfiniteScroll = ListInfiniteScroll;
 Mobile.ListPagination = ListPagination;
 Mobile.PageSizeSelect = PageSizeSelect;
 Mobile.PageTemplate = PageTemplate;
