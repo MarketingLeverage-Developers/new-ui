@@ -1,46 +1,13 @@
 import ArrowPagination from '@/shared/primitives/ArrowPagination/ArrowPagination';
-import { InfiniteScrollTrigger } from '@/shared/primitives/InfiniteScrollTrigger/InfiniteScrollTrigger';
-
-type ListPaginationMode = 'pagination' | 'infinite';
 
 type Props = {
     total: number;
-    totalPages?: number;
     page: number;
     size: number;
     onChange: (page: number) => void;
-    mode?: ListPaginationMode;
-    isLoading?: boolean;
-    hasMore?: boolean;
-    lastPageCount?: number;
 };
 
-export const ListPagination = ({
-    total,
-    totalPages,
-    page,
-    size,
-    onChange,
-    mode = 'pagination',
-    isLoading = false,
-    hasMore,
-    lastPageCount,
-}: Props) => {
-    if (mode === 'infinite') {
-        return (
-            <InfiniteScrollTrigger
-                total={total}
-                totalPages={totalPages}
-                page={page}
-                size={size}
-                onChange={onChange}
-                isLoading={isLoading}
-                hasMore={hasMore}
-                lastPageCount={lastPageCount}
-            />
-        );
-    }
-
+export const ListPagination = ({ total, page, size, onChange }: Props) => {
     const handleChange = (next: { page: number; size: number; total: number }) => {
         onChange(next.page);
     };
