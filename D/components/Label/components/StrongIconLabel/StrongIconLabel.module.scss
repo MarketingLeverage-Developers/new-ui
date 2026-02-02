@@ -33,10 +33,16 @@
     line-height: 1;
 }
 
-.LabelLine {
-    display: inline-flex;
+.LabelWarpper {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
     align-items: center;
-    gap: 12px; /* ✅ fallback */
+    .LabelLine {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px; /* ✅ fallback */
+    }
 }
 
 .Content {

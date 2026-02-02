@@ -46,11 +46,17 @@
 }
 
 /* ✅ 추가 */
-.LabelLine {
-    display: inline-flex;
+.LabelWarpper {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
     align-items: center;
-    gap: 10px;
-    white-space: nowrap;
+    .LabelLine {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        white-space: nowrap;
+    }
 }
 
 /* ✅ children wrapper */

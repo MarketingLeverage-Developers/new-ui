@@ -13,6 +13,7 @@ export type LabelCommonProps = HTMLAttributes<HTMLDivElement> & {
     required?: boolean;
     gap?: number; // ✅ px 숫자
     children: ReactNode;
+    actions?: React.ReactNode;
 };
 
 export type LabelProps = ({ variant: 'muted' } & LabelCommonProps) | ({ variant: 'strong' } & LabelCommonProps);
