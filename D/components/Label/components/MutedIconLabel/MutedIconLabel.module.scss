@@ -48,7 +48,7 @@
 /* ✅ 추가 */
 .LabelWarpper {
     display: flex;
-    width: 100%;
+    width: auto;
     justify-content: space-between;
     align-items: center;
     .LabelLine {
@@ -56,6 +56,13 @@
         align-items: center;
         gap: 10px;
         white-space: nowrap;
+    }
+
+    &.HasActions {
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+        align-items: center;
     }
 }
 

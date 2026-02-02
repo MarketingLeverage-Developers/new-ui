@@ -31,10 +31,12 @@ const MutedIconLabel = (props: LabelCommonProps) => {
         '--label-gap': `${gap}px`,
     };
 
+    const actionsClassName = classNames(styles.LabelWarpper, { [styles.HasActions]: Boolean(actions) });
+
     return (
         <div className={rootClassName} {...rest} style={{ ...cssVariables, ...style }}>
             {icon ? (
-                <div className={styles.LabelWarpper}>
+                <div className={actionsClassName}>
                     <div className={styles.LabelLine}>
                         <span className={styles.Icon}>{icon}</span>
 

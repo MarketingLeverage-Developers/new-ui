@@ -35,13 +35,20 @@
 
 .LabelWarpper {
     display: flex;
-    width: 100%;
+    width: auto;
     justify-content: space-between;
     align-items: center;
     .LabelLine {
         display: inline-flex;
         align-items: center;
         gap: 12px; /* ✅ fallback */
+    }
+
+    &.HasActions {
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+        align-items: center;
     }
 }
 
