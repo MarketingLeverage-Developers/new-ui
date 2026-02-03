@@ -221,6 +221,31 @@
     text-overflow: ellipsis;
 }
 
+.ImageModalBackdrop {
+    z-index: 1200;
+}
+
+.ImageModalContent.ImageModalContent {
+    z-index: 1201;
+    height: 90%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ImageModalImage.ImageModalImage {
+    display: block;
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: none;
+    object-fit: contain;
+    border-radius: 8px;
+    margin: 0 auto;
+}
+
 /* =========================
    IMAGE: 옵션(grid) - 두번째 화면 카드형
    ✅ BaseStackedFileUploaderList에서만 사용

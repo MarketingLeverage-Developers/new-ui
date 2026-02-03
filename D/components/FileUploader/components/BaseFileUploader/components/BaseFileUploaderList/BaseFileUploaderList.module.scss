@@ -211,21 +211,25 @@
     z-index: 1200;
 }
 
-.ImageModalContent {
+.ImageModalContent.ImageModalContent {
     z-index: 1201;
     height: 90%;
+    overflow-y: auto;
+    overflow-x: hidden;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.ImageModalImage {
-    max-width: 100%;
-    max-height: 100%;
+.ImageModalImage.ImageModalImage {
+    display: block;
     width: auto;
     height: auto;
+    max-width: 100%;
+    max-height: none;
     object-fit: contain;
     border-radius: 8px;
+    margin: 0 auto;
 }
 
 // /* =========================
