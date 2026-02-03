@@ -40,6 +40,7 @@
     // min-height: 0; /* ✅ 줄어들 수 있어야 overflow가 걸림 */
     // overflow: auto;
     max-height: var(--basic-table-body-max-height);
+    background-color: var(--White1);
 
     /* Firefox fallback (버튼은 없음) */
     scrollbar-width: auto; /* thin/auto */
