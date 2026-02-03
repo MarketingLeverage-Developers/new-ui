@@ -36,11 +36,13 @@
         display: inline-flex;
         justify-content: space-between;
         align-items: center;
-        background-color: var(--Gray6);
+        // background-color: var(--Gray6);
+        background-color: var(--Primary2);
         gap: 8px;
         padding: 8px 12px;
         font-size: 15px;
-        color: var(--Gray1);
+        // color: var(--Gray1);
+        color: var(--Primary1);
         cursor: pointer;
     }
 
