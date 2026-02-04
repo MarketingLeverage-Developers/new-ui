@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import classNames from 'classnames';
 import { matchPath, useLocation } from 'react-router-dom';
-import { FiMessageCircle, FiMenu, FiMoon, FiPlus, FiPower, FiSun } from 'react-icons/fi';
+import { FiMenu, FiMoon, FiPlus, FiPower, FiSun, FiHome } from 'react-icons/fi';
 import { IoMdClose } from 'react-icons/io';
 import { ROUTES } from '@/app/routes';
 import { AppPageMenu } from '@/features/navigation/components/AppPageMenu';
@@ -139,10 +139,10 @@ const FooterNavBase = ({ className }: { className?: string }) => {
     const navItems: FooterNavItem[] = [
         {
             key: 'inquiry',
-            icon: <FiMessageCircle />,
-            text: '문의내역',
-            active: isActivePath(ROUTES.INQUIRY_HISTORY.PATH),
-            onClick: () => navigate(ROUTES.INQUIRY_HISTORY.PATH),
+            icon: <FiHome />,
+            text: '홈',
+            // active: isActivePath(ROUTES.INQUIRY_HISTORY.PATH),
+            // onClick: () => navigate(ROUTES.INQUIRY_HISTORY.PATH),
         },
         {
             key: 'menu',
