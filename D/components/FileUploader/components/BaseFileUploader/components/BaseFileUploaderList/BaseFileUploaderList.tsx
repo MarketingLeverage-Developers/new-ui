@@ -3,7 +3,7 @@ import { RiDownload2Fill } from 'react-icons/ri';
 import styles from './BaseFileUploaderList.module.scss';
 import { useFileUploader } from '@/shared/primitives/D/components/FileUploader/FileUploader';
 import { Common } from '@/shared/primitives/C/Common';
-import Modal from '@/shared/headless/Modal/Modal';
+import Modal, { useModal } from '@/shared/headless/Modal/Modal';
 import Portal from '@/shared/headless/Portal/Portal';
 
 type FileType = 'IMAGE' | 'ZIP' | 'VIDEO' | 'ETC';
@@ -25,6 +25,72 @@ type PreviewItem =
 
 const isFileType = (value: unknown): value is FileType =>
     value === 'IMAGE' || value === 'ZIP' || value === 'VIDEO' || value === 'ETC';
+
+const ImagePreviewContent = ({ src, name, prefix }: { src: string; name: string; prefix?: string }) => {
+    const { closeModal } = useModal();
+    const [zoom, setZoom] = React.useState(1);
+    const scrollRef = React.useRef<HTMLDivElement>(null);
+
+    React.useEffect(() => {
+        const el = scrollRef.current;
+        if (!el) return;
+        const onWheel = (e: WheelEvent) => {
+            if (e.ctrlKey) {
+                e.preventDefault();
+                const delta = e.deltaY * -0.001;
+                setZoom((prev) => Math.min(Math.max(prev + delta, 0.1), 5));
+            }
+        };
+        el.addEventListener('wheel', onWheel, { passive: false });
+        return () => el.removeEventListener('wheel', onWheel);
+    }, []);
+
+    return (
+        <div
+            ref={scrollRef}
+            style={{
+                width: '100%',
+                height: '100%',
+                padding: '0 10%',
+                boxSizing: 'border-box',
+                overflowY: 'auto',
+                overflowX: 'hidden',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+            }}
+            onClick={() => closeModal()}
+        >
+            <div
+                style={{
+                    width: `${zoom * 100}%`,
+                    transition: 'width 0.1s ease-out',
+                    flexShrink: 0,
+                    margin: 'auto 0',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    cursor: 'default',
+                }}
+                onClick={(e) => e.stopPropagation()}
+            >
+                <Common.Image
+                    className={styles.ImageModalImage}
+                    src={src}
+                    prefix={prefix}
+                    alt={name}
+                    width="100%"
+                    block
+                    style={{
+                        height: 'auto',
+                        maxHeight: 'none',
+                        maxWidth: 'none',
+                    }}
+                />
+            </div>
+        </div>
+    );
+};
 
 const BaseFileUploaderList: React.FC = () => {
     const { type, serverItems, removeItem, getItemKey, showRemove } = useFileUploader();
@@ -195,15 +261,11 @@ const BaseFileUploaderList: React.FC = () => {
                             </Modal.Trigger>
                             <Portal>
                                 <Modal.Backdrop className={styles.ImageModalBackdrop} />
-                                <Modal.Content className={styles.ImageModalContent}>
-                                    <Common.Image
-                                        className={styles.ImageModalImage}
-                                        src={p.url}
-                                        prefix={apiPrefix}
-                                        alt={p.name}
-                                        fit="contain"
-                                        block
-                                    />
+                                <Modal.Content
+                                    className={styles.ImageModalContent}
+                                    style={{ overflow: 'hidden', display: 'block' }}
+                                >
+                                    <ImagePreviewContent src={p.url} prefix={apiPrefix} name={p.name} />
                                 </Modal.Content>
                             </Portal>
                         </Modal>

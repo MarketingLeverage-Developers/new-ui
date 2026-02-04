@@ -5,7 +5,7 @@ import styles from './BaseStackedFileUploaderList.module.scss';
 import { useFileUploader } from '@/shared/primitives/D/components/FileUploader/FileUploader';
 import { Common } from '@/shared/primitives/C/Common';
 import type { ServerImage } from '@/shared/types/common/model';
-import Modal from '@/shared/headless/Modal/Modal'; // ✅ 추가
+import Modal, { useModal } from '@/shared/headless/Modal/Modal'; // ✅ 추가
 import Portal from '@/shared/headless/Portal/Portal'; // ✅ 추가
 
 type FileType = 'IMAGE' | 'ZIP' | 'VIDEO' | 'ETC';
@@ -28,6 +28,72 @@ type PreviewItem =
 
 const isFileType = (value: unknown): value is FileType =>
     value === 'IMAGE' || value === 'ZIP' || value === 'VIDEO' || value === 'ETC';
+
+const ImagePreviewContent = ({ src, name, prefix }: { src: string; name: string; prefix?: string }) => {
+    const { closeModal } = useModal();
+    const [zoom, setZoom] = React.useState(1);
+    const scrollRef = React.useRef<HTMLDivElement>(null);
+
+    React.useEffect(() => {
+        const el = scrollRef.current;
+        if (!el) return;
+        const onWheel = (e: WheelEvent) => {
+            if (e.ctrlKey) {
+                e.preventDefault();
+                const delta = e.deltaY * -0.001;
+                setZoom((prev) => Math.min(Math.max(prev + delta, 0.1), 5));
+            }
+        };
+        el.addEventListener('wheel', onWheel, { passive: false });
+        return () => el.removeEventListener('wheel', onWheel);
+    }, []);
+
+    return (
+        <div
+            ref={scrollRef}
+            style={{
+                width: '100%',
+                height: '100%',
+                padding: '0 10%', // 시각적으로 80% 너비 유지 (좌우 10% 여백)
+                boxSizing: 'border-box',
+                overflowY: 'auto',
+                overflowX: 'hidden',
+                display: 'flex',
+                alignItems: 'center', // 세로 중앙 정렬
+                justifyContent: 'center', // 가로 중앙 정렬
+                cursor: 'pointer', // 배경 클릭 시 닫힘을 암시
+            }}
+            onClick={() => closeModal()}
+        >
+            <div
+                style={{
+                    width: `${zoom * 100}%`,
+                    transition: 'width 0.1s ease-out',
+                    flexShrink: 0,
+                    margin: 'auto 0',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    cursor: 'default', // 이미지 영역은 기본 커서
+                }}
+                onClick={(e) => e.stopPropagation()}
+            >
+                <Common.Image
+                    className={styles.ImageModalImage}
+                    src={src}
+                    prefix={prefix}
+                    alt={name}
+                    width="100%"
+                    block
+                    style={{
+                        height: 'auto',
+                        maxHeight: 'none',
+                        maxWidth: 'none',
+                    }}
+                />
+            </div>
+        </div>
+    );
+};
 
 export type BaseStackedFileUploaderListProps = {
     onSelect?: (item: ServerImage) => void;
@@ -234,17 +300,11 @@ const BaseStackedFileUploaderList: React.FC<BaseStackedFileUploaderListProps> = 
                                 <Modal.Trigger className={styles.ImageTrigger}>{thumbnailContent}</Modal.Trigger>
                                 <Portal>
                                     <Modal.Backdrop className={styles.ImageModalBackdrop} />
-                                    <Modal.Content className={styles.ImageModalContent}>
-                                        <Common.Image
-                                            className={styles.ImageModalImage}
-                                            src={p.url}
-                                            prefix={apiPrefix}
-                                            alt={p.name}
-                                            fit="contain"
-                                            width="100%"
-                                            height="100%"
-                                            block
-                                        />
+                                    <Modal.Content
+                                        className={styles.ImageModalContent}
+                                        style={{ overflow: 'hidden', display: 'block' }}
+                                    >
+                                        <ImagePreviewContent src={p.url} prefix={apiPrefix} name={p.name} />
                                     </Modal.Content>
                                 </Portal>
                             </Modal>
