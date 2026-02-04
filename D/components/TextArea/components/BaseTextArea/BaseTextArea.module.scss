@@ -27,6 +27,10 @@
 
     font-family: 'Pretendard', sans-serif;
 
+    //텍스트가 밀리지 않고 박스 안에서 줄바꿈
+    white-space: pre-wrap;
+    word-break: break-all;
+
     &::placeholder {
         color: var(--Gray3, #9ca3af);
     }
