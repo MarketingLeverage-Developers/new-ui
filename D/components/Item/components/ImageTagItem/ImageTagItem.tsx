@@ -20,6 +20,7 @@ export type ImageTagItemProps = {
     checkboxValue?: boolean;
     onCheckboxClick?: (value: boolean) => void;
     onClick?: () => void;
+    actions?: React.ReactNode;
 };
 
 const ImageTagItem = ({
@@ -34,6 +35,7 @@ const ImageTagItem = ({
     checkboxValue = false,
     onCheckboxClick,
     onClick,
+    actions,
 }: ImageTagItemProps) => (
     <div
         className={styles.ImageTagItem}
@@ -53,6 +55,19 @@ const ImageTagItem = ({
                     <CheckBoxToggle value={checkboxValue} onTriggerClick={onCheckboxClick} />
                 </div>
             )}
+            {actions ? (
+                <>
+                    <div className={styles.ImageDim} />
+                    <div
+                        className={styles.ActionOverlay}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                        }}
+                    >
+                        {actions}
+                    </div>
+                </>
+            ) : null}
             <Common.Image
                 src={imageSrc}
                 prefix={imagePrefix}

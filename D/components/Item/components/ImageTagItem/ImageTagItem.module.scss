@@ -24,7 +24,48 @@
         position: absolute;
         top: 8px;
         left: 8px;
+        z-index: 4;
+    }
+
+    .ImageDim {
+        position: absolute;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.35);
+        opacity: 0;
+        transition: opacity 150ms ease;
+        pointer-events: none;
         z-index: 2;
+    }
+
+    .ActionOverlay {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-4px);
+        transition:
+            opacity 150ms ease,
+            transform 150ms ease,
+            visibility 150ms ease;
+        pointer-events: none;
+        z-index: 3;
+    }
+
+    &:hover .ImageDim,
+    &:focus-within .ImageDim {
+        opacity: 1;
+    }
+
+    &:hover .ActionOverlay,
+    &:focus-within .ActionOverlay {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+        pointer-events: auto;
     }
 
     .InfoContainer {
