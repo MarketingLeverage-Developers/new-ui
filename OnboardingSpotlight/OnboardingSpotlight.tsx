@@ -61,6 +61,23 @@ type SpotlightContextValue = {
 const DEFAULT_PADDING = 8;
 const DEFAULT_SINGLE_STEP_ID = 'default';
 
+const findScrollableYParent = (el: HTMLElement | null) => {
+    let parent = el?.parentElement ?? null;
+    while (parent) {
+        const overflowY = window.getComputedStyle(parent).overflowY;
+        const canScroll =
+            (overflowY === 'auto' || overflowY === 'scroll') && parent.scrollHeight > parent.clientHeight + 1;
+        if (canScroll) return parent;
+        parent = parent.parentElement;
+    }
+    return null;
+};
+
+const prefersReducedMotion = () =>
+    typeof window !== 'undefined' &&
+    typeof window.matchMedia === 'function' &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
 const placementStyles: Record<Placement, React.CSSProperties> = {
     'top-right': { top: 24, right: 24 },
     'top-left': { top: 24, left: 24 },
@@ -113,6 +130,7 @@ const OnboardingSpotlight = ({
     const [highlightRect, setHighlightRect] = useState<HighlightRect | null>(null);
     const [activeIndex, setActiveIndex] = useState(0);
     const targetsRef = useRef<Record<string, HTMLDivElement | null>>({});
+    const activeScrollParentRef = useRef<HTMLElement | null>(null);
 
     const normalizedSteps = useMemo<Step[]>(() => {
         if (steps && steps.length > 0) return steps;
@@ -205,6 +223,40 @@ const OnboardingSpotlight = ({
         updateHighlightRect();
     }, [isOpen, updateHighlightRect, activeIndex]);
 
+    // ✅ When a step becomes active, ensure its target is visible.
+    // - Our app commonly scrolls inside Desktop.MainScroller (nested scroll container), not window.
+    // - `scrollIntoView({ block: 'center' })` tends to overscroll and feel like it "hit bottom",
+    //   so we scroll the closest *scrollable* parent just enough to reveal the target with margin.
+    useLayoutEffect(() => {
+        if (!isOpen) return;
+        const target = targetsRef.current[activeStep?.id ?? ''];
+        if (!target) return;
+
+        const scrollParent = findScrollableYParent(target);
+        activeScrollParentRef.current = scrollParent;
+        if (!scrollParent) return;
+
+        const rect = target.getBoundingClientRect();
+        const parentRect = scrollParent.getBoundingClientRect();
+        const margin = Math.max(12, padding + 12);
+
+        const isAbove = rect.top < parentRect.top + margin;
+        const isBelow = rect.bottom > parentRect.bottom - margin;
+        if (!isAbove && !isBelow) return;
+
+        const delta = isAbove
+            ? rect.top - (parentRect.top + margin)
+            : rect.bottom - (parentRect.bottom - margin);
+
+        scrollParent.scrollTo({
+            top: scrollParent.scrollTop + delta,
+            behavior: prefersReducedMotion() ? 'auto' : 'smooth',
+        });
+
+        // Make sure we sync the hole position right after the scroll starts.
+        requestAnimationFrame(() => updateHighlightRect());
+    }, [isOpen, activeStep?.id, padding, updateHighlightRect]);
+
     useEffect(() => {
         if (!isOpen) return;
         const handle = () => updateHighlightRect();
@@ -269,13 +321,75 @@ const OnboardingSpotlight = ({
             {isOpen && highlightRect && (
                 <Portal>
                     <>
-                        {closeOnBackdrop && (
-                            <div
-                                aria-hidden
-                                onClick={handleClose}
-                                className={styles.OverlayCatcher}
-                            />
-                        )}
+                        {(() => {
+                            const viewportW = window.innerWidth || document.documentElement.clientWidth || 0;
+                            const viewportH = window.innerHeight || document.documentElement.clientHeight || 0;
+
+                            const holeTop = Math.max(0, highlightRect.top - padding);
+                            const holeLeft = Math.max(0, highlightRect.left - padding);
+                            const holeRight = Math.min(viewportW, highlightRect.left + highlightRect.width + padding);
+                            const holeBottom = Math.min(viewportH, highlightRect.top + highlightRect.height + padding);
+
+                            const holeHeight = Math.max(0, holeBottom - holeTop);
+
+                            const onBackdropWheel: React.WheelEventHandler<HTMLDivElement> = (e) => {
+                                e.preventDefault();
+                                activeScrollParentRef.current?.scrollBy({
+                                    top: e.deltaY,
+                                    left: e.deltaX,
+                                });
+                            };
+
+                            const onBackdropClick: React.MouseEventHandler<HTMLDivElement> = (e) => {
+                                e.stopPropagation();
+                                if (closeOnBackdrop) handleClose();
+                            };
+
+                            return (
+                                <>
+                                    {/* ✅ Block interactions outside the spotlight hole, but keep the hole interactive. */}
+                                    {holeTop > 0 && (
+                                        <div
+                                            aria-hidden
+                                            className={styles.BackdropBlocker}
+                                            onClick={onBackdropClick}
+                                            onWheel={onBackdropWheel}
+                                            style={{ top: 0, left: 0, right: 0, height: holeTop }}
+                                        />
+                                    )}
+
+                                    {holeBottom < viewportH && (
+                                        <div
+                                            aria-hidden
+                                            className={styles.BackdropBlocker}
+                                            onClick={onBackdropClick}
+                                            onWheel={onBackdropWheel}
+                                            style={{ top: holeBottom, left: 0, right: 0, bottom: 0 }}
+                                        />
+                                    )}
+
+                                    {holeLeft > 0 && holeHeight > 0 && (
+                                        <div
+                                            aria-hidden
+                                            className={styles.BackdropBlocker}
+                                            onClick={onBackdropClick}
+                                            onWheel={onBackdropWheel}
+                                            style={{ top: holeTop, left: 0, width: holeLeft, height: holeHeight }}
+                                        />
+                                    )}
+
+                                    {holeRight < viewportW && holeHeight > 0 && (
+                                        <div
+                                            aria-hidden
+                                            className={styles.BackdropBlocker}
+                                            onClick={onBackdropClick}
+                                            onWheel={onBackdropWheel}
+                                            style={{ top: holeTop, left: holeRight, right: 0, height: holeHeight }}
+                                        />
+                                    )}
+                                </>
+                            );
+                        })()}
                         <div
                             aria-hidden
                             className={styles.SpotlightHole}
@@ -303,9 +417,7 @@ const OnboardingSpotlight = ({
                                             {stepTitle}
                                         </Text>
                                     </Flex>
-                                    {computedStepLabel && (
-                                        <span className={styles.StepPill}>{computedStepLabel}</span>
-                                    )}
+                                    {computedStepLabel && <span className={styles.StepPill}>{computedStepLabel}</span>}
                                 </Flex>
                                 <Text fontSize={13} textColor={getThemeColor('Gray2')} style={{ lineHeight: '18px' }}>
                                     {stepDescription}

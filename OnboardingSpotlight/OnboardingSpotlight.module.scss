@@ -5,6 +5,12 @@
     background: transparent;
 }
 
+.BackdropBlocker {
+    position: fixed;
+    z-index: 10000;
+    background: transparent;
+}
+
 .SpotlightHole {
     position: fixed;
     border-radius: 14px;
