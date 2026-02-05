@@ -24,7 +24,7 @@ const Input = ({ ...rest }: SearchInputProps) => {
     const hasValue = !!value;
 
     return (
-        <Dropdown.Trigger>
+        <Dropdown.Trigger disabled={rest.disabled}>
             <div className={styles.InputWrapper}>
                 <RoundedInput {...rest} value={value} readOnly className={hasValue ? styles.Selected : undefined} />
                 <BaseButton radius={8} padding={{ x: 17, y: 14 }} textColor="var(--Primary1)" bgColor="var(--Primary2)">
