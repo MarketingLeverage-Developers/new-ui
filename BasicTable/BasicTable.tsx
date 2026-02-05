@@ -38,6 +38,7 @@ type BasicTableProps<T> = React.ComponentProps<typeof AirTable<T>> & {
     showExpandAllRowsButton?: boolean;
 
     enableAnimation?: boolean;
+    onScrollElReady?: (el: HTMLDivElement | null) => void;
 };
 
 export const BasicTable = <T,>({
@@ -51,6 +52,7 @@ export const BasicTable = <T,>({
     actions,
     showExpandAllRowsButton,
     enableAnimation = false,
+    onScrollElReady,
     ...props
 }: BasicTableProps<T>) => {
     const [settingsVisible, setSettingsVisible] = useState(false);
@@ -150,7 +152,11 @@ export const BasicTable = <T,>({
                             boxSizing: 'border-box',
                         }}
                     >
-                        <AirTable.Container height="100%" className={classNames(styles.container)}>
+                        <AirTable.Container
+                            height="100%"
+                            className={classNames(styles.container)}
+                            onScrollElReady={onScrollElReady}
+                        >
                             {showHeader && (
                                 <AirTable.Header className={styles.header} headerCellClassName={styles.headerCell} />
                             )}
