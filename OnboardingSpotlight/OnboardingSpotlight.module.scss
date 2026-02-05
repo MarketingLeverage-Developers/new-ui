@@ -1,0 +1,103 @@
+.OverlayCatcher {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    background: transparent;
+}
+
+.SpotlightHole {
+    position: fixed;
+    border-radius: 14px;
+    border: 1.5px solid rgba(255, 255, 255, 0.85);
+    box-shadow: 0 0 0 9999px rgba(2, 6, 23, 0.45);
+    pointer-events: none;
+    transition: all 180ms ease;
+}
+
+.Card {
+    position: fixed;
+    z-index: 10002;
+    width: 280px;
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 14px;
+    border: 1px solid rgba(148, 163, 184, 0.35);
+    box-shadow: 0 14px 28px rgba(15, 23, 42, 0.12);
+}
+
+.StepPill {
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: rgba(148, 163, 184, 0.2);
+    color: var(--Gray2);
+}
+
+.StepDot {
+    width: 6px;
+    height: 6px;
+    border-radius: 999px;
+    background: var(--Primary1);
+}
+
+.PrimaryButton {
+    border: 1px solid var(--Primary1);
+    background: var(--Primary1);
+    color: #ffffff;
+    border-radius: 8px;
+    padding: 6px 10px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 6px 12px rgba(232, 135, 49, 0.18);
+    transition: filter 120ms ease;
+}
+
+.PrimaryButton:hover {
+    filter: brightness(1.04);
+}
+
+.PrimaryButton:active {
+    filter: brightness(0.98);
+    box-shadow: 0 4px 10px rgba(232, 135, 49, 0.16);
+}
+
+.SecondaryButton {
+    border: 1px solid rgba(148, 163, 184, 0.6);
+    background: #ffffff;
+    color: var(--Gray1);
+    border-radius: 8px;
+    padding: 6px 10px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 120ms ease;
+}
+
+.SecondaryButton:hover {
+    background: #f8fafc;
+}
+
+.SecondaryButton:active {
+    background: #f1f5f9;
+}
+
+.SecondaryButton:disabled {
+    color: var(--Gray3);
+    border-color: rgba(148, 163, 184, 0.4);
+    cursor: default;
+    transform: none;
+}
+
+.GhostButton {
+    border: none;
+    background: transparent;
+    color: var(--Gray3);
+    font-size: 12px;
+    cursor: pointer;
+    transition: color 120ms ease;
+}
+
+.GhostButton:hover {
+    color: var(--Gray2);
+}
