@@ -42,6 +42,7 @@ type Props = {
     showSkip?: boolean;
     advanceOnTargetClick?: boolean;
     closeOnBackdrop?: boolean;
+    onStepChange?: (step: Step, index: number) => void;
     onClose?: () => void;
     onComplete?: () => void;
     wrapperStyle?: React.CSSProperties;
@@ -122,6 +123,7 @@ const OnboardingSpotlight = ({
     showSkip = true,
     advanceOnTargetClick = false,
     closeOnBackdrop = true,
+    onStepChange,
     onClose,
     onComplete,
     wrapperStyle,
@@ -244,9 +246,7 @@ const OnboardingSpotlight = ({
         const isBelow = rect.bottom > parentRect.bottom - margin;
         if (!isAbove && !isBelow) return;
 
-        const delta = isAbove
-            ? rect.top - (parentRect.top + margin)
-            : rect.bottom - (parentRect.bottom - margin);
+        const delta = isAbove ? rect.top - (parentRect.top + margin) : rect.bottom - (parentRect.bottom - margin);
 
         scrollParent.scrollTo({
             top: scrollParent.scrollTop + delta,
@@ -267,6 +267,11 @@ const OnboardingSpotlight = ({
             window.removeEventListener('scroll', handle, true);
         };
     }, [isOpen, updateHighlightRect]);
+
+    useEffect(() => {
+        if (!isOpen || !activeStep) return;
+        onStepChange?.(activeStep, activeIndex);
+    }, [isOpen, activeStep, activeIndex, onStepChange]);
 
     useEffect(() => {
         if (!isOpen) return;

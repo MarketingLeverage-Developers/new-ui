@@ -49,6 +49,7 @@ export type PageTemplateProps<
     creator?: React.ReactNode;
 
     pageTitle?: string;
+    pageTitleAddon?: React.ReactNode;
     subSidebar?: React.ReactNode;
 
     mainLayout?: MainLayoutMode;
@@ -74,6 +75,7 @@ const PageTemplate = <S extends PageTemplateStateBase, A extends PageTemplateAct
 
         main,
         pageTitle,
+        pageTitleAddon,
         subSidebar,
         overlays,
 
@@ -109,6 +111,7 @@ const PageTemplate = <S extends PageTemplateStateBase, A extends PageTemplateAct
                         <Flex.Item flex={1}>
                             <Flex gap={8} align="center">
                                 <PageName text={pageTitle ?? ''} />
+                                {pageTitleAddon}
                                 <span>/</span>
                                 {/* <SiteSelect
                                     companyUuid={state.companyUuid ?? ''}
@@ -133,6 +136,7 @@ const PageTemplate = <S extends PageTemplateStateBase, A extends PageTemplateAct
                         <Flex.Item flex={1}>
                             <Flex gap={8} align="center">
                                 <PageName text={pageTitle ?? ''} />
+                                {pageTitleAddon}
                             </Flex>
                         </Flex.Item>
 
