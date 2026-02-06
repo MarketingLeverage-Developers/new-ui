@@ -15,6 +15,27 @@
     justify-content: center;
 
     cursor: pointer;
+    user-select: none;
+
+    transition:
+        filter 120ms ease,
+        transform 120ms ease,
+        background-color 120ms ease,
+        color 120ms ease,
+        opacity 120ms ease;
+
+    &:hover {
+        filter: brightness(1.03);
+    }
+
+    &:active {
+        transform: scale(0.98);
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--Primary1);
+        outline-offset: 2px;
+    }
 
     &.Gradient {
         background: var(--Gradient1);
@@ -24,5 +45,8 @@
         background-color: var(--Gray6);
         color: var(--Gray3);
         cursor: default;
+        filter: none;
+        transform: none;
+        opacity: 0.85;
     }
 }

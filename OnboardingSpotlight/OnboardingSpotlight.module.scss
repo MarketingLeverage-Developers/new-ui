@@ -24,11 +24,11 @@
     position: fixed;
     z-index: 10002;
     width: 280px;
-    background: #ffffff;
-    border-radius: 12px;
+    background: var(--White1);
+    border-radius: var(--RadiusLg, 12px);
     padding: 14px;
-    border: 1px solid rgba(148, 163, 184, 0.35);
-    box-shadow: 0 14px 28px rgba(15, 23, 42, 0.12);
+    border: 1px solid color-mix(in srgb, var(--Gray3) 40%, transparent);
+    box-shadow: var(--ShadowLg);
 }
 
 .StepPill {
@@ -70,7 +70,7 @@
 
 .SecondaryButton {
     border: 1px solid rgba(148, 163, 184, 0.6);
-    background: #ffffff;
+    background: var(--White1);
     color: var(--Gray1);
     border-radius: 8px;
     padding: 6px 10px;
@@ -81,11 +81,11 @@
 }
 
 .SecondaryButton:hover {
-    background: #f8fafc;
+    background: var(--Gray7);
 }
 
 .SecondaryButton:active {
-    background: #f1f5f9;
+    background: var(--Gray6);
 }
 
 .SecondaryButton:disabled {

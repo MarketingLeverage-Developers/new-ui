@@ -1,18 +1,29 @@
 .SearchInputWrapper {
-    border-radius: 8px;
+    border-radius: var(--RadiusMd, 8px);
     padding: 6px 12px 6px 32px; /* ✅ 왼쪽 돋보기 영역 유지 */
     height: 35px;
 
     border: 1px solid var(--Gray5);
     outline: none;
+    background-color: var(--White1);
 
     display: flex;
     align-items: center;
     position: relative;
     box-sizing: border-box;
 
+    transition:
+        border-color 120ms ease,
+        box-shadow 120ms ease,
+        background-color 120ms ease;
+
+    &:hover {
+        border-color: var(--Gray4);
+    }
+
     &:focus-within {
-        border: 1px solid var(--Primary1);
+        border-color: var(--Primary1);
+        // box-shadow: var(--FocusRing);
     }
 
     input {
@@ -87,7 +98,7 @@
         width: 58px;
         height: 28px;
         padding: 0 8px;
-        border-radius: 6px;
+        border-radius: var(--RadiusSm, 6px);
 
         border: none;
         background: var(--Primary1);

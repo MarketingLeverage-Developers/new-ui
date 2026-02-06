@@ -42,103 +42,27 @@
     max-height: var(--basic-table-body-max-height);
     background-color: var(--White1);
 
-    /* Firefox fallback (버튼은 없음) */
-    scrollbar-width: auto; /* thin/auto */
-    scrollbar-color: #c9c9c9 transparent;
+    /* Firefox */
+    scrollbar-width: thin;
+    scrollbar-color: var(--ScrollbarThumb, var(--Gray5)) var(--ScrollbarTrack, transparent);
 }
 
-/* =========================
-   ✅ Scrollbar (WebKit)
-   - 이미지처럼: 위/아래 화살표 + 둥근 트랙 + 둥근 thumb
-   ========================= */
-
 .body::-webkit-scrollbar {
-    width: 18px; /* 전체 폭 (버튼 포함) */
+    width: var(--ScrollbarSize, 6px);
+    height: var(--ScrollbarSize, 6px);
+}
+
+.body::-webkit-scrollbar-thumb {
+    background-color: var(--ScrollbarThumb, var(--Gray5));
+    border-radius: var(--RadiusPill, 9999px);
+}
+
+.body::-webkit-scrollbar-thumb:hover {
+    background-color: var(--ScrollbarThumbHover, var(--ScrollbarThumb, var(--Gray5)));
 }
 
 .body::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-/* 트랙 “기둥” 느낌 */
-.body::-webkit-scrollbar-track-piece:vertical {
-    background: #f2f2f2;
-    border-radius: 999px;
-    margin: 18px 0; /* 위/아래 버튼 자리만큼 띄워서 이미지처럼 */
-}
-
-.body::-webkit-scrollbar-thumb:vertical {
-    background: #c9c9c9;
-    border-radius: 999px;
-
-    /* thumb를 트랙 안에서 더 ‘얇은 pill’처럼 보이게 */
-    border: 6px solid transparent;
-    background-clip: padding-box;
-}
-
-.body::-webkit-scrollbar-thumb:vertical:hover {
-    background: #b8b8b8;
-    background-clip: padding-box;
-}
-
-/* 위/아래 버튼 */
-.body::-webkit-scrollbar-button:single-button:vertical {
-    height: 18px;
-    background-color: transparent;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: 10px 10px;
-}
-
-/* ▲ 위 화살표 */
-.body::-webkit-scrollbar-button:single-button:vertical:decrement {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23bdbdbd' d='M7 14l5-5 5 5z'/%3E%3C/svg%3E");
-}
-
-/* ▼ 아래 화살표 */
-.body::-webkit-scrollbar-button:single-button:vertical:increment {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23bdbdbd' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
-}
-
-/* (옵션) 좌우 스크롤도 동일 톤으로 */
-.body::-webkit-scrollbar:horizontal {
-    height: 18px;
-}
-
-.body::-webkit-scrollbar-track-piece:horizontal {
-    background: #f2f2f2;
-    border-radius: 999px;
-    margin: 0 18px;
-}
-
-.body::-webkit-scrollbar-thumb:horizontal {
-    background: #c9c9c9;
-    border-radius: 999px;
-    border: 6px solid transparent;
-    background-clip: padding-box;
-}
-
-.body::-webkit-scrollbar-thumb:horizontal:hover {
-    background: #b8b8b8;
-    background-clip: padding-box;
-}
-
-.body::-webkit-scrollbar-button:single-button:horizontal {
-    width: 18px;
-    background-color: transparent;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: 10px 10px;
-}
-
-/* ◀ */
-.body::-webkit-scrollbar-button:single-button:horizontal:decrement {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23bdbdbd' d='M14 7l-5 5 5 5z'/%3E%3C/svg%3E");
-}
-
-/* ▶ */
-.body::-webkit-scrollbar-button:single-button:horizontal:increment {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23bdbdbd' d='M10 7l5 5-5 5z'/%3E%3C/svg%3E");
+    background: var(--ScrollbarTrack, transparent);
 }
 
 .row {
@@ -157,7 +81,7 @@
 }
 
 .selected {
-    background: rgba(59, 130, 246, 0.12) !important;
+    background: color-mix(in srgb, var(--Blue1) 12%, transparent) !important;
 }
 
 .ghost {
@@ -195,54 +119,26 @@
 .PanelBody {
     overflow-y: auto;
 
-    scrollbar-width: auto;
-    scrollbar-color: #c9c9c9 transparent;
+    scrollbar-width: thin;
+    scrollbar-color: var(--ScrollbarThumb, var(--Gray5)) var(--ScrollbarTrack, transparent);
 }
 
-/* =========================
-   ✅ Panel Scrollbar (WebKit)
-   ========================= */
-
 .PanelBody::-webkit-scrollbar {
-    width: 18px;
+    width: var(--ScrollbarSize, 6px);
+    height: var(--ScrollbarSize, 6px);
+}
+
+.PanelBody::-webkit-scrollbar-thumb {
+    background-color: var(--ScrollbarThumb, var(--Gray5));
+    border-radius: var(--RadiusPill, 9999px);
+}
+
+.PanelBody::-webkit-scrollbar-thumb:hover {
+    background-color: var(--ScrollbarThumbHover, var(--ScrollbarThumb, var(--Gray5)));
 }
 
 .PanelBody::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-.PanelBody::-webkit-scrollbar-track-piece:vertical {
-    background: #f2f2f2;
-    border-radius: 999px;
-    margin: 18px 0;
-}
-
-.PanelBody::-webkit-scrollbar-thumb:vertical {
-    background: #c9c9c9;
-    border-radius: 999px;
-    border: 6px solid transparent;
-    background-clip: padding-box;
-}
-
-.PanelBody::-webkit-scrollbar-thumb:vertical:hover {
-    background: #b8b8b8;
-    background-clip: padding-box;
-}
-
-.PanelBody::-webkit-scrollbar-button:single-button:vertical {
-    height: 18px;
-    background-color: transparent;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: 10px 10px;
-}
-
-.PanelBody::-webkit-scrollbar-button:single-button:vertical:decrement {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23bdbdbd' d='M7 14l5-5 5 5z'/%3E%3C/svg%3E");
-}
-
-.PanelBody::-webkit-scrollbar-button:single-button:vertical:increment {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23bdbdbd' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+    background: var(--ScrollbarTrack, transparent);
 }
 
 /* =========================

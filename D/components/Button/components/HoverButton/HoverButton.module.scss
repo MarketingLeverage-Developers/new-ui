@@ -8,6 +8,13 @@
     padding: var(--padding);
     border: none;
     cursor: pointer;
+    user-select: none;
+
+    transition:
+        background-color 120ms ease,
+        transform 120ms ease,
+        filter 120ms ease,
+        opacity 120ms ease;
 
     > span {
         font-size: 13px;
@@ -21,6 +28,15 @@
             color: var(--text-hover-color, var(--Gray1));
             --text-color: var(--text-hover-color, var(--Gray1));
         }
+    }
+
+    &:active {
+        transform: scale(0.98);
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--Primary1);
+        outline-offset: 2px;
     }
 
     &:disabled,
