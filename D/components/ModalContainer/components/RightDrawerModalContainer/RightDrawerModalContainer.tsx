@@ -20,8 +20,8 @@ const RightDrawerModalContainer = ({
 }: RightDrawerModalContainerProps) => (
     <Modal
         value={open}
-        onChange={() => {
-            onChange();
+        onChange={(nextOpen) => {
+            if (!nextOpen) onChange();
         }}
     >
         <Portal>

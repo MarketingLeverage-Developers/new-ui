@@ -13,8 +13,8 @@ export type BaseModalContainerProps = {
 const BaseModalContainer = ({ open, onChange, content, width = 400, maxHeight = '80%' }: BaseModalContainerProps) => (
     <Modal
         value={open}
-        onChange={() => {
-            onChange();
+        onChange={(nextOpen) => {
+            if (!nextOpen) onChange();
         }}
         // enterAction={enterAction}
     >

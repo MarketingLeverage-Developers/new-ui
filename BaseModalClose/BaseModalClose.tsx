@@ -16,7 +16,7 @@ const BaseModalClose = ({ onClick }: BaseModalCloseProps) => {
     };
 
     return (
-        <button className={styles.BaseModalClose} onClick={handleClick}>
+        <button type="button" className={styles.BaseModalClose} onClick={handleClick}>
             <IoCloseSharp />
         </button>
     );
