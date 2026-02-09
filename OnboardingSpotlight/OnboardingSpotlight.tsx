@@ -131,6 +131,7 @@ const OnboardingSpotlight = ({
     const [isOpen, setIsOpen] = useState(false);
     const [highlightRect, setHighlightRect] = useState<HighlightRect | null>(null);
     const [activeIndex, setActiveIndex] = useState(0);
+    const lastReplayKeyRef = useRef<Props['replayKey']>(replayKey);
     const targetsRef = useRef<Record<string, HTMLDivElement | null>>({});
     const activeScrollParentRef = useRef<HTMLElement | null>(null);
     const onStepChangeRef = useRef<Props['onStepChange']>(onStepChange);
@@ -181,11 +182,19 @@ const OnboardingSpotlight = ({
 
     useEffect(() => {
         if (replayKey == null) return;
+        if (Object.is(lastReplayKeyRef.current, replayKey)) return;
         if (!when) return;
+        lastReplayKeyRef.current = replayKey;
         setActiveIndex(0);
         setHighlightRect(null);
         setIsOpen(true);
     }, [replayKey, when]);
+
+    useEffect(() => {
+        if (when) return;
+        if (!isOpen) return;
+        handleClose();
+    }, [when, isOpen, handleClose]);
 
     const handleNext = useCallback(() => {
         if (!isMultiStep) {
