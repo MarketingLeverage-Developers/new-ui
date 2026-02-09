@@ -1,23 +1,37 @@
-// src/shared/viewport/Mobile/components/ListTable/ListTable.tsx (예시 경로)
 import React from 'react';
-import { BasicTable } from '@/shared/primitives/BasicTable/BasicTable'; // ✅ BasicTable import
-import type { Column } from '@/shared/headless/AirTable/AirTable';
+import type { Column, FilterState, SortState } from '@/shared/headless/AirTable/AirTable';
+import { BasicTable, type TableFilterItem } from '@/shared/primitives/BasicTable/BasicTable';
 
 type ListTableProps<T> = {
     data: T[];
     columns: Column<T>[];
     rowKeyField?: string;
     defaultColWidth?: number;
-    containerPaddingPx?: number;
     detailRenderer?: (params: { row: any; ri: number }) => React.ReactNode;
     getRowStyle?: (row: T, index: number) => { backgroundColor?: string };
     storageKey?: string;
-
-    /** ✅✅✅ 추가: 고정할 컬럼 key들 */
     pinnedColumnKeys?: string[];
+    showHeader?: boolean;
+    height?: number;
+    filterItems?: TableFilterItem[];
+    actions?: React.ReactNode;
+    showExpandAllRowsButton?: boolean;
+    enableAnimation?: boolean;
+    onScrollElReady?: (el: HTMLDivElement | null) => void;
 
     pinnedHeaderBgColor?: string | ((colKey: string) => string | undefined);
     pinnedHeaderTextColor?: string | ((colKey: string) => string | undefined);
+
+    sortState?: SortState;
+    defaultSortState?: SortState;
+    onSortChange?: (next: SortState) => void;
+    sortMode?: 'internal' | 'external';
+
+    filterState?: FilterState;
+    defaultFilterState?: FilterState;
+    onFilterChange?: (next: FilterState) => void;
+    filterMode?: 'internal' | 'external';
+    filterOptionsData?: T[];
 };
 
 export const ListTable = <T,>({
@@ -25,30 +39,55 @@ export const ListTable = <T,>({
     columns,
     rowKeyField,
     defaultColWidth = 160,
-    containerPaddingPx = 0,
     detailRenderer,
     getRowStyle,
     storageKey,
     pinnedColumnKeys = [],
+    showHeader = true,
+    height,
+    filterItems = [],
+    actions,
+    showExpandAllRowsButton = false,
+    enableAnimation = false,
+    onScrollElReady,
     pinnedHeaderBgColor,
     pinnedHeaderTextColor,
+    sortState,
+    defaultSortState,
+    onSortChange,
+    sortMode,
+    filterState,
+    defaultFilterState,
+    onFilterChange,
+    filterMode,
+    filterOptionsData,
 }: ListTableProps<T>) => (
-    <>
-        {/* ✅ BasicTable로 교체하여 간결화 */}
-        {/* <Flex.Item flex={1} style={{ minHeight: 0 }}> */}
-        <BasicTable
-            data={data}
-            columns={columns}
-            rowKeyField={rowKeyField as any}
-            defaultColWidth={defaultColWidth}
-            detailRenderer={detailRenderer}
-            getRowStyle={getRowStyle}
-            storageKey={storageKey}
-            fullHeight={true}
-            pinnedColumnKeys={pinnedColumnKeys}
-            pinnedHeaderBgColor={pinnedHeaderBgColor}
-            pinnedHeaderTextColor={pinnedHeaderTextColor}
-        />
-        {/* </Flex.Item> */}
-    </>
+    <BasicTable
+        data={data}
+        columns={columns}
+        rowKeyField={rowKeyField as any}
+        defaultColWidth={defaultColWidth}
+        detailRenderer={detailRenderer}
+        getRowStyle={getRowStyle}
+        storageKey={storageKey}
+        pinnedColumnKeys={pinnedColumnKeys}
+        showHeader={showHeader}
+        height={height}
+        filterItems={filterItems}
+        actions={actions}
+        showExpandAllRowsButton={showExpandAllRowsButton}
+        enableAnimation={enableAnimation}
+        onScrollElReady={onScrollElReady}
+        pinnedHeaderBgColor={pinnedHeaderBgColor}
+        pinnedHeaderTextColor={pinnedHeaderTextColor}
+        sortState={sortState}
+        defaultSortState={defaultSortState}
+        onSortChange={onSortChange}
+        sortMode={sortMode}
+        filterState={filterState}
+        defaultFilterState={defaultFilterState}
+        onFilterChange={onFilterChange}
+        filterMode={filterMode}
+        filterOptionsData={filterOptionsData}
+    />
 );
