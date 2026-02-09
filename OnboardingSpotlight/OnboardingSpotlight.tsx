@@ -113,7 +113,7 @@ const OnboardingSpotlight = ({
     when = true,
     replayKey,
     padding = DEFAULT_PADDING,
-    placement = 'top-right',
+    placement = 'top-left',
     stepLabel,
     confirmLabel = '알겠어요',
     nextLabel = '다음',
@@ -133,6 +133,11 @@ const OnboardingSpotlight = ({
     const [activeIndex, setActiveIndex] = useState(0);
     const targetsRef = useRef<Record<string, HTMLDivElement | null>>({});
     const activeScrollParentRef = useRef<HTMLElement | null>(null);
+    const onStepChangeRef = useRef<Props['onStepChange']>(onStepChange);
+
+    useEffect(() => {
+        onStepChangeRef.current = onStepChange;
+    }, [onStepChange]);
 
     const normalizedSteps = useMemo<Step[]>(() => {
         if (steps && steps.length > 0) return steps;
@@ -161,11 +166,15 @@ const OnboardingSpotlight = ({
         let seen = false;
         try {
             seen = localStorage.getItem(storageKey) === '1';
-        } catch {}
+        } catch {
+            // ignore (localStorage unavailable)
+        }
         if (seen) return;
         try {
             localStorage.setItem(storageKey, '1');
-        } catch {}
+        } catch {
+            // ignore (localStorage unavailable)
+        }
         setActiveIndex(0);
         setIsOpen(true);
     }, [when, isOpen, storageKey]);
@@ -200,10 +209,6 @@ const OnboardingSpotlight = ({
         setActiveIndex((prev) => Math.max(0, prev - 1));
     }, [isMultiStep]);
 
-    const registerTarget = useCallback((id: string, el: HTMLDivElement | null) => {
-        targetsRef.current[id] = el;
-    }, []);
-
     const updateHighlightRect = useCallback(() => {
         if (!isOpen) return;
         const target = targetsRef.current[activeStep?.id ?? ''];
@@ -219,6 +224,20 @@ const OnboardingSpotlight = ({
             height: rect.height,
         });
     }, [isOpen, activeStep?.id]);
+
+    const registerTarget = useCallback(
+        (id: string, el: HTMLDivElement | null) => {
+            targetsRef.current[id] = el;
+            // ✅ Some targets (e.g. modal contents) mount *after* the step becomes active.
+            // When the active step's target is registered/unregistered, re-measure so the overlay can appear.
+            if (!isOpen) return;
+            if (id !== (activeStep?.id ?? '')) return;
+            requestAnimationFrame(() => updateHighlightRect());
+        },
+        [activeStep?.id, isOpen, updateHighlightRect]
+    );
+
+    const spotlightContextValue = useMemo(() => ({ registerTarget }), [registerTarget]);
 
     useLayoutEffect(() => {
         if (!isOpen) return;
@@ -270,8 +289,8 @@ const OnboardingSpotlight = ({
 
     useEffect(() => {
         if (!isOpen || !activeStep) return;
-        onStepChange?.(activeStep, activeIndex);
-    }, [isOpen, activeStep, activeIndex, onStepChange]);
+        onStepChangeRef.current?.(activeStep, activeIndex);
+    }, [isOpen, activeStep, activeIndex]);
 
     useEffect(() => {
         if (!isOpen) return;
@@ -315,7 +334,7 @@ const OnboardingSpotlight = ({
     const stepDescription = activeStep?.description ?? description ?? '';
 
     return (
-        <SpotlightContext.Provider value={{ registerTarget }}>
+        <SpotlightContext.Provider value={spotlightContextValue}>
             {steps && steps.length > 0 ? (
                 children
             ) : (
@@ -323,88 +342,96 @@ const OnboardingSpotlight = ({
                     {children}
                 </Target>
             )}
-            {isOpen && highlightRect && (
+            {isOpen && (
                 <Portal>
                     <>
-                        {(() => {
-                            const viewportW = window.innerWidth || document.documentElement.clientWidth || 0;
-                            const viewportH = window.innerHeight || document.documentElement.clientHeight || 0;
+                        {highlightRect &&
+                            (() => {
+                                const viewportW = window.innerWidth || document.documentElement.clientWidth || 0;
+                                const viewportH = window.innerHeight || document.documentElement.clientHeight || 0;
 
-                            const holeTop = Math.max(0, highlightRect.top - padding);
-                            const holeLeft = Math.max(0, highlightRect.left - padding);
-                            const holeRight = Math.min(viewportW, highlightRect.left + highlightRect.width + padding);
-                            const holeBottom = Math.min(viewportH, highlightRect.top + highlightRect.height + padding);
+                                const holeTop = Math.max(0, highlightRect.top - padding);
+                                const holeLeft = Math.max(0, highlightRect.left - padding);
+                                const holeRight = Math.min(
+                                    viewportW,
+                                    highlightRect.left + highlightRect.width + padding
+                                );
+                                const holeBottom = Math.min(
+                                    viewportH,
+                                    highlightRect.top + highlightRect.height + padding
+                                );
 
-                            const holeHeight = Math.max(0, holeBottom - holeTop);
+                                const holeHeight = Math.max(0, holeBottom - holeTop);
 
-                            const onBackdropWheel: React.WheelEventHandler<HTMLDivElement> = (e) => {
-                                e.preventDefault();
-                                activeScrollParentRef.current?.scrollBy({
-                                    top: e.deltaY,
-                                    left: e.deltaX,
-                                });
-                            };
+                                const onBackdropWheel: React.WheelEventHandler<HTMLDivElement> = (e) => {
+                                    e.preventDefault();
+                                    activeScrollParentRef.current?.scrollBy({
+                                        top: e.deltaY,
+                                        left: e.deltaX,
+                                    });
+                                };
 
-                            const onBackdropClick: React.MouseEventHandler<HTMLDivElement> = (e) => {
-                                e.stopPropagation();
-                                if (closeOnBackdrop) handleClose();
-                            };
+                                const onBackdropClick: React.MouseEventHandler<HTMLDivElement> = (e) => {
+                                    e.stopPropagation();
+                                    if (closeOnBackdrop) handleClose();
+                                };
 
-                            return (
-                                <>
-                                    {/* ✅ Block interactions outside the spotlight hole, but keep the hole interactive. */}
-                                    {holeTop > 0 && (
+                                return (
+                                    <>
+                                        {/* ✅ Block interactions outside the spotlight hole, but keep the hole interactive. */}
+                                        {holeTop > 0 && (
+                                            <div
+                                                aria-hidden
+                                                className={styles.BackdropBlocker}
+                                                onClick={onBackdropClick}
+                                                onWheel={onBackdropWheel}
+                                                style={{ top: 0, left: 0, right: 0, height: holeTop }}
+                                            />
+                                        )}
+
+                                        {holeBottom < viewportH && (
+                                            <div
+                                                aria-hidden
+                                                className={styles.BackdropBlocker}
+                                                onClick={onBackdropClick}
+                                                onWheel={onBackdropWheel}
+                                                style={{ top: holeBottom, left: 0, right: 0, bottom: 0 }}
+                                            />
+                                        )}
+
+                                        {holeLeft > 0 && holeHeight > 0 && (
+                                            <div
+                                                aria-hidden
+                                                className={styles.BackdropBlocker}
+                                                onClick={onBackdropClick}
+                                                onWheel={onBackdropWheel}
+                                                style={{ top: holeTop, left: 0, width: holeLeft, height: holeHeight }}
+                                            />
+                                        )}
+
+                                        {holeRight < viewportW && holeHeight > 0 && (
+                                            <div
+                                                aria-hidden
+                                                className={styles.BackdropBlocker}
+                                                onClick={onBackdropClick}
+                                                onWheel={onBackdropWheel}
+                                                style={{ top: holeTop, left: holeRight, right: 0, height: holeHeight }}
+                                            />
+                                        )}
+
                                         <div
                                             aria-hidden
-                                            className={styles.BackdropBlocker}
-                                            onClick={onBackdropClick}
-                                            onWheel={onBackdropWheel}
-                                            style={{ top: 0, left: 0, right: 0, height: holeTop }}
+                                            className={styles.SpotlightHole}
+                                            style={{
+                                                top: highlightRect.top - padding,
+                                                left: highlightRect.left - padding,
+                                                width: highlightRect.width + padding * 2,
+                                                height: highlightRect.height + padding * 2,
+                                            }}
                                         />
-                                    )}
-
-                                    {holeBottom < viewportH && (
-                                        <div
-                                            aria-hidden
-                                            className={styles.BackdropBlocker}
-                                            onClick={onBackdropClick}
-                                            onWheel={onBackdropWheel}
-                                            style={{ top: holeBottom, left: 0, right: 0, bottom: 0 }}
-                                        />
-                                    )}
-
-                                    {holeLeft > 0 && holeHeight > 0 && (
-                                        <div
-                                            aria-hidden
-                                            className={styles.BackdropBlocker}
-                                            onClick={onBackdropClick}
-                                            onWheel={onBackdropWheel}
-                                            style={{ top: holeTop, left: 0, width: holeLeft, height: holeHeight }}
-                                        />
-                                    )}
-
-                                    {holeRight < viewportW && holeHeight > 0 && (
-                                        <div
-                                            aria-hidden
-                                            className={styles.BackdropBlocker}
-                                            onClick={onBackdropClick}
-                                            onWheel={onBackdropWheel}
-                                            style={{ top: holeTop, left: holeRight, right: 0, height: holeHeight }}
-                                        />
-                                    )}
-                                </>
-                            );
-                        })()}
-                        <div
-                            aria-hidden
-                            className={styles.SpotlightHole}
-                            style={{
-                                top: highlightRect.top - padding,
-                                left: highlightRect.left - padding,
-                                width: highlightRect.width + padding * 2,
-                                height: highlightRect.height + padding * 2,
-                            }}
-                        />
+                                    </>
+                                );
+                            })()}
                         <div
                             role="dialog"
                             aria-modal="true"

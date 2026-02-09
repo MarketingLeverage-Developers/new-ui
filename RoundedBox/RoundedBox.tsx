@@ -43,9 +43,11 @@ const RoundedBox = ({
         if (!scrollable) return;
         const vp = viewportRef.current;
         if (!vp) return;
+        const observedChildren = new Set<Element>();
 
         const update = () => {
-            setContentHeight(vp.scrollHeight);
+            const nextHeight = vp.scrollHeight;
+            setContentHeight((prev) => (prev === nextHeight ? prev : nextHeight));
             if (railRef.current) {
                 const ratio = vp.scrollTop / Math.max(1, vp.scrollHeight - vp.clientHeight);
                 const target = ratio * Math.max(0, railRef.current.scrollHeight - railRef.current.clientHeight);
@@ -60,7 +62,30 @@ const RoundedBox = ({
         const ro = new ResizeObserver(update);
         roRef.current = ro;
         ro.observe(vp);
-        Array.from(vp.children).forEach((c) => ro.observe(c as Element));
+
+        const syncChildObservers = () => {
+            // observe new direct children
+            Array.from(vp.children).forEach((child) => {
+                if (observedChildren.has(child)) return;
+                observedChildren.add(child);
+                ro.observe(child as Element);
+            });
+            // unobserve removed children
+            for (const child of Array.from(observedChildren)) {
+                if (!vp.contains(child)) {
+                    observedChildren.delete(child);
+                    ro.unobserve(child);
+                }
+            }
+        };
+
+        syncChildObservers();
+
+        const mo = new MutationObserver(() => {
+            syncChildObservers();
+            update();
+        });
+        mo.observe(vp, { childList: true });
 
         const onScroll = () => {
             if (syncingRef.current === 'rail') return;
@@ -70,10 +95,11 @@ const RoundedBox = ({
 
         return () => {
             vp.removeEventListener('scroll', onScroll);
+            mo.disconnect();
             ro.disconnect();
             roRef.current = null;
         };
-    }, [scrollable, children]);
+    }, [scrollable]);
 
     useEffect(() => {
         if (!scrollable) return;
