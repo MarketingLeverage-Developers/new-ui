@@ -43,8 +43,8 @@ const SearchInput: React.FC<SearchInputProps> = ({
 
     useEffect(() => {
         const next = String(value ?? '');
-        if (next !== internalValue) setInternalValue(next);
-    }, [value, internalValue]);
+        setInternalValue((prev) => (prev === next ? prev : next));
+    }, [value]);
 
     useEffect(
         () => () => {

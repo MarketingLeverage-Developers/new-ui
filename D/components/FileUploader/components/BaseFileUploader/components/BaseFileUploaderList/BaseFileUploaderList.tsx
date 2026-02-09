@@ -5,6 +5,7 @@ import { useFileUploader } from '@/shared/primitives/D/components/FileUploader/F
 import { Common } from '@/shared/primitives/C/Common';
 import Modal, { useModal } from '@/shared/headless/Modal/Modal';
 import Portal from '@/shared/headless/Portal/Portal';
+import { downloadFileFromUrl } from '@/shared/utils/download/download';
 
 type FileType = 'IMAGE' | 'ZIP' | 'VIDEO' | 'ETC';
 
@@ -161,11 +162,25 @@ const BaseFileUploaderList: React.FC = () => {
         removeItem(key);
     };
 
+    const resolveDownloadUrl = (url: string) => {
+        if (/^https?:\/\//i.test(url)) return url;
+        if (url.startsWith('/api/') && apiOrigin) return `${apiOrigin}${url}`;
+        if (apiPrefix) return `${apiPrefix}${url.startsWith('/') ? '' : '/'}${url}`;
+        return url;
+    };
+
+    const handleFileDownload = async (url: string, fileName: string) => {
+        const downloadUrl = resolveDownloadUrl(url);
+        await downloadFileFromUrl(downloadUrl, fileName);
+    };
+
     if (type === 'file') {
         return (
             <div className={styles.FileList}>
                 {previews.map((p) => {
                     if (p.kind !== 'file') return null;
+
+                    const downloadUrl = p.url ? resolveDownloadUrl(p.url) : undefined;
 
                     return (
                         <div key={p.key} className={styles.FileBar}>
@@ -175,10 +190,16 @@ const BaseFileUploaderList: React.FC = () => {
                             </div>
 
                             <div className={styles.FileBarRight}>
-                                {p.url ? (
-                                    <a className={styles.FileBarLink} href={p.url} target="_blank" rel="noreferrer">
-                                        보기
-                                    </a>
+                                {downloadUrl ? (
+                                    <button
+                                        type="button"
+                                        className={styles.FileBarLink}
+                                        onClick={() => {
+                                            void handleFileDownload(downloadUrl, p.name);
+                                        }}
+                                    >
+                                        다운로드
+                                    </button>
                                 ) : null}
 
                                 {showRemove ? (
@@ -198,13 +219,6 @@ const BaseFileUploaderList: React.FC = () => {
             </div>
         );
     }
-
-    const resolveDownloadUrl = (url: string) => {
-        if (/^https?:\/\//i.test(url)) return url;
-        if (url.startsWith('/api/') && apiOrigin) return `${apiOrigin}${url}`;
-        if (apiPrefix) return `${apiPrefix}${url.startsWith('/') ? '' : '/'}${url}`;
-        return url;
-    };
 
     return (
         <div className={styles.ImageList}>
