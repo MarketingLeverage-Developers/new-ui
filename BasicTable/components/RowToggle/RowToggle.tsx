@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
-import { IoChevronDown, IoChevronForward } from 'react-icons/io5';
 import styles from './RowToggle.module.scss';
 import type { CellRenderMeta } from '@/shared/headless/AirTable/AirTable';
+import { LuCircleMinus, LuCirclePlus } from 'react-icons/lu';
 
 export type RowToggleProps<T> = {
     meta: CellRenderMeta<T>;
@@ -51,10 +51,17 @@ const RowToggleComponent = <T,>({
                 onToggle?.();
             }}
         >
+            {/* 기존 아이콘 로직(필요 시 복구):
             {isOpen ? (
                 <IoChevronDown size={size} className={styles.icon} />
             ) : (
                 <IoChevronForward size={size} className={styles.icon} />
+            )}
+            */}
+            {isOpen ? (
+                <LuCircleMinus size={size} className={styles.icon} />
+            ) : (
+                <LuCirclePlus size={size} className={styles.icon} />
             )}
         </button>
     );
