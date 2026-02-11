@@ -42,6 +42,7 @@ type Props = {
     showSkip?: boolean;
     advanceOnTargetClick?: boolean;
     closeOnBackdrop?: boolean;
+    blockOutside?: boolean;
     onStepChange?: (step: Step, index: number) => void;
     onClose?: () => void;
     onComplete?: () => void;
@@ -141,6 +142,7 @@ const OnboardingSpotlight = ({
     showSkip = true,
     advanceOnTargetClick = false,
     closeOnBackdrop = true,
+    blockOutside = true,
     onStepChange,
     onClose,
     onComplete,
@@ -420,7 +422,7 @@ const OnboardingSpotlight = ({
                                 return (
                                     <>
                                         {/* ✅ Block interactions outside the spotlight hole, but keep the hole interactive. */}
-                                        {holeTop > 0 && (
+                                        {blockOutside && holeTop > 0 && (
                                             <div
                                                 aria-hidden
                                                 className={styles.BackdropBlocker}
@@ -430,7 +432,7 @@ const OnboardingSpotlight = ({
                                             />
                                         )}
 
-                                        {holeBottom < viewportH && (
+                                        {blockOutside && holeBottom < viewportH && (
                                             <div
                                                 aria-hidden
                                                 className={styles.BackdropBlocker}
@@ -440,7 +442,7 @@ const OnboardingSpotlight = ({
                                             />
                                         )}
 
-                                        {holeLeft > 0 && holeHeight > 0 && (
+                                        {blockOutside && holeLeft > 0 && holeHeight > 0 && (
                                             <div
                                                 aria-hidden
                                                 className={styles.BackdropBlocker}
@@ -450,7 +452,7 @@ const OnboardingSpotlight = ({
                                             />
                                         )}
 
-                                        {holeRight < viewportW && holeHeight > 0 && (
+                                        {blockOutside && holeRight < viewportW && holeHeight > 0 && (
                                             <div
                                                 aria-hidden
                                                 className={styles.BackdropBlocker}
