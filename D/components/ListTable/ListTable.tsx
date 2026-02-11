@@ -10,7 +10,7 @@ type ListTableProps<T> = {
     rowKeyField?: string;
     defaultColWidth?: number;
     detailRenderer?: (params: { row: any; ri: number }) => React.ReactNode;
-    getRowStyle?: (row: T, index: number) => { backgroundColor?: string };
+    getRowStyle?: (row: T, index: number) => React.CSSProperties;
     storageKey?: string;
     pinnedColumnKeys?: string[];
     getRowCanExpand?: (row: T, ri: number) => boolean;
