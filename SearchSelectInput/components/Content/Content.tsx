@@ -19,6 +19,8 @@ export type SearchSelectItemProps<T extends SelectItem = SelectItem> = {
 type ContentProps<T extends SelectItem> = {
     children?: React.ReactElement;
     height?: string | number;
+    maxHeight?: string | number;
+    textSize?: string | number;
 };
 
 const DefaultItem = ({ item, onSelect }: SearchSelectItemProps) => (
@@ -27,7 +29,12 @@ const DefaultItem = ({ item, onSelect }: SearchSelectItemProps) => (
     </div>
 );
 
-const Content = <T extends SelectItem>({ children, height = 'auto' }: ContentProps<T>) => {
+const Content = <T extends SelectItem>({
+    children,
+    height = 'auto',
+    maxHeight = 240,
+    textSize = 14,
+}: ContentProps<T>) => {
     const { open, isOpen, close } = useDropdown();
     const { query, data, setQuery, isSync } = useQuerySearch<SelectItem>();
     const { isActive, changeSelectValue } = useSelect();
@@ -69,8 +76,10 @@ const Content = <T extends SelectItem>({ children, height = 'auto' }: ContentPro
     const cssVariables: CSSVariables = useMemo(
         () => ({
             '--height': toCssUnit(height),
+            '--max-height': toCssUnit(maxHeight),
+            '--text-size': toCssUnit(textSize),
         }),
-        [height]
+        [height, maxHeight, textSize]
     );
     return (
         <Dropdown.Content matchTriggerWidth>

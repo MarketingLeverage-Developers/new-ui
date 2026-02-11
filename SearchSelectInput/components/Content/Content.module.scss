@@ -14,8 +14,8 @@
     .Select {
         padding-right: 11px;
         overflow-y: auto;
-        height: var(--height);
-        max-height: 240px;
+        height: var(--height, auto);
+        max-height: var(--max-height, 240px);
         display: flex;
         flex-direction: column;
 
@@ -50,7 +50,7 @@
         padding: 10px;
         gap: 6px;
         width: 100%;
-        font-size: 14px;
+        font-size: var(--text-size, 14px);
         font-weight: 400;
 
         &.Item:hover {
