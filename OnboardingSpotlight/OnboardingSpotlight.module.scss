@@ -107,3 +107,25 @@
 .GhostButton:hover {
     color: var(--Gray2);
 }
+
+.TargetActive {
+    outline: 2px dashed var(--Primary1);
+    outline-offset: 6px;
+    border-radius: 10px;
+}
+
+.TargetHint {
+    position: absolute;
+    left: 0;
+    top: -10px;
+    transform: translateY(-100%);
+    background: var(--Primary1);
+    color: #ffffff;
+    padding: 4px 8px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    box-shadow: 0 6px 14px rgba(232, 135, 49, 0.24);
+    pointer-events: none;
+    white-space: nowrap;
+}

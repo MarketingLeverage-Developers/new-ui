@@ -53,10 +53,15 @@ type TargetProps = {
     children: React.ReactNode;
     style?: React.CSSProperties;
     className?: string;
+    hint?: React.ReactNode;
+    hintClassName?: string;
+    showIndicator?: boolean;
 };
 
 type SpotlightContextValue = {
     registerTarget: (id: string, el: HTMLDivElement | null) => void;
+    advance: () => void;
+    activeStepId: string | null;
 };
 
 const DEFAULT_PADDING = 8;
@@ -88,9 +93,13 @@ const placementStyles: Record<Placement, React.CSSProperties> = {
 
 const SpotlightContext = React.createContext<SpotlightContextValue | null>(null);
 
-const Target = ({ stepId, children, style, className }: TargetProps) => {
+export const useOnboardingSpotlightContext = () => React.useContext(SpotlightContext);
+
+const Target = ({ stepId, children, style, className, hint, hintClassName, showIndicator }: TargetProps) => {
     const ctx = React.useContext(SpotlightContext);
     const ref = useRef<HTMLDivElement | null>(null);
+    const isActive = ctx?.activeStepId === stepId;
+    const needsRelative = isActive && Boolean(hint);
 
     useLayoutEffect(() => {
         ctx?.registerTarget(stepId, ref.current);
@@ -98,8 +107,17 @@ const Target = ({ stepId, children, style, className }: TargetProps) => {
     }, [ctx, stepId]);
 
     return (
-        <div ref={ref} className={className} style={style}>
+        <div
+            ref={ref}
+            className={[className, isActive && showIndicator ? styles.TargetActive : ''].filter(Boolean).join(' ')}
+            style={needsRelative ? { position: 'relative', ...style } : style}
+        >
             {children}
+            {isActive && hint ? (
+                <div className={[styles.TargetHint, hintClassName].filter(Boolean).join(' ')} aria-hidden>
+                    {hint}
+                </div>
+            ) : null}
         </div>
     );
 };
@@ -135,6 +153,13 @@ const OnboardingSpotlight = ({
     const targetsRef = useRef<Record<string, HTMLDivElement | null>>({});
     const activeScrollParentRef = useRef<HTMLElement | null>(null);
     const onStepChangeRef = useRef<Props['onStepChange']>(onStepChange);
+
+    useEffect(() => {
+        if (typeof document === 'undefined') return;
+        const body = document.body;
+        if (isOpen) body.dataset.onboardingSpotlight = 'open';
+        else delete body.dataset.onboardingSpotlight;
+    }, [isOpen]);
 
     useEffect(() => {
         onStepChangeRef.current = onStepChange;
@@ -246,7 +271,14 @@ const OnboardingSpotlight = ({
         [activeStep?.id, isOpen, updateHighlightRect]
     );
 
-    const spotlightContextValue = useMemo(() => ({ registerTarget }), [registerTarget]);
+    const advance = useCallback(() => {
+        handleNext();
+    }, [handleNext]);
+
+    const spotlightContextValue = useMemo(
+        () => ({ registerTarget, advance, activeStepId: activeStep?.id ?? null }),
+        [registerTarget, advance, activeStep?.id]
+    );
 
     useLayoutEffect(() => {
         if (!isOpen) return;
