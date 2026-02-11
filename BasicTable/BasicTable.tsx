@@ -4,6 +4,7 @@ import React, { useState, useCallback, useMemo } from 'react';
 import AirTable from '@/shared/headless/AirTable/AirTable';
 import styles from './BasicTable.module.scss';
 import RowToggle from './components/RowToggle/RowToggle';
+import PlusToggle from './components/PlusToggle/PlusToggle';
 import classNames from 'classnames';
 
 import { ColumnVisibilityControlsPanel } from './components/ColumnVisibilityControlsPanel/ColumnVisibilityControlsPanel';
@@ -246,4 +247,5 @@ export const BasicTable = <T,>({
 };
 
 BasicTable.RowToggle = RowToggle;
+BasicTable.PlusToggle = PlusToggle;
 BasicTable.Content = Content;

@@ -1,14 +1,11 @@
 import React, { useMemo } from 'react';
-import styles from './RowToggle.module.scss';
+import { FiPlus } from 'react-icons/fi';
+import styles from './PlusToggle.module.scss';
 import type { CellRenderMeta } from '@/shared/headless/AirTable/AirTable';
-import { LuCircleMinus, LuCirclePlus } from 'react-icons/lu';
 
-export type RowToggleProps<T> = {
+export type PlusToggleProps<T> = {
     meta: CellRenderMeta<T>;
-
-    /** ✅ rowKey는 optional (기존 코드 호환) */
     rowKey?: string;
-
     onToggle?: () => void;
     className?: string;
     style?: React.CSSProperties;
@@ -16,7 +13,7 @@ export type RowToggleProps<T> = {
     disabled?: boolean;
 };
 
-const RowToggleComponent = <T,>({
+const PlusToggleComponent = <T,>({
     meta,
     rowKey,
     onToggle,
@@ -24,16 +21,16 @@ const RowToggleComponent = <T,>({
     style,
     size = 16,
     disabled = false,
-}: RowToggleProps<T>) => {
-    // ✅ rowKey가 없으면 meta.rowKey로 fallback
+}: PlusToggleProps<T>) => {
     const targetRowKey = rowKey ?? meta.rowKey;
-
     const isOpen = useMemo(() => meta.isRowExpanded(targetRowKey), [meta, targetRowKey]);
 
     return (
         <button
             type="button"
-            className={[styles.root, disabled ? styles.disabled : '', className ?? ''].join(' ')}
+            className={[styles.root, isOpen ? styles.open : '', disabled ? styles.disabled : '', className ?? ''].join(
+                ' '
+            )}
             style={style}
             aria-expanded={isOpen}
             aria-disabled={disabled}
@@ -51,23 +48,11 @@ const RowToggleComponent = <T,>({
                 onToggle?.();
             }}
         >
-            {/* 기존 아이콘 로직(필요 시 복구):
-            {isOpen ? (
-                <IoChevronDown size={size} className={styles.icon} />
-            ) : (
-                <IoChevronForward size={size} className={styles.icon} />
-            )}
-            */}
-            {isOpen ? (
-                <LuCircleMinus size={size} className={styles.icon} />
-            ) : (
-                <LuCirclePlus size={size} className={styles.icon} />
-            )}
+            <FiPlus size={size} className={styles.icon} />
         </button>
     );
 };
 
-/** ✅✅✅ 핵심: 제네릭 컴포넌트 타입을 명시해서 TS 추론 꼬임 방지 */
-const RowToggle: <T>(props: RowToggleProps<T>) => React.ReactElement = RowToggleComponent;
+const PlusToggle: <T>(props: PlusToggleProps<T>) => React.ReactElement = PlusToggleComponent;
 
-export default RowToggle;
+export default PlusToggle;
