@@ -1,11 +1,14 @@
 .Display {
     display: inline-flex;
+    width: var(--width, auto);
+    height: var(--height, auto);
     justify-content: space-between;
     align-items: center;
     background-color: var(--White1);
     border: 1px solid var(--Gray5);
     gap: 8px;
-    padding: 13px 16px;
+    // padding: 13px 16px;
+    padding: var(--padding, 0);
     border-radius: 7px;
     font-size: 15px;
     color: var(--Gray1);
