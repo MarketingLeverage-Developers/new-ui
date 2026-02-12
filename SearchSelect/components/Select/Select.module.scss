@@ -8,7 +8,8 @@
     .Select {
         padding-right: 11px;
         overflow-y: auto;
-        height: 120px;
+        height: var(--height, 120px);
+        max-height: var(--max-height, 240px);
         &::-webkit-scrollbar {
             width: 6px;
             height: 6px;
@@ -36,7 +37,7 @@
         padding: 10px;
         gap: 6px;
         width: 100%;
-        font-size: 14px;
+        font-size: var(--text-size, 14px);
         font-weight: 400;
 
         &.Item:hover {

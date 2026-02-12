@@ -7,8 +7,16 @@ import { useSelect } from '@/shared/headless/Select/Select';
 import { useQuerySearch } from '@/shared/headless/QuerySearch/QuerySearch';
 import type { SelectItem } from '../../SearchSelect';
 import { useHangulSearch } from '@/shared/hooks/client/useHangulSearch';
+import type { CSSVariables } from '@/shared/types/css/CSSVariables';
+import { toCssUnit } from '@/shared/utils';
 
-const Select = () => {
+type SelectProps = {
+    height?: string | number;
+    maxHeight?: string | number;
+    textSize?: string | number;
+};
+
+const Select = ({ height = 120, maxHeight = 240, textSize = 14 }: SelectProps) => {
     const { open, isOpen, close } = useDropdown();
     const { query, data, setQuery } = useQuerySearch<SelectItem>();
     const { isActive, changeSelectValue } = useSelect();
@@ -31,6 +39,15 @@ const Select = () => {
         if (isOpen) close();
     };
 
+    const cssVariables: CSSVariables = useMemo(
+        () => ({
+            '--height': toCssUnit(height),
+            '--max-height': toCssUnit(maxHeight),
+            '--text-size': toCssUnit(textSize),
+        }),
+        [height, maxHeight, textSize]
+    );
+
     // 모달이 닫힌 상태인데 query 값 갱신되면
     useEffect(() => {
         if (!isOpen && query.length > 1) open();
@@ -44,7 +61,7 @@ const Select = () => {
                     onChange={(e) => setQuery(e.target.value)}
                     placeholder={`검색어를 입력하세요`}
                 />
-                <div className={styles.Select}>
+                <div className={styles.Select} style={cssVariables}>
                     {uniqueFiltered.length === 0 && <div className={styles.Empty}>결과가 없습니다</div>}
                     {uniqueFiltered.map((item) => (
                         <ManySelect.Item key={item.uuid} value={item.uuid}>
