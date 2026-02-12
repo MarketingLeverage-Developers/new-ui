@@ -21,6 +21,7 @@ type Step = {
     placement?: Placement;
     stepLabel?: string;
     advanceOnTargetClick?: boolean;
+    requiresCompletion?: boolean;
 };
 
 type Props = {
@@ -63,6 +64,7 @@ type SpotlightContextValue = {
     registerTarget: (id: string, el: HTMLDivElement | null) => void;
     advance: () => void;
     activeStepId: string | null;
+    setStepComplete: (id: string, complete: boolean) => void;
 };
 
 const DEFAULT_PADDING = 8;
@@ -151,6 +153,7 @@ const OnboardingSpotlight = ({
     const [isOpen, setIsOpen] = useState(false);
     const [highlightRect, setHighlightRect] = useState<HighlightRect | null>(null);
     const [activeIndex, setActiveIndex] = useState(0);
+    const [completedStepIds, setCompletedStepIds] = useState<Set<string>>(new Set());
     const lastReplayKeyRef = useRef<Props['replayKey']>(replayKey);
     const targetsRef = useRef<Record<string, HTMLDivElement | null>>({});
     const activeScrollParentRef = useRef<HTMLElement | null>(null);
@@ -162,6 +165,11 @@ const OnboardingSpotlight = ({
         if (isOpen) body.dataset.onboardingSpotlight = 'open';
         else delete body.dataset.onboardingSpotlight;
     }, [isOpen]);
+
+    useEffect(() => {
+        if (!isOpen) return;
+        setCompletedStepIds(new Set());
+    }, [isOpen, replayKey]);
 
     useEffect(() => {
         onStepChangeRef.current = onStepChange;
@@ -273,13 +281,22 @@ const OnboardingSpotlight = ({
         [activeStep?.id, isOpen, updateHighlightRect]
     );
 
+    const setStepComplete = useCallback((id: string, complete: boolean) => {
+        setCompletedStepIds((prev) => {
+            const next = new Set(prev);
+            if (complete) next.add(id);
+            else next.delete(id);
+            return next;
+        });
+    }, []);
+
     const advance = useCallback(() => {
         handleNext();
     }, [handleNext]);
 
     const spotlightContextValue = useMemo(
-        () => ({ registerTarget, advance, activeStepId: activeStep?.id ?? null }),
-        [registerTarget, advance, activeStep?.id]
+        () => ({ registerTarget, advance, activeStepId: activeStep?.id ?? null, setStepComplete }),
+        [registerTarget, advance, activeStep?.id, setStepComplete]
     );
 
     useLayoutEffect(() => {
@@ -375,6 +392,10 @@ const OnboardingSpotlight = ({
 
     const stepTitle = activeStep?.title ?? title ?? '';
     const stepDescription = activeStep?.description ?? description ?? '';
+    const requiresTargetAction = Boolean(activeStep?.advanceOnTargetClick ?? advanceOnTargetClick);
+    const requiresCompletion = Boolean(activeStep?.requiresCompletion);
+    const isActiveStepComplete = activeStep?.id ? completedStepIds.has(activeStep.id) : true;
+    const shouldDisableNext = requiresTargetAction || (requiresCompletion && !isActiveStepComplete);
 
     return (
         <SpotlightContext.Provider value={spotlightContextValue}>
@@ -515,7 +536,12 @@ const OnboardingSpotlight = ({
                                             >
                                                 {prevLabel}
                                             </button>
-                                            <button type="button" onClick={handleNext} className={styles.PrimaryButton}>
+                                            <button
+                                                type="button"
+                                                onClick={handleNext}
+                                                disabled={shouldDisableNext}
+                                                className={styles.PrimaryButton}
+                                            >
                                                 {activeIndex === normalizedSteps.length - 1 ? doneLabel : nextLabel}
                                             </button>
                                         </Flex>
