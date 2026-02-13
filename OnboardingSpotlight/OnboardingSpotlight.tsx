@@ -22,6 +22,7 @@ type Step = {
     stepLabel?: string;
     advanceOnTargetClick?: boolean;
     requiresCompletion?: boolean;
+    hideNext?: boolean;
 };
 
 type Props = {
@@ -61,7 +62,7 @@ type TargetProps = {
 };
 
 type SpotlightContextValue = {
-    registerTarget: (id: string, el: HTMLDivElement | null) => void;
+    registerTarget: (id: string, el: HTMLDivElement | null, showIndicator?: boolean) => void;
     advance: () => void;
     activeStepId: string | null;
     setStepComplete: (id: string, complete: boolean) => void;
@@ -105,16 +106,12 @@ const Target = ({ stepId, children, style, className, hint, hintClassName, showI
     const needsRelative = isActive && Boolean(hint);
 
     useLayoutEffect(() => {
-        ctx?.registerTarget(stepId, ref.current);
-        return () => ctx?.registerTarget(stepId, null);
-    }, [ctx, stepId]);
+        ctx?.registerTarget(stepId, ref.current, showIndicator);
+        return () => ctx?.registerTarget(stepId, null, showIndicator);
+    }, [ctx, stepId, showIndicator]);
 
     return (
-        <div
-            ref={ref}
-            className={[className, isActive && showIndicator ? styles.TargetActive : ''].filter(Boolean).join(' ')}
-            style={needsRelative ? { position: 'relative', ...style } : style}
-        >
+        <div ref={ref} className={className} style={needsRelative ? { position: 'relative', ...style } : style}>
             {children}
             {isActive && hint ? (
                 <div className={[styles.TargetHint, hintClassName].filter(Boolean).join(' ')} aria-hidden>
@@ -155,7 +152,7 @@ const OnboardingSpotlight = ({
     const [activeIndex, setActiveIndex] = useState(0);
     const [completedStepIds, setCompletedStepIds] = useState<Set<string>>(new Set());
     const lastReplayKeyRef = useRef<Props['replayKey']>(replayKey);
-    const targetsRef = useRef<Record<string, HTMLDivElement | null>>({});
+    const targetsRef = useRef<Record<string, { el: HTMLDivElement | null; showIndicator?: boolean }>>({});
     const activeScrollParentRef = useRef<HTMLElement | null>(null);
     const onStepChangeRef = useRef<Props['onStepChange']>(onStepChange);
 
@@ -231,6 +228,12 @@ const OnboardingSpotlight = ({
         handleClose();
     }, [when, isOpen, handleClose]);
 
+    const handleComplete = useCallback(() => {
+        setIsOpen(false);
+        setHighlightRect(null);
+        onComplete?.();
+    }, [onComplete]);
+
     const handleNext = useCallback(() => {
         if (!isMultiStep) {
             handleClose();
@@ -240,13 +243,12 @@ const OnboardingSpotlight = ({
         setActiveIndex((prev) => {
             const next = prev + 1;
             if (next >= normalizedSteps.length) {
-                handleClose();
-                onComplete?.();
+                handleComplete();
                 return prev;
             }
             return next;
         });
-    }, [handleClose, isMultiStep, normalizedSteps.length, onComplete]);
+    }, [handleClose, handleComplete, isMultiStep, normalizedSteps.length, onComplete]);
 
     const handlePrev = useCallback(() => {
         if (!isMultiStep) return;
@@ -255,7 +257,7 @@ const OnboardingSpotlight = ({
 
     const updateHighlightRect = useCallback(() => {
         if (!isOpen) return;
-        const target = targetsRef.current[activeStep?.id ?? ''];
+        const target = targetsRef.current[activeStep?.id ?? '']?.el ?? null;
         if (!target) {
             setHighlightRect(null);
             return;
@@ -270,8 +272,8 @@ const OnboardingSpotlight = ({
     }, [isOpen, activeStep?.id]);
 
     const registerTarget = useCallback(
-        (id: string, el: HTMLDivElement | null) => {
-            targetsRef.current[id] = el;
+        (id: string, el: HTMLDivElement | null, showIndicator?: boolean) => {
+            targetsRef.current[id] = { el, showIndicator };
             // ✅ Some targets (e.g. modal contents) mount *after* the step becomes active.
             // When the active step's target is registered/unregistered, re-measure so the overlay can appear.
             if (!isOpen) return;
@@ -310,7 +312,7 @@ const OnboardingSpotlight = ({
     //   so we scroll the closest *scrollable* parent just enough to reveal the target with margin.
     useLayoutEffect(() => {
         if (!isOpen) return;
-        const target = targetsRef.current[activeStep?.id ?? ''];
+        const target = targetsRef.current[activeStep?.id ?? '']?.el ?? null;
         if (!target) return;
 
         const scrollParent = findScrollableYParent(target);
@@ -354,7 +356,7 @@ const OnboardingSpotlight = ({
 
     useEffect(() => {
         if (!isOpen) return;
-        const target = targetsRef.current[activeStep?.id ?? ''];
+        const target = targetsRef.current[activeStep?.id ?? '']?.el ?? null;
         if (!target || typeof ResizeObserver === 'undefined') return;
         const observer = new ResizeObserver(() => updateHighlightRect());
         observer.observe(target);
@@ -372,7 +374,7 @@ const OnboardingSpotlight = ({
 
     useEffect(() => {
         if (!isOpen) return;
-        const target = targetsRef.current[activeStep?.id ?? ''];
+        const target = targetsRef.current[activeStep?.id ?? '']?.el ?? null;
         if (!target) return;
         const shouldAdvance = activeStep?.advanceOnTargetClick ?? advanceOnTargetClick;
         if (!shouldAdvance) return;
@@ -396,6 +398,8 @@ const OnboardingSpotlight = ({
     const requiresCompletion = Boolean(activeStep?.requiresCompletion);
     const isActiveStepComplete = activeStep?.id ? completedStepIds.has(activeStep.id) : true;
     const shouldDisableNext = requiresTargetAction || (requiresCompletion && !isActiveStepComplete);
+    const shouldHideNext = requiresTargetAction || (activeStep?.hideNext ?? true);
+    const shouldShowIndicator = Boolean(targetsRef.current[activeStep?.id ?? '']?.showIndicator);
 
     return (
         <SpotlightContext.Provider value={spotlightContextValue}>
@@ -493,6 +497,18 @@ const OnboardingSpotlight = ({
                                                 height: highlightRect.height + padding * 2,
                                             }}
                                         />
+                                        {shouldShowIndicator && (
+                                            <div
+                                                aria-hidden
+                                                className={styles.SpotlightIndicator}
+                                                style={{
+                                                    top: highlightRect.top - 6,
+                                                    left: highlightRect.left - 6,
+                                                    width: highlightRect.width + 12,
+                                                    height: highlightRect.height + 12,
+                                                }}
+                                            />
+                                        )}
                                     </>
                                 );
                             })()}
@@ -528,22 +544,24 @@ const OnboardingSpotlight = ({
                                             <span />
                                         )}
                                         <Flex gap={8}>
-                                            <button
+                                            {/* <button
                                                 type="button"
                                                 onClick={handlePrev}
                                                 disabled={activeIndex === 0}
                                                 className={styles.SecondaryButton}
                                             >
                                                 {prevLabel}
-                                            </button>
-                                            <button
-                                                type="button"
-                                                onClick={handleNext}
-                                                disabled={shouldDisableNext}
-                                                className={styles.PrimaryButton}
-                                            >
-                                                {activeIndex === normalizedSteps.length - 1 ? doneLabel : nextLabel}
-                                            </button>
+                                            </button> */}
+                                            {!shouldHideNext && (
+                                                <button
+                                                    type="button"
+                                                    onClick={handleNext}
+                                                    disabled={shouldDisableNext}
+                                                    className={styles.PrimaryButton}
+                                                >
+                                                    {activeIndex === normalizedSteps.length - 1 ? doneLabel : nextLabel}
+                                                </button>
+                                            )}
                                         </Flex>
                                     </Flex>
                                 ) : (
