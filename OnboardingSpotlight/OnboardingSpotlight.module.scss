@@ -118,6 +118,29 @@
     color: var(--Gray2);
 }
 
+.TargetPulse {
+    position: absolute;
+    inset: -6px;
+    border-radius: 12px;
+    border: 2px solid color-mix(in srgb, var(--Primary1) 65%, transparent);
+    pointer-events: none;
+    animation: spotlight-spark 420ms ease-out;
+}
+
+@keyframes spotlight-spark {
+    0% {
+        opacity: 0;
+        transform: scale(0.96);
+    }
+    30% {
+        opacity: 0.5;
+    }
+    100% {
+        opacity: 0;
+        transform: scale(1.08);
+    }
+}
+
 .TargetActive {
     outline: 2px dashed var(--Primary1);
     outline-offset: 4px;
