@@ -126,21 +126,12 @@ const Target = ({
     const ref = useRef<HTMLDivElement | null>(null);
     const isActive = ctx?.activeStepId === stepId;
     const needsRelative = isActive && (Boolean(hint) || Boolean(showIndicator));
-    const [pulseKey, setPulseKey] = useState(0);
-    const [pulseVisible, setPulseVisible] = useState(false);
-    const pulseTimerRef = useRef<number | null>(null);
 
     useLayoutEffect(() => {
         ctx?.registerTarget(stepId, ref.current, showIndicator, usePortalIndicator);
         return () => ctx?.registerTarget(stepId, null, showIndicator, usePortalIndicator);
     }, [ctx, stepId, showIndicator, usePortalIndicator]);
 
-    useEffect(
-        () => () => {
-            if (pulseTimerRef.current) window.clearTimeout(pulseTimerRef.current);
-        },
-        []
-    );
 
     return (
         <div
@@ -149,19 +140,7 @@ const Target = ({
                 .filter(Boolean)
                 .join(' ')}
             style={needsRelative ? { position: 'relative', ...style } : style}
-            onClick={() => {
-                if (!isActive || !showIndicator) return;
-                setPulseKey((prev) => prev + 1);
-                setPulseVisible(true);
-                if (pulseTimerRef.current) window.clearTimeout(pulseTimerRef.current);
-                pulseTimerRef.current = window.setTimeout(() => {
-                    setPulseVisible(false);
-                }, 450);
-            }}
         >
-            {isActive && showIndicator && pulseVisible ? (
-                <span key={pulseKey} className={styles.TargetPulse} aria-hidden />
-            ) : null}
             {children}
             {isActive && hint ? (
                 <div className={[styles.TargetHint, hintClassName].filter(Boolean).join(' ')} aria-hidden>
