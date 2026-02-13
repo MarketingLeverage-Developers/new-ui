@@ -119,21 +119,9 @@
 }
 
 .TargetActive {
-    position: relative;
+    outline: 2px dashed var(--Primary1);
+    outline-offset: 4px;
     border-radius: 10px;
-}
-
-.TargetActive::before {
-    content: '';
-    position: absolute;
-    top: -6px;
-    bottom: -6px;
-    left: -6px;
-    right: -2px;
-    border: 2px dashed var(--Primary1);
-    border-radius: 12px;
-    pointer-events: none;
-    z-index: 100001 !important;
 }
 
 .TargetHint {

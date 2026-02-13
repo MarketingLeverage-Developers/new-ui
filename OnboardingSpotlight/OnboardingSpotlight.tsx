@@ -59,10 +59,16 @@ type TargetProps = {
     hint?: React.ReactNode;
     hintClassName?: string;
     showIndicator?: boolean;
+    usePortalIndicator?: boolean; // indicator가 잘리는 경우 사용
 };
 
 type SpotlightContextValue = {
-    registerTarget: (id: string, el: HTMLDivElement | null, showIndicator?: boolean) => void;
+    registerTarget: (
+        id: string,
+        el: HTMLDivElement | null,
+        showIndicator?: boolean,
+        usePortalIndicator?: boolean
+    ) => void;
     advance: () => void;
     activeStepId: string | null;
     setStepComplete: (id: string, complete: boolean) => void;
@@ -83,6 +89,13 @@ const findScrollableYParent = (el: HTMLElement | null) => {
     return null;
 };
 
+const resolveTargetElement = (el: HTMLDivElement | null) => {
+    if (!el) return null;
+    const rect = el.getBoundingClientRect();
+    if ((rect.width > 0 && rect.height > 0) || !el.firstElementChild) return el;
+    return el.firstElementChild as HTMLElement;
+};
+
 const prefersReducedMotion = () =>
     typeof window !== 'undefined' &&
     typeof window.matchMedia === 'function' &&
@@ -99,19 +112,34 @@ const SpotlightContext = React.createContext<SpotlightContextValue | null>(null)
 
 export const useOnboardingSpotlightContext = () => React.useContext(SpotlightContext);
 
-const Target = ({ stepId, children, style, className, hint, hintClassName, showIndicator }: TargetProps) => {
+const Target = ({
+    stepId,
+    children,
+    style,
+    className,
+    hint,
+    hintClassName,
+    showIndicator,
+    usePortalIndicator = true,
+}: TargetProps) => {
     const ctx = React.useContext(SpotlightContext);
     const ref = useRef<HTMLDivElement | null>(null);
     const isActive = ctx?.activeStepId === stepId;
     const needsRelative = isActive && Boolean(hint);
 
     useLayoutEffect(() => {
-        ctx?.registerTarget(stepId, ref.current, showIndicator);
-        return () => ctx?.registerTarget(stepId, null, showIndicator);
-    }, [ctx, stepId, showIndicator]);
+        ctx?.registerTarget(stepId, ref.current, showIndicator, usePortalIndicator);
+        return () => ctx?.registerTarget(stepId, null, showIndicator, usePortalIndicator);
+    }, [ctx, stepId, showIndicator, usePortalIndicator]);
 
     return (
-        <div ref={ref} className={className} style={needsRelative ? { position: 'relative', ...style } : style}>
+        <div
+            ref={ref}
+            className={[className, isActive && showIndicator && !usePortalIndicator ? styles.TargetActive : '']
+                .filter(Boolean)
+                .join(' ')}
+            style={needsRelative ? { position: 'relative', ...style } : style}
+        >
             {children}
             {isActive && hint ? (
                 <div className={[styles.TargetHint, hintClassName].filter(Boolean).join(' ')} aria-hidden>
@@ -152,7 +180,9 @@ const OnboardingSpotlight = ({
     const [activeIndex, setActiveIndex] = useState(0);
     const [completedStepIds, setCompletedStepIds] = useState<Set<string>>(new Set());
     const lastReplayKeyRef = useRef<Props['replayKey']>(replayKey);
-    const targetsRef = useRef<Record<string, { el: HTMLDivElement | null; showIndicator?: boolean }>>({});
+    const targetsRef = useRef<
+        Record<string, { el: HTMLDivElement | null; showIndicator?: boolean; usePortalIndicator?: boolean }>
+    >({});
     const activeScrollParentRef = useRef<HTMLElement | null>(null);
     const onStepChangeRef = useRef<Props['onStepChange']>(onStepChange);
 
@@ -257,7 +287,7 @@ const OnboardingSpotlight = ({
 
     const updateHighlightRect = useCallback(() => {
         if (!isOpen) return;
-        const target = targetsRef.current[activeStep?.id ?? '']?.el ?? null;
+        const target = resolveTargetElement(targetsRef.current[activeStep?.id ?? '']?.el ?? null);
         if (!target) {
             setHighlightRect(null);
             return;
@@ -272,8 +302,8 @@ const OnboardingSpotlight = ({
     }, [isOpen, activeStep?.id]);
 
     const registerTarget = useCallback(
-        (id: string, el: HTMLDivElement | null, showIndicator?: boolean) => {
-            targetsRef.current[id] = { el, showIndicator };
+        (id: string, el: HTMLDivElement | null, showIndicator?: boolean, usePortalIndicator?: boolean) => {
+            targetsRef.current[id] = { el, showIndicator, usePortalIndicator };
             // ✅ Some targets (e.g. modal contents) mount *after* the step becomes active.
             // When the active step's target is registered/unregistered, re-measure so the overlay can appear.
             if (!isOpen) return;
@@ -312,7 +342,7 @@ const OnboardingSpotlight = ({
     //   so we scroll the closest *scrollable* parent just enough to reveal the target with margin.
     useLayoutEffect(() => {
         if (!isOpen) return;
-        const target = targetsRef.current[activeStep?.id ?? '']?.el ?? null;
+        const target = resolveTargetElement(targetsRef.current[activeStep?.id ?? '']?.el ?? null);
         if (!target) return;
 
         const scrollParent = findScrollableYParent(target);
@@ -356,7 +386,7 @@ const OnboardingSpotlight = ({
 
     useEffect(() => {
         if (!isOpen) return;
-        const target = targetsRef.current[activeStep?.id ?? '']?.el ?? null;
+        const target = resolveTargetElement(targetsRef.current[activeStep?.id ?? '']?.el ?? null);
         if (!target || typeof ResizeObserver === 'undefined') return;
         const observer = new ResizeObserver(() => updateHighlightRect());
         observer.observe(target);
@@ -374,7 +404,7 @@ const OnboardingSpotlight = ({
 
     useEffect(() => {
         if (!isOpen) return;
-        const target = targetsRef.current[activeStep?.id ?? '']?.el ?? null;
+        const target = resolveTargetElement(targetsRef.current[activeStep?.id ?? '']?.el ?? null);
         if (!target) return;
         const shouldAdvance = activeStep?.advanceOnTargetClick ?? advanceOnTargetClick;
         if (!shouldAdvance) return;
@@ -399,7 +429,9 @@ const OnboardingSpotlight = ({
     const isActiveStepComplete = activeStep?.id ? completedStepIds.has(activeStep.id) : true;
     const shouldDisableNext = requiresTargetAction || (requiresCompletion && !isActiveStepComplete);
     const shouldHideNext = requiresTargetAction || (activeStep?.hideNext ?? true);
-    const shouldShowIndicator = Boolean(targetsRef.current[activeStep?.id ?? '']?.showIndicator);
+    const shouldShowIndicator =
+        Boolean(targetsRef.current[activeStep?.id ?? '']?.showIndicator) &&
+        Boolean(targetsRef.current[activeStep?.id ?? '']?.usePortalIndicator ?? true);
 
     return (
         <SpotlightContext.Provider value={spotlightContextValue}>
