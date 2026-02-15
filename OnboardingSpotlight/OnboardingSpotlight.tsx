@@ -44,6 +44,7 @@ type Props = {
     showSkip?: boolean;
     advanceOnTargetClick?: boolean;
     closeOnBackdrop?: boolean;
+    closeOnEsc?: boolean;
     blockOutside?: boolean;
     onStepChange?: (step: Step, index: number) => void;
     onClose?: () => void;
@@ -170,6 +171,7 @@ const OnboardingSpotlight = ({
     showSkip = true,
     advanceOnTargetClick = false,
     closeOnBackdrop = true,
+    closeOnEsc = true,
     blockOutside = true,
     onStepChange,
     onClose,
@@ -396,12 +398,13 @@ const OnboardingSpotlight = ({
 
     useEffect(() => {
         if (!isOpen) return;
+        if (!closeOnEsc) return;
         const handleKeyDown = (event: KeyboardEvent) => {
             if (event.key === 'Escape') handleClose();
         };
         window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
-    }, [isOpen, handleClose]);
+    }, [isOpen, closeOnEsc, handleClose]);
 
     useEffect(() => {
         if (!isOpen) return;
@@ -433,6 +436,7 @@ const OnboardingSpotlight = ({
     const shouldShowIndicator =
         Boolean(targetsRef.current[activeStep?.id ?? '']?.showIndicator) &&
         Boolean(targetsRef.current[activeStep?.id ?? '']?.usePortalIndicator ?? true);
+    const indicatorAnimationKey = `${activeStep?.id ?? 'none'}-${activeIndex}`;
 
     return (
         <SpotlightContext.Provider value={spotlightContextValue}>
@@ -532,6 +536,7 @@ const OnboardingSpotlight = ({
                                         />
                                         {shouldShowIndicator && (
                                             <div
+                                                key={indicatorAnimationKey}
                                                 aria-hidden
                                                 className={styles.SpotlightIndicator}
                                                 style={{
