@@ -1,6 +1,6 @@
 import Lottie from 'lottie-react';
 import React from 'react';
-import loadingAnimation from '@/shared/assets/lotties/loading.json';
+import loadingAnimation from './assets/loading.json';
 
 const styles: { [key: string]: React.CSSProperties } = {
     container: {
