@@ -38,6 +38,37 @@ type ScheduleCalendarCalendarProps = {
 
 const getEventCategory = (e: CalendarEvent) => String(e.extendedProps?.category ?? '');
 
+// label 색
+const DESIGNER_EVENT_COLOR_CACHE = new Map<string, { backgroundColor: string; borderColor: string }>();
+
+const hashString = (value: string) => {
+    let hash = 0;
+    for (let i = 0; i < value.length; i += 1) {
+        hash = (hash << 5) - hash + value.charCodeAt(i);
+        hash |= 0;
+    }
+    return Math.abs(hash);
+};
+
+const getDesignerEventColors = (designerUUID: string) => {
+    const cached = DESIGNER_EVENT_COLOR_CACHE.get(designerUUID);
+    if (cached) return cached;
+
+    const hash = hashString(designerUUID);
+    const hue = hash % 360;
+    const saturation = 74;
+    const lightness = 94;
+    const borderLightness = Math.max(58, lightness - 12);
+
+    const colors = {
+        backgroundColor: `hsl(${hue} ${saturation}% ${lightness}%)`,
+        borderColor: `hsl(${hue} ${Math.max(40, saturation - 12)}% ${borderLightness}%)`,
+    };
+
+    DESIGNER_EVENT_COLOR_CACHE.set(designerUUID, colors);
+    return colors;
+};
+
 const normalizeDay = (d: Date) => {
     const nd = new Date(d);
     nd.setHours(0, 0, 0, 0);
@@ -79,6 +110,25 @@ export const ScheduleCalendarCalendar = ({
         const selectedSet = new Set(selected);
         return ctx.events.filter((e) => selectedSet.has(getEventCategory(e) as FilterId));
     }, [ctx.events, selected]);
+
+    const coloredEvents = useMemo(
+        () =>
+            filteredEvents.map((event) => {
+                const designerUUID = String(event.extendedProps?.designerUUID ?? '').trim();
+
+                if (!designerUUID) return event;
+                if (event.backgroundColor || event.borderColor) return event;
+
+                const colors = getDesignerEventColors(designerUUID);
+
+                return {
+                    ...event,
+                    ...colors,
+                    textColor: event.textColor ?? '#111111',
+                };
+            }),
+        [filteredEvents]
+    );
 
     /**
      * ✅ ctx -> FullCalendar 동기화 (진짜 다를 때만)
@@ -301,7 +351,7 @@ export const ScheduleCalendarCalendar = ({
                 selectAllow={handleSelectAllow}
                 unselect={handleUnselect}
                 editable
-                events={[...filteredEvents, ...(draftEvent ? [draftEvent] : [])]}
+                events={[...coloredEvents, ...(draftEvent ? [draftEvent] : [])]}
                 eventClassNames={(arg) => {
                     const cat = arg.event.extendedProps?.category as string | undefined;
                     const group = cat?.split('_')[0];
