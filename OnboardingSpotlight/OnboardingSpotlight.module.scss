@@ -119,10 +119,10 @@
 .Card {
     position: fixed;
     z-index: 10002;
-    width: 280px;
+    width: 340px;
     background: var(--White1);
-    border-radius: var(--RadiusLg, 12px);
-    padding: 14px;
+    border-radius: var(--RadiusLg, 14px);
+    padding: 18px;
     // border: 1px solid color-mix(in srgb, var(--Gray3) 40%, transparent);
     box-shadow:
         0 10px 24px rgba(15, 23, 42, 0.16),
@@ -130,16 +130,16 @@
 }
 
 .StepPill {
-    font-size: 11px;
-    padding: 2px 8px;
+    font-size: 13px;
+    padding: 4px 10px;
     border-radius: 999px;
     background: rgba(148, 163, 184, 0.2);
     color: var(--Gray2);
 }
 
 .StepDot {
-    width: 6px;
-    height: 6px;
+    width: 8px;
+    height: 8px;
     border-radius: 999px;
     background: var(--Primary1);
 }
@@ -148,9 +148,9 @@
     border: 1px solid var(--Primary1);
     background: var(--Primary1);
     color: #ffffff;
-    border-radius: 8px;
-    padding: 6px 10px;
-    font-size: 12px;
+    border-radius: 10px;
+    padding: 8px 14px;
+    font-size: 16px;
     font-weight: 600;
     cursor: pointer;
     box-shadow: 0 6px 12px rgba(232, 135, 49, 0.18);
@@ -170,9 +170,9 @@
     border: 1px solid rgba(148, 163, 184, 0.6);
     background: var(--White1);
     color: var(--Gray1);
-    border-radius: 8px;
-    padding: 6px 10px;
-    font-size: 12px;
+    border-radius: 10px;
+    padding: 8px 14px;
+    font-size: 16px;
     font-weight: 600;
     cursor: pointer;
     transition: background 120ms ease;
@@ -197,7 +197,7 @@
     border: none;
     background: transparent;
     color: var(--Gray3);
-    font-size: 12px;
+    font-size: 14px;
     cursor: pointer;
     transition: color 120ms ease;
 }
@@ -221,7 +221,7 @@
     color: #ffffff;
     padding: 4px 8px;
     border-radius: 8px;
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 600;
     box-shadow: 0 6px 14px rgba(232, 135, 49, 0.24);
     pointer-events: none;

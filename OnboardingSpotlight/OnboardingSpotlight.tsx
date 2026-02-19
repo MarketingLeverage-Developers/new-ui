@@ -14,6 +14,11 @@ type HighlightRect = {
     height: number;
 };
 
+type CardSize = {
+    width: number;
+    height: number;
+};
+
 type Step = {
     id: string;
     title: string;
@@ -50,6 +55,8 @@ type Props = {
     onClose?: () => void;
     onComplete?: () => void;
     wrapperStyle?: React.CSSProperties;
+    cardClassName?: string;
+    cardStyle?: React.CSSProperties;
 };
 
 type TargetProps = {
@@ -77,6 +84,10 @@ type SpotlightContextValue = {
 
 const DEFAULT_PADDING = 8;
 const DEFAULT_SINGLE_STEP_ID = 'default';
+const DEFAULT_CARD_SIZE: CardSize = { width: 340, height: 220 };
+const CARD_MARGIN = 16;
+const CARD_GAP = 14;
+const CARD_TARGET_OFFSET_Y = 34;
 
 const findScrollableYParent = (el: HTMLElement | null) => {
     let parent = el?.parentElement ?? null;
@@ -101,6 +112,8 @@ const prefersReducedMotion = () =>
     typeof window !== 'undefined' &&
     typeof window.matchMedia === 'function' &&
     window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+const clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max);
 
 const placementStyles: Record<Placement, React.CSSProperties> = {
     'top-right': { top: 24, right: 24 },
@@ -132,7 +145,6 @@ const Target = ({
         ctx?.registerTarget(stepId, ref.current, showIndicator, usePortalIndicator);
         return () => ctx?.registerTarget(stepId, null, showIndicator, usePortalIndicator);
     }, [ctx, stepId, showIndicator, usePortalIndicator]);
-
 
     return (
         <div
@@ -177,12 +189,16 @@ const OnboardingSpotlight = ({
     onClose,
     onComplete,
     wrapperStyle,
+    cardClassName,
+    cardStyle,
 }: Props) => {
     const [isOpen, setIsOpen] = useState(false);
     const [highlightRect, setHighlightRect] = useState<HighlightRect | null>(null);
     const [activeIndex, setActiveIndex] = useState(0);
+    const [cardSize, setCardSize] = useState<CardSize>(DEFAULT_CARD_SIZE);
     const [completedStepIds, setCompletedStepIds] = useState<Set<string>>(new Set());
     const lastReplayKeyRef = useRef<Props['replayKey']>(replayKey);
+    const cardRef = useRef<HTMLDivElement | null>(null);
     const targetsRef = useRef<
         Record<string, { el: HTMLDivElement | null; showIndicator?: boolean; usePortalIndicator?: boolean }>
     >({});
@@ -396,6 +412,22 @@ const OnboardingSpotlight = ({
         return () => observer.disconnect();
     }, [isOpen, updateHighlightRect, activeStep?.id]);
 
+    useLayoutEffect(() => {
+        if (!isOpen) return;
+        const cardEl = cardRef.current;
+        if (!cardEl || typeof ResizeObserver === 'undefined') return;
+        const measure = () => {
+            const rect = cardEl.getBoundingClientRect();
+            const next = { width: rect.width, height: rect.height };
+            setCardSize((prev) => (prev.width === next.width && prev.height === next.height ? prev : next));
+        };
+
+        measure();
+        const observer = new ResizeObserver(measure);
+        observer.observe(cardEl);
+        return () => observer.disconnect();
+    }, [isOpen]);
+
     useEffect(() => {
         if (!isOpen) return;
         if (!closeOnEsc) return;
@@ -418,7 +450,48 @@ const OnboardingSpotlight = ({
     }, [isOpen, activeStep?.id, activeStep?.advanceOnTargetClick, advanceOnTargetClick, handleNext]);
 
     const resolvedPlacement = activeStep?.placement ?? placement;
-    const cardStyle = useMemo(() => placementStyles[resolvedPlacement], [resolvedPlacement]);
+    const resolvedCardPlacementStyle = useMemo<React.CSSProperties>(() => {
+        if (!highlightRect || typeof window === 'undefined') return placementStyles[resolvedPlacement];
+
+        const viewportW = window.innerWidth || document.documentElement.clientWidth || 0;
+        const viewportH = window.innerHeight || document.documentElement.clientHeight || 0;
+        const cardW = cardSize.width || DEFAULT_CARD_SIZE.width;
+        const cardH = cardSize.height || DEFAULT_CARD_SIZE.height;
+
+        let left =
+            resolvedPlacement === 'top-left' || resolvedPlacement === 'bottom-left'
+                ? highlightRect.left - cardW - CARD_GAP
+                : highlightRect.left + highlightRect.width + CARD_GAP;
+        let top =
+            resolvedPlacement === 'bottom-left' || resolvedPlacement === 'bottom-right'
+                ? highlightRect.top + highlightRect.height + CARD_GAP + CARD_TARGET_OFFSET_Y
+                : highlightRect.top + CARD_TARGET_OFFSET_Y;
+
+        const canPlaceRight = highlightRect.left + highlightRect.width + CARD_GAP + cardW <= viewportW - CARD_MARGIN;
+        const canPlaceLeft = highlightRect.left - cardW - CARD_GAP >= CARD_MARGIN;
+        const canPlaceBelow = highlightRect.top + highlightRect.height + CARD_GAP + cardH <= viewportH - CARD_MARGIN;
+        const canPlaceAbove = highlightRect.top - cardH - CARD_GAP >= CARD_MARGIN;
+
+        if (left + cardW > viewportW - CARD_MARGIN) {
+            left = canPlaceLeft ? highlightRect.left - cardW - CARD_GAP : viewportW - cardW - CARD_MARGIN;
+        }
+        if (left < CARD_MARGIN) {
+            left = canPlaceRight ? highlightRect.left + highlightRect.width + CARD_GAP : CARD_MARGIN;
+        }
+        if (top + cardH > viewportH - CARD_MARGIN) {
+            top = canPlaceAbove ? highlightRect.top - cardH - CARD_GAP : viewportH - cardH - CARD_MARGIN;
+        }
+        if (top < CARD_MARGIN) {
+            top = canPlaceBelow ? highlightRect.top + highlightRect.height + CARD_GAP : CARD_MARGIN;
+        }
+
+        return {
+            top: clamp(top, CARD_MARGIN, Math.max(CARD_MARGIN, viewportH - cardH - CARD_MARGIN)),
+            left: clamp(left, CARD_MARGIN, Math.max(CARD_MARGIN, viewportW - cardW - CARD_MARGIN)),
+            right: 'auto',
+            bottom: 'auto',
+        };
+    }, [resolvedPlacement, highlightRect, cardSize.width, cardSize.height]);
 
     const computedStepLabel = useMemo(() => {
         if (activeStep?.stepLabel) return activeStep.stepLabel;
@@ -551,25 +624,27 @@ const OnboardingSpotlight = ({
                                 );
                             })()}
                         <div
+                            ref={cardRef}
                             role="dialog"
                             aria-modal="true"
                             style={{
+                                ...resolvedCardPlacementStyle,
                                 ...cardStyle,
                             }}
-                            className={styles.Card}
+                            className={[styles.Card, cardClassName].filter(Boolean).join(' ')}
                             data-placement={resolvedPlacement}
                         >
                             <Flex direction="column" gap={10}>
                                 <Flex align="center" justify="space-between">
                                     <Flex align="center" gap={8}>
                                         <span className={styles.StepDot} />
-                                        <Text fontSize={15} fontWeight={600} textColor={getThemeColor('Gray1')}>
+                                        <Text fontSize={18} fontWeight={600} textColor={getThemeColor('Gray1')}>
                                             {stepTitle}
                                         </Text>
                                     </Flex>
                                     {computedStepLabel && <span className={styles.StepPill}>{computedStepLabel}</span>}
                                 </Flex>
-                                <Text fontSize={13} textColor={getThemeColor('Gray2')} style={{ lineHeight: '18px' }}>
+                                <Text fontSize={15} textColor={getThemeColor('Gray2')} style={{ lineHeight: '22px' }}>
                                     {stepDescription}
                                 </Text>
                                 {isMultiStep ? (
