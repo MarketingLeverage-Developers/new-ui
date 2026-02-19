@@ -5,7 +5,7 @@ import styles from './BaseAlterFileUploaderDropzone.module.scss';
 import { useFileUploader } from '@/shared/primitives/D/components/FileUploader/FileUploader';
 
 import Button from '@/shared/primitives/D/components/Button/Button';
-import PictureIcon from '@/shared/assets/images/Picture.svg';
+import PictureIcon from './assets/Picture.svg';
 import { Common } from '@/shared/primitives/C/Common';
 
 export type BaseAlterFileUploaderDropzoneProps = {

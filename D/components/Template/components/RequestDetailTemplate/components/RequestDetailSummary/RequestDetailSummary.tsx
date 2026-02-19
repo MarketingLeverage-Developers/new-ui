@@ -2,7 +2,7 @@ import React from 'react';
 import BaseChip from '@/shared/primitives/BaseChip/BaseChip';
 import SectionDiver from '@/shared/primitives/SectionDiver/SectionDiver';
 import styles from './RequestDetailSummary.module.scss';
-import DefaultSummaryImage from '@/shared/assets/images/Picture.svg';
+import DefaultSummaryImage from './assets/Picture.svg';
 import { Common } from '@/shared/primitives/C/Common';
 
 export type RequestDetailSummaryTag = {

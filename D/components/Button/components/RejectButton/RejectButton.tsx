@@ -8,7 +8,7 @@ import { toCssUnit } from '@/shared/utils';
 import type { CSSLength } from '@/shared/types';
 import { Image } from '../../../../../Image/Image';
 import Flex from '../../../../../Flex/Flex';
-import removeIcon from '@/shared/assets/images/removebg-preview.svg';
+import removeIcon from './assets/removebg-preview.svg';
 import Text from '../../../../../Text/Text';
 import type { PaddingSize } from '@/shared/types/css/PaddingSize';
 import { toCssPadding } from '@/shared/utils/css/toCssPadding';

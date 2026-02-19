@@ -5,8 +5,8 @@ import styles from './BaseFileUploaderDropzone.module.scss';
 import { useFileUploader } from '@/shared/primitives/D/components/FileUploader/FileUploader';
 
 import Button from '@/shared/primitives/D/components/Button/Button';
-import FolderIcon from '@/shared/assets/images/Folder.svg';
-import PictureIcon from '@/shared/assets/images/Picture.svg';
+import FolderIcon from './assets/Folder.svg';
+import PictureIcon from './assets/Picture.svg';
 import { Common } from '@/shared/primitives/C/Common';
 
 export type BaseFileUploaderDropzoneProps = Omit<HTMLAttributes<HTMLDivElement>, 'children'> & {

@@ -2,7 +2,7 @@
 import React from 'react';
 import styles from './Image.module.scss';
 import { getThemeColor } from '@/shared/utils/css/getThemeColor';
-import Picture from '@/shared/assets/images/Picture.svg';
+import Picture from './assets/Picture.svg';
 import BaseButton from '@/shared/primitives/BaseButton/BaseButton';
 import FileUploader, { useFileUploader } from '@/shared/headless/FileUploader/FileUploader';
 

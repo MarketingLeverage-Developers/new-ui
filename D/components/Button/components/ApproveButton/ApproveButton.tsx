@@ -11,7 +11,7 @@ import classNames from 'classnames';
 import Flex from '../../../../../Flex/Flex';
 import { Image } from '../../../../../Image/Image';
 import Text from '../../../../../Text/Text';
-import SignIcon from '@/shared/assets/images/sign.svg';
+import SignIcon from './assets/sign.svg';
 import { getThemeColor } from '@/shared/utils/css/getThemeColor';
 
 export type ApproveButtonProps = {

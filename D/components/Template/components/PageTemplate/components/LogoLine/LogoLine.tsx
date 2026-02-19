@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './LogoLine.module.scss';
-import Logo from '@/shared/assets/images/logo.svg';
+import Logo from './assets/logo.svg';
 
 export const LogoLine = () => (
     <div className={styles.LogoLine}>

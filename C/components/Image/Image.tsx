@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import styles from './Image.module.scss';
 import type { CSSLength } from '@/shared/types';
 import { toCssUnit } from '@/shared/utils';
-import DefaultFallbackImage from '@/shared/assets/images/logo.svg';
+import DefaultFallbackImage from './assets/logo.svg';
 
 type ImageProps = React.HTMLAttributes<HTMLImageElement> & {
     src?: string;
