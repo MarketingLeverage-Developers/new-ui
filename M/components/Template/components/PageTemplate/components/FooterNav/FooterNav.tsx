@@ -9,9 +9,9 @@ import { useProgressNavigate } from '@/features/route-progress/logic/hooks';
 import { useUserAuthQuery } from '@/features/user/auth/logic/query';
 import { USER_ROLE } from '@/features/user/auth/logic/types';
 import useUserLogoutMutation from '@/features/user/logout/logic/mutation';
-import Modal from '@/shared/headless/Modal/Modal';
-import { useToast } from '@/shared/headless/ToastProvider/ToastProvider';
-import { useTheme } from '@/shared/hooks/client/useTheme';
+import Modal from '../../../../../../../shared/headless/Modal/Modal';
+import { useToast } from '../../../../../../../shared/headless/ToastProvider/ToastProvider';
+import { useTheme } from '../../../../../../../shared/hooks/client/useTheme';
 import styles from './FooterNav.module.scss';
 
 export type FooterNavVariant = 'base';

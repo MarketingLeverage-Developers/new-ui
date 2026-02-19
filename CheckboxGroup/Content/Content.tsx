@@ -1,10 +1,10 @@
 import React from 'react';
 import styles from '../CheckboxGroup.module.scss';
-import type { PaddingSize } from '@/shared/types/css/PaddingSize';
-import type { CSSVariables } from '@/shared/types/css/CSSVariables';
-import { toCssPadding } from '@/shared/utils/css/toCssPadding';
-import type { CSSLength } from '@/shared/types';
-import { toCssUnit } from '@/shared/utils';
+import type { PaddingSize } from '../../shared/types/css/PaddingSize';
+import type { CSSVariables } from '../../shared/types/css/CSSVariables';
+import { toCssPadding } from '../../shared/utils/css/toCssPadding';
+import type { CSSLength } from '../../shared/types';
+import { toCssUnit } from '../../shared/utils';
 type ContentProps = {
     children: React.ReactNode;
     padding?: PaddingSize;

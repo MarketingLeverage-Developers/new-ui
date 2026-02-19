@@ -1,9 +1,9 @@
-import Toggle, { useToggle } from '@/shared/headless/Toggle/Toggle';
+import Toggle, { useToggle } from '../../shared/headless/Toggle/Toggle';
 import styles from './ThemeTrigger.module.scss';
 import React from 'react';
 import classNames from 'classnames';
 import { FiSun, FiMoon } from 'react-icons/fi';
-import { getThemeColor } from '@/shared/utils/css/getThemeColor';
+import { getThemeColor } from '../../shared/utils/css/getThemeColor';
 
 type TriggerProps = React.ComponentProps<typeof Toggle.Trigger>;
 

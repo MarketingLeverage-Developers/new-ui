@@ -2,8 +2,8 @@ import React from 'react';
 import Flex from '../Flex/Flex';
 import Text from '../Text/Text';
 import { Image } from '../Image/Image';
-import NoDataIcon from './assets/no-data.png';
-import { getThemeColor } from '@/shared/utils/css/getThemeColor';
+import NoDataIcon from '../shared/assets/components/EmptyFallback/no-data.png';
+import { getThemeColor } from '../shared/utils/css/getThemeColor';
 
 const EmptyFallback = () => (
     <Flex direction="column" align="center" gap={7}>

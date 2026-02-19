@@ -1,6 +1,6 @@
 import React from 'react';
 import Text from '../Text/Text';
-import { getThemeColor } from '@/shared/utils/css/getThemeColor';
+import { getThemeColor } from '../shared/utils/css/getThemeColor';
 
 type Props = {
     onClick?: () => void;

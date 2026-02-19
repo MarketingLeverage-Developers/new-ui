@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import TemplateSelectModal from '../../TemplateSelectModal';
 import type { TemplateListItem } from '@/features/template/list/logic/types';
-import { BaseTooltip } from '@/shared/primitives/BaseTooltip/BaseTooltip';
-import { Image } from '@/shared/primitives/Image/Image';
-import { Desktop } from '@/shared/primitives/D/Desktop';
-import Flex from '@/shared/primitives/Flex/Flex';
-import { getThemeColor } from '@/shared/utils/css/getThemeColor';
+import { BaseTooltip } from '../../../BaseTooltip/BaseTooltip';
+import { Image } from '../../../Image/Image';
+import { Desktop } from '../../../D/Desktop';
+import Flex from '../../../Flex/Flex';
+import { getThemeColor } from '../../../shared/utils/css/getThemeColor';
 import { requestImageUpload } from '@/features/image-upload/logic/service';
-import type { ServerImage } from '@/shared/types/common';
+import type { ServerImage } from '../../../shared/types/common';
 
 const { FileUploader, TextArea, Calendar, Box, Button, Text, MultiSelect } = Desktop;
 

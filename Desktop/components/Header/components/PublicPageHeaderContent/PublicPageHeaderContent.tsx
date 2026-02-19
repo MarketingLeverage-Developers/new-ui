@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './PublicPageHeaderContent.module.scss';
-import LogoLandscapeText from '@/shared/primitives/LogoLandscapeText/LogoLandscapeText';
+import LogoLandscapeText from '../../../../../LogoLandscapeText/LogoLandscapeText';
 
 const PublicPageHeaderContent = () => (
     <div className={styles.PublicPageHeaderContent}>

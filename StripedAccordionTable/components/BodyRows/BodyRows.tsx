@@ -5,7 +5,7 @@ import {
     RowDetailsProvider,
     useDetailsRenderer,
     useTableContext,
-} from '@/shared/headless/AccordionTable/AccordionTable';
+} from '../../../shared/headless/AccordionTable/AccordionTable';
 
 export const BodyRows: React.FC = () => {
     const { state } = useTableContext();

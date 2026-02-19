@@ -3,7 +3,7 @@
 import React, { useState, type InputHTMLAttributes } from 'react';
 import styles from './RoundedInput.module.scss';
 import classNames from 'classnames';
-import { STATUS, type Status } from '@/shared/types/css/Status';
+import { STATUS, type Status } from '../shared/types/css/Status';
 
 type RoundedInputProps = {
     wrapperStyle?: React.CSSProperties;

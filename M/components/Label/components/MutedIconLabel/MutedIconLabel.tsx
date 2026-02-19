@@ -2,7 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 import styles from './MutedIconLabel.module.scss';
 import type { LabelCommonProps } from '../../Label';
-import type { CSSVariables } from '@/shared/types/css/CSSVariables';
+import type { CSSVariables } from '../../../../../shared/types/css/CSSVariables';
 
 const MutedIconLabel = (props: LabelCommonProps) => {
     const { icon, direction = 'row', required = false, gap = 8, children, className, text, style, ...rest } = props;

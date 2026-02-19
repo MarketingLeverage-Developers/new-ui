@@ -1,17 +1,17 @@
 import React, { type ButtonHTMLAttributes } from 'react';
 import styles from './RejectButton.module.scss';
-import type { HexColor } from '@/shared/types/css/HexColor';
-import type { ThemeColorVar } from '@/shared/types/css/ThemeColorTokens';
-import type { CSSVariables } from '@/shared/types/css/CSSVariables';
+import type { HexColor } from '../shared/types/css/HexColor';
+import type { ThemeColorVar } from '../shared/types/css/ThemeColorTokens';
+import type { CSSVariables } from '../shared/types/css/CSSVariables';
 import classNames from 'classnames';
-import { toCssUnit } from '@/shared/utils';
-import type { CSSLength } from '@/shared/types';
+import { toCssUnit } from '../shared/utils';
+import type { CSSLength } from '../shared/types';
 import { Image } from '../Image/Image';
 import Flex from '../Flex/Flex';
-import removeIcon from './assets/removebg-preview.svg';
+import removeIcon from '../shared/assets/components/RejectButton/removebg-preview.svg';
 import Text from '../Text/Text';
-import type { PaddingSize } from '@/shared/types/css/PaddingSize';
-import { toCssPadding } from '@/shared/utils/css/toCssPadding';
+import type { PaddingSize } from '../shared/types/css/PaddingSize';
+import { toCssPadding } from '../shared/utils/css/toCssPadding';
 
 type RejectButtonPros = {
     bgColor?: HexColor | ThemeColorVar;

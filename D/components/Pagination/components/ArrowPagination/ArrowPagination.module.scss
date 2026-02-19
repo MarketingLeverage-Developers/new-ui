@@ -1,0 +1,38 @@
+.ArrowPagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+}
+
+.PagingButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    color: var(--Gray3);
+    padding: 4px;
+    font-weight: 400;
+    font-size: 18px;
+    height: 34px;
+    aspect-ratio: 1 / 1;
+}
+
+.PagingButton:disabled {
+    color: var(--Gray5);
+    cursor: default;
+}
+
+.PagingButton.Active:disabled {
+    color: var(--Gray1);
+}
+
+.Active {
+    color: var(--Gray1);
+    background-color: var(--Gray5);
+    border-radius: 50%;
+    font-weight: 600;
+    text-align: center;
+}

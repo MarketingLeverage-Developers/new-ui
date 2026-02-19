@@ -4,9 +4,9 @@ import styles from './BaseBox.module.scss';
 
 import type { BoxCommonProps } from '../../Box';
 
-import type { CSSVariables } from '@/shared/types/css/CSSVariables';
-import { toCssPadding } from '@/shared/utils/css/toCssPadding';
-import { toCssUnit } from '@/shared/utils';
+import type { CSSVariables } from '../../../../../shared/types/css/CSSVariables';
+import { toCssPadding } from '../../../../../shared/utils/css/toCssPadding';
+import { toCssUnit } from '../../../../../shared/utils';
 
 export type BaseBoxExtraProps = {
     radius?: number;

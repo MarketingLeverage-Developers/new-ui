@@ -1,8 +1,8 @@
-import type { CSSLength } from '@/shared/types';
-import type { CSSVariables } from '@/shared/types/css/CSSVariables';
-import type { PaddingSize } from '@/shared/types/css/PaddingSize';
-import { toCssUnit } from '@/shared/utils';
-import { toCssPadding } from '@/shared/utils/css/toCssPadding';
+import type { CSSLength } from '../shared/types';
+import type { CSSVariables } from '../shared/types/css/CSSVariables';
+import type { PaddingSize } from '../shared/types/css/PaddingSize';
+import { toCssUnit } from '../shared/utils';
+import { toCssPadding } from '../shared/utils/css/toCssPadding';
 import styles from './PillButton.module.scss';
 import React, { type HTMLAttributes } from 'react';
 import classNames from 'classnames';

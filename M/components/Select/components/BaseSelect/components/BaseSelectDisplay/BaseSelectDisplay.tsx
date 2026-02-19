@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
-import Dropdown from '@/shared/headless/Dropdown/Dropdown';
-import { useSelect } from '@/shared/headless/Select/Select';
+import Dropdown from '../../../../../../../shared/headless/Dropdown/Dropdown';
+import { useSelect } from '../../../../../../../shared/headless/Select/Select';
 import { MdKeyboardArrowDown } from 'react-icons/md';
 import styles from './BaseSelectDisplay.module.scss';
 

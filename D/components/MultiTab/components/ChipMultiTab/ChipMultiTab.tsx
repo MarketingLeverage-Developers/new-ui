@@ -2,7 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 import styles from './ChipMultiTab.module.scss';
 
-import ManySelect from '@/shared/headless/ManySelect/ManySelect';
+import ManySelect from '../../../../../shared/headless/ManySelect/ManySelect';
 import ChipMultiTabItem, { type ChipMultiTabItemProps } from './components/ChipMultiTabItem/ChipMultiTabItem';
 
 export type ChipMultiTabExtraProps = {

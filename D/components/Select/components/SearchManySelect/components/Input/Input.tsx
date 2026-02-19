@@ -1,8 +1,8 @@
-import Dropdown from '@/shared/headless/Dropdown/Dropdown';
-import SearchInput from '@/shared/primitives/SearchInput/SearchInput';
+import Dropdown from '../../../../../../../shared/headless/Dropdown/Dropdown';
+import SearchInput from '../../../../../../../SearchInput/SearchInput';
 import React from 'react';
 import styles from './Input.module.scss';
-import { useQuerySearch } from '@/shared/headless/QuerySearch/QuerySearch';
+import { useQuerySearch } from '../../../../../../../shared/headless/QuerySearch/QuerySearch';
 
 type SearchManySelectInputProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, 'value' | 'onChange' | 'placeholder'>;
 

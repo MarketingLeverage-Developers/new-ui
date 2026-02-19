@@ -2,11 +2,11 @@ import React from 'react';
 import classNames from 'classnames';
 import styles from './FlexBox.module.scss';
 
-import { toCssUnit } from '@/shared/utils';
-import type { PaddingSize } from '@/shared/types/css/PaddingSize';
-import type { CSSVariables } from '@/shared/types/css/CSSVariables';
-import { toCssPadding } from '@/shared/utils/css/toCssPadding';
-import type { CSSLength } from '@/shared/types';
+import { toCssUnit } from '../../../../../shared/utils';
+import type { PaddingSize } from '../../../../../shared/types/css/PaddingSize';
+import type { CSSVariables } from '../../../../../shared/types/css/CSSVariables';
+import { toCssPadding } from '../../../../../shared/utils/css/toCssPadding';
+import type { CSSLength } from '../../../../../shared/types';
 import type { BoxCommonProps } from '../../Box';
 
 export type FlexBoxExtraProps = {

@@ -1,12 +1,12 @@
-import type { CSSVariables } from '@/shared/types/css/CSSVariables';
-import type { PaddingSize } from '@/shared/types/css/PaddingSize';
-import { toCssUnit } from '@/shared/utils';
-import { toCssPadding } from '@/shared/utils/css/toCssPadding';
+import type { CSSVariables } from '../../../shared/types/css/CSSVariables';
+import type { PaddingSize } from '../../../shared/types/css/PaddingSize';
+import { toCssUnit } from '../../../shared/utils';
+import { toCssPadding } from '../../../shared/utils/css/toCssPadding';
 import classNames from 'classnames';
 import React from 'react';
 import styles from './Header.module.scss';
-import BaseModalClose from '@/shared/primitives/BaseModalClose/BaseModalClose';
-import type { CSSLength } from '@/shared/types';
+import BaseModalClose from '../../../BaseModalClose/BaseModalClose';
+import type { CSSLength } from '../../../shared/types';
 
 type HeaderProps = {
     subTitle?: string;

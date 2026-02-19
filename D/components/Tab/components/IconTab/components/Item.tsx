@@ -1,5 +1,5 @@
-import Select from '@/shared/headless/Select/Select';
-import { useSelect } from '@/shared/headless/Select/Select';
+import Select from '../../../../../../shared/headless/Select/Select';
+import { useSelect } from '../../../../../../shared/headless/Select/Select';
 import classNames from 'classnames';
 import styles from '../IconTab.module.scss';
 import React from 'react';

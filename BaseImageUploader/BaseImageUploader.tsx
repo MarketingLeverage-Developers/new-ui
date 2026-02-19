@@ -1,6 +1,6 @@
 import React from 'react';
 import { Dropzone, FileList, ImageList } from './components';
-import ImageUploader from '@/shared/headless/ImageUploader/ImageUploader';
+import ImageUploader from '../shared/headless/ImageUploader/ImageUploader';
 import styles from './BaseImageUploader.module.scss';
 
 type BaseImageUploaderProps = {

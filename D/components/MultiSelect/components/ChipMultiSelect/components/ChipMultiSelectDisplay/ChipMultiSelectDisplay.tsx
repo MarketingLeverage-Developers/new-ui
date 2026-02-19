@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import classNames from 'classnames';
-import Dropdown from '@/shared/headless/Dropdown/Dropdown';
-import { useManySelect } from '@/shared/headless/ManySelect/ManySelect';
+import Dropdown from '../../../../../../../shared/headless/Dropdown/Dropdown';
+import { useManySelect } from '../../../../../../../shared/headless/ManySelect/ManySelect';
 import styles from './ChipMultiSelectDisplay.module.scss';
 
 export type ChipMultiSelectDisplayProps = {

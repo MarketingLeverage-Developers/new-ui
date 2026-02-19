@@ -1,4 +1,4 @@
-import AccordionTable from '@/shared/headless/AccordionTable/AccordionTable';
+import AccordionTable from '../../../shared/headless/AccordionTable/AccordionTable';
 import React from 'react';
 import styles from './Row.module.scss';
 

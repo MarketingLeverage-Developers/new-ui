@@ -1,10 +1,10 @@
 // TransparentUploader.Image
 import React from 'react';
 import styles from './Image.module.scss';
-import { getThemeColor } from '@/shared/utils/css/getThemeColor';
-import Picture from './assets/Picture.svg';
-import BaseButton from '@/shared/primitives/BaseButton/BaseButton';
-import FileUploader, { useFileUploader } from '@/shared/headless/FileUploader/FileUploader';
+import { getThemeColor } from '../../../shared/utils/css/getThemeColor';
+import Picture from '../../../shared/assets/components/TransparentUploader/components/Image/Picture.svg';
+import BaseButton from '../../../BaseButton/BaseButton';
+import FileUploader, { useFileUploader } from '../../../shared/headless/FileUploader/FileUploader';
 
 const IMG_ACCEPT = 'image/jpeg,image/png,image/gif,.jpg,.jpeg,.png,.gif';
 

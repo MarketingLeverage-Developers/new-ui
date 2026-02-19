@@ -1,5 +1,5 @@
 import React, { createContext, useContext } from 'react';
-import type HeadlessSelect from '@/shared/headless/Select/Select';
+import type HeadlessSelect from '../../../shared/headless/Select/Select';
 import BaseSelect from './components/BaseSelect/BaseSelect';
 import BaseSelectItem, { type BaseSelectItemProps } from './components/BaseSelect/components/BaseSelectItem/BaseSelectItem';
 import BaseSelectDisplay, {

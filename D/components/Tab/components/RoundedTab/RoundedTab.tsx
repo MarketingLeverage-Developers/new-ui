@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './RoundedTab.module.scss';
-import Select from '@/shared/headless/Select/Select';
+import Select from '../../../../../shared/headless/Select/Select';
 import { RoundedTabItem, type RoundedTabItemProps } from './components/Item';
 
 export type RoundedTabProps = React.ComponentProps<typeof Select> & {

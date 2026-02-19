@@ -2,7 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 import styles from './BaseAccordion.module.scss';
 
-import { Accordion as AccordionHeadless } from '@/shared/headless/Accordion/Accordion';
+import { Accordion as AccordionHeadless } from '../../../../../shared/headless/Accordion/Accordion';
 
 export type BaseAccordionExtraProps = {
     className?: string;

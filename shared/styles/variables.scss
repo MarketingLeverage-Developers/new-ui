@@ -1,0 +1,62 @@
+/* ---------- 1. Color Palette (Raw Values) ---------- */
+
+/* Grayscale — Light */
+$White1: #ffffff;
+$Black1: #161616;
+$Gray1: #333333;
+$Gray2: #666666;
+$Gray3: #999999;
+$Gray4: #cccccc;
+$Gray5: #eeeeee;
+$Gray6: #f4f4f4;
+$Gray7: #f8f8f8;
+
+/* Brand / Accent */
+$Blue1: #3b82f6;
+$Blue2: #eff6ff;
+
+/* Status — Light */
+$Red1: #ef3636;
+$Red2: #ffedeb;
+$Green1: #317b0f;
+$Green2: #e8fdde;
+
+/* Status — Dark */
+$RedD1: #ff6b6b; /* 어두운 배경에서 잘 보이는 밝은 빨강 */
+$RedD2: #5c1e1e; /* 붉은 틴트의 어두운 배경 */
+$GreenD1: #86efac; /* 어두운 배경에서 잘 보이는 밝은 초록 */
+$GreenD2: #14532d; /* 초록 틴트의 어두운 배경 */
+
+/* Primary (Brand Orange) — Light */
+$Primary1: #e88731; /* 메인(텍스트/아이콘/버튼) */
+$Primary2: #fff5eb; /* 가장 연한 배경 */
+$Primary3: #ffe8d2; /* 연한 배경 */
+$Primary4: #ffd8b2; /* hover/selected 배경 */
+$Primary5: #ffc489; /* active/pressed 배경 */
+$Primary6: #fffcf6; /* 더 연한 배경 */
+
+// 보색
+$Complementary1: #1979f8;
+$Complementary2: #edf4ff;
+
+/* Primary (Brand Orange) — Dark
+   - 다크 배경(#161616)에서 충분한 대비 확보
+   - 채도 조절 / 명도 상향
+*/
+$PrimaryD1: #ff9a3e; /* 메인(텍스트/아이콘/버튼) — 대비 ↑ */
+$PrimaryD2: #2a1f18; /* 가장 어두운 배경 */
+$PrimaryD3: #3a2618; /* 어두운 배경 */
+$PrimaryD4: #4a2f1c; /* hover 배경 */
+$PrimaryD5: #5b3a22; /* active/pressed 배경 */
+$PrimaryD6: #6b4522; /* 더 어두운 배경 */
+
+// 보색 다크모드
+$ComplementaryD1: #1979f8;
+$ComplementaryD2: #edf4ff;
+
+/* 보조: 필요 시 알파 토큰(경계/포커스 링 등) — 선택 사항 */
+$PrimaryAlpha16: rgba(255, 154, 62, 0.16);
+$PrimaryAlpha24: rgba(255, 154, 62, 0.24);
+
+$Gradient1: linear-gradient(90deg, #ffb143 0%, #ff7a58 100%);
+$Gradient2: linear-gradient(180deg, #ff9a3e 0%, #ff5c00 100%);

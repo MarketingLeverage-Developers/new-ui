@@ -1,6 +1,6 @@
 import React from 'react';
 import CompactPagination from '../CompactPagination';
-import type { PaginationValueType } from '@/shared/headless/Pagination/Pagination';
+import type { PaginationValueType } from '../../shared/headless/Pagination/Pagination';
 
 type CompactPaginationButtonsProps = {
     onPagingButtonClick: (paginationValue: PaginationValueType) => void;

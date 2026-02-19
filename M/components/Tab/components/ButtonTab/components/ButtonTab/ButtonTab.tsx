@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import styles from './ButtonTab.module.scss';
-import Select from '@/shared/headless/Select/Select';
+import Select from '../../../../../../../shared/headless/Select/Select';
 import ButtonTabItem, { type ButtonTabItemProps } from './components/ButtonTabItem/ButtonTabItem';
 
 export type ButtonTabExtraProps = {

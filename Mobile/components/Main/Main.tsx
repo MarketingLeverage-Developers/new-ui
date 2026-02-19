@@ -1,8 +1,8 @@
 // 기능: 모바일 메인 컨테이너 - 내부 스크롤과 오버레이 레이어 분리 + 정적 속성(FilterLine) 타입 안전 부여
 import React from 'react';
-import type { CSSVariables } from '@/shared/types/css/CSSVariables';
-import type { HexColor } from '@/shared/types/css/HexColor';
-import type { ThemeColorVar } from '@/shared/types/css/ThemeColorTokens';
+import type { CSSVariables } from '../../../shared/types/css/CSSVariables';
+import type { HexColor } from '../../../shared/types/css/HexColor';
+import type { ThemeColorVar } from '../../../shared/types/css/ThemeColorTokens';
 import styles from './Main.module.scss';
 import { FilterLine } from './components/FilterLine/FilterLine';
 

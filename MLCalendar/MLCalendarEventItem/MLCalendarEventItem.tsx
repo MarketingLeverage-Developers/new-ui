@@ -1,7 +1,7 @@
-import BaseChip from '@/shared/primitives/BaseChip/BaseChip';
-import Text from '@/shared/primitives/Text/Text';
-import type { HexColor } from '@/shared/types/css/HexColor';
-import type { ThemeColorVar } from '@/shared/types/css/ThemeColorTokens';
+import BaseChip from '../../BaseChip/BaseChip';
+import Text from '../../Text/Text';
+import type { HexColor } from '../../shared/types/css/HexColor';
+import type { ThemeColorVar } from '../../shared/types/css/ThemeColorTokens';
 import type { EventContentArg } from '@fullcalendar/core/index.js';
 
 const MLCalendarEventItem = ({ arg }: { arg?: EventContentArg }) => {

@@ -1,4 +1,4 @@
-import { useModal } from '@/shared/headless/Modal/Modal';
+import { useModal } from '../shared/headless/Modal/Modal';
 import styles from './BaseModalClose.module.scss';
 import React from 'react';
 import { IoCloseSharp } from 'react-icons/io5';

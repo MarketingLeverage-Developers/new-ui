@@ -1,4 +1,4 @@
-import RoundedSelect from '@/shared/primitives/RoundedSelect/RoundedSelect';
+import RoundedSelect from '../../../RoundedSelect/RoundedSelect';
 type Props = {
     size: number;
     onClick: () => void;

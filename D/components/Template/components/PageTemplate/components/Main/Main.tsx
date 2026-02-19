@@ -1,8 +1,8 @@
 import React from 'react';
 import styles from './Main.module.scss';
-import type { HexColor } from '@/shared/types/css/HexColor';
-import type { ThemeColorVar } from '@/shared/types/css/ThemeColorTokens';
-import type { CSSVariables } from '@/shared/types/css/CSSVariables';
+import type { HexColor } from '../../../../../../../shared/types/css/HexColor';
+import type { ThemeColorVar } from '../../../../../../../shared/types/css/ThemeColorTokens';
+import type { CSSVariables } from '../../../../../../../shared/types/css/CSSVariables';
 import { FilterLine } from './components/FilterLine/FilterLine';
 
 type MainProps = {

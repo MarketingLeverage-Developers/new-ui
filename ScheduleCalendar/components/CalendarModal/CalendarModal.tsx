@@ -1,11 +1,11 @@
-import Flex from '@/shared/primitives/Flex/Flex';
-import Modal from '@/shared/headless/Modal/Modal';
-import BaseModalLayout from '@/shared/primitives/BaseModalLayout/BaseModalLayout';
-import Form from '@/shared/primitives/Form/Form';
-import RoundedInput from '@/shared/primitives/RoundedInput/RoundedInput';
-import BaseButton from '@/shared/primitives/BaseButton/BaseButton';
-import Text from '@/shared/primitives/Text/Text';
-import { getThemeColor } from '@/shared/utils/css/getThemeColor';
+import Flex from '../../../Flex/Flex';
+import Modal from '../../../shared/headless/Modal/Modal';
+import BaseModalLayout from '../../../BaseModalLayout/BaseModalLayout';
+import Form from '../../../Form/Form';
+import RoundedInput from '../../../RoundedInput/RoundedInput';
+import BaseButton from '../../../BaseButton/BaseButton';
+import Text from '../../../Text/Text';
+import { getThemeColor } from '../../../shared/utils/css/getThemeColor';
 
 type Draft = {
     title: string;

@@ -1,4 +1,4 @@
-import Select from '@/shared/headless/Select/Select';
+import Select from '../shared/headless/Select/Select';
 import React from 'react';
 import { Item } from './components';
 import Flex from '../Flex/Flex';

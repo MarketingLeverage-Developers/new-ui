@@ -1,4 +1,4 @@
-import Dropdown from '@/shared/headless/Dropdown/Dropdown';
+import Dropdown from '../../../shared/headless/Dropdown/Dropdown';
 import React from 'react';
 import styles from './Trigger.module.scss';
 import { MdChevronLeft, MdChevronRight } from 'react-icons/md';

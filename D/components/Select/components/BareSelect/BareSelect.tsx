@@ -1,6 +1,6 @@
 import React from 'react';
-import Dropdown from '@/shared/headless/Dropdown/Dropdown';
-import HeadlessSelect from '@/shared/headless/Select/Select';
+import Dropdown from '../../../../../shared/headless/Dropdown/Dropdown';
+import HeadlessSelect from '../../../../../shared/headless/Select/Select';
 
 import BareSelectDisplay, { type BareSelectDisplayProps } from './components/Display/Display';
 import BareSelectContent, { type BareSelectContentProps } from './components/Content/Content';

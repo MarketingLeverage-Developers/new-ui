@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './ImageTagItem.module.scss';
-import CheckBoxToggle from '@/shared/primitives/CheckBoxToggle/CheckBoxToggle';
-import { Common } from '@/shared/primitives/C/Common';
+import CheckBoxToggle from '../../../../../CheckBoxToggle/CheckBoxToggle';
+import { Common } from '../../../../../C/Common';
 
 export type ImageTagItemTag = {
     id?: string | number;

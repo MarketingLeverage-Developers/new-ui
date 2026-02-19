@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import React, { useLayoutEffect, useState } from 'react';
 import styles from './SearchColumnSelectBox.module.scss';
 import { FaCheck } from 'react-icons/fa';
-import Table from '@/shared/headless/TableX/Table';
+import Table from '../../../shared/headless/TableX/Table';
 import { createPortal } from 'react-dom';
 
 const SearchColumnSelectBox = (props: React.ComponentProps<typeof Table.ColumnSelectBox>) => {

@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import { FaCheck } from 'react-icons/fa6';
 
 import styles from './Item.module.scss';
-import { useManySelect, type ManySelectValue } from '@/shared/headless/ManySelect/ManySelect';
+import { useManySelect, type ManySelectValue } from '../../../shared/headless/ManySelect/ManySelect';
 
 type ItemProps = React.HTMLAttributes<HTMLDivElement> & {
     text: string;

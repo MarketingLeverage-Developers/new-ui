@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import styles from './ButtonTabItem.module.scss';
-import Select, { useSelect } from '@/shared/headless/Select/Select';
+import Select, { useSelect } from '../../../../../../../../../shared/headless/Select/Select';
 
 export type ButtonTabItemProps = Omit<React.ComponentProps<typeof Select.Item>, 'value'> & {
     value: string;

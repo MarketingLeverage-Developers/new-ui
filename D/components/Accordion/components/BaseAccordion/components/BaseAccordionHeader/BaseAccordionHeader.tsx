@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import styles from './BaseAccordionHeader.module.scss';
 import { MdKeyboardArrowDown } from 'react-icons/md';
 
-import { useAccordion } from '@/shared/headless/Accordion/Accordion';
+import { useAccordion } from '../../../../../../../shared/headless/Accordion/Accordion';
 
 export type BaseAccordionHeaderProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
     className?: string;

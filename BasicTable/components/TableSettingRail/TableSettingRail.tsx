@@ -2,9 +2,9 @@
 
 import React from 'react';
 import { FaColumns, FaThumbtack, FaFilter } from 'react-icons/fa';
-import BaseButton from '@/shared/primitives/BaseButton/BaseButton';
-import { getThemeColor } from '@/shared/utils/css/getThemeColor';
-import { BaseTooltip } from '@/shared/primitives/BaseTooltip/BaseTooltip'; // ✅✅✅ BaseTooltip import
+import BaseButton from '../../../BaseButton/BaseButton';
+import { getThemeColor } from '../../../shared/utils/css/getThemeColor';
+import { BaseTooltip } from '../../../BaseTooltip/BaseTooltip'; // ✅✅✅ BaseTooltip import
 
 type TabKey = 'columns' | 'pinned' | 'filters';
 

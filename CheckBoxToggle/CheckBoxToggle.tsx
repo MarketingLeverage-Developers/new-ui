@@ -1,4 +1,4 @@
-import Toggle from '@/shared/headless/Toggle/Toggle';
+import Toggle from '../shared/headless/Toggle/Toggle';
 import React from 'react';
 import Trigger from './components/Trigger';
 

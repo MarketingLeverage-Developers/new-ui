@@ -1,5 +1,5 @@
 import type React from 'react';
-import MultiInput, { useMultiInput } from '@/shared/headless/MultiInput/MultiInput';
+import MultiInput, { useMultiInput } from '../shared/headless/MultiInput/MultiInput';
 import Trigger from './components/Trigger/Trigger';
 import InputList from './components/InputList/InputList';
 

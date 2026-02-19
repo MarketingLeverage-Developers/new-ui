@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './ImageMetricItem.module.scss';
-import { Common } from '@/shared/primitives/C/Common';
+import { Common } from '../../../../../C/Common';
 
 export type ImageMetricItemMetric = {
     label: string;

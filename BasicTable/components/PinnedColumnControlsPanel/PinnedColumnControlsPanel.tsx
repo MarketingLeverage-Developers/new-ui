@@ -2,8 +2,8 @@ import React, { useMemo, useState, useCallback } from 'react';
 import classNames from 'classnames';
 import { FaCheck } from 'react-icons/fa';
 
-import ManySelect from '@/shared/headless/ManySelect/ManySelect';
-import { usePinnedColumnControl } from '@/shared/headless/AirTable/hooks/usePinnedColumnControl';
+import ManySelect from '../../../shared/headless/ManySelect/ManySelect';
+import { usePinnedColumnControl } from '../../../shared/headless/AirTable/hooks/usePinnedColumnControl';
 
 import tableStyles from '../../BasicTable.module.scss'; // ✅✅✅ BasicTable 공통 스타일만 사용
 

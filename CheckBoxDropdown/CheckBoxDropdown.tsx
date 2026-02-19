@@ -8,12 +8,12 @@ import Trigger from './components/Trigger/Trigger';
 import Content from './components/Content/Content';
 import Item from './components/Item/Item';
 
-import Dropdown from '@/shared/headless/Dropdown/Dropdown';
-import type { ManySelectValue } from '@/shared/headless/ManySelect/ManySelect';
-import ManySelect from '@/shared/headless/ManySelect/ManySelect';
+import Dropdown from '../shared/headless/Dropdown/Dropdown';
+import type { ManySelectValue } from '../shared/headless/ManySelect/ManySelect';
+import ManySelect from '../shared/headless/ManySelect/ManySelect';
 
-import type { HexColor } from '@/shared/types/css/HexColor';
-import { toCssUnit } from '@/shared/utils';
+import type { HexColor } from '../shared/types/css/HexColor';
+import { toCssUnit } from '../shared/utils';
 
 export interface CheckBoxDropdownContextType {
     disabled?: boolean;

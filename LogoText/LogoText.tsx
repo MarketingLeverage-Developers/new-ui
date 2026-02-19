@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './LogoText.module.scss';
-import Logo from './assets/logo.svg';
+import Logo from '../shared/assets/components/LogoText/logo.svg';
 
 const LogoText = () => (
     <div className={styles.LogoText}>

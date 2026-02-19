@@ -1,6 +1,6 @@
 import React from 'react';
 import { Content, Trigger } from './components';
-import Dropdown from '@/shared/headless/Dropdown/Dropdown';
+import Dropdown from '../shared/headless/Dropdown/Dropdown';
 
 type RoundedDropDownProps = {
     children: React.ReactNode;

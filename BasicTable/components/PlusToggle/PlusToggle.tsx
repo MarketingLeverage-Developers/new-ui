@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { FiPlus } from 'react-icons/fi';
 import styles from './PlusToggle.module.scss';
-import type { CellRenderMeta } from '@/shared/headless/AirTable/AirTable';
+import type { CellRenderMeta } from '../../../shared/headless/AirTable/AirTable';
 
 export type PlusToggleProps<T> = {
     meta: CellRenderMeta<T>;

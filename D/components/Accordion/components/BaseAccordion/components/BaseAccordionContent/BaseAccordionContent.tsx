@@ -2,7 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 import styles from './BaseAccordionContent.module.scss';
 
-import { useAccordion } from '@/shared/headless/Accordion/Accordion';
+import { useAccordion } from '../../../../../../../shared/headless/Accordion/Accordion';
 
 export type BaseAccordionContentProps = React.HTMLAttributes<HTMLDivElement> & {
     className?: string;

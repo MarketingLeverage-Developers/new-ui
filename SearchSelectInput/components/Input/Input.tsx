@@ -1,8 +1,8 @@
 import React from 'react';
-import { useQuerySearch } from '@/shared/headless/QuerySearch/QuerySearch';
-import Dropdown from '@/shared/headless/Dropdown/Dropdown';
-import Flex from '@/shared/primitives/Flex/Flex';
-import FormSearchInput from '@/shared/primitives/FormSearchInput/FormSearchInput';
+import { useQuerySearch } from '../../../shared/headless/QuerySearch/QuerySearch';
+import Dropdown from '../../../shared/headless/Dropdown/Dropdown';
+import Flex from '../../../Flex/Flex';
+import FormSearchInput from '../../../FormSearchInput/FormSearchInput';
 type InputProps = {
     placeholder: string;
 };

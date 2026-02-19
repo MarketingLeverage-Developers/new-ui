@@ -1,8 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 import cn from 'classnames';
 import styles from './ScrollArea.module.scss';
-import { toCssUnit } from '@/shared/utils';
-import type { CSSVariables } from '@/shared/types/css/CSSVariables';
+import { toCssUnit } from '../shared/utils';
+import type { CSSVariables } from '../shared/types/css/CSSVariables';
 
 type Snap = 'none' | 'proximity' | 'mandatory';
 type Fade = 'none' | 'start' | 'end' | 'both' | 'auto';

@@ -1,9 +1,9 @@
 import React, { useMemo } from 'react';
 import classNames from 'classnames';
-import Dropdown from '@/shared/headless/Dropdown/Dropdown';
-import { useQuerySearch } from '@/shared/headless/QuerySearch/QuerySearch';
-import { useHangulSearch } from '@/shared/hooks/client/useHangulSearch';
-import SearchInput from '@/shared/primitives/SearchInput/SearchInput';
+import Dropdown from '../../../../../../../shared/headless/Dropdown/Dropdown';
+import { useQuerySearch } from '../../../../../../../shared/headless/QuerySearch/QuerySearch';
+import { useHangulSearch } from '../../../../../../../shared/hooks/client/useHangulSearch';
+import SearchInput from '../../../../../../../SearchInput/SearchInput';
 import { useChipMultiSelectConfig } from '../../ChipMultiSelect';
 import styles from './ChipMultiSelectContent.module.scss';
 

@@ -1,9 +1,9 @@
 import React from 'react';
 import classNames from 'classnames';
 import styles from './ModalTemplate.module.scss';
-import type { CSSLength } from '@/shared/types';
-import type { CSSVariables } from '@/shared/types/css/CSSVariables';
-import { toCssUnit } from '@/shared/utils';
+import type { CSSLength } from '../../../../../shared/types';
+import type { CSSVariables } from '../../../../../shared/types/css/CSSVariables';
+import { toCssUnit } from '../../../../../shared/utils';
 import MainOverlay from '@/features/overlay/components/MainOverlay';
 import ModalTemplateHeader, {
     type ModalTemplateHeaderProps,

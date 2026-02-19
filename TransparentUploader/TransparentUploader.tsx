@@ -1,4 +1,4 @@
-import FileUploader from '@/shared/headless/FileUploader/FileUploader';
+import FileUploader from '../shared/headless/FileUploader/FileUploader';
 import React from 'react';
 import styles from './TransparentUploader.module.scss';
 import { File, Image, FileList, ImageList } from './components';

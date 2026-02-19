@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState, type ChangeEvent } from 'react';
 import styles from './ProfileImageUploader.module.scss';
 import { IoMdCamera } from 'react-icons/io';
-import type { ImageItem, ImageItemInput } from '@/shared/headless/ImageUploader/ImageUploader';
+import type { ImageItem, ImageItemInput } from '../shared/headless/ImageUploader/ImageUploader';
 
 type ProfileImageUploaderProps = {
     value?: ImageItem[];

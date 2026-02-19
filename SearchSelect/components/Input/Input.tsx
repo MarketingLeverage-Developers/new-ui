@@ -1,10 +1,10 @@
 import React, { useMemo } from 'react';
 import styles from './Input.module.scss';
-import { useSelect } from '@/shared/headless/Select/Select';
-import Dropdown from '@/shared/headless/Dropdown/Dropdown';
-import BaseButton from '@/shared/primitives/BaseButton/BaseButton';
-import { useQuerySearch } from '@/shared/headless/QuerySearch/QuerySearch';
-import RoundedInput from '@/shared/primitives/RoundedInput/RoundedInput';
+import { useSelect } from '../../../shared/headless/Select/Select';
+import Dropdown from '../../../shared/headless/Dropdown/Dropdown';
+import BaseButton from '../../../BaseButton/BaseButton';
+import { useQuerySearch } from '../../../shared/headless/QuerySearch/QuerySearch';
+import RoundedInput from '../../../RoundedInput/RoundedInput';
 // import { useSearchSelect } from '../../SearchSelect';
 
 type SearchInputProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, 'value' | 'onChange' | 'placeholder'> & {

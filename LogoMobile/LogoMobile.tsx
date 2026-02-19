@@ -1,7 +1,7 @@
 import React from 'react';
 
 import styles from './LogoMobile.module.scss';
-import Logo from './assets/logo.svg';
+import Logo from '../shared/assets/components/LogoMobile/logo.svg';
 import { Image } from '../Image/Image';
 
 const LogoMobile = () => (

@@ -1,0 +1,62 @@
+.DateRangeWrapper {
+    display: inline-flex;
+    align-items: center;
+}
+
+.NavButton {
+    width: 28px;
+    height: 34px;
+    border: 1px solid var(--Gray5);
+    background: var(--White1);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+
+    &:disabled {
+        opacity: 0.4;
+        cursor: default;
+    }
+
+    svg {
+        font-size: 24px;
+        color: var(--Gray1);
+    }
+}
+
+.NavPrev {
+    border-radius: 8px 0 0 8px;
+}
+
+.NavNext {
+    border-radius: 0 8px 8px 0;
+}
+
+.DateRangeTrigger {
+    min-height: 34px;
+    min-width: 220px;
+    padding: 8px 12px;
+    background: var(--Primary2);
+    color: var(--Primary1);
+    font-size: 15px;
+    line-height: 1.2;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    user-select: none;
+}
+
+.RoundedTrigger {
+    height: 34px;
+    display: inline-flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--Gray6);
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: 7px;
+    font-size: 15px;
+    color: var(--Gray1);
+    cursor: pointer;
+}

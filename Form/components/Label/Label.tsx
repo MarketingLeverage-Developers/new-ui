@@ -1,8 +1,8 @@
 import React, { type ReactNode } from 'react';
 import styles from './Label.module.scss';
-import type { CSSVariables } from '@/shared/types/css/CSSVariables';
-import { toCssUnit } from '@/shared/utils';
-import type { CSSLength } from '@/shared/types';
+import type { CSSVariables } from '../../../shared/types/css/CSSVariables';
+import { toCssUnit } from '../../../shared/utils';
+import type { CSSLength } from '../../../shared/types';
 import classNames from 'classnames';
 
 type LabelProps = {

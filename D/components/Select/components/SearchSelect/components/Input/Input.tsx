@@ -1,10 +1,10 @@
 import React, { useMemo } from 'react';
 import styles from './Input.module.scss';
-import { useSelect } from '@/shared/headless/Select/Select';
-import Dropdown from '@/shared/headless/Dropdown/Dropdown';
-import BaseButton from '@/shared/primitives/D/components/Button/components/BaseButton/BaseButton';
-import { useQuerySearch } from '@/shared/headless/QuerySearch/QuerySearch';
-import RoundedInput from '@/shared/primitives/RoundedInput/RoundedInput';
+import { useSelect } from '../../../../../../../shared/headless/Select/Select';
+import Dropdown from '../../../../../../../shared/headless/Dropdown/Dropdown';
+import BaseButton from '../../../../../Button/components/BaseButton/BaseButton';
+import { useQuerySearch } from '../../../../../../../shared/headless/QuerySearch/QuerySearch';
+import RoundedInput from '../../../../../../../RoundedInput/RoundedInput';
 
 /** 기존 SearchSelect Input을 D 패턴에 맞춰 이동 */
 type SearchSelectInputProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, 'value' | 'onChange' | 'placeholder'>;

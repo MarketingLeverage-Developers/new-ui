@@ -3,8 +3,8 @@ import * as Tooltip from '@radix-ui/react-tooltip';
 import type { EventContentArg } from '@fullcalendar/core/index.js';
 import { CiCalendarDate, CiClock2, CiUser } from 'react-icons/ci';
 
-import Text from '@/shared/primitives/Text/Text';
-import { formatMeridiemKoreanTimeRange } from '@/shared/utils/dateFilter/dateFilter';
+import Text from '../../../Text/Text';
+import { formatMeridiemKoreanTimeRange } from '../../../shared/utils/dateFilter/dateFilter';
 import styles from './CalendarTooltip.module.scss';
 
 type CalendarTooltipProps = {

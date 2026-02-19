@@ -4,7 +4,7 @@ import { CiSearch } from 'react-icons/ci';
 import Flex from '../Flex/Flex';
 import classNames from 'classnames';
 import { IoIosArrowForward } from 'react-icons/io';
-import { getThemeColor } from '@/shared/utils/css/getThemeColor';
+import { getThemeColor } from '../shared/utils/css/getThemeColor';
 import RoundedSearch from '../RoundedSearch/RoundedSearch';
 import BaseButton from '../BaseButton/BaseButton';
 

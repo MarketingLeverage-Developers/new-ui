@@ -1,4 +1,4 @@
-import Toggle, { useToggle } from '@/shared/headless/Toggle/Toggle';
+import Toggle, { useToggle } from '../../shared/headless/Toggle/Toggle';
 import styles from './Trigger.module.scss';
 import React from 'react';
 import classNames from 'classnames';

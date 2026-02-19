@@ -1,10 +1,10 @@
-import RoundedTab from '@/shared/primitives/RoundedTab/RoundedTab';
+import RoundedTab from '../../RoundedTab/RoundedTab';
 import React from 'react';
 import type { ViewType } from '../MLCalendar';
-import Flex from '@/shared/primitives/Flex/Flex';
+import Flex from '../../Flex/Flex';
 import { GrFormPrevious, GrFormNext } from 'react-icons/gr';
-import { getThemeColor } from '@/shared/utils/css/getThemeColor';
-import Text from '@/shared/primitives/Text/Text';
+import { getThemeColor } from '../../shared/utils/css/getThemeColor';
+import Text from '../../Text/Text';
 
 type CalendarHeaderProps = {
     title: string; // 'MM월'

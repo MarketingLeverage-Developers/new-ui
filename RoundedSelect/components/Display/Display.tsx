@@ -1,5 +1,5 @@
-import Dropdown from '@/shared/headless/Dropdown/Dropdown';
-import Select from '@/shared/headless/Select/Select';
+import Dropdown from '../../../shared/headless/Dropdown/Dropdown';
+import Select from '../../../shared/headless/Select/Select';
 import React from 'react';
 import styles from './Display.module.scss';
 import { MdOutlineKeyboardArrowDown } from 'react-icons/md';

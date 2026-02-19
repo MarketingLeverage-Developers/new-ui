@@ -1,4 +1,4 @@
-import AccordionTable from '@/shared/headless/AccordionTable/AccordionTable';
+import AccordionTable from '../../../shared/headless/AccordionTable/AccordionTable';
 import styles from './Th.module.scss';
 
 export const Th = (props: React.ComponentProps<typeof AccordionTable.Th>) => (

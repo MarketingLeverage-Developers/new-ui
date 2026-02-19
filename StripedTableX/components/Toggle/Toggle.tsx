@@ -1,6 +1,6 @@
 // 각 행의 디테일 open/close 토글 버튼
-import type Table from '@/shared/headless/TableX/Table';
-import { useRowDetails } from '@/shared/headless/TableX/Table';
+import type Table from '../../../shared/headless/TableX/Table';
+import { useRowDetails } from '../../../shared/headless/TableX/Table';
 import { IoMdAddCircleOutline, IoMdRemoveCircleOutline } from 'react-icons/io';
 import styles from './Toggle.module.scss';
 import React from 'react';

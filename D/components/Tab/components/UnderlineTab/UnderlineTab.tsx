@@ -1,11 +1,11 @@
 import React from 'react';
 import styles from './UnderlineTab.module.scss';
-import Select from '@/shared/headless/Select/Select';
+import Select from '../../../../../shared/headless/Select/Select';
 import { UnderlineTabItem, type UnderlineTabItemProps } from './components/Item';
-import type { CSSVariables } from '@/shared/types/css/CSSVariables';
-import { toCssUnit } from '@/shared/utils';
-import type { PaddingSize } from '@/shared/types/css/PaddingSize';
-import { toCssPadding } from '@/shared/utils/css/toCssPadding';
+import type { CSSVariables } from '../../../../../shared/types/css/CSSVariables';
+import { toCssUnit } from '../../../../../shared/utils';
+import type { PaddingSize } from '../../../../../shared/types/css/PaddingSize';
+import { toCssPadding } from '../../../../../shared/utils/css/toCssPadding';
 
 export type UnderlineTabProps = React.ComponentProps<typeof Select> & {
     gap?: string | number;

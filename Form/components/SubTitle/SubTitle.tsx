@@ -1,8 +1,8 @@
 import React from 'react';
 import styles from './SubTitle.module.scss';
-import type { CSSVariables } from '@/shared/types/css/CSSVariables';
-import { toCssUnit } from '@/shared/utils';
-import type { CSSLength } from '@/shared/types';
+import type { CSSVariables } from '../../../shared/types/css/CSSVariables';
+import { toCssUnit } from '../../../shared/utils';
+import type { CSSLength } from '../../../shared/types';
 
 type SubTitleProps = {
     text: string;

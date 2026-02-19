@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './Content.module.scss';
-import type { CSSVariables } from '@/shared/types/css/CSSVariables';
+import type { CSSVariables } from '../../../shared/types/css/CSSVariables';
 
 type ContentProps = {
     children?: React.ReactNode;

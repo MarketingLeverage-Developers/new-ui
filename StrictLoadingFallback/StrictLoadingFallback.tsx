@@ -3,7 +3,7 @@
 import React from 'react';
 import styles from './StrictLoadingFallback.module.scss';
 import Lottie from 'lottie-react';
-import loadingAnimation from './assets/strict-loading.json';
+import loadingAnimation from '../shared/assets/components/StrictLoadingFallback/strict-loading.json';
 
 const StrictLoadingFallback: React.FC = () => (
     <div className={styles.StrictLoadingFallback}>

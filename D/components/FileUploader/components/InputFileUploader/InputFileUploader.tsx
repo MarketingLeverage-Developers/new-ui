@@ -2,7 +2,7 @@ import React, { useMemo, type ReactNode } from 'react';
 import classNames from 'classnames';
 import styles from './InputFileUploader.module.scss';
 
-import { useFileUploader } from '@/shared/primitives/D/components/FileUploader/FileUploader';
+import { useFileUploader } from '../../FileUploader';
 
 export type InputFileUploaderProps = {
     placeholder?: ReactNode;

@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './ImageList.module.scss';
-import FileUploader from '@/shared/headless/FileUploader/FileUploader';
+import FileUploader from '../../../shared/headless/FileUploader/FileUploader';
 import { FaCircleXmark } from 'react-icons/fa6';
 
 export const ImageList = () => (

@@ -1,13 +1,13 @@
-import type { CSSLength } from '@/shared/types';
-import type { CSSVariables } from '@/shared/types/css/CSSVariables';
-import type { PaddingSize } from '@/shared/types/css/PaddingSize';
-import { toCssUnit } from '@/shared/utils';
-import { toCssPadding } from '@/shared/utils/css/toCssPadding';
+import type { CSSLength } from '../shared/types';
+import type { CSSVariables } from '../shared/types/css/CSSVariables';
+import type { PaddingSize } from '../shared/types/css/PaddingSize';
+import { toCssUnit } from '../shared/utils';
+import { toCssPadding } from '../shared/utils/css/toCssPadding';
 import styles from './BaseButton.module.scss';
 import React, { forwardRef, type ButtonHTMLAttributes } from 'react';
 import classNames from 'classnames';
-import type { HexColor } from '@/shared/types/css/HexColor';
-import type { ThemeColorVar } from '@/shared/types/css/ThemeColorTokens';
+import type { HexColor } from '../shared/types/css/HexColor';
+import type { ThemeColorVar } from '../shared/types/css/ThemeColorTokens';
 
 type BaseButtonProps = {
     padding?: PaddingSize;

@@ -1,7 +1,7 @@
 import React, { useState, type InputHTMLAttributes } from 'react';
 import classNames from 'classnames';
 import styles from './RoundedPassword.module.scss';
-import { STATUS, type Status } from '@/shared/types/css/Status';
+import { STATUS, type Status } from '../shared/types/css/Status';
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
 
 type RoundedPasswordProps = {

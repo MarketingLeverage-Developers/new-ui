@@ -1,11 +1,11 @@
 import React from 'react';
 import classNames from 'classnames';
 import styles from './Text.module.scss';
-import type { CSSLength } from '@/shared/types';
-import type { ThemeColorVar } from '@/shared/types/css/ThemeColorTokens';
-import type { HexColor } from '@/shared/types/css/HexColor';
-import { toCssUnit } from '@/shared/utils';
-import type { CSSVariables } from '@/shared/types/css/CSSVariables';
+import type { CSSLength } from '../shared/types';
+import type { ThemeColorVar } from '../shared/types/css/ThemeColorTokens';
+import type { HexColor } from '../shared/types/css/HexColor';
+import { toCssUnit } from '../shared/utils';
+import type { CSSVariables } from '../shared/types/css/CSSVariables';
 
 export type TextProps = React.HTMLAttributes<HTMLSpanElement> & {
     fontSize?: CSSLength;

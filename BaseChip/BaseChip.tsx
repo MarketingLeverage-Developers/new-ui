@@ -1,12 +1,12 @@
 import React, { type HTMLAttributes } from 'react';
 import styles from './BaseChip.module.scss';
-import type { PaddingSize } from '@/shared/types/css/PaddingSize';
-import type { CSSLength } from '@/shared/types';
-import type { HexColor } from '@/shared/types/css/HexColor';
-import { toCssUnit } from '@/shared/utils';
-import { toCssPadding } from '@/shared/utils/css/toCssPadding';
-import type { CSSVariables } from '@/shared/types/css/CSSVariables';
-import type { ThemeColorVar } from '@/shared/types/css/ThemeColorTokens';
+import type { PaddingSize } from '../shared/types/css/PaddingSize';
+import type { CSSLength } from '../shared/types';
+import type { HexColor } from '../shared/types/css/HexColor';
+import { toCssUnit } from '../shared/utils';
+import { toCssPadding } from '../shared/utils/css/toCssPadding';
+import type { CSSVariables } from '../shared/types/css/CSSVariables';
+import type { ThemeColorVar } from '../shared/types/css/ThemeColorTokens';
 
 type BaseChipProps = HTMLAttributes<HTMLDivElement> & {
     padding?: PaddingSize;

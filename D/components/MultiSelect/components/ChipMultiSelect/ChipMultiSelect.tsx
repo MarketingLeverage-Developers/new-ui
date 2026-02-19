@@ -1,7 +1,7 @@
 import React, { useMemo, createContext, useContext } from 'react';
-import ManySelect from '@/shared/headless/ManySelect/ManySelect';
-import Dropdown from '@/shared/headless/Dropdown/Dropdown';
-import { QuerySearch } from '@/shared/headless/QuerySearch/QuerySearch';
+import ManySelect from '../../../../../shared/headless/ManySelect/ManySelect';
+import Dropdown from '../../../../../shared/headless/Dropdown/Dropdown';
+import { QuerySearch } from '../../../../../shared/headless/QuerySearch/QuerySearch';
 
 import ChipMultiSelectItem from './components/ChipMultiSelectItem/ChipMultiSelectItem';
 import ChipMultiSelectContent from './components/ChipMultiSelectContent/ChipMultiSelectContent';

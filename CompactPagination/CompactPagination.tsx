@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './CompactPagination.module.scss';
-import Pagination from '@/shared/headless/Pagination/Pagination';
+import Pagination from '../shared/headless/Pagination/Pagination';
 import CompactPaginationButtons from './CompactPaginationButtons/CompactPaginationButtons';
 import CompactPrev from './CompactPaginationButtons/CompactPrev/CompactPrev';
 import CompactNext from './CompactPaginationButtons/CompactNext/CompactNext';

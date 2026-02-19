@@ -3,9 +3,9 @@ import styles from './CalendarDatePicker.module.scss';
 import { DayPicker, type DayPickerProps } from 'react-day-picker';
 import { ko } from 'react-day-picker/locale';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
-import type { CSSLength } from '@/shared/types';
-import { toCssUnit } from '@/shared/utils';
-import type { CSSVariables } from '@/shared/types/css/CSSVariables';
+import type { CSSLength } from '../shared/types';
+import { toCssUnit } from '../shared/utils';
+import type { CSSVariables } from '../shared/types/css/CSSVariables';
 
 type CalendarDatePickerProps = {
     /** 선택된 날짜 */

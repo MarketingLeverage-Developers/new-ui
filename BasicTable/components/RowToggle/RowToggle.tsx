@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import styles from './RowToggle.module.scss';
-import type { CellRenderMeta } from '@/shared/headless/AirTable/AirTable';
+import type { CellRenderMeta } from '../../../shared/headless/AirTable/AirTable';
 import { LuCircleMinus, LuCirclePlus } from 'react-icons/lu';
 
 export type RowToggleProps<T> = {

@@ -2,7 +2,7 @@ import type React from 'react';
 import { useEffect, useMemo, useRef, useState, type InputHTMLAttributes } from 'react';
 import styles from './RoundedFileInput.module.scss';
 import classNames from 'classnames';
-import { STATUS, type Status } from '@/shared/types/css/Status';
+import { STATUS, type Status } from '../shared/types/css/Status';
 
 type ResolvedFile = {
     id: string; // 서버 uuid 같은 최종 값

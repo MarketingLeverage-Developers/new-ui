@@ -1,4 +1,4 @@
-import RoundedSelect from '@/shared/primitives/RoundedSelect/RoundedSelect';
+import RoundedSelect from '../../../RoundedSelect/RoundedSelect';
 import React from 'react';
 
 type IsDeleteSelectProps = {

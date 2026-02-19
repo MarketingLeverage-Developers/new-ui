@@ -2,11 +2,11 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import classNames from 'classnames';
 import styles from './BaseAlterFileUploaderDropzone.module.scss';
 
-import { useFileUploader } from '@/shared/primitives/D/components/FileUploader/FileUploader';
+import { useFileUploader } from '../../../../FileUploader';
 
-import Button from '@/shared/primitives/D/components/Button/Button';
-import PictureIcon from './assets/Picture.svg';
-import { Common } from '@/shared/primitives/C/Common';
+import Button from '../../../../../Button/Button';
+import PictureIcon from '../../../../../../../shared/assets/components/D/components/FileUploader/components/BaseAlterFileUploader/components/BaseAlterFileUploaderDropzone/Picture.svg';
+import { Common } from '../../../../../../../C/Common';
 
 export type BaseAlterFileUploaderDropzoneProps = {
     guideText?: string;

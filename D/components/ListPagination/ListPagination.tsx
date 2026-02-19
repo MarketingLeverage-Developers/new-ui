@@ -1,4 +1,4 @@
-import ArrowPagination from '@/shared/primitives/ArrowPagination/ArrowPagination';
+import ArrowPagination from '../../../ArrowPagination/ArrowPagination';
 
 type Props = {
     total: number;

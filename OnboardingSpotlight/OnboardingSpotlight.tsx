@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import Portal from '@/shared/headless/Portal/Portal';
-import Flex from '@/shared/primitives/Flex/Flex';
-import Text from '@/shared/primitives/Text/Text';
-import { getThemeColor } from '@/shared/utils/css/getThemeColor';
+import Portal from '../shared/headless/Portal/Portal';
+import Flex from '../Flex/Flex';
+import Text from '../Text/Text';
+import { getThemeColor } from '../shared/utils/css/getThemeColor';
 import styles from './OnboardingSpotlight.module.scss';
 
 type Placement = 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left';

@@ -1,11 +1,11 @@
 import React, { useMemo } from 'react';
 import { RiDownload2Fill } from 'react-icons/ri';
 import styles from './BaseFileUploaderList.module.scss';
-import { useFileUploader } from '@/shared/primitives/D/components/FileUploader/FileUploader';
-import { Common } from '@/shared/primitives/C/Common';
-import Modal, { useModal } from '@/shared/headless/Modal/Modal';
-import Portal from '@/shared/headless/Portal/Portal';
-import { downloadFileFromUrl } from '@/shared/utils/download/download';
+import { useFileUploader } from '../../../../FileUploader';
+import { Common } from '../../../../../../../C/Common';
+import Modal, { useModal } from '../../../../../../../shared/headless/Modal/Modal';
+import Portal from '../../../../../../../shared/headless/Portal/Portal';
+import { downloadFileFromUrl } from '../../../../../../../shared/utils/download/download';
 
 type FileType = 'IMAGE' | 'ZIP' | 'VIDEO' | 'ETC';
 
@@ -299,8 +299,8 @@ export default BaseFileUploaderList;
 // import React, { useMemo } from 'react';
 // import { RiDownload2Fill } from 'react-icons/ri';
 // import styles from './BaseFileUploaderList.module.scss';
-// import { useFileUploader } from '@/shared/primitives/D/components/FileUploader/FileUploader';
-// import { Common } from '@/shared/primitives/C/Common';
+// import { useFileUploader } from '../../../../FileUploader';
+// import { Common } from '../../../../../../../C/Common';
 
 // type FileType = 'IMAGE' | 'ZIP' | 'VIDEO' | 'ETC';
 

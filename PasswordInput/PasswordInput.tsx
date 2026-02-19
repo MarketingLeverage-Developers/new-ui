@@ -1,8 +1,8 @@
-import RoundedInput from '@/shared/primitives/RoundedInput/RoundedInput';
+import RoundedInput from '../RoundedInput/RoundedInput';
 import React, { useState, type HtmlHTMLAttributes } from 'react';
 import styles from './PasswordInput.module.scss';
 import { IoEye, IoEyeOff } from 'react-icons/io5';
-import type { Status } from '@/shared/types/css/Status';
+import type { Status } from '../shared/types/css/Status';
 
 type PasswordInputProps = {
     placeholder: string;

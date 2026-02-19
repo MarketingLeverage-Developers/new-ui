@@ -1,7 +1,7 @@
-import type { CSSVariables } from '@/shared/types/css/CSSVariables';
-import type { PaddingSize } from '@/shared/types/css/PaddingSize';
-import { toCssUnit } from '@/shared/utils';
-import { toCssPadding } from '@/shared/utils/css/toCssPadding';
+import type { CSSVariables } from '../../../shared/types/css/CSSVariables';
+import type { PaddingSize } from '../../../shared/types/css/PaddingSize';
+import { toCssUnit } from '../../../shared/utils';
+import { toCssPadding } from '../../../shared/utils/css/toCssPadding';
 import classNames from 'classnames';
 import React from 'react';
 import styles from './Footer.module.scss';

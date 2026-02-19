@@ -1,10 +1,10 @@
-import { Accordion } from '@/shared/headless/Accordion/Accordion';
+import { Accordion } from '../shared/headless/Accordion/Accordion';
 import React from 'react';
 import styles from './BlurAccordion.module.scss';
 import { FaAngleDown } from 'react-icons/fa6';
-import type { CSSLength } from '@/shared/types';
-import { toCssUnit } from '@/shared/utils';
-import type { CSSVariables } from '@/shared/types/css/CSSVariables';
+import type { CSSLength } from '../shared/types';
+import { toCssUnit } from '../shared/utils';
+import type { CSSVariables } from '../shared/types/css/CSSVariables';
 
 type BlurAccordionProps = {
     children: React.ReactNode;

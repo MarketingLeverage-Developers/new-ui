@@ -3,8 +3,8 @@ import type { InputHTMLAttributes } from 'react';
 import classNames from 'classnames';
 import { IoCloseOutline } from 'react-icons/io5';
 import styles from './InputList.module.scss';
-import { useMultiInput } from '@/shared/headless/MultiInput/MultiInput';
-import { STATUS, type Status } from '@/shared/types/css/Status';
+import { useMultiInput } from '../../../shared/headless/MultiInput/MultiInput';
+import { STATUS, type Status } from '../../../shared/types/css/Status';
 
 type InputListProps = {
     width?: React.CSSProperties['width'];

@@ -2,7 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 import styles from './ModalTemplateHeader.module.scss';
 import { MdClose } from 'react-icons/md';
-import { useModal } from '@/shared/headless/Modal/Modal';
+import { useModal } from '../../../../../../../shared/headless/Modal/Modal';
 
 export type ModalTemplateHeaderProps = {
     className?: string;

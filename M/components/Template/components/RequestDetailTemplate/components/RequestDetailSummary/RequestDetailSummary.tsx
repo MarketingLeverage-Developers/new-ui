@@ -1,9 +1,9 @@
 import React from 'react';
-import BaseChip from '@/shared/primitives/BaseChip/BaseChip';
-import SectionDiver from '@/shared/primitives/SectionDiver/SectionDiver';
+import BaseChip from '../../../../../../../BaseChip/BaseChip';
+import SectionDiver from '../../../../../../../SectionDiver/SectionDiver';
 import styles from './RequestDetailSummary.module.scss';
-import DefaultSummaryImage from './assets/Picture.svg';
-import { Common } from '@/shared/primitives/C/Common';
+import DefaultSummaryImage from '../../../../../../../shared/assets/components/M/components/Template/components/RequestDetailTemplate/components/RequestDetailSummary/Picture.svg';
+import { Common } from '../../../../../../../C/Common';
 
 export type RequestDetailSummaryTag = {
     id?: string | number;

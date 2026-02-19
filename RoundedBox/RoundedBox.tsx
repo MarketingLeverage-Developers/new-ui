@@ -1,9 +1,9 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import type { CSSVariables } from '@/shared/types/css/CSSVariables';
+import type { CSSVariables } from '../shared/types/css/CSSVariables';
 import styles from './RoundedBox.module.scss';
-import type { PaddingSize } from '@/shared/types/css/PaddingSize';
-import { toCssPadding } from '@/shared/utils/css/toCssPadding';
-import { toCssUnit } from '@/shared/utils';
+import type { PaddingSize } from '../shared/types/css/PaddingSize';
+import { toCssPadding } from '../shared/utils/css/toCssPadding';
+import { toCssUnit } from '../shared/utils';
 import classNames from 'classnames';
 
 type RoundedBoxProps = {

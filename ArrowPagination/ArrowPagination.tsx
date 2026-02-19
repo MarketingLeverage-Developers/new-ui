@@ -1,4 +1,4 @@
-import Pagination from '@/shared/headless/Pagination/Pagination';
+import Pagination from '../shared/headless/Pagination/Pagination';
 import styles from './ArrowPagination.module.scss';
 import React from 'react';
 import ArrowPrev from './ArrowPaginationButtons/ArrowPrev/ArrowPrev';

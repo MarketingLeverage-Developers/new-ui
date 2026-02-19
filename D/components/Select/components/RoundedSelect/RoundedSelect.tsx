@@ -1,6 +1,6 @@
 import React from 'react';
-import Dropdown from '@/shared/headless/Dropdown/Dropdown';
-import HeadlessSelect from '@/shared/headless/Select/Select';
+import Dropdown from '../../../../../shared/headless/Dropdown/Dropdown';
+import HeadlessSelect from '../../../../../shared/headless/Select/Select';
 import RoundedSelectDisplay, { type RoundedSelectDisplayProps } from './components/Display/Display';
 import RoundedSelectContent, { type RoundedSelectContentProps } from './components/Content/Content';
 import RoundedSelectItem, { type RoundedSelectItemProps } from './components/Item/Item';

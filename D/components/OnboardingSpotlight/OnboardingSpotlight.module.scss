@@ -1,0 +1,229 @@
+.OverlayCatcher {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    background: transparent;
+}
+
+.BackdropBlocker {
+    position: fixed;
+    z-index: 10000;
+    background: transparent;
+}
+
+.SpotlightHole {
+    position: fixed;
+    border-radius: 14px;
+    border: 1.5px solid rgba(255, 255, 255, 0.85);
+    box-shadow: 0 0 0 9999px rgba(2, 6, 23, 0.45);
+    pointer-events: none;
+    transition: all 180ms ease;
+}
+
+.SpotlightIndicator {
+    position: fixed;
+    z-index: 10001;
+    border-radius: 12px;
+    border: 2px dashed var(--Primary1);
+    overflow: visible;
+    pointer-events: none;
+    animation: SpotlightIndicatorPop 420ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.SpotlightIndicator::before,
+.SpotlightIndicator::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    pointer-events: none;
+}
+
+.SpotlightIndicator::before {
+    width: calc(100% + 12px);
+    height: calc(100% + 12px);
+    border-radius: inherit;
+    border: 2px solid var(--Primary1);
+    transform: translate(-50%, -50%) scale(0.92);
+    opacity: 0;
+    animation: SpotlightIndicatorRingBurst 520ms ease-out;
+}
+
+.SpotlightIndicator::after {
+    width: 6px;
+    height: 6px;
+    border-radius: 999px;
+    background: var(--Primary1);
+    box-shadow:
+        0 -28px 0 0 var(--Primary1),
+        20px -20px 0 0 var(--Primary1),
+        28px 0 0 0 var(--Primary1),
+        20px 20px 0 0 var(--Primary1),
+        0 28px 0 0 var(--Primary1),
+        -20px 20px 0 0 var(--Primary1),
+        -28px 0 0 0 var(--Primary1),
+        -20px -20px 0 0 var(--Primary1);
+    transform: translate(-50%, -50%) scale(0.24);
+    opacity: 0;
+    animation: SpotlightIndicatorParticleBurst 460ms ease-out;
+}
+
+@keyframes SpotlightIndicatorPop {
+    0% {
+        opacity: 0;
+        transform: scale(0.88);
+    }
+    55% {
+        opacity: 1;
+        transform: scale(1.04);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes SpotlightIndicatorRingBurst {
+    0% {
+        opacity: 0.66;
+        transform: translate(-50%, -50%) scale(0.9);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(1.18);
+    }
+}
+
+@keyframes SpotlightIndicatorParticleBurst {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.24);
+    }
+    30% {
+        opacity: 0.95;
+    }
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(1.55);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .SpotlightIndicator,
+    .SpotlightIndicator::before,
+    .SpotlightIndicator::after {
+        animation: none;
+    }
+}
+
+.Card {
+    position: fixed;
+    z-index: 10002;
+    width: 280px;
+    background: var(--White1);
+    border-radius: var(--RadiusLg, 12px);
+    padding: 14px;
+    // border: 1px solid color-mix(in srgb, var(--Gray3) 40%, transparent);
+    box-shadow:
+        0 10px 24px rgba(15, 23, 42, 0.16),
+        0 4px 12px rgba(15, 23, 42, 0.1);
+}
+
+.StepPill {
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: rgba(148, 163, 184, 0.2);
+    color: var(--Gray2);
+}
+
+.StepDot {
+    width: 6px;
+    height: 6px;
+    border-radius: 999px;
+    background: var(--Primary1);
+}
+
+.PrimaryButton {
+    border: 1px solid var(--Primary1);
+    background: var(--Primary1);
+    color: #ffffff;
+    border-radius: 8px;
+    padding: 6px 10px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 6px 12px rgba(232, 135, 49, 0.18);
+    transition: filter 120ms ease;
+}
+
+.PrimaryButton:hover {
+    filter: brightness(1.04);
+}
+
+.PrimaryButton:active {
+    filter: brightness(0.98);
+    box-shadow: 0 4px 10px rgba(232, 135, 49, 0.16);
+}
+
+.SecondaryButton {
+    border: 1px solid rgba(148, 163, 184, 0.6);
+    background: var(--White1);
+    color: var(--Gray1);
+    border-radius: 8px;
+    padding: 6px 10px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 120ms ease;
+}
+
+.SecondaryButton:hover {
+    background: var(--Gray7);
+}
+
+.SecondaryButton:active {
+    background: var(--Gray6);
+}
+
+.SecondaryButton:disabled {
+    color: var(--Gray3);
+    border-color: rgba(148, 163, 184, 0.4);
+    cursor: default;
+    transform: none;
+}
+
+.GhostButton {
+    border: none;
+    background: transparent;
+    color: var(--Gray3);
+    font-size: 12px;
+    cursor: pointer;
+    transition: color 120ms ease;
+}
+
+.GhostButton:hover {
+    color: var(--Gray2);
+}
+
+.TargetActive {
+    outline: 2px dashed var(--Primary1);
+    outline-offset: 4px;
+    border-radius: 10px;
+}
+
+.TargetHint {
+    position: absolute;
+    left: 0;
+    top: -10px;
+    transform: translateY(-100%);
+    background: var(--Primary1);
+    color: #ffffff;
+    padding: 4px 8px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    box-shadow: 0 6px 14px rgba(232, 135, 49, 0.24);
+    pointer-events: none;
+    white-space: nowrap;
+}

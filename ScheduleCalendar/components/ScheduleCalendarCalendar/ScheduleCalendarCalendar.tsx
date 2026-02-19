@@ -12,7 +12,7 @@ import type {
     MoreLinkSimpleAction,
 } from '@fullcalendar/core';
 
-import { useMLCalendar, type CalendarEvent, type CalendarView } from '@/shared/headless/MLCalendar/MLCalendar';
+import { useMLCalendar, type CalendarEvent, type CalendarView } from '../../../shared/headless/MLCalendar/MLCalendar';
 
 import CalendarEventItem from '../CalendarEnvetItem/CalendarEnvetItem';
 import CalendarDayHeader from '../CalendarDayHeader/CalendarDayHeader';

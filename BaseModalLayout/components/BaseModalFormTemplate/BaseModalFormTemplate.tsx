@@ -1,9 +1,9 @@
 import StrictOverlay from '@/features/overlay/components/StrictOverlay';
 import React from 'react';
 import BaseModalLayout from '../../BaseModalLayout';
-import Form from '@/shared/primitives/Form/Form';
-import Modal from '@/shared/headless/Modal/Modal';
-import Portal from '@/shared/headless/Portal/Portal';
+import Form from '../../../Form/Form';
+import Modal from '../../../shared/headless/Modal/Modal';
+import Portal from '../../../shared/headless/Portal/Portal';
 
 type BaseModalFormTemplateProps = {
     content: React.ReactNode;

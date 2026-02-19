@@ -1,11 +1,11 @@
 import React from 'react';
 import styles from './SearchManySelect.module.scss';
 import SearchInput from './components/Input/Input';
-import Dropdown from '@/shared/headless/Dropdown/Dropdown';
+import Dropdown from '../shared/headless/Dropdown/Dropdown';
 import Select from './components/Select/Select';
-import ManySelect from '@/shared/headless/ManySelect/ManySelect';
+import ManySelect from '../shared/headless/ManySelect/ManySelect';
 import Selected from './components/Selected/Selected';
-import { QuerySearch } from '@/shared/headless/QuerySearch/QuerySearch';
+import { QuerySearch } from '../shared/headless/QuerySearch/QuerySearch';
 
 export type SelectItem = { label: string; uuid: string };
 

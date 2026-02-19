@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './LogoLandscapeText.module.scss';
-import Logo from './assets/logo-landscape.svg';
+import Logo from '../shared/assets/components/LogoLandscapeText/logo-landscape.svg';
 
 const LogoLandscapeText = () => (
     <div className={styles.LogoLandscapeText}>

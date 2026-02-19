@@ -1,13 +1,13 @@
-import Select from '@/shared/headless/Select/Select';
-import { useSelect } from '@/shared/headless/Select/Select';
+import Select from '../../shared/headless/Select/Select';
+import { useSelect } from '../../shared/headless/Select/Select';
 import classNames from 'classnames';
 import styles from './Item.module.scss';
 import React from 'react';
-import type { CSSLength } from '@/shared/types';
-import type { CSSVariables } from '@/shared/types/css/CSSVariables';
-import { toCssUnit } from '@/shared/utils';
-import type { PaddingSize } from '@/shared/types/css/PaddingSize';
-import { toCssPadding } from '@/shared/utils/css/toCssPadding';
+import type { CSSLength } from '../../shared/types';
+import type { CSSVariables } from '../../shared/types/css/CSSVariables';
+import { toCssUnit } from '../../shared/utils';
+import type { PaddingSize } from '../../shared/types/css/PaddingSize';
+import { toCssPadding } from '../../shared/utils/css/toCssPadding';
 
 type UnderlineTabItemProps = React.ComponentProps<typeof Select.Item> & {
     full?: boolean;

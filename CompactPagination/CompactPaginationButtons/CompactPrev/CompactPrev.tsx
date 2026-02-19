@@ -1,4 +1,4 @@
-import Pagination, { usePagination } from '@/shared/headless/Pagination/Pagination';
+import Pagination, { usePagination } from '../../../shared/headless/Pagination/Pagination';
 import classNames from 'classnames';
 import React from 'react';
 import { IoIosArrowBack } from 'react-icons/io';

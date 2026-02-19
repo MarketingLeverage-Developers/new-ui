@@ -1,14 +1,14 @@
-import Dropdown, { useDropdown } from '@/shared/headless/Dropdown/Dropdown';
+import Dropdown, { useDropdown } from '../../../shared/headless/Dropdown/Dropdown';
 import React, { useEffect, useMemo } from 'react';
 import styles from './Select.module.scss';
-import ManySelect from '@/shared/headless/ManySelect/ManySelect';
-import SearchInput from '@/shared/primitives/SearchInput/SearchInput';
-import { useSelect } from '@/shared/headless/Select/Select';
-import { useQuerySearch } from '@/shared/headless/QuerySearch/QuerySearch';
+import ManySelect from '../../../shared/headless/ManySelect/ManySelect';
+import SearchInput from '../../../SearchInput/SearchInput';
+import { useSelect } from '../../../shared/headless/Select/Select';
+import { useQuerySearch } from '../../../shared/headless/QuerySearch/QuerySearch';
 import type { SelectItem } from '../../SearchSelect';
-import { useHangulSearch } from '@/shared/hooks/client/useHangulSearch';
-import type { CSSVariables } from '@/shared/types/css/CSSVariables';
-import { toCssUnit } from '@/shared/utils';
+import { useHangulSearch } from '../../../shared/hooks/client/useHangulSearch';
+import type { CSSVariables } from '../../../shared/types/css/CSSVariables';
+import { toCssUnit } from '../../../shared/utils';
 
 type SelectProps = {
     height?: string | number;

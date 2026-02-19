@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import classNames from 'classnames';
 import styles from './Image.module.scss';
-import type { CSSLength } from '@/shared/types';
-import { toCssUnit } from '@/shared/utils';
+import type { CSSLength } from '../shared/types';
+import { toCssUnit } from '../shared/utils';
 
 type ImageProps = React.HTMLAttributes<HTMLImageElement> & {
     src: string;

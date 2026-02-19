@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import styles from './BaseTab.module.scss';
-import Select from '@/shared/headless/Select/Select';
+import Select from '../../../../../../../shared/headless/Select/Select';
 
 export type BaseTabExtraProps = {
     className?: string;

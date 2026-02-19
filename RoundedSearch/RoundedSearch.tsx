@@ -2,9 +2,9 @@ import React, { type InputHTMLAttributes } from 'react';
 import classNames from 'classnames';
 import styles from './RoundedSearch.module.scss';
 import { HiMiniMagnifyingGlass } from 'react-icons/hi2';
-import type { CSSLength } from '@/shared/types';
-import type { CSSVariables } from '@/shared/types/css/CSSVariables';
-import { toCssUnit } from '@/shared/utils';
+import type { CSSLength } from '../shared/types';
+import type { CSSVariables } from '../shared/types/css/CSSVariables';
+import { toCssUnit } from '../shared/utils';
 
 type RoundedSearchProps = {
     width?: CSSLength;

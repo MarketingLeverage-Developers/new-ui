@@ -1,12 +1,12 @@
 import { useState } from 'react';
-import Grid from '@/shared/primitives/Grid/Grid';
-import Flex from '@/shared/primitives/Flex/Flex';
+import Grid from '../../../Grid/Grid';
+import Flex from '../../../Flex/Flex';
 
 import type FullCalendar from '@fullcalendar/react';
 import type { EventContentArg } from '@fullcalendar/core';
 
 import ScheduleCalendar from '../../ScheduleCalendar';
-import type { CalendarEvent, CalendarView } from '@/shared/headless/MLCalendar/MLCalendar';
+import type { CalendarEvent, CalendarView } from '../../../shared/headless/MLCalendar/MLCalendar';
 import type { FilterId } from '../CalendarSidebar/CalendarSidebar';
 
 type Draft = {

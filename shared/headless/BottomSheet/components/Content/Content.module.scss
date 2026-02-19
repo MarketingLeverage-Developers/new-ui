@@ -1,0 +1,115 @@
+.Overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.35);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 180ms ease;
+    z-index: 1000;
+}
+
+.Overlay.open {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.Sheet {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    /* iOS 안전 영역 고려 */
+    padding-bottom: max(16px, env(safe-area-inset-bottom));
+    background: #fff;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    box-shadow: 0 -6px 24px rgba(0, 0, 0, 0.08);
+
+    transform: translateY(100%);
+    transition: transform 240ms ease;
+    will-change: transform; /* 드래그 성능 개선 */
+    display: flex;
+    flex-direction: column;
+
+    /* 최대 높이 보호 */
+    max-height: 70vh;
+
+    background-color: var(--White1);
+}
+
+.Sheet.open {
+    transform: translateY(0);
+}
+
+/* 드래그 중에는 트랜지션 제거 (JS에서 .dragging 토글) */
+.Sheet.dragging {
+    transition: none;
+}
+
+.Handle {
+    width: 44px;
+    height: 4px;
+    border-radius: 999px;
+    background: #e5e5e5;
+    margin: 8px auto 6px;
+
+    /* 드래그 제스처 UX */
+    cursor: grab;
+    touch-action: none; /* 스크롤 제스처와 충돌 방지 */
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    position: relative;
+
+    /* 히트존 확장: 잡기 쉬움 */
+    &::after {
+        content: '';
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        top: -10px;
+        bottom: -10px;
+        width: 120px;
+    }
+}
+
+.Handle:active {
+    cursor: grabbing;
+}
+
+.Header {
+    padding: 16px;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--Black1);
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.Content {
+    padding: 24px 16px 16px 16px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain; /* 상위로 스크롤 전파 최소화 */
+    flex: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .Overlay,
+    .Sheet {
+        transition: none;
+    }
+}
+
+.Footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 1002;
+    width: 100%;
+    background-color: var(--White1);
+    padding: var(--padding, 16px);
+    height: auto;
+}

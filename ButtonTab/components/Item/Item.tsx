@@ -1,4 +1,4 @@
-import Select, { useSelect } from '@/shared/headless/Select/Select';
+import Select, { useSelect } from '../../../shared/headless/Select/Select';
 import React from 'react';
 import styles from './Item.module.scss';
 import classNames from 'classnames';

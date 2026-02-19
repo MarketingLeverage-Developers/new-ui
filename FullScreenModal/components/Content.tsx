@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from '../FullScreenModal.module.scss';
-import Modal from '@/shared/headless/Modal/Modal';
+import Modal from '../../shared/headless/Modal/Modal';
 
 type ContentProps = {
     children: React.ReactNode;

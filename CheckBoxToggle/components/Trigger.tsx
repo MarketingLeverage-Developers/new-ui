@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './Trigger.module.scss';
-import Toggle, { useToggle } from '@/shared/headless/Toggle/Toggle';
+import Toggle, { useToggle } from '../../shared/headless/Toggle/Toggle';
 import classNames from 'classnames';
 import { FaCheck } from 'react-icons/fa';
 

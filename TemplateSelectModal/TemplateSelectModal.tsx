@@ -1,4 +1,4 @@
-import Modal from '@/shared/headless/Modal/Modal';
+import Modal from '../shared/headless/Modal/Modal';
 import React from 'react';
 import { Trigger, Layout, Template, Item, TopPortal } from './components/intdex';
 

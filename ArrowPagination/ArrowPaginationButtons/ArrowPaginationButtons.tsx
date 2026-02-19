@@ -1,5 +1,5 @@
 import ArrowPagination from '../ArrowPagination';
-import { type PaginationValueType } from '@/shared/headless/Pagination/Pagination';
+import { type PaginationValueType } from '../../shared/headless/Pagination/Pagination';
 
 type ArrowPaginationButtonsProps = {
     onPagingButtonClick: (paginationValue: PaginationValueType) => void;

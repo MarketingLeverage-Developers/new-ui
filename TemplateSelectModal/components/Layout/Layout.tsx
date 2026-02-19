@@ -1,7 +1,7 @@
 import StrictOverlay from '@/features/overlay/components/StrictOverlay';
-import Modal from '@/shared/headless/Modal/Modal';
-import BaseModalLayout from '@/shared/primitives/BaseModalLayout/BaseModalLayout';
-import Form from '@/shared/primitives/Form/Form';
+import Modal from '../../../shared/headless/Modal/Modal';
+import BaseModalLayout from '../../../BaseModalLayout/BaseModalLayout';
+import Form from '../../../Form/Form';
 import React from 'react';
 
 type LayoutProps = {

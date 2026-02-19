@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from '../SummaryInfoBox.module.scss';
-import type { Image } from '@/shared/types/common';
+import type { Image } from '../../shared/types/common';
 
 type Props = { icon: string; file: Image | undefined };
 const LogoRow = ({ icon, file }: Props) => {

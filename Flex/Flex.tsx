@@ -1,11 +1,11 @@
 import React from 'react';
 import classNames from 'classnames';
 import styles from './Flex.module.scss';
-import { toCssUnit } from '@/shared/utils';
-import type { PaddingSize } from '@/shared/types/css/PaddingSize';
-import type { CSSVariables } from '@/shared/types/css/CSSVariables';
-import { toCssPadding } from '@/shared/utils/css/toCssPadding';
-import type { CSSLength } from '@/shared/types';
+import { toCssUnit } from '../shared/utils';
+import type { PaddingSize } from '../shared/types/css/PaddingSize';
+import type { CSSVariables } from '../shared/types/css/CSSVariables';
+import { toCssPadding } from '../shared/utils/css/toCssPadding';
+import type { CSSLength } from '../shared/types';
 import Item from './Item/Item';
 
 export type FlexProps = React.HTMLAttributes<HTMLDivElement> & {

@@ -1,6 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
-import Dropdown from '@/shared/headless/Dropdown/Dropdown';
+import Dropdown from '../../../../../../../shared/headless/Dropdown/Dropdown';
 import styles from './BaseSelectContent.module.scss';
 
 export type BaseSelectContentProps = React.ComponentProps<typeof Dropdown.Content> & {

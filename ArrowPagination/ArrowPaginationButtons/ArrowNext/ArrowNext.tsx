@@ -1,8 +1,8 @@
-import Pagination, { usePagination } from '@/shared/headless/Pagination/Pagination';
+import Pagination, { usePagination } from '../../../shared/headless/Pagination/Pagination';
 import classNames from 'classnames';
 import React from 'react';
 import styles from '../ArrowPaginationButtons.module.scss';
-import type { Next } from '@/shared/headless/Pagination/components';
+import type { Next } from '../../../shared/headless/Pagination/components';
 import { IoIosArrowForward } from 'react-icons/io';
 
 type ArrowNextProps = Omit<React.ComponentProps<typeof Next>, 'children'>;

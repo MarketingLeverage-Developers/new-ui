@@ -1,10 +1,10 @@
-import type { CSSVariables } from '@/shared/types/css/CSSVariables';
-import { toCssUnit } from '@/shared/utils';
+import type { CSSVariables } from '../shared/types/css/CSSVariables';
+import { toCssUnit } from '../shared/utils';
 import React from 'react';
 import styles from './RequestDescriptionBox.module.scss';
-import type { HexColor } from '@/shared/types/css/HexColor';
-import type { ThemeColorVar } from '@/shared/types/css/ThemeColorTokens';
-import type { CSSLength } from '@/shared/types';
+import type { HexColor } from '../shared/types/css/HexColor';
+import type { ThemeColorVar } from '../shared/types/css/ThemeColorTokens';
+import type { CSSLength } from '../shared/types';
 
 type Props = {
     height?: CSSLength;

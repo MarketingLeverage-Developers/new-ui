@@ -1,18 +1,18 @@
 import React, { type ButtonHTMLAttributes } from 'react';
 import styles from './ApproveButton.module.scss';
-import type { HexColor } from '@/shared/types/css/HexColor';
-import type { CSSLength } from '@/shared/types';
-import type { ThemeColorVar } from '@/shared/types/css/ThemeColorTokens';
-import type { PaddingSize } from '@/shared/types/css/PaddingSize';
-import type { CSSVariables } from '@/shared/types/css/CSSVariables';
-import { toCssUnit } from '@/shared/utils';
-import { toCssPadding } from '@/shared/utils/css/toCssPadding';
+import type { HexColor } from '../../../../../shared/types/css/HexColor';
+import type { CSSLength } from '../../../../../shared/types';
+import type { ThemeColorVar } from '../../../../../shared/types/css/ThemeColorTokens';
+import type { PaddingSize } from '../../../../../shared/types/css/PaddingSize';
+import type { CSSVariables } from '../../../../../shared/types/css/CSSVariables';
+import { toCssUnit } from '../../../../../shared/utils';
+import { toCssPadding } from '../../../../../shared/utils/css/toCssPadding';
 import classNames from 'classnames';
 import Flex from '../../../../../Flex/Flex';
 import { Image } from '../../../../../Image/Image';
 import Text from '../../../../../Text/Text';
-import SignIcon from './assets/sign.svg';
-import { getThemeColor } from '@/shared/utils/css/getThemeColor';
+import SignIcon from '../../../../../shared/assets/components/D/components/Button/components/ApproveButton/sign.svg';
+import { getThemeColor } from '../../../../../shared/utils/css/getThemeColor';
 
 export type ApproveButtonProps = {
     bgColor?: HexColor | ThemeColorVar;

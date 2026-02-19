@@ -2,11 +2,13 @@ import React from 'react';
 import classNames from 'classnames';
 import styles from './ModalTemplate.module.scss';
 
-import type { CSSLength } from '@/shared/types';
-import type { CSSVariables } from '@/shared/types/css/CSSVariables';
-import { toCssUnit } from '@/shared/utils';
+import type { CSSLength } from '../../../../../shared/types';
+import type { CSSVariables } from '../../../../../shared/types/css/CSSVariables';
+import type { PaddingSize } from '../../../../../shared/types/css/PaddingSize';
+import { toCssUnit } from '../../../../../shared/utils';
+import { toCssPadding } from '../../../../../shared/utils/css/toCssPadding';
 
-import MainOverlay from '@/features/overlay/components/MainOverlay';
+import MainOverlay from '@/components/feature/overlay/MainOverlay';
 import ModalTemplateHeader, {
     type ModalTemplateHeaderProps,
 } from './components/ModalTemplateHeader/ModalTemplateHeader';
@@ -19,6 +21,9 @@ export type ModalTemplateExtraProps = {
 export type ModalTemplateProps = ModalTemplateExtraProps & {
     /** ✅ module.scss에서 width 제어용 */
     width?: CSSLength;
+    height?: CSSLength;
+    padding?: PaddingSize | number;
+    children?: React.ReactNode;
 
     isLoading?: boolean;
     isError?: boolean;
@@ -46,6 +51,9 @@ const ModalTemplateRoot: React.FC<ModalTemplateProps> = (props) => {
     const {
         className,
         width,
+        height,
+        padding,
+        children,
         title,
         subTitle,
         onTitleChange,
@@ -59,6 +67,20 @@ const ModalTemplateRoot: React.FC<ModalTemplateProps> = (props) => {
         isEmpty,
         onRetry,
     } = props;
+
+    if (children) {
+        const legacyCssVariables: CSSVariables = {
+            '--width': toCssUnit(width),
+            '--height': toCssUnit(height),
+            '--padding': toCssPadding(padding ?? 32),
+        };
+
+        return (
+            <div className={classNames(styles.ModalTemplateLegacy, className)} style={legacyCssVariables}>
+                {children}
+            </div>
+        );
+    }
 
     const cssVariables: CSSVariables = {
         '--modal-width': toCssUnit(width),

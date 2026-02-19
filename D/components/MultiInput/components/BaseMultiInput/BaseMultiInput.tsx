@@ -2,7 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 import styles from './BaseMultiInput.module.scss';
 import type { MultiInputCommonProps } from '../../MultiInput';
-import MultiInput, { useMultiInput } from '@/shared/headless/MultiInput/MultiInput';
+import MultiInput, { useMultiInput } from '../../../../../shared/headless/MultiInput/MultiInput';
 import { IoCloseOutline } from 'react-icons/io5';
 
 export type BaseMultiInputStatus = 'default' | 'error' | 'success';

@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './BreadCrumbTitle.module.scss';
 import { MdNavigateNext } from 'react-icons/md';
-import { getThemeColor } from '@/shared/utils/css/getThemeColor';
+import { getThemeColor } from '../shared/utils/css/getThemeColor';
 
 export type BreadCrumbItem = {
     label: string;

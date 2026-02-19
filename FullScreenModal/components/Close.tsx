@@ -1,7 +1,7 @@
 import React from 'react';
 import Flex from '../../Flex/Flex';
 import { IoIosArrowBack } from 'react-icons/io';
-import { useModal } from '@/shared/headless/Modal/Modal';
+import { useModal } from '../../shared/headless/Modal/Modal';
 
 const Close = () => {
     const { closeModal } = useModal();

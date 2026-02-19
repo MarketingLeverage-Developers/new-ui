@@ -1,9 +1,9 @@
 // src/shared/primitives/BasicTable/components/ExpandAllRowsButton/ExpandAllRowsButton.tsx
 
 import React, { useCallback } from 'react';
-import BaseButton from '@/shared/primitives/BaseButton/BaseButton';
-import { getThemeColor } from '@/shared/utils/css/getThemeColor';
-import { useAirTableContext } from '@/shared/headless/AirTable/AirTable';
+import BaseButton from '../../../BaseButton/BaseButton';
+import { getThemeColor } from '../../../shared/utils/css/getThemeColor';
+import { useAirTableContext } from '../../../shared/headless/AirTable/AirTable';
 import { HiOutlineSortAscending } from 'react-icons/hi';
 import { HiOutlineSortDescending } from 'react-icons/hi';
 

@@ -1,6 +1,6 @@
 import type { HTMLAttributes, ReactNode } from 'react';
 import styles from './Col.module.scss';
-import type { CSSVariables } from '@/shared/types/css/CSSVariables';
+import type { CSSVariables } from '../../../shared/types/css/CSSVariables';
 import classNames from 'classnames';
 
 type ColProps = {

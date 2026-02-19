@@ -1,8 +1,8 @@
 import React, { useRef } from 'react';
 import styles from './FormSearchInput.module.scss';
-import type { PaddingSize } from '@/shared/types/css/PaddingSize';
-import type { CSSVariables } from '@/shared/types/css/CSSVariables';
-import { toCssPadding } from '@/shared/utils/css/toCssPadding';
+import type { PaddingSize } from '../shared/types/css/PaddingSize';
+import type { CSSVariables } from '../shared/types/css/CSSVariables';
+import { toCssPadding } from '../shared/utils/css/toCssPadding';
 import { HiOutlineMagnifyingGlass } from 'react-icons/hi2';
 
 type FormSearchInputProps = React.InputHTMLAttributes<HTMLInputElement> & {

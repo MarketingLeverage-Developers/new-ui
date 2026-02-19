@@ -3,7 +3,7 @@ import styles from './PageName.module.scss';
 import PageNameMobile from './PageNameMobile';
 import Flex from '../Flex/Flex';
 import BaseChip from '../BaseChip/BaseChip';
-import { getThemeColor } from '@/shared/utils/css/getThemeColor';
+import { getThemeColor } from '../shared/utils/css/getThemeColor';
 
 type PageNameProps = {
     text: string;

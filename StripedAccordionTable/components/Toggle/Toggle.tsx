@@ -1,5 +1,5 @@
-import type AccordionTable from '@/shared/headless/AccordionTable/AccordionTable';
-import { useRowDetails } from '@/shared/headless/AccordionTable/AccordionTable';
+import type AccordionTable from '../../../shared/headless/AccordionTable/AccordionTable';
+import { useRowDetails } from '../../../shared/headless/AccordionTable/AccordionTable';
 import { IoMdAddCircleOutline, IoMdRemoveCircleOutline } from 'react-icons/io';
 import styles from './Toggle.module.scss';
 

@@ -2,11 +2,11 @@ import React, { useMemo, useState, useCallback } from 'react';
 import classNames from 'classnames';
 import { FaCheck } from 'react-icons/fa';
 
-import { useColumnVisibilityControl } from '@/shared/headless/AirTable/hooks/useColumnVisibilityControl';
+import { useColumnVisibilityControl } from '../../../shared/headless/AirTable/hooks/useColumnVisibilityControl';
 
 import tableStyles from '../../BasicTable.module.scss'; // ✅✅✅ 이것만 사용
 
-import ManySelect from '@/shared/headless/ManySelect/ManySelect';
+import ManySelect from '../../../shared/headless/ManySelect/ManySelect';
 
 type CheckboxProps = {
     label: string;

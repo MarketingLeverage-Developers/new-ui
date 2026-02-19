@@ -1,9 +1,9 @@
 import React from 'react';
 import styles from './Dropzone.module.scss';
-import { getThemeColor } from '@/shared/utils/css/getThemeColor';
-import Direcotry from './assets/directory.png';
-import BaseButton from '@/shared/primitives/BaseButton/BaseButton';
-import ImageUploader, { useImageUploader } from '@/shared/headless/ImageUploader/ImageUploader';
+import { getThemeColor } from '../../../shared/utils/css/getThemeColor';
+import Direcotry from '../../../shared/assets/components/BaseImageUploader/components/Dropzone/directory.png';
+import BaseButton from '../../../BaseButton/BaseButton';
+import ImageUploader, { useImageUploader } from '../../../shared/headless/ImageUploader/ImageUploader';
 
 type DropzoneProps = { openFileDialog?: () => void } & React.HTMLAttributes<HTMLDivElement>;
 

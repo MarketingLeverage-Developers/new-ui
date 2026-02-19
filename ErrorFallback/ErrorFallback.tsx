@@ -3,8 +3,8 @@ import React from 'react';
 import Flex from '../Flex/Flex';
 import Text from '../Text/Text';
 import BaseButton from '../BaseButton/BaseButton';
-import { getThemeColor } from '@/shared/utils/css/getThemeColor';
-import ErrorImage from './assets/error.svg';
+import { getThemeColor } from '../shared/utils/css/getThemeColor';
+import ErrorImage from '../shared/assets/components/ErrorFallback/error.svg';
 
 interface ErrorFallbackProps {
     onRetry?: () => void;

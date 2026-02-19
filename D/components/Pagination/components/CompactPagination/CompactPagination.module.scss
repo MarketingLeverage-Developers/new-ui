@@ -1,0 +1,45 @@
+.CompactPagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+.PagingButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    color: var(--Gray3);
+    padding: 4px;
+    font-size: 18px;
+    height: 34px;
+    aspect-ratio: 1 / 1;
+}
+
+.Disabled {
+    color: var(--Gray5);
+}
+
+.CompactPages {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    color: var(--Gray2);
+    font-weight: 400;
+}
+
+.CompactPages > span:first-child {
+    font-weight: 600;
+    color: var(--Gray1);
+}
+
+.CompactPages span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 30px;
+}

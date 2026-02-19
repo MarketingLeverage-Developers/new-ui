@@ -11,7 +11,7 @@ import BaseDropdownContent, {
     type BaseDropdownContentProps,
 } from './BaseDropdown/components/BaseDropdownContent/BaseDropdownContent';
 
-export type DropdownVariant = 'base';
+export type DropdownVariant = 'base' | 'date-range' | 'rounded';
 
 export type DropdownProps = { variant?: DropdownVariant } & BaseDropdownProps;
 
@@ -24,7 +24,7 @@ const DropdownVariantContext = createContext<DropdownVariantContextValue | null>
 const useDropdownVariant = () => {
     const ctx = useContext(DropdownVariantContext);
     if (!ctx) {
-        throw new Error("Dropdown.* must be used inside <Dropdown variant='base' ...>");
+        throw new Error("Dropdown.* must be used inside <Dropdown variant='base' | 'date-range' | 'rounded' ...>");
     }
     return ctx;
 };
@@ -44,7 +44,7 @@ const DropdownRoot: React.FC<DropdownProps> = (props) => {
 
     return (
         <DropdownVariantContext.Provider value={{ variant }}>
-            {variant === 'base' ? <BaseDropdown {...(rest as BaseDropdownProps)} /> : null}
+            {(variant === 'base' || variant === 'date-range') ? <BaseDropdown {...(rest as BaseDropdownProps)} /> : null}
         </DropdownVariantContext.Provider>
     );
 };
@@ -53,6 +53,10 @@ const DropdownTrigger: React.FC<DropdownTriggerProps> = (props) => {
     const { variant } = useDropdownVariant();
 
     if (variant === 'base') return <BaseDropdownTrigger {...(props as BaseDropdownTriggerProps)} />;
+    if (variant === 'date-range')
+        return <BaseDropdownTrigger {...(props as BaseDropdownTriggerProps)} triggerVariant="date-range" />;
+    if (variant === 'rounded')
+        return <BaseDropdownTrigger {...(props as BaseDropdownTriggerProps)} triggerVariant="rounded" />;
 
     return null;
 };
@@ -69,6 +73,9 @@ const DropdownContent: React.FC<DropdownContentProps> = (props) => {
     const { variant } = useDropdownVariant();
 
     if (variant === 'base') return <BaseDropdownContent {...(props as BaseDropdownContentProps)} />;
+    if (variant === 'date-range')
+        return <BaseDropdownContent {...(props as BaseDropdownContentProps)} contentVariant="date-range" />;
+    if (variant === 'rounded') return <BaseDropdownContent {...(props as BaseDropdownContentProps)} />;
 
     return null;
 };

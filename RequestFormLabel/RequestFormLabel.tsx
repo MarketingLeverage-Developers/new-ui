@@ -1,6 +1,6 @@
 import React from 'react';
-import type { CSSVariables } from '@/shared/types/css/CSSVariables';
-import { toCssUnit } from '@/shared/utils';
+import type { CSSVariables } from '../shared/types/css/CSSVariables';
+import { toCssUnit } from '../shared/utils';
 import styles from './RequestFormLabel.module.scss';
 import classNames from 'classnames';
 type Props = {

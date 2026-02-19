@@ -1,8 +1,8 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import Flex from '@/shared/primitives/Flex/Flex';
-import RoundedInput from '@/shared/primitives/RoundedInput/RoundedInput';
-import Text from '@/shared/primitives/Text/Text';
-import { getThemeColor } from '@/shared/utils/css/getThemeColor';
+import Flex from '../Flex/Flex';
+import RoundedInput from '../RoundedInput/RoundedInput';
+import Text from '../Text/Text';
+import { getThemeColor } from '../shared/utils/css/getThemeColor';
 
 type PhoneNumberInqutProps = {
     value?: string; // "01012345678" 같은 합쳐진 값

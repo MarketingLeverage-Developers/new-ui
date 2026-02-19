@@ -2,11 +2,11 @@ import React, { useMemo } from 'react';
 import { RiDownload2Fill } from 'react-icons/ri';
 import { FaCheck } from 'react-icons/fa';
 import styles from './BaseStackedFileUploaderList.module.scss';
-import { useFileUploader } from '@/shared/primitives/D/components/FileUploader/FileUploader';
-import { Common } from '@/shared/primitives/C/Common';
-import type { ServerImage } from '@/shared/types/common/model';
-import Modal, { useModal } from '@/shared/headless/Modal/Modal'; // ✅ 추가
-import Portal from '@/shared/headless/Portal/Portal'; // ✅ 추가
+import { useFileUploader } from '../../../../FileUploader';
+import { Common } from '../../../../../../../C/Common';
+import type { ServerImage } from '../../../../../../../shared/types/common/model';
+import Modal, { useModal } from '../../../../../../../shared/headless/Modal/Modal'; // ✅ 추가
+import Portal from '../../../../../../../shared/headless/Portal/Portal'; // ✅ 추가
 
 type FileType = 'IMAGE' | 'ZIP' | 'VIDEO' | 'ETC';
 
@@ -326,9 +326,9 @@ export default BaseStackedFileUploaderList;
 // import { RiDownload2Fill } from 'react-icons/ri';
 // import { FaCheck } from 'react-icons/fa';
 // import styles from './BaseStackedFileUploaderList.module.scss';
-// import { useFileUploader } from '@/shared/primitives/D/components/FileUploader/FileUploader';
-// import { Common } from '@/shared/primitives/C/Common';
-// import type { ServerImage } from '@/shared/types/common/model';
+// import { useFileUploader } from '../../../../FileUploader';
+// import { Common } from '../../../../../../../C/Common';
+// import type { ServerImage } from '../../../../../../../shared/types/common/model';
 
 // type FileType = 'IMAGE' | 'ZIP' | 'VIDEO' | 'ETC';
 

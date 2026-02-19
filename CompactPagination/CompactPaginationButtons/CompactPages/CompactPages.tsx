@@ -1,4 +1,4 @@
-import { usePagination, type PaginationValueType } from '@/shared/headless/Pagination/Pagination';
+import { usePagination, type PaginationValueType } from '../../../shared/headless/Pagination/Pagination';
 import React from 'react';
 import styles from '../CompactPaginationButtons.module.scss';
 

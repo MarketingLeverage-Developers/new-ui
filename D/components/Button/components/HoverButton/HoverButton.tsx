@@ -1,9 +1,9 @@
 import React, { forwardRef } from 'react';
 import styles from './HoverButton.module.scss';
-import type { CSSVariables } from '@/shared/types/css/CSSVariables';
-import type { PaddingSize } from '@/shared/types/css/PaddingSize';
-import { toCssUnit } from '@/shared/utils';
-import { toCssPadding } from '@/shared/utils/css/toCssPadding';
+import type { CSSVariables } from '../../../../../shared/types/css/CSSVariables';
+import type { PaddingSize } from '../../../../../shared/types/css/PaddingSize';
+import { toCssUnit } from '../../../../../shared/utils';
+import { toCssPadding } from '../../../../../shared/utils/css/toCssPadding';
 
 export type HoverButtonTone = 'gray' | 'blue' | 'red' | 'green';
 

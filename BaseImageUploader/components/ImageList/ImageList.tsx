@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './ImageList.module.scss';
-import ImageUploader from '@/shared/headless/ImageUploader/ImageUploader';
+import ImageUploader from '../../../shared/headless/ImageUploader/ImageUploader';
 
 export const ImageList = () => (
     <ImageUploader.ImageList

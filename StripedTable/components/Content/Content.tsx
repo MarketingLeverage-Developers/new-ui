@@ -1,7 +1,7 @@
 // 셀 안에서 텍스트 정렬을 제어하는 래퍼
 import React from 'react';
 import styles from './Content.module.scss';
-import type { CSSVariables } from '@/shared/types/css/CSSVariables';
+import type { CSSVariables } from '../../../shared/types/css/CSSVariables';
 
 type ContentProps = {
     children?: React.ReactNode;

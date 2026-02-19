@@ -6,9 +6,9 @@ import BaseAccordionHeader from './components/BaseAccordion/components/BaseAccor
 import type { BaseAccordionContentProps } from './components/BaseAccordion/components/BaseAccordionContent/BaseAccordionContent';
 import BaseAccordionContent from './components/BaseAccordion/components/BaseAccordionContent/BaseAccordionContent';
 
-import type { Accordion as AccordionHeadless } from '@/shared/headless/Accordion/Accordion';
+import type { Accordion as AccordionHeadless } from '../../../shared/headless/Accordion/Accordion';
 
-import type { LabelCommonProps } from '@/shared/primitives/D/components/Label/Label';
+import type { LabelCommonProps } from '../Label/Label';
 import StrongIconLabelAccordion from './components/StrongIconLabelAccordion/StrongIconLabelAccordion';
 
 export type AccordionVariant = 'base' | 'strong-label';

@@ -1,11 +1,11 @@
-import Dropdown, { useDropdown } from '@/shared/headless/Dropdown/Dropdown';
+import Dropdown, { useDropdown } from '../../../../../../../shared/headless/Dropdown/Dropdown';
 import React, { useEffect, useMemo } from 'react';
 import styles from './Content.module.scss';
-import ManySelect, { useManySelect } from '@/shared/headless/ManySelect/ManySelect';
+import ManySelect, { useManySelect } from '../../../../../../../shared/headless/ManySelect/ManySelect';
 import { FaCheck } from 'react-icons/fa';
 import classNames from 'classnames';
-import { useQuerySearch } from '@/shared/headless/QuerySearch/QuerySearch';
-import { useHangulSearch } from '@/shared/hooks/client/useHangulSearch';
+import { useQuerySearch } from '../../../../../../../shared/headless/QuerySearch/QuerySearch';
+import { useHangulSearch } from '../../../../../../../shared/hooks/client/useHangulSearch';
 
 const SearchManySelectContent: React.FC<{ isDesc?: boolean }> = ({ isDesc = false }) => {
     const { open, isOpen } = useDropdown();

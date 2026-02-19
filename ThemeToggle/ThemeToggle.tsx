@@ -1,10 +1,10 @@
-import Toggle from '@/shared/headless/Toggle/Toggle';
+import Toggle from '../shared/headless/Toggle/Toggle';
 import React from 'react';
 
 import ThemeTrigger from './components/ThemeTrigger';
-import Flex from '@/shared/primitives/Flex/Flex';
-import Text from '@/shared/primitives/Text/Text';
-import { getThemeColor } from '@/shared/utils/css/getThemeColor';
+import Flex from '../Flex/Flex';
+import Text from '../Text/Text';
+import { getThemeColor } from '../shared/utils/css/getThemeColor';
 
 type ThemeToggleProps = Omit<React.ComponentProps<typeof Toggle>, 'children'> & {
     label?: React.ReactNode;

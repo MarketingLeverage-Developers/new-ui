@@ -1,5 +1,5 @@
-import type { Prev } from '@/shared/headless/Pagination/components';
-import Pagination, { usePagination } from '@/shared/headless/Pagination/Pagination';
+import type { Prev } from '../../../shared/headless/Pagination/components';
+import Pagination, { usePagination } from '../../../shared/headless/Pagination/Pagination';
 import classNames from 'classnames';
 import React from 'react';
 import styles from '../ArrowPaginationButtons.module.scss';

@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './Line.module.scss';
-import Flex from '@/shared/primitives/Flex/Flex';
+import Flex from '../../../../../../../../../Flex/Flex';
 
 type LineProps = {} & React.ComponentProps<typeof Flex>;
 

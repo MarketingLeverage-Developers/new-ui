@@ -2,12 +2,12 @@ import React, { type HTMLAttributes, useCallback, useState } from 'react';
 import classNames from 'classnames';
 import styles from './BaseFileUploaderDropzone.module.scss';
 
-import { useFileUploader } from '@/shared/primitives/D/components/FileUploader/FileUploader';
+import { useFileUploader } from '../../../../FileUploader';
 
-import Button from '@/shared/primitives/D/components/Button/Button';
-import FolderIcon from './assets/Folder.svg';
-import PictureIcon from './assets/Picture.svg';
-import { Common } from '@/shared/primitives/C/Common';
+import Button from '../../../../../Button/Button';
+import FolderIcon from '../../../../../../../shared/assets/components/D/components/FileUploader/components/BaseFileUploader/components/BaseFileUploaderDropzone/Folder.svg';
+import PictureIcon from '../../../../../../../shared/assets/components/D/components/FileUploader/components/BaseFileUploader/components/BaseFileUploaderDropzone/Picture.svg';
+import { Common } from '../../../../../../../C/Common';
 
 export type BaseFileUploaderDropzoneProps = Omit<HTMLAttributes<HTMLDivElement>, 'children'> & {
     guideText?: string;

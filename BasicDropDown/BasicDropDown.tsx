@@ -1,4 +1,4 @@
-import Dropdown from '@/shared/headless/Dropdown/Dropdown';
+import Dropdown from '../shared/headless/Dropdown/Dropdown';
 import React from 'react';
 import { Content, Trigger } from './components';
 

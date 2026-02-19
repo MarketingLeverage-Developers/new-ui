@@ -1,4 +1,4 @@
-import { usePagination, type PaginationValueType } from '@/shared/headless/Pagination/Pagination';
+import { usePagination, type PaginationValueType } from '../../../shared/headless/Pagination/Pagination';
 import classNames from 'classnames';
 import styles from '../ArrowPaginationButtons.module.scss';
 import React from 'react';

@@ -1,6 +1,6 @@
 import React from 'react';
-import Box from '@/shared/primitives/D/components/Box/Box';
-import { getThemeColor } from '@/shared/utils/css/getThemeColor';
+import Box from '../../../Box/Box';
+import { getThemeColor } from '../../../../../shared/utils/css/getThemeColor';
 
 export type RequestDetailTemplateProps = {
     left?: React.ReactNode;

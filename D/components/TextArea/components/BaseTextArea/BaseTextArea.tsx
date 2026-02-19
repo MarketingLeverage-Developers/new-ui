@@ -2,9 +2,9 @@ import React from 'react';
 import classNames from 'classnames';
 import styles from './BaseTextArea.module.scss';
 
-import type { CSSVariables } from '@/shared/types/css/CSSVariables';
-import type { CSSLength } from '@/shared/types';
-import { toCssUnit } from '@/shared/utils';
+import type { CSSVariables } from '../../../../../shared/types/css/CSSVariables';
+import type { CSSLength } from '../../../../../shared/types';
+import { toCssUnit } from '../../../../../shared/utils';
 
 export type BaseTextAreaExtraProps = {
     height?: CSSLength;

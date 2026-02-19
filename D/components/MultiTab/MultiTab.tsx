@@ -1,5 +1,5 @@
 import React, { createContext, useContext } from 'react';
-import type ManySelect from '@/shared/headless/ManySelect/ManySelect';
+import type ManySelect from '../../../shared/headless/ManySelect/ManySelect';
 
 import ChipMultiTab, { type ChipMultiTabExtraProps } from './components/ChipMultiTab/ChipMultiTab';
 import ChipMultiTabItem, {

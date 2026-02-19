@@ -1,6 +1,6 @@
 import React, { createContext, useContext } from 'react';
 
-import type ManySelect from '@/shared/headless/ManySelect/ManySelect';
+import type ManySelect from '../../../shared/headless/ManySelect/ManySelect';
 
 import ChipMultiSelect, { type ChipMultiSelectProps } from './components/ChipMultiSelect/ChipMultiSelect';
 import type { ChipMultiSelectItemProps } from './components/ChipMultiSelect/components/ChipMultiSelectItem/ChipMultiSelectItem';

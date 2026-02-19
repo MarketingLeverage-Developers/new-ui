@@ -1,4 +1,4 @@
-import Table from '@/shared/headless/TableX/Table';
+import Table from '../../../shared/headless/TableX/Table';
 import React, { useState, useLayoutEffect } from 'react';
 import { createPortal } from 'react-dom';
 import styles from './ColumnSelectBox.module.scss';

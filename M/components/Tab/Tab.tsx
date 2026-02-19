@@ -5,7 +5,7 @@ import ButtonTab, { type ButtonTabExtraProps } from './components/ButtonTab/comp
 import ButtonTabItem, {
     type ButtonTabItemProps,
 } from './components/ButtonTab/components/ButtonTab/components/ButtonTabItem/ButtonTabItem';
-import type Select from '@/shared/headless/Select/Select';
+import type Select from '../../../shared/headless/Select/Select';
 
 export type TabVariant = 'base' | 'button';
 

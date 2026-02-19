@@ -2,7 +2,7 @@ import React, { forwardRef } from 'react';
 import classNames from 'classnames';
 import styles from './BoxButton.module.scss';
 import { MdKeyboardArrowRight, MdClose } from 'react-icons/md';
-import { Common } from '@/shared/primitives/C/Common';
+import { Common } from '../../../../../C/Common';
 
 export type BoxButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
     className?: string;

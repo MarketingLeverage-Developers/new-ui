@@ -2,7 +2,7 @@ import type React from 'react';
 
 import styles from './ScheduleCalendar.module.scss';
 
-import MLCalendarProvider, { type CalendarEvent, type CalendarView } from '@/shared/headless/MLCalendar/MLCalendar';
+import MLCalendarProvider, { type CalendarEvent, type CalendarView } from '../shared/headless/MLCalendar/MLCalendar';
 
 import CalendarEventItem from './components/CalendarEnvetItem/CalendarEnvetItem';
 import CalendarDayHeader from './components/CalendarDayHeader/CalendarDayHeader';

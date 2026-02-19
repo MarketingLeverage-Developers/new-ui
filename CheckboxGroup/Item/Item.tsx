@@ -1,11 +1,11 @@
 import React, { useEffect, useMemo } from 'react';
-import Toggle from '@/shared/headless/Toggle/Toggle';
+import Toggle from '../../shared/headless/Toggle/Toggle';
 import { FaCheck } from 'react-icons/fa';
 import { useCheckboxGroup } from '../CheckboxGroupContext';
 import styles from '../CheckboxGroup.module.scss';
-import type { CSSVariables } from '@/shared/types/css/CSSVariables';
-import type { HexColor } from '@/shared/types/css/HexColor';
-import type { ThemeColorVar } from '@/shared/types/css/ThemeColorTokens';
+import type { CSSVariables } from '../../shared/types/css/CSSVariables';
+import type { HexColor } from '../../shared/types/css/HexColor';
+import type { ThemeColorVar } from '../../shared/types/css/ThemeColorTokens';
 
 export type ItemProps = {
     value: string;

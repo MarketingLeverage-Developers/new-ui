@@ -1,6 +1,6 @@
-import BaseButton from '@/shared/primitives/BaseButton/BaseButton';
+import BaseButton from '../../../BaseButton/BaseButton';
 import tableStyles from '../../BasicTable.module.scss';
-import { getThemeColor } from '@/shared/utils/css/getThemeColor';
+import { getThemeColor } from '../../../shared/utils/css/getThemeColor';
 import { FaCog } from 'react-icons/fa';
 
 const TableSettingTrigger = ({ open, onToggle }: { open: boolean; onToggle: () => void }) => (

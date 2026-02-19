@@ -3,7 +3,7 @@ import React from 'react';
 import classNames from 'classnames';
 
 import styles from './Content.module.scss';
-import Dropdown, { useDropdown } from '@/shared/headless/Dropdown/Dropdown';
+import Dropdown, { useDropdown } from '../../../shared/headless/Dropdown/Dropdown';
 
 type ContentProps = {
     children: React.ReactNode;

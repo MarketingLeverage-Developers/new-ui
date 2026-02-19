@@ -1,12 +1,12 @@
 import React from 'react';
 import styles from './Trigger.module.scss';
 import { IoIosCloseCircle } from 'react-icons/io';
-import Text from '@/shared/primitives/Text/Text';
-import { getThemeColor } from '@/shared/utils/css/getThemeColor';
-import Flex from '@/shared/primitives/Flex/Flex';
+import Text from '../../../Text/Text';
+import { getThemeColor } from '../../../shared/utils/css/getThemeColor';
+import Flex from '../../../Flex/Flex';
 import { FaAngleRight } from 'react-icons/fa';
-import Modal from '@/shared/headless/Modal/Modal';
-import { Image } from '@/shared/primitives/Image/Image';
+import Modal from '../../../shared/headless/Modal/Modal';
+import { Image } from '../../../Image/Image';
 import classNames from 'classnames';
 
 export const Trigger = ({

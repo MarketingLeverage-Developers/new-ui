@@ -1,5 +1,5 @@
-import Modal, { useModal } from '@/shared/headless/Modal/Modal';
-import Portal from '@/shared/headless/Portal/Portal';
+import Modal, { useModal } from '../../shared/headless/Modal/Modal';
+import Portal from '../../shared/headless/Portal/Portal';
 import React from 'react';
 import classNames from 'classnames';
 import styles from './Content.module.scss';

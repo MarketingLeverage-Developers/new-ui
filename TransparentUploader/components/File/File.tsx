@@ -1,10 +1,10 @@
 // TransparentUploader.File
 import React from 'react';
 import styles from './File.module.scss';
-import { getThemeColor } from '@/shared/utils/css/getThemeColor';
-import Folder from './assets/Folder.svg';
-import BaseButton from '@/shared/primitives/BaseButton/BaseButton';
-import FileUploader, { useFileUploader } from '@/shared/headless/FileUploader/FileUploader';
+import { getThemeColor } from '../../../shared/utils/css/getThemeColor';
+import Folder from '../../../shared/assets/components/TransparentUploader/components/File/Folder.svg';
+import BaseButton from '../../../BaseButton/BaseButton';
+import FileUploader, { useFileUploader } from '../../../shared/headless/FileUploader/FileUploader';
 
 const ZIP_ACCEPT = 'application/zip,application/x-zip-compressed,.zip';
 

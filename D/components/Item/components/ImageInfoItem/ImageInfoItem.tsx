@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './ImageInfoItem.module.scss';
-import Flex from '@/shared/primitives/Flex/Flex';
-import { Common } from '@/shared/primitives/C/Common';
+import Flex from '../../../../../Flex/Flex';
+import { Common } from '../../../../../C/Common';
 import { MdArrowForwardIos } from 'react-icons/md';
 
 export type ImageInfoItemProps = {

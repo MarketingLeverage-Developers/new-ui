@@ -1,11 +1,11 @@
 import React from 'react';
 import styles from '../BaseButtonTab.module.scss';
-import Select from '@/shared/headless/Select/Select';
-import { useSelect } from '@/shared/headless/Select/Select';
+import Select from '../../shared/headless/Select/Select';
+import { useSelect } from '../../shared/headless/Select/Select';
 import classNames from 'classnames';
-import type { HexColor } from '@/shared/types/css/HexColor';
-import type { ThemeColorVar } from '@/shared/types/css/ThemeColorTokens';
-import type { CSSVariables } from '@/shared/types/css/CSSVariables';
+import type { HexColor } from '../../shared/types/css/HexColor';
+import type { ThemeColorVar } from '../../shared/types/css/ThemeColorTokens';
+import type { CSSVariables } from '../../shared/types/css/CSSVariables';
 
 type ItemProps = {
     children: React.ReactNode;

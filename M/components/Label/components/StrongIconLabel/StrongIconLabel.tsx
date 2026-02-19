@@ -2,7 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 import styles from './StrongIconLabel.module.scss';
 import type { LabelCommonProps } from '../../Label';
-import type { CSSVariables } from '@/shared/types/css/CSSVariables';
+import type { CSSVariables } from '../../../../../shared/types/css/CSSVariables';
 
 const StrongIconLabel = (props: LabelCommonProps) => {
     const { icon, direction = 'row', gap = 10, children, className, text, style, ...rest } = props;

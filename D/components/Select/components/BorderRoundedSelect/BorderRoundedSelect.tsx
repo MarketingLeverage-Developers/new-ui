@@ -1,6 +1,6 @@
 import React from 'react';
-import Dropdown from '@/shared/headless/Dropdown/Dropdown';
-import HeadlessSelect from '@/shared/headless/Select/Select';
+import Dropdown from '../../../../../shared/headless/Dropdown/Dropdown';
+import HeadlessSelect from '../../../../../shared/headless/Select/Select';
 import BorderRoundedSelectDisplay, { type BorderRoundedSelectDisplayProps } from './components/Display/Display';
 import BorderRoundedSelectContent, { type BorderRoundedSelectContentProps } from './components/Content/Content';
 import BorderRoundedSelectItem, { type BorderRoundedSelectItemProps } from './components/Item/Item';

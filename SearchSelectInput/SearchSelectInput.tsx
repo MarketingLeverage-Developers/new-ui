@@ -1,8 +1,8 @@
-import { QuerySearch, useQuerySearch } from '@/shared/headless/QuerySearch/QuerySearch';
-import Select from '@/shared/headless/Select/Select';
+import { QuerySearch, useQuerySearch } from '../shared/headless/QuerySearch/QuerySearch';
+import Select from '../shared/headless/Select/Select';
 import React from 'react';
 import type { SelectItem } from '../SearchSelect/SearchSelect';
-import Dropdown from '@/shared/headless/Dropdown/Dropdown';
+import Dropdown from '../shared/headless/Dropdown/Dropdown';
 import Content from './components/Content/Content';
 import Input from './components/Input/Input';
 

@@ -4,7 +4,7 @@ import ImageInfoItem, { type ImageInfoItemProps } from './components/ImageInfoIt
 import ImageMetricItem, { type ImageMetricItemProps } from './components/ImageMetricItem/ImageMetricItem';
 import DepartmentCardItem, {
     type DepartmentCardItemProps,
-} from '@/shared/primitives/D/components/Item/components/DepartmentCardItem/DepartmentCardItem';
+} from '../../../D/components/Item/components/DepartmentCardItem/DepartmentCardItem';
 
 export type ItemVariant = 'image-tag' | 'image-info' | 'image-metric' | 'department';
 

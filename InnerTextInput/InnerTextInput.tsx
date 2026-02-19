@@ -1,7 +1,7 @@
 import React, { forwardRef, useState, type InputHTMLAttributes } from 'react';
 import classNames from 'classnames';
 import styles from './InnerTextInput.module.scss';
-import { STATUS, type Status } from '@/shared/types/css/Status';
+import { STATUS, type Status } from '../shared/types/css/Status';
 
 type InnerTextInputProps = {
     innerText: string;

@@ -4,7 +4,7 @@ import { MdKeyboardArrowDown } from 'react-icons/md';
 
 import styles from './Trigger.module.scss';
 
-import Dropdown from '@/shared/headless/Dropdown/Dropdown';
+import Dropdown from '../../../shared/headless/Dropdown/Dropdown';
 import { useCheckBoxDropdownContext } from '../../CheckBoxDropdown';
 import Display from '../Display/Display';
 

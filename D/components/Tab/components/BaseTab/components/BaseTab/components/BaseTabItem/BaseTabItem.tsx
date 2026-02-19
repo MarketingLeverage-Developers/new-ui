@@ -2,7 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 import styles from './BaseTabItem.module.scss';
 
-import Select, { useSelect } from '@/shared/headless/Select/Select';
+import Select, { useSelect } from '../../../../../../../../../shared/headless/Select/Select';
 import { IoCloseSharp } from 'react-icons/io5';
 
 export type BaseTabItemTone = 'default' | 'add';

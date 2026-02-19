@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState, type ComponentProps } from 'react';
 import styles from './TimerInput.module.scss';
 import RoundedInput from '../RoundedInput/RoundedInput';
-import { getThemeColor } from '@/shared/utils/css/getThemeColor';
+import { getThemeColor } from '../shared/utils/css/getThemeColor';
 import { IoMdCheckmarkCircle } from 'react-icons/io';
 
 type TimerInputProps = {

@@ -4,8 +4,8 @@ import React, { useState } from 'react';
 import type { CSSProperties } from 'react';
 import { Row } from '../Row/Row';
 import { Cell } from '../Cell/Cell';
-import { RowDetailsProvider, useDetailsRenderer, useTableContext } from '@/shared/headless/Table/Table';
-import type { CSSLength } from '@/shared/types';
+import { RowDetailsProvider, useDetailsRenderer, useTableContext } from '../../../shared/headless/Table/Table';
+import type { CSSLength } from '../../../shared/types';
 import type { ToggleClickArgs } from '../Toggle/Toggle';
 
 type DataCell = {

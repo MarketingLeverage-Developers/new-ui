@@ -1,6 +1,6 @@
 // 줄무늬 스타일을 입힌 Table 스킨 컴포넌트
 import React, { type JSX } from 'react';
-import Table from '@/shared/headless/TableX/Table';
+import Table from '../shared/headless/TableX/Table';
 import {
     Body,
     BodyRows,

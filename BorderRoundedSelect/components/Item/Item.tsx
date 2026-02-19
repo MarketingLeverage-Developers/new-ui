@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './Item.module.scss';
-import Select from '@/shared/headless/Select/Select';
-import { useDropdown } from '@/shared/headless/Dropdown/Dropdown';
+import Select from '../../../shared/headless/Select/Select';
+import { useDropdown } from '../../../shared/headless/Dropdown/Dropdown';
 
 type ItemProps = React.ComponentProps<typeof Select.Item>;
 

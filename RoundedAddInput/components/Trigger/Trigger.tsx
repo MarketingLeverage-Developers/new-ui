@@ -1,7 +1,7 @@
 import type React from 'react';
 import classNames from 'classnames';
 import styles from './Trigger.module.scss';
-import { useMultiInput } from '@/shared/headless/MultiInput/MultiInput';
+import { useMultiInput } from '../../../shared/headless/MultiInput/MultiInput';
 
 type TriggerProps = {
     className?: string;

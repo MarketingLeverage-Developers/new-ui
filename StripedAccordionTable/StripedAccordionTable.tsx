@@ -1,6 +1,6 @@
 import React, { type JSX } from 'react';
-import AccordionTable from '@/shared/headless/AccordionTable/AccordionTable';
-import type Table from '@/shared/headless/AccordionTable/AccordionTable';
+import AccordionTable from '../shared/headless/AccordionTable/AccordionTable';
+import type Table from '../shared/headless/AccordionTable/AccordionTable';
 import { Body, BodyRows, Cell, ColGroup, Content, GroupHeader, Header, HeaderRows, Row, Toggle } from './components';
 import styles from './StripedAccordionTable.module.scss';
 import DetailsContent from './components/DetailsContent/DetailsContent';

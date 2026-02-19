@@ -1,12 +1,12 @@
 import React from 'react';
-import { Mobile } from '@/shared/primitives/M/Mobile';
-import LogoMobile from '@/shared/primitives/LogoMobile/LogoMobile';
-import ScrollArea from '@/shared/primitives/ScrollArea/ScrollArea';
-import BaseButton from '@/shared/primitives/BaseButton/BaseButton';
-import { getThemeColor } from '@/shared/utils/css/getThemeColor';
+import { Mobile } from '../../../../Mobile';
+import LogoMobile from '../../../../../LogoMobile/LogoMobile';
+import ScrollArea from '../../../../../ScrollArea/ScrollArea';
+import BaseButton from '../../../../../BaseButton/BaseButton';
+import { getThemeColor } from '../../../../../shared/utils/css/getThemeColor';
 import { IoMdOptions } from 'react-icons/io';
 import MainOverlay from '@/features/overlay/components/MainOverlay';
-import Flex from '@/shared/primitives/Flex/Flex';
+import Flex from '../../../../../Flex/Flex';
 import styles from './PageTemplate.module.scss';
 import FooterNav from './components/FooterNav/FooterNav';
 

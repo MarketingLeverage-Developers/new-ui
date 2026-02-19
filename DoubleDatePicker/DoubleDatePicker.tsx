@@ -3,7 +3,7 @@ import styles from './DoubleDatePicker.module.scss';
 import { DayPicker, type DateRange, type DayPickerProps } from 'react-day-picker';
 import { ko } from 'react-day-picker/locale';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
-import { useDropdown } from '@/shared/headless/Dropdown/Dropdown';
+import { useDropdown } from '../shared/headless/Dropdown/Dropdown';
 
 type DoubleDatePickerProps = {
     range: DateRange; // 확정된 범위(부모에서 관리)

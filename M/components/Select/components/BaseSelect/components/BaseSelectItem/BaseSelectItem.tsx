@@ -1,6 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
-import HeadlessSelect from '@/shared/headless/Select/Select';
+import HeadlessSelect from '../../../../../../../shared/headless/Select/Select';
 import styles from './BaseSelectItem.module.scss';
 
 export type BaseSelectItemProps = React.ComponentProps<typeof HeadlessSelect.Item> & {

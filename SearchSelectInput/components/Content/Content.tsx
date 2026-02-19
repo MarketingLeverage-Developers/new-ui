@@ -1,14 +1,14 @@
 // Content.tsx
-import Dropdown, { useDropdown } from '@/shared/headless/Dropdown/Dropdown';
+import Dropdown, { useDropdown } from '../../../shared/headless/Dropdown/Dropdown';
 import React, { useEffect, useMemo } from 'react';
-import Select, { useSelect } from '@/shared/headless/Select/Select';
-import { useQuerySearch } from '@/shared/headless/QuerySearch/QuerySearch';
-import { useHangulSearch } from '@/shared/hooks/client/useHangulSearch';
+import Select, { useSelect } from '../../../shared/headless/Select/Select';
+import { useQuerySearch } from '../../../shared/headless/QuerySearch/QuerySearch';
+import { useHangulSearch } from '../../../shared/hooks/client/useHangulSearch';
 import styles from './Content.module.scss';
-import type { SelectItem } from '@/shared/primitives/SearchSelect/SearchSelect';
+import type { SelectItem } from '../../../SearchSelect/SearchSelect';
 import classNames from 'classnames';
-import type { CSSVariables } from '@/shared/types/css/CSSVariables';
-import { toCssUnit } from '@/shared/utils';
+import type { CSSVariables } from '../../../shared/types/css/CSSVariables';
+import { toCssUnit } from '../../../shared/utils';
 
 export type SearchSelectItemProps<T extends SelectItem = SelectItem> = {
     item: T;

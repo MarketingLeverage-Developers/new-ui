@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import styles from './Item.module.scss';
-import { Accordion, useAccordion } from '@/shared/headless/Accordion/Accordion';
+import { Accordion, useAccordion } from '../../../shared/headless/Accordion/Accordion';
 import classNames from 'classnames';
-import Text from '@/shared/primitives/Text/Text';
+import Text from '../../../Text/Text';
 import { FaChevronDown } from 'react-icons/fa';
 
 type ItemProps = {

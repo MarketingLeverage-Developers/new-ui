@@ -1,9 +1,9 @@
 import type { HTMLAttributes, ReactNode } from 'react';
 import styles from './Grid.module.scss';
-import type { CSSVariables } from '@/shared/types/css/CSSVariables';
+import type { CSSVariables } from '../shared/types/css/CSSVariables';
 import classNames from 'classnames';
-import { toCssPadding } from '@/shared/utils/css/toCssPadding';
-import type { PaddingSize } from '@/shared/types/css/PaddingSize';
+import { toCssPadding } from '../shared/utils/css/toCssPadding';
+import type { PaddingSize } from '../shared/types/css/PaddingSize';
 import { Col } from './components';
 
 type Props = {

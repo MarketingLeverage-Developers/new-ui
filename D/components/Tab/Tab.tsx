@@ -6,7 +6,7 @@ import BaseTabItem, {
     type BaseTabDeleteButtonItemProps,
 } from './components/BaseTab/components/BaseTab/components/BaseTabItem/BaseTabItem';
 
-import type Select from '@/shared/headless/Select/Select';
+import type Select from '../../../shared/headless/Select/Select';
 
 import ButtonTab, { type ButtonTabExtraProps } from './components/ButtonTab/components/ButtonTab/ButtonTab';
 import type { ButtonTabItemProps } from './components/ButtonTab/components/ButtonTab/components/ButtonTabItem/ButtonTabItem';

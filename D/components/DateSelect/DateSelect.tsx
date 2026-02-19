@@ -1,13 +1,13 @@
-import DoubleDatePicker from '@/shared/primitives/DoubleDatePicker/DoubleDatePicker';
-import RoundedSelect from '@/shared/primitives/RoundedSelect/RoundedSelect';
+import DoubleDatePicker from '../../../DoubleDatePicker/DoubleDatePicker';
+import RoundedSelect from '../../../RoundedSelect/RoundedSelect';
 import React, { useState } from 'react';
-import Flex from '@/shared/primitives/Flex/Flex';
-import { formatDate } from '@/shared/utils/utils';
+import Flex from '../../../Flex/Flex';
+import { formatDate } from '../../../shared/utils/utils';
 import type { DateRange } from 'react-day-picker';
-import RangeDatePicker from '@/shared/primitives/RangeDatePicker/RangeDatePicker';
-import BasicDropDown from '@/shared/primitives/BasicDropDown/BasicDropDown';
-import { moveMonth } from '@/shared/utils/dateFilter/dateFilter';
-import { BaseTooltip } from '@/shared/primitives/BaseTooltip/BaseTooltip';
+import RangeDatePicker from '../../../RangeDatePicker/RangeDatePicker';
+import BasicDropDown from '../../../BasicDropDown/BasicDropDown';
+import { moveMonth } from '../../../shared/utils/dateFilter/dateFilter';
+import { BaseTooltip } from '../../../BaseTooltip/BaseTooltip';
 
 const datePeriodMapper: Record<string, string> = {
     '1m': '최근 1개월',

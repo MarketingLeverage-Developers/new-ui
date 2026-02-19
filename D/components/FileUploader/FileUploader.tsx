@@ -27,7 +27,7 @@ import type { BaseStackedFileUploaderExtraProps } from './components/BaseStacked
  * - 여기서 ServerFile.fileType이 string 이었던 게 충돌 원인
  * - 공용 타입(FileType, ServerImage, ServerFile)을 한 군데서만 정의하고 import해서 쓴다
  */
-import type { FileType, ServerFile, ServerImage } from '@/shared/types/common/model';
+import type { FileType, ServerFile, ServerImage } from '../../../shared/types/common/model';
 
 export type FileUploaderVariant = 'base' | 'input' | 'base-stacked' | 'base-alter';
 export type FileUploaderType = 'image' | 'file';

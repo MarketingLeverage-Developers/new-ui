@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './FileList.module.scss';
 import { FaCircleXmark } from 'react-icons/fa6';
-import ImageUploader from '@/shared/headless/ImageUploader/ImageUploader';
+import ImageUploader from '../../../shared/headless/ImageUploader/ImageUploader';
 
 export const FileList = () => (
     <ImageUploader.FileList

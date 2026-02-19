@@ -1,0 +1,4 @@
+.Item {
+    flex: var(--item-flex, initial);
+    min-width: var(--min-width, 0);
+}

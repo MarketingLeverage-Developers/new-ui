@@ -1,8 +1,8 @@
-import Pagination, { usePagination } from '@/shared/headless/Pagination/Pagination';
+import Pagination, { usePagination } from '../../../shared/headless/Pagination/Pagination';
 import classNames from 'classnames';
 import styles from '../ArrowPaginationButtons.module.scss';
 import React from 'react';
-import type { FastNext } from '@/shared/headless/Pagination/components';
+import type { FastNext } from '../../../shared/headless/Pagination/components';
 import { RxDoubleArrowRight } from 'react-icons/rx';
 
 type ArrowFastNextProps = Omit<React.ComponentProps<typeof FastNext>, 'children'>;

@@ -1,8 +1,8 @@
 import React, { useMemo } from 'react';
 import styles from './Selected.module.scss';
-import { useManySelect } from '@/shared/headless/ManySelect/ManySelect';
+import { useManySelect } from '../../../shared/headless/ManySelect/ManySelect';
 import { MdCancel } from 'react-icons/md';
-import { useQuerySearch } from '@/shared/headless/QuerySearch/QuerySearch';
+import { useQuerySearch } from '../../../shared/headless/QuerySearch/QuerySearch';
 
 const Selected = () => {
     const { label, data } = useQuerySearch<any>();

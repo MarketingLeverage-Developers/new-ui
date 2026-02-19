@@ -1,14 +1,21 @@
 import React from 'react';
-import type { DayPickerProps } from 'react-day-picker';
+import type { DateRange, DayPickerProps } from 'react-day-picker';
+import RangeDatePicker from '../../../RangeDatePicker/RangeDatePicker';
 
 import BaseCalendar, { type BaseCalendarExtraProps } from './components/BaseCalendar/BaseCalendar';
 import MiniCalendar, { type MiniCalendarExtraProps } from './components/MiniCalendar/MiniCalendar';
 
-export type CalendarVariant = 'base' | 'mini';
+export type CalendarVariant = 'base' | 'mini' | 'date-range';
 
 export type CalendarBaseProps = { variant: 'base' } & DayPickerProps & BaseCalendarExtraProps;
 export type CalendarMiniProps = { variant: 'mini' } & DayPickerProps & MiniCalendarExtraProps;
-export type CalendarProps = CalendarBaseProps | CalendarMiniProps;
+export type CalendarDateRangeProps = {
+    variant: 'date-range';
+    mode: 'range';
+    selected?: DateRange;
+    onSelect?: (range: DateRange | undefined) => void;
+} & Omit<DayPickerProps, 'mode' | 'selected' | 'onSelect' | 'month' | 'numberOfMonths'>;
+export type CalendarProps = CalendarBaseProps | CalendarMiniProps | CalendarDateRangeProps;
 
 const defaultParseServerDateTime = (value: string | null | undefined): Date | undefined => {
     if (!value) return undefined;
@@ -33,8 +40,6 @@ const defaultFormatServerDateTime = (date: Date | undefined): string => {
 
     return `${yyyy}-${mm}-${dd} ${hh}:${mi}:${ss}`;
 };
-
-type CalendarMode = 'single' | 'range';
 
 type CalendarServerStringSingleProps = Omit<
     CalendarBaseProps,
@@ -92,6 +97,19 @@ const Calendar: React.FC<CalendarUnionProps> = (props) => {
 
     if (variant === 'mini') {
         return <MiniCalendar {...(rest as DayPickerProps & MiniCalendarExtraProps)} />;
+    }
+
+    if (variant === 'date-range') {
+        const { selected, onSelect, ...rangeRest } = props as CalendarDateRangeProps;
+        const range = selected ?? { from: new Date(), to: new Date() };
+
+        return (
+            <RangeDatePicker
+                range={range}
+                onChange={(nextRange) => onSelect?.(nextRange)}
+                {...rangeRest}
+            />
+        );
     }
 
     if (isServerStringSingleMode(props)) {

@@ -1,0 +1,170 @@
+@use './variables' as *;
+
+@mixin light-vars {
+    /* Grayscale */
+    --White1: #{$White1};
+    --Black1: #{$Black1};
+    --Gray1: #{$Gray1};
+    --Gray2: #{$Gray2};
+    --Gray3: #{$Gray3};
+    --Gray4: #{$Gray4};
+    --Gray5: #{$Gray5};
+    --Gray6: #{$Gray6};
+    --Gray7: #{$Gray7};
+
+    /* Brand / Accent */
+    --Blue1: #{$Blue1};
+    --Blue2: #{$Blue2};
+
+    /* Status */
+    --Red1: #{$Red1};
+    --Red2: #{$Red2};
+    --Green1: #{$Green1};
+    --Green2: #{$Green2};
+
+    /* Primary (Brand Orange) — Light 매핑 */
+    --Primary1: #{$Primary1}; /* 텍스트/아이콘/버튼 */
+    --Primary2: #{$Primary2}; /* 가장 연한 배경 */
+    --Primary3: #{$Primary3}; /* 연한 배경 */
+    --Primary4: #{$Primary4}; /* hover 배경 */
+    --Primary5: #{$Primary5}; /* active 배경 */
+    --Primary6: #{$Primary6}; /* 더 연한 배경 */
+    --Complementary1: #{$Complementary1}; /* 보색 */
+    --Complementary2: #{$Complementary2}; /* 보색 */
+
+    /* 선택: 알파 토큰(경계/포커스 링 등) */
+    --PrimaryAlpha16: #{$PrimaryAlpha16};
+    --PrimaryAlpha24: #{$PrimaryAlpha24};
+
+    --Gradient1: #{$Gradient1};
+    --Gradient2: #{$Gradient2};
+
+    /* Backdrop */
+    --BackdropColor: rgba(0, 0, 0, 0.4);
+    --BackdropBlur: 6px;
+    --BackdropWebkitBlur: 6px;
+
+    /* UI Tokens (Radii / Shadows / Focus / Layering / Scrollbar) */
+    --RadiusXs: 4px;
+    --RadiusSm: 6px;
+    --RadiusMd: 8px;
+    --RadiusLg: 12px;
+    --RadiusXl: 20px;
+    --RadiusPill: 9999px;
+
+    --ShadowSm: 0 2px 8px rgba(0, 0, 0, 0.04);
+    --ShadowMd: 0 6px 24px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.06);
+    --ShadowLg: 0 14px 28px rgba(0, 0, 0, 0.12);
+
+    --FocusRing: 0 0 0 3px var(--PrimaryAlpha24);
+
+    --z-dropdown-portal: 7000;
+    --z-dropdown: 7000;
+    --z-dropdown-portal-modal: 9002;
+    --z-dropdown-modal: 9002;
+    --z-modal-backdrop: 9000;
+    --z-modal: 9001;
+    --z-overlay: 10002;
+
+    --ScrollbarSize: 6px;
+    --ScrollbarThumb: var(--Gray5);
+    --ScrollbarThumbHover: color-mix(in srgb, var(--Gray5) 70%, var(--Gray2));
+    --ScrollbarTrack: transparent;
+
+    color-scheme: light;
+}
+
+@mixin dark-vars {
+    /* Grayscale (Dark) */
+    --White1: #{$Black1};
+    --Black1: #{$White1};
+    --Gray1: #{$Gray7};
+    --Gray2: #{$Gray6};
+    --Gray3: #{$Gray5};
+    --Gray4: #{$Gray4};
+    --Gray5: #{$Gray3};
+    --Gray6: #{$Gray2};
+    --Gray7: #{$Gray1};
+
+    /* Brand / Accent — 동일 유지 */
+    --Blue1: #{$Blue1};
+    --Blue2: #{$Blue2};
+
+    /* Status */
+    --Red1: #{$RedD1};
+    --Red2: #{$RedD2};
+    --Green1: #{$GreenD1};
+    --Green2: #{$GreenD2};
+
+    /* Primary (Brand Orange) — Dark 매핑 */
+    --Primary1: #{$PrimaryD1}; /* 텍스트/아이콘/버튼 */
+    --Primary2: #{$PrimaryD2}; /* 가장 어두운 배경 */
+    --Primary3: #{$PrimaryD3}; /* 어두운 배경 */
+    --Primary4: #{$PrimaryD4}; /* hover 배경 */
+    --Primary5: #{$PrimaryD5}; /* active 배경 */
+    --Primary6: #{$PrimaryD6}; /* 더 어두운 배경 */
+    --Complementary1: #{$ComplementaryD1}; /* 보색 */
+    --Complementary2: #{$ComplementaryD2}; /* 보색 */
+
+    /* 선택: 알фа 토큰 동일 사용(필요 시 다크 전용으로 분리 가능) */
+    --PrimaryAlpha16: #{$PrimaryAlpha16};
+    --PrimaryAlpha24: #{$PrimaryAlpha24};
+
+    --Gradient1: #{$Gradient1};
+    --Gradient2: #{$Gradient2};
+
+    /* Backdrop (Dark Mode) */
+    --BackdropColor: rgba(255, 255, 255, 0.3);
+    --BackdropBlur: 8px;
+    --BackdropWebkitBlur: 8px;
+
+    /* UI Tokens (Radii / Shadows / Focus / Layering / Scrollbar) */
+    --RadiusXs: 4px;
+    --RadiusSm: 6px;
+    --RadiusMd: 8px;
+    --RadiusLg: 12px;
+    --RadiusXl: 20px;
+    --RadiusPill: 9999px;
+
+    --ShadowSm: 0 2px 8px rgba(0, 0, 0, 0.16);
+    --ShadowMd: 0 6px 24px rgba(0, 0, 0, 0.24), 0 2px 6px rgba(0, 0, 0, 0.18);
+    --ShadowLg: 0 14px 28px rgba(0, 0, 0, 0.32);
+
+    --FocusRing: 0 0 0 3px var(--PrimaryAlpha24);
+
+    --z-dropdown-portal: 7000;
+    --z-dropdown: 7000;
+    --z-dropdown-portal-modal: 9002;
+    --z-dropdown-modal: 9002;
+    --z-modal-backdrop: 9000;
+    --z-modal: 9001;
+    --z-overlay: 10002;
+
+    --ScrollbarSize: 6px;
+    --ScrollbarThumb: var(--Gray4);
+    --ScrollbarThumbHover: color-mix(in srgb, var(--Gray4) 70%, var(--Gray2));
+    --ScrollbarTrack: transparent;
+
+    color-scheme: dark;
+}
+
+/* ---------- 1) 기본(라이트) ---------- */
+:root {
+    @include light-vars;
+}
+
+/* ---------- 2) 시스템 다크 모드 ---------- */
+@media (prefers-color-scheme: dark) {
+    :root {
+        @include dark-vars;
+    }
+}
+
+/* ---------- 3) 수동 오버라이드 (Recoil State) ---------- */
+:root[data-theme='dark'] {
+    @include dark-vars;
+}
+
+:root[data-theme='light'] {
+    @include light-vars;
+}

@@ -1,13 +1,13 @@
 import React, { forwardRef, type ButtonHTMLAttributes } from 'react';
 import classNames from 'classnames';
 import styles from './BaseButton.module.scss';
-import type { CSSLength } from '@/shared/types';
-import type { CSSVariables } from '@/shared/types/css/CSSVariables';
-import type { PaddingSize } from '@/shared/types/css/PaddingSize';
-import { toCssUnit } from '@/shared/utils';
-import { toCssPadding } from '@/shared/utils/css/toCssPadding';
-import type { HexColor } from '@/shared/types/css/HexColor';
-import type { ThemeColorVar } from '@/shared/types/css/ThemeColorTokens';
+import type { CSSLength } from '../../../../../shared/types';
+import type { CSSVariables } from '../../../../../shared/types/css/CSSVariables';
+import type { PaddingSize } from '../../../../../shared/types/css/PaddingSize';
+import { toCssUnit } from '../../../../../shared/utils';
+import { toCssPadding } from '../../../../../shared/utils/css/toCssPadding';
+import type { HexColor } from '../../../../../shared/types/css/HexColor';
+import type { ThemeColorVar } from '../../../../../shared/types/css/ThemeColorTokens';
 
 export type BaseButtonSize = 'sm' | 'md' | 'lg';
 

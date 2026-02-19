@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import classNames from 'classnames';
 import { MdKeyboardArrowDown } from 'react-icons/md';
 
-import { Accordion as AccordionHeadless } from '@/shared/headless/Accordion/Accordion';
+import { Accordion as AccordionHeadless } from '../../../../../shared/headless/Accordion/Accordion';
 
 import styles from './StrongIconLabelAccordion.module.scss';
 

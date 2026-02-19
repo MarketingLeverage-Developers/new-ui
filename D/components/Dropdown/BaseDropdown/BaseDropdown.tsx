@@ -1,5 +1,5 @@
 import React from 'react';
-import Dropdown from '@/shared/headless/Dropdown/Dropdown';
+import Dropdown from '../../../../shared/headless/Dropdown/Dropdown';
 
 export type BaseDropdownProps = React.ComponentProps<typeof Dropdown>;
 

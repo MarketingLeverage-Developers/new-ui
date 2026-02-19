@@ -1,4 +1,4 @@
-import Select from '@/shared/headless/Select/Select';
+import Select from '../shared/headless/Select/Select';
 import React from 'react';
 import styles from './BaseButtonTab.module.scss';
 import Item from './components/Item';

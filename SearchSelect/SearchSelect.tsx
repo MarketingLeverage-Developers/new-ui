@@ -1,10 +1,10 @@
 import React from 'react';
 import styles from './SearchSelect.module.scss';
 import SearchInput from './components/Input/Input';
-import Dropdown from '@/shared/headless/Dropdown/Dropdown';
+import Dropdown from '../shared/headless/Dropdown/Dropdown';
 import SelectComponent from './components/Select/Select';
-import Select from '@/shared/headless/Select/Select';
-import { QuerySearch } from '@/shared/headless/QuerySearch/QuerySearch';
+import Select from '../shared/headless/Select/Select';
+import { QuerySearch } from '../shared/headless/QuerySearch/QuerySearch';
 
 export type SelectItem = {
     label: string;

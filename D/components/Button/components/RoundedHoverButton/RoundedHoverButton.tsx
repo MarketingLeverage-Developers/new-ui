@@ -1,9 +1,9 @@
 import React from 'react';
 import styles from './RoundedHoverButton.module.scss';
-import type { CSSVariables } from '@/shared/types/css/CSSVariables';
-import { toCssUnit } from '@/shared/utils';
-import { toCssPadding } from '@/shared/utils/css/toCssPadding';
-import type { PaddingSize } from '@/shared/types/css/PaddingSize';
+import type { CSSVariables } from '../../../../../shared/types/css/CSSVariables';
+import { toCssUnit } from '../../../../../shared/utils';
+import { toCssPadding } from '../../../../../shared/utils/css/toCssPadding';
+import type { PaddingSize } from '../../../../../shared/types/css/PaddingSize';
 
 export type RoundedHoverButtonProps = {
     onClick: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;

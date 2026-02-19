@@ -1,10 +1,10 @@
 import React from 'react';
 
-import PageName from '@/shared/primitives/PageName/PageName';
+import PageName from '../../../../../PageName/PageName';
 
-import MainOverlay from '@/features/overlay/components/MainOverlay';
-import Flex from '@/shared/primitives/Flex/Flex';
-import { AppPageMenu } from '@/features/navigation/components/AppPageMenu';
+import MainOverlay from '@/components/feature/overlay/MainOverlay';
+import Flex from '../../../../../Flex/Flex';
+import { AppPageMenu } from '@/components/feature/navigation/AppPageMenu/AppPageMenu';
 import { Sidebar } from './components/Sidebar/Sidebar';
 import { LogoLine } from './components/LogoLine/LogoLine';
 import { SubSidebar } from './components/SubSidebar/SubSidebar';
@@ -12,8 +12,8 @@ import { Header } from './components/Header/Header';
 import { Main } from './components/Main/Main';
 import { Overlays } from './components/Overlays/Overlays';
 import styles from './PageTemplate.module.scss';
-import ProfileDropdown from '@/features/navigation/components/ProfileDropdown/ProfileDropdown';
-import type { PaddingSize } from '@/shared/types/css/PaddingSize';
+import ProfileDropdown from '@/components/feature/navigation/ProfileDropdown/ProfileDropdown';
+import type { PaddingSize } from '../../../../../shared/types/css/PaddingSize';
 
 export type PageTemplateStateBase = {
     companyUuid?: string;
@@ -100,7 +100,7 @@ const PageTemplate = <S extends PageTemplateStateBase, A extends PageTemplateAct
         <div className={styles.PageTemplate}>
             <Sidebar>
                 <LogoLine />
-                <AppPageMenu />
+                <AppPageMenu.Desktop />
             </Sidebar>
 
             {subSidebar ? <SubSidebar>{subSidebar}</SubSidebar> : null}
@@ -127,7 +127,7 @@ const PageTemplate = <S extends PageTemplateStateBase, A extends PageTemplateAct
 
                         <Flex.Item flex={1}>
                             <Flex justify="end">
-                                <ProfileDropdown />
+                                <ProfileDropdown.Desktop />
                             </Flex>
                         </Flex.Item>
                     </>
@@ -146,7 +146,7 @@ const PageTemplate = <S extends PageTemplateStateBase, A extends PageTemplateAct
 
                         <Flex.Item flex={1}>
                             <Flex justify="end">
-                                <ProfileDropdown />
+                                <ProfileDropdown.Desktop />
                             </Flex>
                         </Flex.Item>
                     </>

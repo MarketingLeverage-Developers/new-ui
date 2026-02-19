@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
-import CheckboxGroup from '@/shared/primitives/CheckboxGroup/CheckboxGroup';
-import Flex from '@/shared/primitives/Flex/Flex';
+import CheckboxGroup from '../../../CheckboxGroup/CheckboxGroup';
+import Flex from '../../../Flex/Flex';
 import styles from '../../ScheduleCalendar.module.scss';
 
 export type FilterId =

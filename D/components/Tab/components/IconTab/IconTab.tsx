@@ -1,6 +1,6 @@
-import Select from '@/shared/headless/Select/Select';
-import type { CSSVariables } from '@/shared/types/css/CSSVariables';
-import { toCssUnit } from '@/shared/utils';
+import Select from '../../../../../shared/headless/Select/Select';
+import type { CSSVariables } from '../../../../../shared/types/css/CSSVariables';
+import { toCssUnit } from '../../../../../shared/utils';
 import React from 'react';
 import styles from './IconTab.module.scss';
 import IconTabItem, { type IconTabItemProps } from './components/Item';

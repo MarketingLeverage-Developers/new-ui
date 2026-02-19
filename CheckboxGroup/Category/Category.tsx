@@ -2,9 +2,9 @@ import React, { useMemo } from 'react';
 import { useCheckboxGroup, CheckboxGroupCtx } from '../CheckboxGroupContext';
 import { FaCheck } from 'react-icons/fa';
 import styles from '../CheckboxGroup.module.scss';
-import type { CSSVariables } from '@/shared/types/css/CSSVariables';
-import type { PaddingSize } from '@/shared/types/css/PaddingSize';
-import { toCssPadding } from '@/shared/utils/css/toCssPadding';
+import type { CSSVariables } from '../../shared/types/css/CSSVariables';
+import type { PaddingSize } from '../../shared/types/css/PaddingSize';
+import { toCssPadding } from '../../shared/utils/css/toCssPadding';
 
 export type CategoryProps = {
     /** 카테고리 키 (안 주면 title 사용) — 가능하면 안정적인 고유값 권장 */

@@ -1,5 +1,5 @@
-import CheckboxGroup from '@/shared/primitives/CheckboxGroup/CheckboxGroup';
-import Flex from '@/shared/primitives/Flex/Flex';
+import CheckboxGroup from '../../CheckboxGroup/CheckboxGroup';
+import Flex from '../../Flex/Flex';
 
 export type FilterId =
     | 'default'

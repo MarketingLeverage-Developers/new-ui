@@ -1,13 +1,13 @@
-import Modal from '@/shared/headless/Modal/Modal';
-import type { CSSLength } from '@/shared/types';
-import type { CSSVariables } from '@/shared/types/css/CSSVariables';
-import { toCssUnit } from '@/shared/utils';
+import Modal from '../shared/headless/Modal/Modal';
+import type { CSSLength } from '../shared/types';
+import type { CSSVariables } from '../shared/types/css/CSSVariables';
+import { toCssUnit } from '../shared/utils';
 import React from 'react';
 import Flex from '../Flex/Flex';
 import styles from './ImageModalBox.module.scss';
-import Portal from '@/shared/headless/Portal/Portal';
+import Portal from '../shared/headless/Portal/Portal';
 import Text from '../Text/Text';
-import { getThemeColor } from '@/shared/utils/css/getThemeColor';
+import { getThemeColor } from '../shared/utils/css/getThemeColor';
 
 type Props = {
     width?: CSSLength;

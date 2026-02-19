@@ -1,6 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
-import ManySelect, { useManySelect } from '@/shared/headless/ManySelect/ManySelect';
+import ManySelect, { useManySelect } from '../../../../../../../shared/headless/ManySelect/ManySelect';
 import styles from './ChipMultiSelectItem.module.scss';
 
 export type ChipMultiSelectItemProps = React.ComponentProps<typeof ManySelect.Item> & {

@@ -1,10 +1,10 @@
 import type React from 'react';
-import RoundedTab from '@/shared/primitives/RoundedTab/RoundedTab';
-import Flex from '@/shared/primitives/Flex/Flex';
+import RoundedTab from '../../../RoundedTab/RoundedTab';
+import Flex from '../../../Flex/Flex';
 import { GrFormPrevious, GrFormNext } from 'react-icons/gr';
-import { getThemeColor } from '@/shared/utils/css/getThemeColor';
-import Text from '@/shared/primitives/Text/Text';
-import { useMLCalendar, type CalendarView } from '@/shared/headless/MLCalendar/MLCalendar';
+import { getThemeColor } from '../../../shared/utils/css/getThemeColor';
+import Text from '../../../Text/Text';
+import { useMLCalendar, type CalendarView } from '../../../shared/headless/MLCalendar/MLCalendar';
 
 type CalendarHeaderProps = {
     title?: string;

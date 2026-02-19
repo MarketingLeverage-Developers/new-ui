@@ -1,7 +1,7 @@
 import React from 'react';
-import type { CSSLength } from '@/shared/types';
-import type { CSSVariables } from '@/shared/types/css/CSSVariables';
-import { toCssUnit } from '@/shared/utils';
+import type { CSSLength } from '../../shared/types';
+import type { CSSVariables } from '../../shared/types/css/CSSVariables';
+import { toCssUnit } from '../../shared/utils';
 import styles from './Item.module.scss';
 
 type ItemProps = {

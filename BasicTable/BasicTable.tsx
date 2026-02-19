@@ -1,7 +1,7 @@
 // src/shared/primitives/BasicTable/BasicTable.tsx
 
 import React, { useState, useCallback, useMemo } from 'react';
-import AirTable from '@/shared/headless/AirTable/AirTable';
+import AirTable from '../shared/headless/AirTable/AirTable';
 import styles from './BasicTable.module.scss';
 import RowToggle from './components/RowToggle/RowToggle';
 import PlusToggle from './components/PlusToggle/PlusToggle';
@@ -17,7 +17,7 @@ import { FilterControlsPanel } from './components/FilterControlsPanel/FilterCont
 import Flex from '../Flex/Flex';
 import ExpandAllRowsButton from './components/ExpandAllRowButton/ExpandAllRowButton';
 import Text from '../Text/Text';
-import { getThemeColor } from '@/shared/utils/css/getThemeColor';
+import { getThemeColor } from '../shared/utils/css/getThemeColor';
 import { FaFileAlt } from 'react-icons/fa';
 
 export type TableFilterItem = {

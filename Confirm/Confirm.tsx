@@ -1,8 +1,8 @@
 import React from 'react';
 import styles from './Confirm.module.scss';
 import BaseButton from '../BaseButton/BaseButton';
-import { getThemeColor } from '@/shared/utils/css/getThemeColor';
-import { useModal } from '@/shared/headless/Modal/Modal';
+import { getThemeColor } from '../shared/utils/css/getThemeColor';
+import { useModal } from '../shared/headless/Modal/Modal';
 import { FaExclamation } from 'react-icons/fa6';
 
 type ConfirmProps = {

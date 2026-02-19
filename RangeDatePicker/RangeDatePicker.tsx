@@ -6,8 +6,8 @@ import { ko } from 'react-day-picker/locale';
 import { IoIosArrowDown, IoMdWarning } from 'react-icons/io';
 import { IoCaretBackSharp, IoCaretForwardSharp } from 'react-icons/io5';
 
-import { useDropdown } from '@/shared/headless/Dropdown/Dropdown';
-import Select from '@/shared/headless/Select/Select';
+import { useDropdown } from '../shared/headless/Dropdown/Dropdown';
+import Select from '../shared/headless/Select/Select';
 
 type PresetKey =
     | 'YESTERDAY'
