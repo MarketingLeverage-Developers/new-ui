@@ -1,0 +1,52 @@
+.tooltip {
+    min-width: 260px;
+    max-width: 360px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: 1px solid var(--Gray5);
+    background: var(--White1);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.18);
+    z-index: 10010;
+}
+
+.title {
+    color: var(--Gray1);
+    font-size: 17px;
+    font-weight: 600;
+    line-height: 1.35;
+    margin-bottom: 8px;
+    word-break: break-word;
+}
+
+.badgeRow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 10px;
+}
+
+.row {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-top: 6px;
+}
+
+.icon {
+    color: var(--Gray3);
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.text {
+    color: var(--Gray1);
+    font-size: 14px;
+    line-height: 1.4;
+    word-break: break-word;
+}
+
+.arrow {
+    fill: var(--White1);
+    stroke: var(--Gray5);
+    stroke-width: 1;
+}
