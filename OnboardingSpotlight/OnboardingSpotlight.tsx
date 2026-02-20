@@ -28,6 +28,8 @@ type Step = {
     advanceOnTargetClick?: boolean;
     requiresCompletion?: boolean;
     hideNext?: boolean;
+    highlightPadding?: number;
+    blockOutside?: boolean;
 };
 
 type Props = {
@@ -112,6 +114,14 @@ const prefersReducedMotion = () =>
     typeof window !== 'undefined' &&
     typeof window.matchMedia === 'function' &&
     window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+const blurActiveElement = () => {
+    if (typeof document === 'undefined') return;
+    const activeElement = document.activeElement;
+    if (activeElement instanceof HTMLElement) {
+        activeElement.blur();
+    }
+};
 
 const clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max);
 
@@ -236,6 +246,8 @@ const OnboardingSpotlight = ({
 
     const activeStep = normalizedSteps[activeIndex];
     const isMultiStep = normalizedSteps.length > 1;
+    const stepHighlightPadding = activeStep?.highlightPadding ?? padding;
+    const stepBlockOutside = activeStep?.blockOutside ?? blockOutside;
 
     const handleClose = useCallback(() => {
         setIsOpen(false);
@@ -284,6 +296,8 @@ const OnboardingSpotlight = ({
     }, [onComplete]);
 
     const handleNext = useCallback(() => {
+        // Auto-advance can happen while an input keeps focus; blur first so previous step value is not edited further.
+        blurActiveElement();
         if (!isMultiStep) {
             handleClose();
             onComplete?.();
@@ -355,6 +369,26 @@ const OnboardingSpotlight = ({
         updateHighlightRect();
     }, [isOpen, updateHighlightRect, activeIndex]);
 
+    // Targets inside animated containers (e.g. side modal slide-in) can move without resize/scroll events.
+    // Re-measure for a short period after step changes so the spotlight hole stays aligned and clickable.
+    useEffect(() => {
+        if (!isOpen) return;
+        let frame = 0;
+        let rafId = 0;
+        const maxFrames = 36;
+
+        const syncDuringTransition = () => {
+            updateHighlightRect();
+            frame += 1;
+            if (frame < maxFrames) {
+                rafId = requestAnimationFrame(syncDuringTransition);
+            }
+        };
+
+        rafId = requestAnimationFrame(syncDuringTransition);
+        return () => cancelAnimationFrame(rafId);
+    }, [isOpen, activeStep?.id, updateHighlightRect]);
+
     // ✅ When a step becomes active, ensure its target is visible.
     // - Our app commonly scrolls inside Desktop.MainScroller (nested scroll container), not window.
     // - `scrollIntoView({ block: 'center' })` tends to overscroll and feel like it "hit bottom",
@@ -370,7 +404,7 @@ const OnboardingSpotlight = ({
 
         const rect = target.getBoundingClientRect();
         const parentRect = scrollParent.getBoundingClientRect();
-        const margin = Math.max(12, padding + 12);
+        const margin = Math.max(12, stepHighlightPadding + 12);
 
         const isAbove = rect.top < parentRect.top + margin;
         const isBelow = rect.bottom > parentRect.bottom - margin;
@@ -385,7 +419,7 @@ const OnboardingSpotlight = ({
 
         // Make sure we sync the hole position right after the scroll starts.
         requestAnimationFrame(() => updateHighlightRect());
-    }, [isOpen, activeStep?.id, padding, updateHighlightRect]);
+    }, [isOpen, activeStep?.id, stepHighlightPadding, updateHighlightRect]);
 
     useEffect(() => {
         if (!isOpen) return;
@@ -440,13 +474,22 @@ const OnboardingSpotlight = ({
 
     useEffect(() => {
         if (!isOpen) return;
-        const target = resolveTargetElement(targetsRef.current[activeStep?.id ?? '']?.el ?? null);
-        if (!target) return;
         const shouldAdvance = activeStep?.advanceOnTargetClick ?? advanceOnTargetClick;
         if (!shouldAdvance) return;
-        const handleClick = () => handleNext();
-        target.addEventListener('click', handleClick);
-        return () => target.removeEventListener('click', handleClick);
+
+        // Target nodes can remount while staying on the same step (e.g. tab/content re-render).
+        // Delegate click handling to document so we always resolve the latest target at click time.
+        const handleDocumentClick = (event: MouseEvent) => {
+            const clickedNode = event.target;
+            if (!(clickedNode instanceof Node)) return;
+            const target = resolveTargetElement(targetsRef.current[activeStep?.id ?? '']?.el ?? null);
+            if (!target) return;
+            if (!target.contains(clickedNode)) return;
+            handleNext();
+        };
+
+        document.addEventListener('click', handleDocumentClick, true);
+        return () => document.removeEventListener('click', handleDocumentClick, true);
     }, [isOpen, activeStep?.id, activeStep?.advanceOnTargetClick, advanceOnTargetClick, handleNext]);
 
     const resolvedPlacement = activeStep?.placement ?? placement;
@@ -528,15 +571,15 @@ const OnboardingSpotlight = ({
                                 const viewportW = window.innerWidth || document.documentElement.clientWidth || 0;
                                 const viewportH = window.innerHeight || document.documentElement.clientHeight || 0;
 
-                                const holeTop = Math.max(0, highlightRect.top - padding);
-                                const holeLeft = Math.max(0, highlightRect.left - padding);
+                                const holeTop = Math.max(0, highlightRect.top - stepHighlightPadding);
+                                const holeLeft = Math.max(0, highlightRect.left - stepHighlightPadding);
                                 const holeRight = Math.min(
                                     viewportW,
-                                    highlightRect.left + highlightRect.width + padding
+                                    highlightRect.left + highlightRect.width + stepHighlightPadding
                                 );
                                 const holeBottom = Math.min(
                                     viewportH,
-                                    highlightRect.top + highlightRect.height + padding
+                                    highlightRect.top + highlightRect.height + stepHighlightPadding
                                 );
 
                                 const holeHeight = Math.max(0, holeBottom - holeTop);
@@ -557,7 +600,7 @@ const OnboardingSpotlight = ({
                                 return (
                                     <>
                                         {/* ✅ Block interactions outside the spotlight hole, but keep the hole interactive. */}
-                                        {blockOutside && holeTop > 0 && (
+                                        {stepBlockOutside && holeTop > 0 && (
                                             <div
                                                 aria-hidden
                                                 className={styles.BackdropBlocker}
@@ -567,7 +610,7 @@ const OnboardingSpotlight = ({
                                             />
                                         )}
 
-                                        {blockOutside && holeBottom < viewportH && (
+                                        {stepBlockOutside && holeBottom < viewportH && (
                                             <div
                                                 aria-hidden
                                                 className={styles.BackdropBlocker}
@@ -577,7 +620,7 @@ const OnboardingSpotlight = ({
                                             />
                                         )}
 
-                                        {blockOutside && holeLeft > 0 && holeHeight > 0 && (
+                                        {stepBlockOutside && holeLeft > 0 && holeHeight > 0 && (
                                             <div
                                                 aria-hidden
                                                 className={styles.BackdropBlocker}
@@ -587,7 +630,7 @@ const OnboardingSpotlight = ({
                                             />
                                         )}
 
-                                        {blockOutside && holeRight < viewportW && holeHeight > 0 && (
+                                        {stepBlockOutside && holeRight < viewportW && holeHeight > 0 && (
                                             <div
                                                 aria-hidden
                                                 className={styles.BackdropBlocker}
@@ -601,10 +644,10 @@ const OnboardingSpotlight = ({
                                             aria-hidden
                                             className={styles.SpotlightHole}
                                             style={{
-                                                top: highlightRect.top - padding,
-                                                left: highlightRect.left - padding,
-                                                width: highlightRect.width + padding * 2,
-                                                height: highlightRect.height + padding * 2,
+                                                top: highlightRect.top - stepHighlightPadding,
+                                                left: highlightRect.left - stepHighlightPadding,
+                                                width: highlightRect.width + stepHighlightPadding * 2,
+                                                height: highlightRect.height + stepHighlightPadding * 2,
                                             }}
                                         />
                                         {shouldShowIndicator && (
