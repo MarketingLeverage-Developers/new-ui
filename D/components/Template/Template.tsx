@@ -39,10 +39,26 @@ export type TemplateProps<
     | ({ variant: 'request-detail' } & RequestDetailPageTemplateProps<S, A>)
     | ({ variant: 'onboarding-modal' } & OnboardingModalTemplateProps<G>);
 
+let pageTemplateDefaultSlots: Partial<PageTemplateSlots> = {};
+
+const cloneSlotNode = (node?: React.ReactNode): React.ReactNode =>
+    React.isValidElement(node) ? React.cloneElement(node) : node;
+
+export const setPageTemplateDefaultSlots = (slots: Partial<PageTemplateSlots>) => {
+    pageTemplateDefaultSlots = {
+        ...pageTemplateDefaultSlots,
+        ...slots,
+    };
+};
+
+export const resetPageTemplateDefaultSlots = () => {
+    pageTemplateDefaultSlots = {};
+};
+
 const getDefaultPageTemplateSlots = (slots?: PageTemplateSlots): PageTemplateSlots => ({
-    sidebarMenu: slots?.sidebarMenu ?? null,
-    headerProfile: slots?.headerProfile ?? null,
-    mainOverlay: slots?.mainOverlay ?? MainOverlay,
+    sidebarMenu: slots?.sidebarMenu ?? cloneSlotNode(pageTemplateDefaultSlots.sidebarMenu) ?? null,
+    headerProfile: slots?.headerProfile ?? cloneSlotNode(pageTemplateDefaultSlots.headerProfile) ?? null,
+    mainOverlay: slots?.mainOverlay ?? pageTemplateDefaultSlots.mainOverlay ?? MainOverlay,
 });
 
 const Template = <S extends PageTemplateStateBase, A extends PageTemplateActionsBase, G extends string = string>(
