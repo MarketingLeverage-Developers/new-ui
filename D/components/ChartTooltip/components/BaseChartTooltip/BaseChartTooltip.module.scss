@@ -1,0 +1,41 @@
+.TooltipWrapper {
+    width: 100%;
+    background: var(--White1);
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.06);
+    border-radius: 8px;
+    padding: 12px 16px;
+}
+
+.TooltipHeader {
+    margin-bottom: 4px;
+    font-size: 13px;
+    color: var(--Gray2);
+}
+
+.TooltipContents {
+    display: grid;
+    gap: 4px;
+}
+
+.TooltipItem {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    gap: 8px;
+    font-size: 14px;
+    color: var(--Gray1);
+}
+
+.TooltipDot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.TooltipLabel {
+    min-width: 56px;
+}
+
+.TooltipValue {
+    margin-left: auto;
+}
