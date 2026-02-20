@@ -12,7 +12,7 @@ import ButtonTab, { type ButtonTabExtraProps } from './components/ButtonTab/comp
 import type { ButtonTabItemProps } from './components/ButtonTab/components/ButtonTab/components/ButtonTabItem/ButtonTabItem';
 import ButtonTabItem from './components/ButtonTab/components/ButtonTab/components/ButtonTabItem/ButtonTabItem';
 
-import RoundedTab from './components/RoundedTab/RoundedTab';
+import RoundedTab, { type RoundedTabProps } from './components/RoundedTab/RoundedTab';
 import { RoundedTabItem, type RoundedTabItemProps } from './components/RoundedTab/components/Item';
 
 import UnderlineTab from './components/UnderlineTab/UnderlineTab';
@@ -29,7 +29,7 @@ export type TabCommonProps = React.ComponentProps<typeof Select>;
 export type TabProps =
     | ({ variant: 'base' } & TabCommonProps & BaseTabExtraProps)
     | ({ variant: 'button' } & TabCommonProps & ButtonTabExtraProps)
-    | ({ variant: 'rounded' } & TabCommonProps)
+    | ({ variant: 'rounded' } & RoundedTabProps)
     | ({ variant: 'underline' } & TabCommonProps)
     | ({ variant: 'icon' } & TabCommonProps);
 
@@ -64,7 +64,7 @@ const TabRoot: React.FC<TabProps> = (props) => {
     if (variant === 'rounded') {
         return (
             <TabVariantContext.Provider value={{ variant }}>
-                <RoundedTab {...(rest as TabCommonProps)} />
+                <RoundedTab {...(rest as RoundedTabProps)} />
             </TabVariantContext.Provider>
         );
     }

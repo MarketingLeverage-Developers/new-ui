@@ -5,7 +5,18 @@
 import { useCallback, useMemo } from 'react';
 import type { z, ZodTypeAny } from 'zod';
 
-type MapOption<TField, TUi extends string | number | boolean | unknown[]> = {
+type UiPrimitive = string | number | boolean | unknown[];
+type InferUiValue<TField> = Extract<TField, string> extends never
+    ? Extract<TField, number> extends never
+        ? Extract<TField, boolean> extends never
+            ? Extract<TField, unknown[]> extends never
+                ? string
+                : Extract<TField, unknown[]>
+            : boolean
+        : number
+    : string;
+
+type MapOption<TField, TUi extends UiPrimitive> = {
     toUi?: (field: TField) => TUi;
     toField?: (ui: TUi) => TField;
 };
@@ -17,9 +28,9 @@ type UseZodFormOptions<T extends Record<string, unknown>> = {
 };
 
 /** 모든 JSX 엘리먼트의 change 이벤트를 지원하도록 Element로 확장 */
-type ChangeArg = string | number | boolean | unknown[] | React.ChangeEvent<Element>;
+type ChangeArg = UiPrimitive | React.ChangeEvent<Element>;
 
-export type FieldRegisterProps<TField = unknown, TUi extends string | number | boolean | unknown[] = string> = {
+export type FieldRegisterProps<TField = unknown, TUi extends UiPrimitive = InferUiValue<TField>> = {
     name: string;
     value: TUi;
     /** 값 또는 이벤트 모두 허용 */
@@ -27,14 +38,22 @@ export type FieldRegisterProps<TField = unknown, TUi extends string | number | b
 };
 
 export type UseZodFormReturn<T extends Record<string, unknown>> = {
-    // ✅ 에러 방지를 위한 최소 수정: K 제네릭을 도입해 T[keyof T] 유니온이 아니라 T[K]로 정확히 좁힘
-    register: <K extends keyof T & string, TUi extends string | number | boolean | unknown[] = string>(
-        name: K,
-        opts?: {
-            schemaOverride?: ZodTypeAny;
-            map?: MapOption<T[K], TUi>;
-        }
-    ) => FieldRegisterProps<T[K], TUi>;
+    register: {
+        <K extends keyof T & string>(
+            name: K,
+            opts?: {
+                schemaOverride?: ZodTypeAny;
+                map?: undefined;
+            }
+        ): FieldRegisterProps<T[K], InferUiValue<T[K]>>;
+        <K extends keyof T & string, TUi extends UiPrimitive>(
+            name: K,
+            opts: {
+                schemaOverride?: ZodTypeAny;
+                map: MapOption<T[K], TUi>;
+            }
+        ): FieldRegisterProps<T[K], TUi>;
+    };
     isValid: boolean;
     errors: Partial<Record<keyof T & string, string>>;
     getValue: <K extends keyof T & string>(name: K) => T[K];
@@ -51,7 +70,7 @@ const isChangeEvent = (arg: unknown): arg is React.ChangeEvent<Element> =>
     typeof arg === 'object' && arg !== null && 'target' in (arg as Record<string, unknown>);
 
 /** 이벤트/값에서 UI용 값을 일관되게 추출 */
-const getUiNextFromChange = (arg: ChangeArg): string | number | boolean | unknown[] => {
+const getUiNextFromChange = (arg: ChangeArg): UiPrimitive => {
     if (!isChangeEvent(arg)) return arg; // 이미 값인 경우 그대로
 
     const target = arg.target as Element;
@@ -97,8 +116,7 @@ export const useZodForm = <T extends Record<string, unknown>>({
     }, [parseResult]);
 
     const register = useCallback(
-        // ✅ 위와 동일하게 K 제네릭 도입
-        <K extends keyof T & string, TUi extends string | number | boolean | unknown[] = string>(
+        <K extends keyof T & string, TUi extends UiPrimitive = InferUiValue<T[K]>>(
             name: K,
             opts?: {
                 schemaOverride?: ZodTypeAny; // 필요 시 개별 필드 스키마 대체(선택)
