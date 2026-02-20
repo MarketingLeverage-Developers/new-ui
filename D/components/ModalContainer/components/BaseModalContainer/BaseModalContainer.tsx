@@ -8,15 +8,23 @@ export type BaseModalContainerProps = {
     content: React.ReactNode;
     width?: string | number;
     maxHeight?: string | number;
+    enterAction?: () => void;
 };
 
-const BaseModalContainer = ({ open, onChange, content, width = 400, maxHeight = '80%' }: BaseModalContainerProps) => (
+const BaseModalContainer = ({
+    open,
+    onChange,
+    content,
+    width = 400,
+    maxHeight = '80%',
+    enterAction,
+}: BaseModalContainerProps) => (
     <Modal
         value={open}
         onChange={(nextOpen) => {
             if (!nextOpen) onChange();
         }}
-        // enterAction={enterAction}
+        enterAction={enterAction}
     >
         <Portal>
             <Modal.Backdrop />
