@@ -8,9 +8,7 @@ import type {
     PageTemplateStateBase,
 } from './components/PageTemplate/PageTemplate';
 import PageTemplate from './components/PageTemplate/PageTemplate';
-import MainOverlay from '@/features/overlay/components/MainOverlay';
-import { AppPageMenu } from '@/features/navigation/components/AppPageMenu';
-import ProfileDropdown from '@/features/navigation/components/ProfileDropdown/ProfileDropdown';
+import MainOverlay from '../../../shared/composites/MainOverlay/MainOverlay';
 
 import type { ModalTemplateExtraProps, ModalTemplateProps } from './components/ModalTemplate/ModalTemplate';
 import ModalTemplate from './components/ModalTemplate/ModalTemplate';
@@ -42,8 +40,8 @@ export type TemplateProps<
     | ({ variant: 'onboarding-modal' } & OnboardingModalTemplateProps<G>);
 
 const getDefaultPageTemplateSlots = (slots?: PageTemplateSlots): PageTemplateSlots => ({
-    sidebarMenu: slots?.sidebarMenu ?? <AppPageMenu />,
-    headerProfile: slots?.headerProfile ?? <ProfileDropdown />,
+    sidebarMenu: slots?.sidebarMenu ?? null,
+    headerProfile: slots?.headerProfile ?? null,
     mainOverlay: slots?.mainOverlay ?? MainOverlay,
 });
 

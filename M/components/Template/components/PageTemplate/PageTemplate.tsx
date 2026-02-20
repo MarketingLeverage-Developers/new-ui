@@ -5,7 +5,7 @@ import ScrollArea from '../../../../../ScrollArea/ScrollArea';
 import BaseButton from '../../../../../BaseButton/BaseButton';
 import { getThemeColor } from '../../../../../shared/utils/css/getThemeColor';
 import { IoMdOptions } from 'react-icons/io';
-import MainOverlay from '@/features/overlay/components/MainOverlay';
+import MainOverlay from '../../../../../shared/composites/MainOverlay/MainOverlay';
 import Flex from '../../../../../Flex/Flex';
 import styles from './PageTemplate.module.scss';
 import FooterNav from './components/FooterNav/FooterNav';

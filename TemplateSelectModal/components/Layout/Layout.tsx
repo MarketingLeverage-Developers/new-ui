@@ -1,4 +1,4 @@
-import StrictOverlay from '@/features/overlay/components/StrictOverlay';
+import StrictOverlay from '../../../shared/composites/StrictOverlay/StrictOverlay';
 import Modal from '../../../shared/headless/Modal/Modal';
 import BaseModalLayout from '../../../BaseModalLayout/BaseModalLayout';
 import Form from '../../../Form/Form';

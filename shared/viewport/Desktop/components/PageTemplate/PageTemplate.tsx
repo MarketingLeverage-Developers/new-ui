@@ -10,7 +10,7 @@ import AppPageMenuSystem from '@/components/feature/navigation/AppPageMenu/compo
 import AppPageMenuUser from '@/components/feature/navigation/AppPageMenu/components/AppPageMenuUser';
 import CompanySelectSidebar from '@/components/feature/company/CompanySelectSidebar/CompanySelectSidebar';
 import RequireCompanyAndSite from '@/components/feature/navigation/RequireCompanyAndSite';
-import MainOverlay from '@/features/overlay/components/MainOverlay';
+import MainOverlay from '../../../../composites/MainOverlay/MainOverlay';
 import Flex from '../../../../../Flex/Flex';
 import AppPageMenuManager from '@/components/feature/navigation/AppPageMenu/components/AppPageMenuManager';
 import AppPageMenuAdvertiser from '@/components/feature/navigation/AppPageMenu/components/AppPageMenuAdvertiser';

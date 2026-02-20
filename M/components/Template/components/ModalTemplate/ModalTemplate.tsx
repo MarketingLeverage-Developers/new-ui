@@ -4,7 +4,7 @@ import styles from './ModalTemplate.module.scss';
 import type { CSSLength } from '../../../../../shared/types';
 import type { CSSVariables } from '../../../../../shared/types/css/CSSVariables';
 import { toCssUnit } from '../../../../../shared/utils';
-import MainOverlay from '@/features/overlay/components/MainOverlay';
+import MainOverlay from '../../../../../shared/composites/MainOverlay/MainOverlay';
 import ModalTemplateHeader, {
     type ModalTemplateHeaderProps,
 } from './components/ModalTemplateHeader/ModalTemplateHeader';
