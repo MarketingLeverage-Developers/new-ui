@@ -3,6 +3,7 @@ import React from 'react';
 import type {
     PageTemplateActionsBase,
     PageTemplateExtraProps,
+    PageTemplateOverlayProps,
     PageTemplateProps,
     PageTemplateSlots,
     PageTemplateStateBase,
@@ -22,17 +23,30 @@ import OnboardingModalTemplate, {
 
 export type TemplateVariant = 'page' | 'modal' | 'confirm' | 'request-detail' | 'onboarding-modal';
 
+export type TemplatePageProps<
+    S extends PageTemplateStateBase = PageTemplateStateBase,
+    A extends PageTemplateActionsBase = PageTemplateActionsBase,
+> = PageTemplateProps &
+    PageTemplateExtraProps & {
+        state: S;
+        actions: A;
+        isLoading?: boolean;
+        isError?: boolean;
+        isEmpty?: boolean;
+        onRetry?: () => void;
+    };
+
 export type RequestDetailPageTemplateProps<
     S extends PageTemplateStateBase = PageTemplateStateBase,
     A extends PageTemplateActionsBase = PageTemplateActionsBase,
-> = Omit<PageTemplateProps<S, A>, 'main'> & PageTemplateExtraProps & RequestDetailTemplateProps;
+> = Omit<TemplatePageProps<S, A>, 'main'> & RequestDetailTemplateProps;
 
 export type TemplateProps<
     S extends PageTemplateStateBase = PageTemplateStateBase,
     A extends PageTemplateActionsBase = PageTemplateActionsBase,
     G extends string = string,
 > =
-    | ({ variant: 'page' } & PageTemplateProps<S, A> & PageTemplateExtraProps)
+    | ({ variant: 'page' } & TemplatePageProps<S, A>)
     | ({ variant: 'modal' } & ModalTemplateProps & ModalTemplateExtraProps)
     | ({ variant: 'confirm' } & ConfirmTemplateProps)
     | ({ variant: 'request-detail' } & RequestDetailTemplateProps)
@@ -61,6 +75,28 @@ const getDefaultPageTemplateSlots = (slots?: PageTemplateSlots): PageTemplateSlo
     mainOverlay: slots?.mainOverlay ?? pageTemplateDefaultSlots.mainOverlay ?? MainOverlay,
 });
 
+const bindMainOverlayRuntime = (
+    overlay: PageTemplateSlots['mainOverlay'],
+    runtime: Pick<PageTemplateOverlayProps, 'isFetching' | 'hasError' | 'isEmpty' | 'onRetry'>
+): PageTemplateSlots['mainOverlay'] => {
+    if (!overlay) return undefined;
+
+    const BoundMainOverlay: React.FC<PageTemplateOverlayProps> = ({ children }) => (
+        React.createElement(
+            overlay as React.ComponentType<PageTemplateOverlayProps>,
+            {
+                isFetching: runtime.isFetching,
+                hasError: runtime.hasError,
+                isEmpty: runtime.isEmpty,
+                onRetry: runtime.onRetry,
+            },
+            children
+        )
+    );
+
+    return BoundMainOverlay;
+};
+
 const Template = <S extends PageTemplateStateBase, A extends PageTemplateActionsBase, G extends string = string>(
     props: TemplateProps<S, A, G>
 ) => {
@@ -84,41 +120,46 @@ const Template = <S extends PageTemplateStateBase, A extends PageTemplateActions
 
         if (hasPageProps) {
             const {
-                state,
-                actions,
+                state: _state,
+                actions: _actions,
                 isLoading,
                 isError,
                 isEmpty,
                 onRetry,
-                overlays,
-                defaultOverlay,
-                filters,
-                creator,
-                pageTitle,
-                subSidebar,
-                mainLayout,
-                className,
+                left,
+                rightHeader,
+                rightMain,
+                leftFlex,
+                rightFlex,
                 slots,
-                ...detailProps
+                ...pageTemplateProps
             } = rest as RequestDetailPageTemplateProps<S, A>;
+
+            const resolvedSlots = getDefaultPageTemplateSlots(slots);
+            const runtimeBoundSlots: PageTemplateSlots = {
+                ...resolvedSlots,
+                mainOverlay: bindMainOverlayRuntime(resolvedSlots.mainOverlay, {
+                    isFetching: isLoading,
+                    hasError: isError,
+                    isEmpty,
+                    onRetry,
+                }),
+            };
 
             return (
                 <PageTemplate
-                    state={state}
-                    actions={actions}
-                    isLoading={isLoading}
-                    isError={isError}
-                    isEmpty={isEmpty}
-                    onRetry={onRetry}
-                    overlays={overlays ?? defaultOverlay}
-                    filters={filters}
-                    creator={creator}
-                    pageTitle={pageTitle}
-                    subSidebar={subSidebar}
-                    mainLayout={mainLayout}
-                    className={className}
-                    slots={getDefaultPageTemplateSlots(slots)}
-                    main={<RequestDetailTemplate {...(detailProps as RequestDetailTemplateProps)} />}
+                    {...pageTemplateProps}
+                    overlays={pageTemplateProps.overlays ?? pageTemplateProps.defaultOverlay}
+                    slots={runtimeBoundSlots}
+                    main={
+                        <RequestDetailTemplate
+                            left={left}
+                            rightHeader={rightHeader}
+                            rightMain={rightMain}
+                            leftFlex={leftFlex}
+                            rightFlex={rightFlex}
+                        />
+                    }
                 />
             );
         }
@@ -126,9 +167,29 @@ const Template = <S extends PageTemplateStateBase, A extends PageTemplateActions
         return <RequestDetailTemplate {...(rest as RequestDetailTemplateProps)} />;
     }
 
-    const pageTemplateProps = rest as PageTemplateProps<S, A> & PageTemplateExtraProps;
+    const {
+        state: _state,
+        actions: _actions,
+        isLoading,
+        isError,
+        isEmpty,
+        onRetry,
+        slots,
+        ...pageTemplateProps
+    } = rest as TemplatePageProps<S, A>;
 
-    return <PageTemplate {...pageTemplateProps} slots={getDefaultPageTemplateSlots(pageTemplateProps.slots)} />;
+    const resolvedSlots = getDefaultPageTemplateSlots(slots);
+    const runtimeBoundSlots: PageTemplateSlots = {
+        ...resolvedSlots,
+        mainOverlay: bindMainOverlayRuntime(resolvedSlots.mainOverlay, {
+            isFetching: isLoading,
+            hasError: isError,
+            isEmpty,
+            onRetry,
+        }),
+    };
+
+    return <PageTemplate {...pageTemplateProps} slots={runtimeBoundSlots} />;
 };
 
 export default Template;

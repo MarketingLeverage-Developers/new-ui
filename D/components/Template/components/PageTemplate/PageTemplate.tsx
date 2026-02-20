@@ -39,18 +39,7 @@ export type PageTemplateActionsBase = {
 
 export type MainLayoutMode = 'auto' | 'fill';
 
-export type PageTemplateProps<
-    S extends PageTemplateStateBase = PageTemplateStateBase,
-    A extends PageTemplateActionsBase = PageTemplateActionsBase,
-> = {
-    state: S;
-    actions: A;
-
-    isLoading?: boolean;
-    isError?: boolean;
-    isEmpty?: boolean;
-    onRetry?: () => void;
-
+export type PageTemplateProps = {
     main: React.ReactNode;
 
     overlays?: React.ReactNode;
@@ -62,6 +51,13 @@ export type PageTemplateProps<
     pageTitle?: string;
     pageTitleAddon?: React.ReactNode;
     subSidebar?: React.ReactNode;
+    sidebarBrand?: React.ReactNode;
+    sidebarContent?: React.ReactNode;
+
+    headerContent?: React.ReactNode;
+    headerLeft?: React.ReactNode;
+    headerCenter?: React.ReactNode;
+    headerRight?: React.ReactNode;
 
     mainLayout?: MainLayoutMode;
     mainPadding?: PaddingSize | number;
@@ -73,25 +69,21 @@ export type PageTemplateExtraProps = {
     slots?: PageTemplateSlots;
 };
 
-const PageTemplate = <S extends PageTemplateStateBase, A extends PageTemplateActionsBase>(
-    props: PageTemplateProps<S, A> & PageTemplateExtraProps
-) => {
+const PageTemplate = (props: PageTemplateProps & PageTemplateExtraProps) => {
     const {
-        state,
-        actions,
-
-        isLoading,
-        isError,
-        isEmpty,
-        onRetry,
-
         main,
         pageTitle,
         pageTitleAddon,
         subSidebar,
+        sidebarBrand,
+        sidebarContent,
         overlays,
 
         filters,
+        headerContent,
+        headerLeft,
+        headerCenter,
+        headerRight,
         mainLayout = 'fill',
         mainPadding = { y: 20, x: 24 },
         mainScrollable = true,
@@ -104,6 +96,27 @@ const PageTemplate = <S extends PageTemplateStateBase, A extends PageTemplateAct
     const sidebarMenu = slots?.sidebarMenu ?? null;
     const headerProfile = slots?.headerProfile ?? null;
 
+    const defaultHeaderLeft = (
+        <Flex gap={8} align="center">
+            <PageName text={pageTitle ?? ''} />
+            {pageTitleAddon}
+        </Flex>
+    );
+
+    const resolvedHeaderContent = headerContent ?? (
+        <>
+            <Flex.Item flex={1}>{headerLeft ?? defaultHeaderLeft}</Flex.Item>
+
+            <Flex.Item flex={2}>
+                {headerCenter ?? <Flex justify="center">{filters}</Flex>}
+            </Flex.Item>
+
+            <Flex.Item flex={1}>
+                {headerRight ?? <Flex justify="end">{headerProfile}</Flex>}
+            </Flex.Item>
+        </>
+    );
+
     const mainWrapperStyle =
         mainLayout === 'fill'
             ? ({
@@ -111,68 +124,20 @@ const PageTemplate = <S extends PageTemplateStateBase, A extends PageTemplateAct
               } as React.CSSProperties)
             : undefined;
 
-    const hasCompanyAndHomepage = typeof state.companyUuid !== 'undefined' && typeof state.homepageUuid !== 'undefined';
-
     return (
         <div className={styles.PageTemplate}>
             <Sidebar>
-                <LogoLine />
-                {sidebarMenu}
+                {sidebarBrand ?? <LogoLine />}
+                {sidebarContent ?? sidebarMenu}
             </Sidebar>
 
             {subSidebar ? <SubSidebar>{subSidebar}</SubSidebar> : null}
 
-            <Header>
-                {hasCompanyAndHomepage ? (
-                    <>
-                        <Flex.Item flex={1}>
-                            <Flex gap={8} align="center">
-                                <PageName text={pageTitle ?? ''} />
-                                {pageTitleAddon}
-                                <span>/</span>
-                                {/* <SiteSelect
-                                    companyUuid={state.companyUuid ?? ''}
-                                    homepageUuid={state.homepageUuid ?? ''}
-                                    onChange={actions.changeHomepageUuid ?? (() => undefined)}
-                                /> */}
-                            </Flex>
-                        </Flex.Item>
-
-                        <Flex.Item flex={2}>
-                            <Flex justify="center">{filters}</Flex>
-                        </Flex.Item>
-
-                        <Flex.Item flex={1}>
-                            <Flex justify="end">
-                                {headerProfile}
-                            </Flex>
-                        </Flex.Item>
-                    </>
-                ) : (
-                    <>
-                        <Flex.Item flex={1}>
-                            <Flex gap={8} align="center">
-                                <PageName text={pageTitle ?? ''} />
-                                {pageTitleAddon}
-                            </Flex>
-                        </Flex.Item>
-
-                        <Flex.Item flex={2}>
-                            <Flex justify="center">{filters}</Flex>
-                        </Flex.Item>
-
-                        <Flex.Item flex={1}>
-                            <Flex justify="end">
-                                {headerProfile}
-                            </Flex>
-                        </Flex.Item>
-                    </>
-                )}
-            </Header>
+            <Header>{resolvedHeaderContent}</Header>
 
             <Main scrollable={mainScrollable}>
                 {MainOverlayComponent ? (
-                    <MainOverlayComponent isFetching={isLoading} isEmpty={isEmpty} hasError={isError} onRetry={onRetry}>
+                    <MainOverlayComponent>
                         <Flex padding={mainPadding} direction="column" gap={24} style={mainWrapperStyle}>
                             {main}
                         </Flex>

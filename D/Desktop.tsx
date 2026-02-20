@@ -16,8 +16,7 @@ import TextArea from './components/TextArea/TextArea';
 import MultiTab from './components/MultiTab/MultiTab';
 import Rating from './components/Rating/Rating';
 import Calendar from './components/Calendar/Calendar';
-import Template from './components/Template/Template';
-import PageTemplate from './components/Template/components/PageTemplate/PageTemplate';
+import Template, { type TemplatePageProps } from './components/Template/Template';
 import { DateSelect } from './components/DateSelect/DateSelect';
 import { IsDeleteSelect } from './components/IsDeleteSelect/IsDeleteSelect';
 import { ListInfiniteScroll } from './components/ListInfiniteScroll/ListInfiniteScroll';
@@ -39,6 +38,8 @@ type DesktopProps = {
 };
 
 export const Desktop = ({ children }: DesktopProps) => <>{children}</>;
+
+const PageTemplateBridge = (props: TemplatePageProps) => <Template variant="page" {...props} />;
 
 Desktop.DeleteConfirmModal = DeleteConfirmModal;
 Desktop.RestoreConfirmModal = RestoreConfirmModal;
@@ -64,7 +65,7 @@ Desktop.MultiTab = MultiTab;
 Desktop.Rating = Rating;
 Desktop.Calendar = Calendar;
 Desktop.Template = Template;
-Desktop.PageTemplate = PageTemplate;
+Desktop.PageTemplate = PageTemplateBridge;
 Desktop.Box = Box;
 Desktop.Accordion = Accordion;
 Desktop.Select = Select;
