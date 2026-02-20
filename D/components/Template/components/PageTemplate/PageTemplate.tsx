@@ -2,9 +2,7 @@ import React from 'react';
 
 import PageName from '../../../../../PageName/PageName';
 
-import MainOverlay from '@/components/feature/overlay/MainOverlay';
 import Flex from '../../../../../Flex/Flex';
-import { AppPageMenu } from '@/components/feature/navigation/AppPageMenu/AppPageMenu';
 import { Sidebar } from './components/Sidebar/Sidebar';
 import { LogoLine } from './components/LogoLine/LogoLine';
 import { SubSidebar } from './components/SubSidebar/SubSidebar';
@@ -12,8 +10,21 @@ import { Header } from './components/Header/Header';
 import { Main } from './components/Main/Main';
 import { Overlays } from './components/Overlays/Overlays';
 import styles from './PageTemplate.module.scss';
-import ProfileDropdown from '@/components/feature/navigation/ProfileDropdown/ProfileDropdown';
 import type { PaddingSize } from '../../../../../shared/types/css/PaddingSize';
+
+export type PageTemplateOverlayProps = {
+    children: React.ReactNode;
+    isFetching?: boolean;
+    isEmpty?: boolean;
+    hasError?: boolean;
+    onRetry?: () => void;
+};
+
+export type PageTemplateSlots = {
+    sidebarMenu?: React.ReactNode;
+    headerProfile?: React.ReactNode;
+    mainOverlay?: React.ComponentType<PageTemplateOverlayProps>;
+};
 
 export type PageTemplateStateBase = {
     companyUuid?: string;
@@ -59,6 +70,7 @@ export type PageTemplateProps<
 
 export type PageTemplateExtraProps = {
     className?: string;
+    slots?: PageTemplateSlots;
 };
 
 const PageTemplate = <S extends PageTemplateStateBase, A extends PageTemplateActionsBase>(
@@ -84,8 +96,13 @@ const PageTemplate = <S extends PageTemplateStateBase, A extends PageTemplateAct
         mainPadding = { y: 20, x: 24 },
         mainScrollable = true,
 
-        className,
+        className: _className,
+        slots,
     } = props;
+
+    const MainOverlayComponent = slots?.mainOverlay;
+    const sidebarMenu = slots?.sidebarMenu ?? null;
+    const headerProfile = slots?.headerProfile ?? null;
 
     const mainWrapperStyle =
         mainLayout === 'fill'
@@ -100,7 +117,7 @@ const PageTemplate = <S extends PageTemplateStateBase, A extends PageTemplateAct
         <div className={styles.PageTemplate}>
             <Sidebar>
                 <LogoLine />
-                <AppPageMenu.Desktop />
+                {sidebarMenu}
             </Sidebar>
 
             {subSidebar ? <SubSidebar>{subSidebar}</SubSidebar> : null}
@@ -127,7 +144,7 @@ const PageTemplate = <S extends PageTemplateStateBase, A extends PageTemplateAct
 
                         <Flex.Item flex={1}>
                             <Flex justify="end">
-                                <ProfileDropdown.Desktop />
+                                {headerProfile}
                             </Flex>
                         </Flex.Item>
                     </>
@@ -146,7 +163,7 @@ const PageTemplate = <S extends PageTemplateStateBase, A extends PageTemplateAct
 
                         <Flex.Item flex={1}>
                             <Flex justify="end">
-                                <ProfileDropdown.Desktop />
+                                {headerProfile}
                             </Flex>
                         </Flex.Item>
                     </>
@@ -154,11 +171,17 @@ const PageTemplate = <S extends PageTemplateStateBase, A extends PageTemplateAct
             </Header>
 
             <Main scrollable={mainScrollable}>
-                <MainOverlay isFetching={isLoading} isEmpty={isEmpty} hasError={isError} onRetry={onRetry}>
+                {MainOverlayComponent ? (
+                    <MainOverlayComponent isFetching={isLoading} isEmpty={isEmpty} hasError={isError} onRetry={onRetry}>
+                        <Flex padding={mainPadding} direction="column" gap={24} style={mainWrapperStyle}>
+                            {main}
+                        </Flex>
+                    </MainOverlayComponent>
+                ) : (
                     <Flex padding={mainPadding} direction="column" gap={24} style={mainWrapperStyle}>
                         {main}
                     </Flex>
-                </MainOverlay>
+                )}
             </Main>
 
             <Overlays>{overlays}</Overlays>

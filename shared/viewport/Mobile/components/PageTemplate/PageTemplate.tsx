@@ -10,7 +10,7 @@ import BaseButton from '../../../../../BaseButton/BaseButton';
 import { getThemeColor } from '../../../../utils/css/getThemeColor';
 import { IoMdOptions } from 'react-icons/io';
 import RequireCompanyAndSite from '@/components/feature/navigation/RequireCompanyAndSite';
-import MainOverlay from '@/components/feature/overlay/MainOverlay';
+import MainOverlay from '@/features/overlay/components/MainOverlay';
 import Flex from '../../../../../Flex/Flex';
 import {
     AppOnboardingOverviewButton,

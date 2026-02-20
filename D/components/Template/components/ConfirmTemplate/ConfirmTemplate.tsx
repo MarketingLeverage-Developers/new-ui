@@ -1,6 +1,6 @@
 import React from 'react';
 import { FaExclamation } from 'react-icons/fa6';
-import Button from '@/components/common/D/components/Button/Button';
+import Button from '../../../Button/Button';
 import type { CSSLength } from '../../../../../shared/types';
 import type { PaddingSize } from '../../../../../shared/types/css/PaddingSize';
 import ModalTemplate from '../ModalTemplate/ModalTemplate';

@@ -66,6 +66,73 @@ export const moveDayRange = (range: DateRange | undefined, diff: number): DateRa
     return { from, to };
 };
 
+const pad2 = (n: number) => String(n).padStart(2, '0');
+
+const toValidDate = (value?: string | Date | null): Date | null => {
+    if (!value) return null;
+    if (value instanceof Date) return Number.isNaN(value.getTime()) ? null : value;
+    const parsed = new Date(value);
+    return Number.isNaN(parsed.getTime()) ? null : parsed;
+};
+
+const getMeridiemAndHourMinute = (date: Date) => {
+    const h = date.getHours();
+    const m = date.getMinutes();
+    const period = h < 12 ? '오전' : '오후';
+    const hh = pad2(h % 12 || 12);
+    const mm = pad2(m);
+    return { period, hh, mm };
+};
+
+export const formatMeridiemKoreanTime = (value?: string | Date | null): string => {
+    const date = toValidDate(value);
+    if (!date) return '-';
+
+    const { period, hh, mm } = getMeridiemAndHourMinute(date);
+    return `${period} ${hh}시 ${mm}분`;
+};
+
+export const formatKoreanTime = (value?: string | Date | null): string => {
+    const date = toValidDate(value);
+    if (!date) return '-';
+
+    const { hh, mm } = getMeridiemAndHourMinute(date);
+    return `${hh}시 ${mm}분`;
+};
+
+export const formatMeridiemKoreanTimeRange = (
+    startValue?: string | Date | null,
+    endValue?: string | Date | null
+): string => {
+    const start = toValidDate(startValue);
+    const end = toValidDate(endValue);
+
+    if (start && end) {
+        const isSameDate =
+            start.getFullYear() === end.getFullYear() &&
+            start.getMonth() === end.getMonth() &&
+            start.getDate() === end.getDate();
+
+        if (!isSameDate) {
+            const startDay = pad2(start.getDate());
+            const endDay = pad2(end.getDate());
+            const startFmt = formatMeridiemKoreanTime(start);
+            const endFmt = formatMeridiemKoreanTime(end);
+            return `${startDay}일 ${startFmt} ~ ${endDay}일 ${endFmt}`;
+        }
+
+        const startFmt = formatMeridiemKoreanTime(start);
+        const startPeriod = start.getHours() < 12 ? '오전' : '오후';
+        const endPeriod = end.getHours() < 12 ? '오전' : '오후';
+        const endFmt = startPeriod === endPeriod ? formatKoreanTime(end) : formatMeridiemKoreanTime(end);
+        return `${startFmt} ~ ${endFmt}`;
+    }
+
+    if (start) return formatMeridiemKoreanTime(start);
+    if (end) return formatMeridiemKoreanTime(end);
+    return '-';
+};
+
 export const MEDIA_ICONS: Record<string, string> = {
     naver: NaverImg,
     kakao: KakaoImg,

@@ -2,7 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 import { FiArrowLeft, FiArrowRight, FiEye } from 'react-icons/fi';
 import type { CSSLength } from '../../../../../shared/types';
-import Button from '@/components/common/D/components/Button/Button';
+import Button from '../../../Button/Button';
 import styles from './OnboardingModalTemplate.module.scss';
 
 export type OnboardingModalGuide<GuideId extends string = string> = {

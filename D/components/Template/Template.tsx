@@ -4,9 +4,13 @@ import type {
     PageTemplateActionsBase,
     PageTemplateExtraProps,
     PageTemplateProps,
+    PageTemplateSlots,
     PageTemplateStateBase,
 } from './components/PageTemplate/PageTemplate';
 import PageTemplate from './components/PageTemplate/PageTemplate';
+import MainOverlay from '@/features/overlay/components/MainOverlay';
+import { AppPageMenu } from '@/features/navigation/components/AppPageMenu';
+import ProfileDropdown from '@/features/navigation/components/ProfileDropdown/ProfileDropdown';
 
 import type { ModalTemplateExtraProps, ModalTemplateProps } from './components/ModalTemplate/ModalTemplate';
 import ModalTemplate from './components/ModalTemplate/ModalTemplate';
@@ -36,6 +40,12 @@ export type TemplateProps<
     | ({ variant: 'request-detail' } & RequestDetailTemplateProps)
     | ({ variant: 'request-detail' } & RequestDetailPageTemplateProps<S, A>)
     | ({ variant: 'onboarding-modal' } & OnboardingModalTemplateProps<G>);
+
+const getDefaultPageTemplateSlots = (slots?: PageTemplateSlots): PageTemplateSlots => ({
+    sidebarMenu: slots?.sidebarMenu ?? <AppPageMenu />,
+    headerProfile: slots?.headerProfile ?? <ProfileDropdown />,
+    mainOverlay: slots?.mainOverlay ?? MainOverlay,
+});
 
 const Template = <S extends PageTemplateStateBase, A extends PageTemplateActionsBase, G extends string = string>(
     props: TemplateProps<S, A, G>
@@ -74,6 +84,7 @@ const Template = <S extends PageTemplateStateBase, A extends PageTemplateActions
                 subSidebar,
                 mainLayout,
                 className,
+                slots,
                 ...detailProps
             } = rest as RequestDetailPageTemplateProps<S, A>;
 
@@ -92,6 +103,7 @@ const Template = <S extends PageTemplateStateBase, A extends PageTemplateActions
                     subSidebar={subSidebar}
                     mainLayout={mainLayout}
                     className={className}
+                    slots={getDefaultPageTemplateSlots(slots)}
                     main={<RequestDetailTemplate {...(detailProps as RequestDetailTemplateProps)} />}
                 />
             );
@@ -100,7 +112,9 @@ const Template = <S extends PageTemplateStateBase, A extends PageTemplateActions
         return <RequestDetailTemplate {...(rest as RequestDetailTemplateProps)} />;
     }
 
-    return <PageTemplate {...(rest as PageTemplateProps<S, A> & PageTemplateExtraProps)} />;
+    const pageTemplateProps = rest as PageTemplateProps<S, A> & PageTemplateExtraProps;
+
+    return <PageTemplate {...pageTemplateProps} slots={getDefaultPageTemplateSlots(pageTemplateProps.slots)} />;
 };
 
 export default Template;

@@ -8,7 +8,7 @@ import type { PaddingSize } from '../../../../../shared/types/css/PaddingSize';
 import { toCssUnit } from '../../../../../shared/utils';
 import { toCssPadding } from '../../../../../shared/utils/css/toCssPadding';
 
-import MainOverlay from '@/components/feature/overlay/MainOverlay';
+import MainOverlay from '@/features/overlay/components/MainOverlay';
 import ModalTemplateHeader, {
     type ModalTemplateHeaderProps,
 } from './components/ModalTemplateHeader/ModalTemplateHeader';
