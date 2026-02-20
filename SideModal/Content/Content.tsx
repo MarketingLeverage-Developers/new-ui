@@ -16,7 +16,12 @@ const Content = ({ children }: { children: React.ReactNode }) => {
     return (
         <Portal>
             <Modal.Backdrop />
-            <Modal.Content className={classnames} height="100%">
+            <Modal.Content
+                className={classnames}
+                height="100vh"
+                maxHeight="100vh"
+                style={{ top: 0, right: 0, left: 'auto', transform: 'none' }}
+            >
                 {children}
             </Modal.Content>
         </Portal>
