@@ -3,6 +3,7 @@ import React, { type HTMLAttributes } from 'react';
 import BaseBox, { type BaseBoxExtraProps } from './components/BaseBox/BaseBox';
 import FlexBox, { type FlexBoxExtraProps } from './components/FlexBox/FlexBox';
 import GridBox, { type GridBoxExtraProps } from './components/GridBox/GridBox';
+import RoundedBox, { type RoundedBoxExtraProps } from './components/RoundedBox/RoundedBox';
 
 /** CSS 크기 단위 타입 */
 export type CSSLength = number | string;
@@ -18,7 +19,7 @@ export type PaddingSize =
           b?: number;
       };
 
-export type BoxVariant = 'base' | 'flex' | 'grid';
+export type BoxVariant = 'base' | 'flex' | 'grid' | 'rounded';
 
 export type BoxCommonProps = HTMLAttributes<HTMLDivElement> & {
     children: React.ReactNode;
@@ -44,7 +45,8 @@ export type BoxCommonProps = HTMLAttributes<HTMLDivElement> & {
 export type BoxProps =
     | ({ variant?: 'flex' } & BoxCommonProps & FlexBoxExtraProps)
     | ({ variant?: 'base' } & BoxCommonProps & BaseBoxExtraProps)
-    | ({ variant: 'grid' } & BoxCommonProps & GridBoxExtraProps);
+    | ({ variant: 'grid' } & BoxCommonProps & GridBoxExtraProps)
+    | ({ variant: 'rounded' } & BoxCommonProps & RoundedBoxExtraProps);
 
 const Box: React.FC<BoxProps> = (props) => {
     const { variant = 'flex', ...rest } = props;
@@ -55,6 +57,10 @@ const Box: React.FC<BoxProps> = (props) => {
 
     if (variant === 'grid') {
         return <GridBox {...(rest as BoxCommonProps & GridBoxExtraProps)} />;
+    }
+
+    if (variant === 'rounded') {
+        return <RoundedBox {...(rest as BoxCommonProps & RoundedBoxExtraProps)} />;
     }
 
     return <FlexBox {...(rest as BoxCommonProps & FlexBoxExtraProps)} />;

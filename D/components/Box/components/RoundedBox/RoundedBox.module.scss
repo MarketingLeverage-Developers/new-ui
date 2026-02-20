@@ -1,0 +1,64 @@
+.Container {
+    display: flex;
+    align-items: stretch;
+    width: var(--width, auto);
+    max-width: var(--max-width, none);
+    height: var(--height, auto);
+    margin: var(--margin, 0);
+    flex: var(--flex, initial);
+    min-width: var(--min-width, 0);
+    min-height: var(--min-height, 0);
+}
+
+.RoundedBox {
+    background-color: var(--bg, var(--White1));
+    border-radius: var(--radius, 20px);
+    box-sizing: border-box;
+    padding: var(--padding, 0);
+    flex: 1 1 auto;
+    min-width: 0;
+    min-height: 0;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.NoShadow {
+    box-shadow: none;
+}
+
+.Viewport {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: auto;
+    scrollbar-width: none;
+}
+
+.Viewport::-webkit-scrollbar {
+    display: none;
+}
+
+.NoScroll {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.ExternalScrollbar {
+    overflow-y: auto;
+    overflow-x: hidden;
+    background: transparent;
+    scrollbar-width: thin;
+    scrollbar-color: var(--Gray5) transparent;
+}
+
+.ExternalScrollbar::-webkit-scrollbar {
+    width: 8px;
+}
+
+.ExternalScrollbar::-webkit-scrollbar-thumb {
+    background: var(--Gray5);
+    border-radius: 6px;
+}
