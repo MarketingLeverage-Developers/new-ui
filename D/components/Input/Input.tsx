@@ -5,7 +5,7 @@ import InnerTextInput, { type InnerTextInputProps } from './components/InnerText
 import RoundedPassword, { type RoundedPasswordProps } from './components/RoundedPassword/RoundedPassword';
 import SearchInput, { type SearchInputProps } from './components/SearchInput/SearchInput';
 
-export type InputVariant = 'base' | 'rounded' | 'inner-text' | 'rounded-password' | 'search';
+export type InputVariant = 'base' | 'rounded' | 'inner-text' | 'rounded-password' | 'search' | 'rounded-search';
 
 export type InputCommonProps = Omit<InputHTMLAttributes<HTMLInputElement>, 'prefix' | 'suffix'>;
 
@@ -14,7 +14,8 @@ export type InputProps =
     | ({ variant: 'rounded' } & RoundedInputProps)
     | ({ variant: 'inner-text' } & InnerTextInputProps)
     | ({ variant: 'rounded-password' } & RoundedPasswordProps)
-    | ({ variant: 'search' } & SearchInputProps);
+    | ({ variant: 'search' } & SearchInputProps)
+    | ({ variant: 'rounded-search' } & SearchInputProps);
 
 const Input = (props: InputProps) => {
     const { variant, ...rest } = props as any;
@@ -22,7 +23,7 @@ const Input = (props: InputProps) => {
     if (variant === 'rounded') return <RoundedInput {...(rest as RoundedInputProps)} />;
     if (variant === 'inner-text') return <InnerTextInput {...(rest as InnerTextInputProps)} />;
     if (variant === 'rounded-password') return <RoundedPassword {...(rest as RoundedPasswordProps)} />;
-    if (variant === 'search') return <SearchInput {...(rest as SearchInputProps)} />;
+    if (variant === 'search' || variant === 'rounded-search') return <SearchInput {...(rest as SearchInputProps)} />;
 
     return <BaseInput {...(rest as BaseInputExtraProps & InputCommonProps)} />;
 };
