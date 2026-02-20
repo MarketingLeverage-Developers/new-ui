@@ -9,6 +9,8 @@
     top: 0;
     // overflow-y: auto;
 
+    background-color: var(--White1);
+
     // &::-webkit-scrollbar {
     //     width: 6px;
     // }
@@ -19,4 +21,34 @@
     // &::-webkit-scrollbar-track {
     //     background: transparent;
     // }
+}
+
+.ResizeHandle {
+    position: absolute;
+    top: 0;
+    right: -3px;
+    width: 6px;
+    height: 100%;
+    cursor: col-resize;
+    z-index: 3;
+}
+
+.ResizeHandle::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 2px;
+    width: 2px;
+    border-radius: 999px;
+    background-color: transparent;
+    transition: background-color 0.14s ease;
+}
+
+.SubSidebar:hover .ResizeHandle::after {
+    background-color: var(--Gray5);
+}
+
+.SubSidebar[data-resizing='true'] .ResizeHandle::after {
+    background-color: var(--Primary1);
 }
