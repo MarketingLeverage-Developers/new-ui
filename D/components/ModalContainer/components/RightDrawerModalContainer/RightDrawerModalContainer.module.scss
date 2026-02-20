@@ -1,12 +1,15 @@
-.RightDrawerContent {
+.RightDrawerContent.RightDrawerContent {
     top: 0;
+    bottom: 0;
     right: 0;
     left: auto;
     transform: translateX(100%);
     border-radius: 0;
     transition: transform 0.25s ease;
+    height: 100dvh;
+    max-height: 100dvh;
 }
 
-.RightDrawerContent[data-open='true'] {
+.RightDrawerContent.RightDrawerContent[data-open='true'] {
     transform: translateX(0);
 }
