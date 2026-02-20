@@ -14,11 +14,31 @@ const clampWidth = (value: number) => Math.min(MAX_WIDTH_PX, Math.max(MIN_WIDTH_
 
 export const SubSidebar = ({ children }: SubSidebarProps) => {
     const sidebarRef = useRef<HTMLElement | null>(null);
+    const contentRef = useRef<HTMLDivElement | null>(null);
     const dragRef = useRef<{ startX: number; startWidth: number } | null>(null);
     const latestWidthRef = useRef<number>(DEFAULT_WIDTH_PX);
 
     const [widthPx, setWidthPx] = useState<number>(DEFAULT_WIDTH_PX);
     const [isResizing, setIsResizing] = useState(false);
+    const [hasVisibleContent, setHasVisibleContent] = useState(false);
+
+    const checkHasVisibleContent = useCallback(() => {
+        const root = contentRef.current;
+        if (!root) {
+            setHasVisibleContent(false);
+            return;
+        }
+
+        if ((root.textContent ?? '').trim().length > 0) {
+            setHasVisibleContent(true);
+            return;
+        }
+
+        const interactiveNode = root.querySelector(
+            'button, input, select, textarea, a, img, svg, ul, ol, li, table, [role]'
+        );
+        setHasVisibleContent(Boolean(interactiveNode));
+    }, []);
 
     useEffect(() => {
         try {
@@ -36,7 +56,29 @@ export const SubSidebar = ({ children }: SubSidebarProps) => {
     }, []);
 
     useEffect(() => {
-        if (!isResizing) return;
+        checkHasVisibleContent();
+    }, [children, checkHasVisibleContent]);
+
+    useEffect(() => {
+        const root = contentRef.current;
+        if (!root) return;
+
+        checkHasVisibleContent();
+        const observer = new MutationObserver(() => {
+            checkHasVisibleContent();
+        });
+        observer.observe(root, {
+            childList: true,
+            subtree: true,
+            characterData: true,
+            attributes: true,
+        });
+
+        return () => observer.disconnect();
+    }, [checkHasVisibleContent]);
+
+    useEffect(() => {
+        if (!isResizing || !hasVisibleContent) return;
         if (typeof document === 'undefined') return;
 
         const { body } = document;
@@ -50,7 +92,7 @@ export const SubSidebar = ({ children }: SubSidebarProps) => {
             body.style.cursor = prevCursor;
             body.style.userSelect = prevUserSelect;
         };
-    }, [isResizing]);
+    }, [hasVisibleContent, isResizing]);
 
     const persistWidth = useCallback((nextWidth: number) => {
         try {
@@ -92,6 +134,7 @@ export const SubSidebar = ({ children }: SubSidebarProps) => {
 
     const startDragging = useCallback(
         (e: React.PointerEvent<HTMLDivElement>) => {
+            if (!hasVisibleContent) return;
             if (e.button !== 0) return;
             e.preventDefault();
             e.stopPropagation();
@@ -104,7 +147,7 @@ export const SubSidebar = ({ children }: SubSidebarProps) => {
             window.addEventListener('pointerup', stopDragging);
             window.addEventListener('pointercancel', stopDragging);
         },
-        [handlePointerMove, stopDragging, widthPx]
+        [handlePointerMove, hasVisibleContent, stopDragging, widthPx]
     );
 
     const resetWidth = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
@@ -122,7 +165,10 @@ export const SubSidebar = ({ children }: SubSidebarProps) => {
         }
     }, []);
 
-    const style = useMemo<React.CSSProperties>(() => ({ width: `${widthPx}px` }), [widthPx]);
+    const style = useMemo<React.CSSProperties>(
+        () => ({ width: hasVisibleContent ? `${widthPx}px` : '0px' }),
+        [hasVisibleContent, widthPx]
+    );
 
     return (
         <aside
@@ -130,15 +176,18 @@ export const SubSidebar = ({ children }: SubSidebarProps) => {
             className={styles.SubSidebar}
             style={style}
             data-resizing={isResizing ? 'true' : 'false'}
+            data-collapsed={hasVisibleContent ? 'false' : 'true'}
         >
-            {children}
-            <div
-                role="separator"
-                aria-orientation="vertical"
-                className={styles.ResizeHandle}
-                onPointerDown={startDragging}
-                onDoubleClick={resetWidth}
-            />
+            <div ref={contentRef}>{children}</div>
+            {hasVisibleContent ? (
+                <div
+                    role="separator"
+                    aria-orientation="vertical"
+                    className={styles.ResizeHandle}
+                    onPointerDown={startDragging}
+                    onDoubleClick={resetWidth}
+                />
+            ) : null}
         </aside>
     );
 };

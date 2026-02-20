@@ -23,6 +23,13 @@
     // }
 }
 
+.SubSidebar[data-collapsed='true'] {
+    width: 0 !important;
+    min-width: 0;
+    border-right: none;
+    overflow: hidden;
+}
+
 .ResizeHandle {
     position: absolute;
     top: 0;
