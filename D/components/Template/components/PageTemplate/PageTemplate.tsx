@@ -27,6 +27,7 @@ export type PageTemplateProps = {
     main: React.ReactNode;
     mainPadding?: PaddingSize | number;
     mainScrollable?: boolean;
+    mainLayout?: 'auto' | 'fill';
 };
 
 const PageTemplate = ({
@@ -37,6 +38,7 @@ const PageTemplate = ({
     overlay,
     mainPadding = DEFAULT_MAIN_PADDING,
     mainScrollable = true,
+    mainLayout = 'fill',
 }: PageTemplateProps) => (
     <div className={styles.PageTemplate}>
         <Sidebar>{sidebar}</Sidebar>
@@ -50,7 +52,7 @@ const PageTemplate = ({
                 padding={normalizePadding(mainPadding)}
                 direction="column"
                 gap={24}
-                style={{ height: '100%' }}
+                style={mainLayout === 'fill' ? { height: '100%' } : undefined}
             >
                 {main}
             </Flex>
