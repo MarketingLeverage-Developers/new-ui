@@ -32,18 +32,21 @@ const MutedIconLabel = (props: LabelCommonProps) => {
     };
 
     const actionsClassName = classNames(styles.LabelWarpper, { [styles.HasActions]: Boolean(actions) });
+    const hasLabelHeader = Boolean(icon || text || actions);
 
     return (
         <div className={rootClassName} {...rest} style={{ ...cssVariables, ...style }}>
-            {icon ? (
+            {hasLabelHeader ? (
                 <div className={actionsClassName}>
                     <div className={styles.LabelLine}>
-                        <span className={styles.Icon}>{icon}</span>
+                        {icon ? <span className={styles.Icon}>{icon}</span> : null}
 
-                        <span className={styles.Text}>
-                            {text}
-                            {required ? <span className={styles.Required}> (필수)</span> : null}
-                        </span>
+                        {text ? (
+                            <span className={styles.Text}>
+                                {text}
+                                {required ? <span className={styles.Required}> (필수)</span> : null}
+                            </span>
+                        ) : null}
                     </div>
                     {actions && actions}
                 </div>

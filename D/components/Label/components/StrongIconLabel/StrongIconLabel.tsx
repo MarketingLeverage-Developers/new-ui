@@ -21,14 +21,15 @@ const StrongIconLabel = (props: LabelCommonProps) => {
     };
 
     const actionsClassName = classNames(styles.LabelWarpper, { [styles.HasActions]: Boolean(actions) });
+    const hasLabelHeader = Boolean(icon || text || actions);
 
     return (
         <div className={rootClassName} {...rest} style={{ ...cssVariables, ...style }}>
-            {icon ? (
+            {hasLabelHeader ? (
                 <div className={actionsClassName}>
                     <div className={styles.LabelLine}>
-                        <span className={styles.Icon}>{icon}</span>
-                        <span className={styles.Text}>{text}</span>
+                        {icon ? <span className={styles.Icon}>{icon}</span> : null}
+                        {text ? <span className={styles.Text}>{text}</span> : null}
                     </div>
                     {actions && actions}
                 </div>
