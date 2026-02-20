@@ -44,7 +44,7 @@ const DropdownRoot: React.FC<DropdownProps> = (props) => {
 
     return (
         <DropdownVariantContext.Provider value={{ variant }}>
-            {(variant === 'base' || variant === 'date-range') ? <BaseDropdown {...(rest as BaseDropdownProps)} /> : null}
+            <BaseDropdown {...(rest as BaseDropdownProps)} />
         </DropdownVariantContext.Provider>
     );
 };
