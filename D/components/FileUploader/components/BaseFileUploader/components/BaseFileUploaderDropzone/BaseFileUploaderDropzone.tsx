@@ -107,7 +107,7 @@ const BaseFileUploaderDropzone: React.FC<BaseFileUploaderDropzoneProps> = (props
                 <div className={styles.Text}>{resolvedGuideText}</div>
             </div>
 
-            <Button variant="base" size="md" primary disabled={blocked} onClick={openFileDialog}>
+            <Button variant="base" type="button" size="md" primary disabled={blocked} onClick={openFileDialog}>
                 {isUploading ? '업로드중...' : buttonText}
             </Button>
 

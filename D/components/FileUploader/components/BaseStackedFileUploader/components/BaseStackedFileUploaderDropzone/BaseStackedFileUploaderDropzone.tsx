@@ -102,7 +102,7 @@ const BaseStackedFileUploaderDropzone: React.FC<BaseStackedFileUploaderDropzoneP
 
             <div className={styles.Text}>{resolvedGuideText}</div>
 
-            <Button variant="base" size="md" primary disabled={disabled} onClick={openFileDialog}>
+            <Button variant="base" type="button" size="md" primary disabled={disabled} onClick={openFileDialog}>
                 {buttonText}
             </Button>
 
