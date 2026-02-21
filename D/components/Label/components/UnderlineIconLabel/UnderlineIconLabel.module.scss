@@ -1,0 +1,86 @@
+.UnderlineIconLabel {
+    display: inline-flex;
+    width: 100%;
+    min-width: 0;
+    border-bottom: 2px solid var(--Gray5);
+    --label-width: 120px;
+    gap: var(--label-gap, 16px);
+    color: var(--Gray1);
+    font-size: 15px;
+    font-weight: 500;
+    padding: 10px 0;
+}
+
+.Row {
+    flex-direction: row;
+    align-items: center;
+}
+
+.Column {
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.LabelHeader {
+    display: inline-flex;
+    align-items: center;
+    min-width: 0;
+
+    .LabelLine {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        min-width: 0;
+        width: 100%;
+    }
+
+    &.HasActions {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: auto;
+        gap: 8px;
+    }
+}
+
+.Row .LabelHeader {
+    flex: 0 0 var(--label-width);
+    width: var(--label-width);
+    max-width: var(--label-width);
+}
+
+.Icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--Gray3);
+    width: 20px;
+    height: 20px;
+    font-size: 20px;
+}
+
+.Text {
+    display: block;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.Required {
+    color: var(--Red1, #ef4444);
+    font-weight: 400;
+}
+
+.Content {
+    min-width: 0;
+    width: 100%;
+}
+
+.Row .Content {
+    flex: 1 1 0;
+}
+
+.Column .Content {
+    width: 100%;
+}
