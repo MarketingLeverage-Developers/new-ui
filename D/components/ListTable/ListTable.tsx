@@ -27,6 +27,10 @@ type ListTableProps<T> = {
     actions?: React.ReactNode;
     showExpandAllRowsButton?: boolean;
     enableAnimation?: boolean;
+    enableVirtualization?: boolean;
+    virtualRowHeight?: number;
+    virtualOverscan?: number;
+    persistExpandedRowKeys?: boolean;
     onScrollElReady?: (el: HTMLDivElement | null) => void;
 
     pinnedHeaderBgColor?: string | ((colKey: string) => string | undefined);
@@ -42,6 +46,7 @@ type ListTableProps<T> = {
     onFilterChange?: (next: FilterState) => void;
     filterMode?: 'internal' | 'external';
     filterOptionsData?: T[];
+    fillContainerWidth?: boolean;
 };
 
 export const ListTable = <T,>({
@@ -63,6 +68,10 @@ export const ListTable = <T,>({
     actions,
     showExpandAllRowsButton = false,
     enableAnimation = false,
+    enableVirtualization,
+    virtualRowHeight,
+    virtualOverscan,
+    persistExpandedRowKeys,
     onScrollElReady,
     pinnedHeaderBgColor,
     pinnedHeaderTextColor,
@@ -75,6 +84,7 @@ export const ListTable = <T,>({
     onFilterChange,
     filterMode,
     filterOptionsData,
+    fillContainerWidth,
 }: ListTableProps<T>) => (
     <BasicTable
         data={data}
@@ -95,6 +105,10 @@ export const ListTable = <T,>({
         actions={actions}
         showExpandAllRowsButton={showExpandAllRowsButton}
         enableAnimation={enableAnimation}
+        enableVirtualization={enableVirtualization}
+        virtualRowHeight={virtualRowHeight}
+        virtualOverscan={virtualOverscan}
+        persistExpandedRowKeys={persistExpandedRowKeys}
         onScrollElReady={onScrollElReady}
         pinnedHeaderBgColor={pinnedHeaderBgColor}
         pinnedHeaderTextColor={pinnedHeaderTextColor}
@@ -107,5 +121,6 @@ export const ListTable = <T,>({
         onFilterChange={onFilterChange}
         filterMode={filterMode}
         filterOptionsData={filterOptionsData}
+        fillContainerWidth={fillContainerWidth}
     />
 );

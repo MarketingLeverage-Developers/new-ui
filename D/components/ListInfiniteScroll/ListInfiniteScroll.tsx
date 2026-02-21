@@ -6,11 +6,13 @@ type Props = {
     size: number;
     onChange: (page: number) => void;
     isLoading?: boolean;
+    scrollEl?: HTMLElement | null;
 };
 
 const ROOT_MARGIN = '200px';
+const SCROLL_THRESHOLD_PX = 200;
 
-export const ListInfiniteScroll = ({ total, page, size, onChange, isLoading }: Props) => {
+export const ListInfiniteScroll = ({ total, page, size, onChange, isLoading, scrollEl }: Props) => {
     const triggerRef = useRef<HTMLDivElement | null>(null);
     const lastRequestedPageRef = useRef<number | null>(null);
     const requestedFromPageRef = useRef<number | null>(null);
@@ -26,7 +28,8 @@ export const ListInfiniteScroll = ({ total, page, size, onChange, isLoading }: P
             lastRequestedPageRef.current = null;
             requestedFromPageRef.current = null;
         }
-    }, [page]);
+        if (scrollEl) wasIntersectingRef.current = false;
+    }, [page, scrollEl]);
 
     useEffect(() => {
         if (!isLoading && requestedFromPageRef.current === page) {
@@ -37,6 +40,7 @@ export const ListInfiniteScroll = ({ total, page, size, onChange, isLoading }: P
 
     useEffect(() => {
         const el = triggerRef.current;
+        if (scrollEl) return;
         if (!el) return;
         if (!canLoad) return;
         if (typeof IntersectionObserver === 'undefined') return;
@@ -64,9 +68,38 @@ export const ListInfiniteScroll = ({ total, page, size, onChange, isLoading }: P
 
         observer.observe(el);
         return () => observer.disconnect();
-    }, [canLoad, nextPage, onChange, page]);
+    }, [canLoad, nextPage, onChange, page, scrollEl]);
+
+    useEffect(() => {
+        if (!scrollEl) return;
+        if (!canLoad) return;
+
+        const onScroll = () => {
+            const { scrollTop, scrollHeight, clientHeight } = scrollEl;
+            const distanceToBottom = scrollHeight - (scrollTop + clientHeight);
+            const nearBottom = distanceToBottom <= SCROLL_THRESHOLD_PX;
+
+            if (!nearBottom) {
+                wasIntersectingRef.current = false;
+                return;
+            }
+
+            if (wasIntersectingRef.current) return;
+            wasIntersectingRef.current = true;
+
+            if (lastRequestedPageRef.current === nextPage) return;
+            lastRequestedPageRef.current = nextPage;
+            requestedFromPageRef.current = page;
+            onChange(nextPage);
+        };
+
+        onScroll();
+        scrollEl.addEventListener('scroll', onScroll, { passive: true });
+        return () => scrollEl.removeEventListener('scroll', onScroll);
+    }, [canLoad, nextPage, onChange, page, scrollEl]);
 
     if (!hasMore) return null;
+    if (scrollEl) return null;
 
     return <div ref={triggerRef} aria-hidden="true" style={{ height: 1 }} />;
 };
