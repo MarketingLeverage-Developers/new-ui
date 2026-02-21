@@ -47,9 +47,11 @@ export interface ColumnType<T> {
     render: (item: T, index: number, meta: CellRenderMeta<T>) => React.ReactElement;
     header: (key: string, data: T[]) => React.ReactElement;
     width?: number | string;
+    defaultHidden?: boolean;
     filter?: React.ReactNode;
     sortValue?: SortValueGetter<T>;
     sorter?: Sorter<T>;
+    headerUnderline?: HeaderUnderlineConfig;
 }
 
 export type Column<T> = {
@@ -58,10 +60,19 @@ export type Column<T> = {
     header: (key: string, data: T[]) => React.ReactElement;
     render: (item: T, index: number, meta: CellRenderMeta<T>) => React.ReactElement;
     width?: number | string;
+    defaultHidden?: boolean;
     children?: ColumnType<T>[];
     filter?: React.ReactNode;
     sortValue?: SortValueGetter<T>;
     sorter?: Sorter<T>;
+    headerUnderline?: HeaderUnderlineConfig;
+};
+
+export type HeaderUnderlineConfig = {
+    active?: boolean;
+    activeWhenAnyVisibleKeys?: readonly string[];
+    color?: string;
+    width?: number;
 };
 
 // src/shared/headless/AirTable/AirTable.tsx
@@ -75,6 +86,7 @@ export type AirTableProps<T> = {
     getRowCanExpand?: (row: T, ri: number) => boolean;
     getRowStyle?: (row: T, index: number) => React.CSSProperties;
     storageKey?: string;
+    defaultVisibleColumnKeys?: string[];
     style?: React.CSSProperties;
     children?: React.ReactNode;
     pinnedColumnKeys?: string[];
@@ -451,6 +463,7 @@ const useTable = <T,>({
     containerWidth,
     rowKeyField,
     storageKey,
+    defaultVisibleColumnKeys,
     initialPinnedColumnKeys,
     getExpandedRows,
     getRowLevel,
@@ -463,6 +476,7 @@ const useTable = <T,>({
     containerWidth: number;
     rowKeyField?: string;
     storageKey?: string;
+    defaultVisibleColumnKeys?: string[];
     initialPinnedColumnKeys?: string[];
 
     /** ✅ flatten */
@@ -477,6 +491,8 @@ const useTable = <T,>({
                     return col.children.map((ch) => ({
                         ...ch,
                         key: String(ch.key),
+                        defaultHidden: ch.defaultHidden,
+                        headerUnderline: ch.headerUnderline,
                     }));
                 }
 
@@ -495,9 +511,11 @@ const useTable = <T,>({
                         render,
                         header: col.header,
                         width: col.width,
+                        defaultHidden: col.defaultHidden,
                         filter: col.filter,
                         sortValue: col.sortValue,
                         sorter: col.sorter,
+                        headerUnderline: col.headerUnderline,
                     } as ColumnType<T>,
                 ];
             }),
@@ -506,6 +524,16 @@ const useTable = <T,>({
 
     const leafKeys = useMemo(() => uniq(leafColumns.map((c) => c.key)), [leafColumns]);
     const leafKeySet = useMemo(() => new Set(leafKeys), [leafKeys]);
+    const defaultVisibleLeafKeys = useMemo(() => {
+        const preferred = uniq((defaultVisibleColumnKeys ?? []).map(String)).filter((k) => leafKeySet.has(k));
+        if (preferred.length > 0) return preferred;
+
+        const byColumnConfig = leafColumns
+            .filter((column) => !column.defaultHidden)
+            .map((column) => String(column.key));
+
+        return byColumnConfig.length > 0 ? byColumnConfig : leafKeys;
+    }, [defaultVisibleColumnKeys, leafKeySet, leafKeys, leafColumns]);
 
     const innerWidth = Math.max(0, containerWidth - containerPaddingPx);
 
@@ -535,9 +563,12 @@ const useTable = <T,>({
     });
     const [visibleColumnKeysDesired, setVisibleColumnKeysDesired] = useState<string[]>(() => {
         if (persisted?.visibleColumnKeys && persisted.visibleColumnKeys.length > 0) return persisted.visibleColumnKeys;
+        return defaultVisibleLeafKeys;
+    });
+    const [knownColumnKeys, setKnownColumnKeys] = useState<string[]>(() => {
+        if (persisted?.knownColumnKeys && persisted.knownColumnKeys.length > 0) return persisted.knownColumnKeys;
         return leafKeys;
     });
-    const [knownColumnKeys, setKnownColumnKeys] = useState<string[]>(() => persisted?.knownColumnKeys ?? []);
 
     const [pinnedColumnKeys, setPinnedColumnKeysState] = useState<string[]>(() => {
         const fromPersisted = persisted?.pinnedColumnKeys ?? [];
@@ -545,7 +576,9 @@ const useTable = <T,>({
         return uniq(initialPinnedColumnKeys ?? []);
     });
 
-    const knownSetRef = useRef<Set<string>>(new Set(persisted?.knownColumnKeys ?? []));
+    const knownSetRef = useRef<Set<string>>(
+        new Set(persisted?.knownColumnKeys && persisted.knownColumnKeys.length > 0 ? persisted.knownColumnKeys : leafKeys)
+    );
     useMemo(() => {
         knownSetRef.current = new Set(knownColumnKeys);
         return null;
@@ -589,8 +622,11 @@ const useTable = <T,>({
             const nextVisible =
                 persisted?.visibleColumnKeys && persisted.visibleColumnKeys.length > 0
                     ? persisted.visibleColumnKeys
+                    : defaultVisibleLeafKeys;
+            const nextKnown =
+                persisted?.knownColumnKeys && persisted.knownColumnKeys.length > 0
+                    ? persisted.knownColumnKeys
                     : leafKeys;
-            const nextKnown = persisted?.knownColumnKeys ?? [];
             const nextPinned = persisted?.pinnedColumnKeys ?? initialPinnedColumnKeys ?? [];
 
             setColumnWidths(nextWidths);
@@ -603,7 +639,7 @@ const useTable = <T,>({
             hydratedRef.current = true;
             pendingHydrationRef.current = false;
         }, 60);
-    }, [storageKey, leafKeys, persisted, initialPinnedColumnKeys]);
+    }, [storageKey, leafKeys, persisted, initialPinnedColumnKeys, defaultVisibleLeafKeys]);
 
     const stateRef = useRef<PersistedTableState>({
         columnWidths,
@@ -702,7 +738,7 @@ const useTable = <T,>({
         setColumnOrder((prev) => mergeOrderByLeafKeys(prev, leafKeys));
 
         setVisibleColumnKeysDesired((prevDesired) => {
-            if (!prevDesired || prevDesired.length === 0) return leafKeys;
+            if (!prevDesired || prevDesired.length === 0) return defaultVisibleLeafKeys;
             if (newKeys.length > 0) return uniq([...prevDesired, ...newKeys]);
             return prevDesired;
         });
@@ -710,7 +746,7 @@ const useTable = <T,>({
         setPinnedColumnKeysState((prevPinned) => prevPinned.filter((k) => leafKeySet.has(k)));
 
         return null;
-    }, [leafKeys, leafKeySet, baseLeafWidthByKey, defaultColWidth]);
+    }, [leafKeys, leafKeySet, baseLeafWidthByKey, defaultColWidth, defaultVisibleLeafKeys]);
 
     const resizeColumn = useCallback(
         (colKey: string, width: number) => {
@@ -986,6 +1022,7 @@ const AirTableInner = <T,>({
     getRowStyle,
     getRowCanExpand,
     storageKey,
+    defaultVisibleColumnKeys,
     style,
     children,
     pinnedColumnKeys: initialPinnedColumnKeys = [],
@@ -1135,6 +1172,7 @@ const AirTableInner = <T,>({
         containerWidth,
         rowKeyField: rowKeyField ? String(rowKeyField) : undefined,
         storageKey,
+        defaultVisibleColumnKeys,
         initialPinnedColumnKeys,
         getExpandedRows,
         getRowLevel,

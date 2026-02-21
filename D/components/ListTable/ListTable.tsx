@@ -12,6 +12,7 @@ type ListTableProps<T> = {
     detailRenderer?: (params: { row: any; ri: number }) => React.ReactNode;
     getRowStyle?: (row: T, index: number) => React.CSSProperties;
     storageKey?: string;
+    defaultVisibleColumnKeys?: string[];
     pinnedColumnKeys?: string[];
     getRowCanExpand?: (row: T, ri: number) => boolean;
     showHeader?: boolean;
@@ -57,6 +58,7 @@ export const ListTable = <T,>({
     detailRenderer,
     getRowStyle,
     storageKey,
+    defaultVisibleColumnKeys,
     pinnedColumnKeys = [],
     getRowCanExpand,
     showHeader = true,
@@ -94,6 +96,7 @@ export const ListTable = <T,>({
         detailRenderer={detailRenderer}
         getRowStyle={getRowStyle}
         storageKey={storageKey}
+        defaultVisibleColumnKeys={defaultVisibleColumnKeys}
         pinnedColumnKeys={pinnedColumnKeys}
         getRowCanExpand={getRowCanExpand}
         showHeader={showHeader}

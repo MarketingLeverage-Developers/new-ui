@@ -445,6 +445,27 @@ export const Header = <T,>({ className, headerCellClassName, resizeHandleClassNa
     );
 
     const enableAnimation = props.enableAnimation ?? false;
+    const resolveColumnUnderline = useCallback(
+        (colKey: string): string | undefined => {
+            const column = columnByKey.get(colKey);
+            const underline = column?.headerUnderline;
+            if (!underline) return undefined;
+
+            let isActive = true;
+            if (typeof underline.active === 'boolean') {
+                isActive = underline.active;
+            } else if ((underline.activeWhenAnyVisibleKeys ?? []).length > 0) {
+                isActive = underline.activeWhenAnyVisibleKeys!.some((key) => visibleColumnKeys.includes(String(key)));
+            }
+
+            if (!isActive) return undefined;
+
+            const width = Math.max(1, Number(underline.width ?? 2));
+            const color = underline.color ?? getThemeColor('Primary1');
+            return `inset 0 -${width}px 0 ${color}`;
+        },
+        [columnByKey, visibleColumnKeys]
+    );
 
     const resolvePinnedHeaderColor = useCallback(
         (
@@ -691,6 +712,7 @@ export const Header = <T,>({ className, headerCellClassName, resizeHandleClassNa
                         if (!col) return null;
 
                         const isPinned = pinnedColumnKeys.includes(colKey);
+                        const underlineShadow = resolveColumnUnderline(colKey);
                         const pinnedHeaderBg = resolvePinnedHeaderColor(props.pinnedHeaderBgColor, colKey);
                         const pinnedHeaderTextColor = resolvePinnedHeaderColor(props.pinnedHeaderTextColor, colKey);
                         const sortConfig = sortConfigByKey.get(colKey);
@@ -700,6 +722,17 @@ export const Header = <T,>({ className, headerCellClassName, resizeHandleClassNa
                         const isFilterActive = (filterState[colKey]?.excluded?.length ?? 0) > 0;
                         const actionPaddingRight = 12 + (hasFilterButton ? 28 : 0) + (isSortable ? 24 : 0);
                         const sortButtonRight = hasFilterButton ? 42 : 14;
+                        const pinnedStyle: React.CSSProperties = isPinned
+                            ? {
+                                  ...getPinnedStyle(colKey, pinnedHeaderBg ?? getThemeColor('Primary1'), {
+                                      isHeader: true,
+                                  }),
+                                  ...(pinnedHeaderTextColor ? { color: pinnedHeaderTextColor } : {}),
+                              }
+                            : {};
+                        const combinedBoxShadow = [pinnedStyle.boxShadow, underlineShadow]
+                            .filter((shadow): shadow is string => typeof shadow === 'string' && shadow.length > 0)
+                            .join(', ');
 
                         return (
                             <HeaderCellWrapper
@@ -710,22 +743,15 @@ export const Header = <T,>({ className, headerCellClassName, resizeHandleClassNa
                                       }
                                     : {})}
                                 key={`h-${colKey}`}
+                                data-col-key={colKey}
                                 className={[headerCellClassName, 'air-table-header-cell'].filter(Boolean).join(' ')}
                                 style={{
                                     position: 'relative',
                                     cursor: isDraggingMoved ? 'grabbing' : 'pointer',
                                     userSelect: 'none',
                                     ...(isDragging ? getShiftStyle(colKey) : {}),
-                                    ...(isPinned
-                                        ? {
-                                              ...getPinnedStyle(
-                                                  colKey,
-                                                  pinnedHeaderBg ?? getThemeColor('Primary1'),
-                                                  { isHeader: true }
-                                              ),
-                                              ...(pinnedHeaderTextColor ? { color: pinnedHeaderTextColor } : {}),
-                                          }
-                                        : {}),
+                                    ...pinnedStyle,
+                                    ...(combinedBoxShadow ? { boxShadow: combinedBoxShadow } : {}),
                                 }}
                                 onMouseDown={handleHeaderMouseDown(colKey)}
                                 onClick={handleHeaderClick(colKey)}
