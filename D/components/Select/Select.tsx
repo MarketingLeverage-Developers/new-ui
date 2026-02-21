@@ -98,8 +98,8 @@ type SelectCompound = React.FC<SelectProps> & {
     Item: React.FC<SelectItemProps>;
     Display: React.FC<SelectDisplayUnionProps>;
     Content: React.FC<SelectContentUnionProps>;
-    Input?: React.FC<SelectInputUnionProps>;
-    Selected?: React.FC<SelectSelectedUnionProps>;
+    Input: React.FC<SelectInputUnionProps>;
+    Selected: React.FC<SelectSelectedUnionProps>;
 };
 
 const SelectRoot: React.FC<SelectProps> = (props) => {

@@ -33,6 +33,7 @@ import Item from './components/Item/Item';
 import Pagination from './components/Pagination/Pagination';
 import Dropdown from './components/Dropdown/Dropdown';
 import ChartTooltip from './components/ChartTooltip/ChartTooltip';
+import Divider from './components/Divider/Divider';
 
 type DesktopProps = {
     children: React.ReactNode;
@@ -76,3 +77,4 @@ Desktop.Item = Item;
 Desktop.Pagination = Pagination;
 Desktop.Dropdown = Dropdown;
 Desktop.ChartTooltip = ChartTooltip;
+Desktop.Divider = Divider;
