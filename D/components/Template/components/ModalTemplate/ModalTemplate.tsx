@@ -23,6 +23,7 @@ export type ModalTemplateProps = ModalTemplateExtraProps & {
     width?: CSSLength;
     height?: CSSLength;
     padding?: PaddingSize | number;
+    radius?: CSSLength;
     children?: React.ReactNode;
 
     isLoading?: boolean;
@@ -53,6 +54,7 @@ const ModalTemplateRoot: React.FC<ModalTemplateProps> = (props) => {
         width,
         height,
         padding,
+        radius,
         children,
         title,
         subTitle,
@@ -73,6 +75,7 @@ const ModalTemplateRoot: React.FC<ModalTemplateProps> = (props) => {
             '--width': toCssUnit(width),
             '--height': toCssUnit(height),
             '--padding': toCssPadding(padding ?? 32),
+            '--modal-radius': toCssUnit(radius),
         };
 
         return (
@@ -84,6 +87,9 @@ const ModalTemplateRoot: React.FC<ModalTemplateProps> = (props) => {
 
     const cssVariables: CSSVariables = {
         '--modal-width': toCssUnit(width),
+        '--modal-height': toCssUnit(height),
+        '--modal-padding': toCssPadding(padding ?? 32),
+        '--modal-radius': toCssUnit(radius),
     };
 
     const rootClassName = classNames(styles.ModalTemplate, className);

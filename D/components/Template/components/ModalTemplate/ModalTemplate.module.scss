@@ -1,5 +1,6 @@
 .ModalTemplate {
     width: var(--modal-width, 800px);
+    height: var(--modal-height, auto);
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -8,9 +9,10 @@
     min-height: 0;
 
     background-color: var(--White1);
-    border-radius: 20px;
+    border-radius: var(--modal-radius, 20px);
 
-    padding: 32px;
+    padding: var(--modal-padding, 32px);
+    box-sizing: border-box;
 }
 
 .ModalTemplateLegacy {
@@ -18,7 +20,7 @@
     height: var(--height, auto);
     padding: var(--padding, 32px);
     background-color: var(--White1);
-    border-radius: 20px;
+    border-radius: var(--modal-radius, 20px);
     overflow: hidden;
     display: flex;
     flex-direction: column;
