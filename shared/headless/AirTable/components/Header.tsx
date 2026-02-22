@@ -324,6 +324,7 @@ const HeaderContextMenu = ({
     y,
     onClose,
     isPinned,
+    showPinAction,
     onPin,
     onUnpin,
     onHide,
@@ -333,6 +334,7 @@ const HeaderContextMenu = ({
     y: number;
     onClose: () => void;
     isPinned: boolean;
+    showPinAction: boolean;
     onPin: () => void;
     onUnpin: () => void;
     onHide: () => void;
@@ -385,17 +387,19 @@ const HeaderContextMenu = ({
             onMouseDown={(e) => e.stopPropagation()}
             onContextMenu={(e) => e.preventDefault()}
         >
-            <button
-                type="button"
-                style={itemStyle}
-                onClick={() => {
-                    if (isPinned) onUnpin();
-                    else onPin();
-                    onClose();
-                }}
-            >
-                {isPinned ? '고정 해제' : '컬럼 고정'}
-            </button>
+            {showPinAction && (
+                <button
+                    type="button"
+                    style={itemStyle}
+                    onClick={() => {
+                        if (isPinned) onUnpin();
+                        else onPin();
+                        onClose();
+                    }}
+                >
+                    {isPinned ? '고정 해제' : '컬럼 고정'}
+                </button>
+            )}
             <button
                 type="button"
                 style={itemStyle}
@@ -556,9 +560,11 @@ export const Header = <T,>({ className, headerCellClassName, resizeHandleClassNa
     const handlePin = useCallback(() => {
         const colKey = contextMenu.colKey;
         if (!colKey) return;
+        const column = columnByKey.get(colKey);
+        if (column?.disablePinning) return;
         if (pinnedColumnKeys.includes(colKey)) return;
         setPinnedColumnKeys([...pinnedColumnKeys, colKey]);
-    }, [contextMenu.colKey, pinnedColumnKeys, setPinnedColumnKeys]);
+    }, [contextMenu.colKey, columnByKey, pinnedColumnKeys, setPinnedColumnKeys]);
 
     const handleUnpin = useCallback(() => {
         const colKey = contextMenu.colKey;
@@ -676,6 +682,11 @@ export const Header = <T,>({ className, headerCellClassName, resizeHandleClassNa
         if (!contextMenu.colKey) return false;
         return pinnedColumnKeys.includes(contextMenu.colKey);
     }, [contextMenu.colKey, pinnedColumnKeys]);
+
+    const canContextPin = useMemo(() => {
+        if (!contextMenu.colKey) return false;
+        return !columnByKey.get(contextMenu.colKey)?.disablePinning;
+    }, [contextMenu.colKey, columnByKey]);
 
     const OuterWrapper = enableAnimation ? motion.div : 'div';
     const HeaderCellWrapper = enableAnimation ? motion.div : 'div';
@@ -893,6 +904,7 @@ export const Header = <T,>({ className, headerCellClassName, resizeHandleClassNa
                 y={contextMenu.y}
                 onClose={closeContextMenu}
                 isPinned={isContextPinned}
+                showPinAction={canContextPin}
                 onPin={handlePin}
                 onUnpin={handleUnpin}
                 onHide={handleHide}

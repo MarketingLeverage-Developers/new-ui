@@ -52,6 +52,8 @@ export interface ColumnType<T> {
     sortValue?: SortValueGetter<T>;
     sorter?: Sorter<T>;
     headerUnderline?: HeaderUnderlineConfig;
+    disablePinning?: boolean;
+    pinRelatedColumnKeys?: readonly string[];
 }
 
 export type Column<T> = {
@@ -66,6 +68,8 @@ export type Column<T> = {
     sortValue?: SortValueGetter<T>;
     sorter?: Sorter<T>;
     headerUnderline?: HeaderUnderlineConfig;
+    disablePinning?: boolean;
+    pinRelatedColumnKeys?: readonly string[];
 };
 
 export type HeaderUnderlineConfig = {
@@ -493,6 +497,8 @@ const useTable = <T,>({
                         key: String(ch.key),
                         defaultHidden: ch.defaultHidden,
                         headerUnderline: ch.headerUnderline,
+                        disablePinning: ch.disablePinning,
+                        pinRelatedColumnKeys: ch.pinRelatedColumnKeys,
                     }));
                 }
 
@@ -516,6 +522,8 @@ const useTable = <T,>({
                         sortValue: col.sortValue,
                         sorter: col.sorter,
                         headerUnderline: col.headerUnderline,
+                        disablePinning: col.disablePinning,
+                        pinRelatedColumnKeys: col.pinRelatedColumnKeys,
                     } as ColumnType<T>,
                 ];
             }),
@@ -534,6 +542,55 @@ const useTable = <T,>({
 
         return byColumnConfig.length > 0 ? byColumnConfig : leafKeys;
     }, [defaultVisibleColumnKeys, leafKeySet, leafKeys, leafColumns]);
+
+    const directPinnableLeafKeySet = useMemo(() => {
+        const next = new Set<string>();
+        leafColumns.forEach((col) => {
+            if (col.disablePinning) return;
+            next.add(col.key);
+        });
+        return next;
+    }, [leafColumns]);
+
+    const pinRelatedColumnKeysByKey = useMemo(() => {
+        const map = new Map<string, string[]>();
+
+        leafColumns.forEach((col) => {
+            const related = uniq((col.pinRelatedColumnKeys ?? []).map(String)).filter(
+                (key) => key !== col.key && leafKeySet.has(key)
+            );
+            if (related.length > 0) {
+                map.set(col.key, related);
+            }
+        });
+
+        return map;
+    }, [leafColumns, leafKeySet]);
+
+    const normalizePinnedColumnKeys = useCallback(
+        (keys: string[]) => {
+            const requested = uniq(keys.map(String)).filter((key) => leafKeySet.has(key));
+            const next: string[] = [];
+            const seen = new Set<string>();
+
+            const append = (key: string) => {
+                if (seen.has(key)) return;
+                seen.add(key);
+                next.push(key);
+            };
+
+            requested.forEach((key) => {
+                if (!directPinnableLeafKeySet.has(key)) return;
+                append(key);
+
+                const relatedKeys = pinRelatedColumnKeysByKey.get(key) ?? [];
+                relatedKeys.forEach((relatedKey) => append(relatedKey));
+            });
+
+            return next;
+        },
+        [leafKeySet, directPinnableLeafKeySet, pinRelatedColumnKeysByKey]
+    );
 
     const innerWidth = Math.max(0, containerWidth - containerPaddingPx);
 
@@ -572,8 +629,8 @@ const useTable = <T,>({
 
     const [pinnedColumnKeys, setPinnedColumnKeysState] = useState<string[]>(() => {
         const fromPersisted = persisted?.pinnedColumnKeys ?? [];
-        if (fromPersisted.length > 0) return uniq(fromPersisted);
-        return uniq(initialPinnedColumnKeys ?? []);
+        if (fromPersisted.length > 0) return normalizePinnedColumnKeys(fromPersisted);
+        return normalizePinnedColumnKeys(initialPinnedColumnKeys ?? []);
     });
 
     const knownSetRef = useRef<Set<string>>(
@@ -633,13 +690,13 @@ const useTable = <T,>({
             setColumnOrder(uniq(nextOrder));
             setVisibleColumnKeysDesired(uniq(nextVisible));
             setKnownColumnKeys(uniq(nextKnown));
-            setPinnedColumnKeysState(uniq(nextPinned));
+            setPinnedColumnKeysState(normalizePinnedColumnKeys(nextPinned));
             knownSetRef.current = new Set(uniq(nextKnown));
 
             hydratedRef.current = true;
             pendingHydrationRef.current = false;
         }, 60);
-    }, [storageKey, leafKeys, persisted, initialPinnedColumnKeys, defaultVisibleLeafKeys]);
+    }, [storageKey, leafKeys, persisted, initialPinnedColumnKeys, defaultVisibleLeafKeys, normalizePinnedColumnKeys]);
 
     const stateRef = useRef<PersistedTableState>({
         columnWidths,
@@ -697,13 +754,13 @@ const useTable = <T,>({
 
     const setPinnedColumnKeys = useCallback(
         (keys: string[]) => {
-            const next = uniq(keys.map(String)).filter((k) => leafKeySet.has(k));
+            const next = normalizePinnedColumnKeys(keys);
             setPinnedColumnKeysState(next);
 
             stateRef.current = { ...stateRef.current, pinnedColumnKeys: next };
             persistNow();
         },
-        [leafKeySet, persistNow]
+        [normalizePinnedColumnKeys, persistNow]
     );
 
     useMemo(() => {
@@ -743,10 +800,10 @@ const useTable = <T,>({
             return prevDesired;
         });
 
-        setPinnedColumnKeysState((prevPinned) => prevPinned.filter((k) => leafKeySet.has(k)));
+        setPinnedColumnKeysState((prevPinned) => normalizePinnedColumnKeys(prevPinned));
 
         return null;
-    }, [leafKeys, leafKeySet, baseLeafWidthByKey, defaultColWidth, defaultVisibleLeafKeys]);
+    }, [leafKeys, leafKeySet, baseLeafWidthByKey, defaultColWidth, defaultVisibleLeafKeys, normalizePinnedColumnKeys]);
 
     const resizeColumn = useCallback(
         (colKey: string, width: number) => {
