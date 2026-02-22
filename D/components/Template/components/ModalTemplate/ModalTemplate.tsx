@@ -74,7 +74,7 @@ const ModalTemplateRoot: React.FC<ModalTemplateProps> = (props) => {
         const legacyCssVariables: CSSVariables = {
             '--width': toCssUnit(width),
             '--height': toCssUnit(height),
-            '--padding': toCssPadding(padding ?? 32),
+            '--padding': toCssPadding(padding ?? 24),
             '--modal-radius': toCssUnit(radius),
         };
 
@@ -88,7 +88,7 @@ const ModalTemplateRoot: React.FC<ModalTemplateProps> = (props) => {
     const cssVariables: CSSVariables = {
         '--modal-width': toCssUnit(width),
         '--modal-height': toCssUnit(height),
-        '--modal-padding': toCssPadding(padding ?? 32),
+        '--modal-padding': toCssPadding(padding ?? 24),
         '--modal-radius': toCssUnit(radius),
     };
 

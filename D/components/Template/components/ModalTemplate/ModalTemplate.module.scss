@@ -11,14 +11,14 @@
     background-color: var(--White1);
     border-radius: var(--modal-radius, 20px);
 
-    padding: var(--modal-padding, 32px);
+    padding: var(--modal-padding, 24px);
     box-sizing: border-box;
 }
 
 .ModalTemplateLegacy {
     width: var(--width, 100%);
     height: var(--height, auto);
-    padding: var(--padding, 32px);
+    padding: var(--padding, 24px);
     background-color: var(--White1);
     border-radius: var(--modal-radius, 20px);
     overflow: hidden;
