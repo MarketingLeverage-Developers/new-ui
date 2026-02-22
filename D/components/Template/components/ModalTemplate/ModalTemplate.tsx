@@ -75,7 +75,7 @@ const ModalTemplateRoot: React.FC<ModalTemplateProps> = (props) => {
             '--width': toCssUnit(width),
             '--height': toCssUnit(height),
             '--padding': toCssPadding(padding ?? 24),
-            '--modal-radius': toCssUnit(radius),
+            '--modal-radius': radius == null ? undefined : toCssUnit(radius),
         };
 
         return (
@@ -89,7 +89,7 @@ const ModalTemplateRoot: React.FC<ModalTemplateProps> = (props) => {
         '--modal-width': toCssUnit(width),
         '--modal-height': toCssUnit(height),
         '--modal-padding': toCssPadding(padding ?? 24),
-        '--modal-radius': toCssUnit(radius),
+        '--modal-radius': radius == null ? undefined : toCssUnit(radius),
     };
 
     const rootClassName = classNames(styles.ModalTemplate, className);
