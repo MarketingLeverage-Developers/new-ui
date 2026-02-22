@@ -89,7 +89,7 @@
 }
 
 .Content {
-    padding: 24px 16px 16px 16px;
+    padding: 0;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     overscroll-behavior: contain; /* 상위로 스크롤 전파 최소화 */

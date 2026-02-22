@@ -10,6 +10,7 @@ export type BottomSheetModalContainerProps = {
     footer?: React.ReactNode;
     closeOnBackdrop?: boolean;
     tab?: React.ReactNode;
+    hideHeader?: boolean;
 };
 
 const BottomSheetModalContainer = ({
@@ -21,6 +22,7 @@ const BottomSheetModalContainer = ({
     footer,
     closeOnBackdrop,
     tab,
+    hideHeader,
 }: BottomSheetModalContainerProps) => (
     <BottomSheet
         open={open}
@@ -28,7 +30,7 @@ const BottomSheetModalContainer = ({
             if (!nextOpen) onChange();
         }}
     >
-        <BottomSheet.Content title={title} height={height} closeOnBackdrop={closeOnBackdrop} tab={tab}>
+        <BottomSheet.Content title={title} height={height} closeOnBackdrop={closeOnBackdrop} tab={tab} hideHeader={hideHeader}>
             {content}
             {footer ? <BottomSheet.Footer>{footer}</BottomSheet.Footer> : null}
         </BottomSheet.Content>
