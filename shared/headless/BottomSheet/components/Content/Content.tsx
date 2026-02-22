@@ -12,7 +12,14 @@ type ContentProps = {
     hideHeader?: boolean;
 };
 
-export const Content = ({ children, closeOnBackdrop = true, height = '65vh', title = '', tab, hideHeader = false }: ContentProps) => {
+export const Content = ({
+    children,
+    closeOnBackdrop = true,
+    height = '65vh',
+    title = '',
+    tab,
+    hideHeader = false,
+}: ContentProps) => {
     const { open, setOpen } = useBottomSheetCtx();
     const sheetRef = useRef<HTMLDivElement>(null);
     const handleRef = useRef<HTMLDivElement>(null);
@@ -106,6 +113,9 @@ export const Content = ({ children, closeOnBackdrop = true, height = '65vh', tit
         return () => cancelAnimationFrame(id);
     }, [dragging, dragY]);
 
+    const hasTitle = typeof title === 'string' ? title.trim().length > 0 : Boolean(title);
+    const shouldRenderHeader = !hideHeader && (hasTitle || Boolean(tab));
+
     return (
         <Portal>
             <div
@@ -135,7 +145,7 @@ export const Content = ({ children, closeOnBackdrop = true, height = '65vh', tit
                         onPointerUp={onPointerUpOrCancel}
                         onPointerCancel={onPointerUpOrCancel}
                     />
-                    {!hideHeader ? (
+                    {shouldRenderHeader ? (
                         <div className={styles.Header}>
                             {title}
                             {tab}
