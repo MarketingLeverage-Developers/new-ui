@@ -1,0 +1,68 @@
+.Dropzone {
+    width: 100%;
+    border: 1.5px dashed var(--Primary1);
+    border-radius: 24px;
+    padding: 36px 24px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+
+    background-color: var(--White1, #fff);
+    text-align: center;
+
+    transition:
+        background-color 0.15s ease,
+        border-color 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+.Icon {
+    width: 40px;
+    height: 40px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    color: var(--Gray3);
+}
+
+.Icon :global(svg) {
+    width: 36px;
+    height: 36px;
+}
+
+.Text {
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.5;
+    color: var(--Gray2);
+    white-space: pre-line;
+}
+
+.HiddenInput {
+    display: none;
+}
+
+.Dragging {
+    background-color: #f5f9ff;
+    border-color: var(--Primary1);
+    box-shadow: 0 0 0 3px rgba(45, 108, 223, 0.12);
+}
+
+.Disabled {
+    background-color: var(--Gray6);
+    border-color: var(--Gray5);
+    cursor: not-allowed;
+}
+
+.Disabled .Icon {
+    color: var(--Gray4);
+}
+
+.Disabled .Text {
+    color: var(--Gray3);
+}
