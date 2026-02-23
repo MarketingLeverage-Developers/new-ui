@@ -14,14 +14,21 @@
     transform: translateX(0) translateY(0);
 
     transition: width 0.3s ease, min-width 0.3s ease;
+
+    pointer-events: none;
+    visibility: hidden;
 }
 
 .Open {
     width: 580px;
     min-width: 580px;
+    pointer-events: auto;
+    visibility: visible;
 }
 
 .Closed {
     width: 0;
     min-width: 0;
+    pointer-events: none;
+    visibility: hidden;
 }

@@ -20,7 +20,15 @@ const Content = ({ children }: { children: React.ReactNode }) => {
                 className={classnames}
                 height="100vh"
                 maxHeight="100vh"
-                style={{ top: 0, right: 0, left: 'auto', transform: 'none' }}
+                style={{
+                    top: 0,
+                    right: 0,
+                    left: 'auto',
+                    transform: 'none',
+                    pointerEvents: modalValue ? 'auto' : 'none',
+                    visibility: modalValue ? 'visible' : 'hidden',
+                    zIndex: modalValue ? 1000 : -1,
+                }}
             >
                 {children}
             </Modal.Content>
