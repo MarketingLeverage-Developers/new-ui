@@ -2,9 +2,18 @@ import React from 'react';
 import styles from './LogoLine.module.scss';
 import Logo from '../../../../../../../shared/assets/components/D/components/Template/components/PageTemplate/components/LogoLine/logo.svg';
 
-export const LogoLine = () => (
+const DEFAULT_LOGO_ALT = '로고';
+const DEFAULT_LOGO_TEXT = '마케팅레버리지';
+
+export type LogoLineProps = {
+    imageSrc?: string;
+    imageAlt?: string;
+    text?: React.ReactNode;
+};
+
+export const LogoLine = ({ imageSrc = Logo, imageAlt = DEFAULT_LOGO_ALT, text = DEFAULT_LOGO_TEXT }: LogoLineProps) => (
     <div className={styles.LogoLine}>
-        <img className={styles.Logo} src={Logo} alt="로고" />
-        <span className={styles.Text}>마레인트라넷</span>
+        <img className={styles.Logo} src={imageSrc} alt={imageAlt} />
+        <span className={styles.Text}>{text}</span>
     </div>
 );

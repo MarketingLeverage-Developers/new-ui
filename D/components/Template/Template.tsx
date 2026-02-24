@@ -15,10 +15,12 @@ import RequestDetailTemplate, {
 import OnboardingModalTemplate, {
     type OnboardingModalTemplateProps,
 } from './components/OnboardingModalTemplate/OnboardingModalTemplate';
+import { LogoLine, type LogoLineProps } from './components/PageTemplate/components/LogoLine/LogoLine';
 
-export type TemplateVariant = 'page' | 'mobile' | 'modal' | 'confirm' | 'request-detail' | 'onboarding-modal';
+export type TemplateVariant = 'page' | 'mobile' | 'modal' | 'confirm' | 'request-detail' | 'onboarding-modal' | 'logo';
 export type TemplatePageProps = PageTemplateProps;
 export type TemplateMobilePageProps = MobilePageTemplateProps;
+export type TemplateLogoProps = LogoLineProps;
 
 export type TemplateProps<G extends string = string> =
     | ({ variant: 'page' } & PageTemplateProps)
@@ -26,7 +28,8 @@ export type TemplateProps<G extends string = string> =
     | ({ variant: 'modal' } & ModalTemplateProps & ModalTemplateExtraProps)
     | ({ variant: 'confirm' } & ConfirmTemplateProps)
     | ({ variant: 'request-detail' } & RequestDetailTemplateProps)
-    | ({ variant: 'onboarding-modal' } & OnboardingModalTemplateProps<G>);
+    | ({ variant: 'onboarding-modal' } & OnboardingModalTemplateProps<G>)
+    | ({ variant: 'logo' } & LogoLineProps);
 
 const Template = <G extends string = string>(props: TemplateProps<G>) => {
     const { variant, ...rest } = props;
@@ -49,6 +52,10 @@ const Template = <G extends string = string>(props: TemplateProps<G>) => {
 
     if (variant === 'mobile') {
         return <MobilePageTemplate {...(rest as MobilePageTemplateProps)} />;
+    }
+
+    if (variant === 'logo') {
+        return <LogoLine {...(rest as LogoLineProps)} />;
     }
 
     return <PageTemplate {...(rest as PageTemplateProps)} />;
