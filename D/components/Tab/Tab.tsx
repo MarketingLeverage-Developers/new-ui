@@ -15,7 +15,7 @@ import ButtonTabItem from './components/ButtonTab/components/ButtonTab/component
 import RoundedTab, { type RoundedTabProps } from './components/RoundedTab/RoundedTab';
 import { RoundedTabItem, type RoundedTabItemProps } from './components/RoundedTab/components/Item';
 
-import UnderlineTab from './components/UnderlineTab/UnderlineTab';
+import UnderlineTab, { type UnderlineTabProps } from './components/UnderlineTab/UnderlineTab';
 import { UnderlineTabItem, type UnderlineTabItemProps } from './components/UnderlineTab/components/Item';
 
 import IconTab from './components/IconTab/IconTab';
@@ -30,7 +30,7 @@ export type TabProps =
     | ({ variant: 'base' } & TabCommonProps & BaseTabExtraProps)
     | ({ variant: 'button' } & TabCommonProps & ButtonTabExtraProps)
     | ({ variant: 'rounded' } & RoundedTabProps)
-    | ({ variant: 'underline' } & TabCommonProps)
+    | ({ variant: 'underline' } & UnderlineTabProps)
     | ({ variant: 'icon' } & TabCommonProps);
 
 /** Tab 내부에서 variant 공유 */
@@ -72,7 +72,7 @@ const TabRoot: React.FC<TabProps> = (props) => {
     if (variant === 'underline') {
         return (
             <TabVariantContext.Provider value={{ variant }}>
-                <UnderlineTab {...(rest as TabCommonProps)} />
+                <UnderlineTab {...(rest as UnderlineTabProps)} />
             </TabVariantContext.Provider>
         );
     }
