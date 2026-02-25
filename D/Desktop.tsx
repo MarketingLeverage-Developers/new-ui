@@ -34,6 +34,7 @@ import Pagination from './components/Pagination/Pagination';
 import Dropdown from './components/Dropdown/Dropdown';
 import ChartTooltip from './components/ChartTooltip/ChartTooltip';
 import Divider from './components/Divider/Divider';
+import { ConfirmModal } from './components/ComfirmModal/ConfirmModal';
 
 type DesktopProps = {
     children: React.ReactNode;
@@ -44,6 +45,7 @@ export const Desktop = ({ children }: DesktopProps) => <>{children}</>;
 const PageTemplateBridge = (props: TemplatePageProps) => <Template variant="page" {...props} />;
 
 Desktop.DeleteConfirmModal = DeleteConfirmModal;
+Desktop.ConfirmModal = ConfirmModal;
 Desktop.RestoreConfirmModal = RestoreConfirmModal;
 Desktop.DateSelect = DateSelect;
 Desktop.IsDeleteSelect = IsDeleteSelect;
