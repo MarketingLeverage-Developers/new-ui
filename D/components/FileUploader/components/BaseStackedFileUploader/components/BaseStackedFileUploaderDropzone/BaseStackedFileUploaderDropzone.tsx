@@ -23,7 +23,7 @@ const BaseStackedFileUploaderDropzone: React.FC<BaseStackedFileUploaderDropzoneP
 
     const resolvedGuideText =
         guideText ??
-        (type === 'image' ? '5개 이하의 이미지를 끌어오거나 (jpg, png, gif)' : '500MB 이하의 파일을 끌어오거나 (zip)');
+        (type === 'image' ? '5개 이하의 이미지를 끌어오거나 (jpg, png, mp4)' : '500MB 이하의 파일을 끌어오거나 (zip)');
 
     const handleInputChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
         const list = e.target.files;

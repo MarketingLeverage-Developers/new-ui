@@ -199,7 +199,7 @@ const FileUploaderRoot: React.FC<FileUploaderProps> = (props) => {
         return maxCount ?? (type === 'image' ? 5 : 5);
     }, [maxCount, type, variant]);
 
-    const resolvedMaxFileSizeMB = useMemo(() => maxFileSizeMB ?? (type === 'file' ? 500 : 50), [maxFileSizeMB, type]);
+    const resolvedMaxFileSizeMB = useMemo(() => maxFileSizeMB ?? (type === 'file' ? 500 : 150), [maxFileSizeMB, type]);
 
     const isOverSize = (file: File) => {
         const maxBytes = resolvedMaxFileSizeMB * 1024 * 1024;
