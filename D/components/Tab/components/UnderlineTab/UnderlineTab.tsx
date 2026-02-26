@@ -10,14 +10,26 @@ import { toCssPadding } from '../../../../../shared/utils/css/toCssPadding';
 export type UnderlineTabProps = React.ComponentProps<typeof Select> & {
     gap?: string | number;
     margin?: PaddingSize | number;
+    textColor?: string;
+    activeTextColor?: string;
     divProps?: Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'>;
 };
 
-const UnderlineTab: React.FC<UnderlineTabProps> & { Item: React.FC<UnderlineTabItemProps> } = ({ children, divProps, gap, margin, ...props }) => {
+const UnderlineTab: React.FC<UnderlineTabProps> & { Item: React.FC<UnderlineTabItemProps> } = ({
+    children,
+    divProps,
+    gap,
+    margin,
+    textColor,
+    activeTextColor,
+    ...props
+}) => {
     const { style, ...restDiv } = divProps ?? {};
     const cssVariables: CSSVariables = {
         '--gap': toCssUnit(gap),
         '--margin': toCssPadding(margin),
+        '--text-color': textColor,
+        '--active-color': activeTextColor,
     };
 
     return (

@@ -1,6 +1,8 @@
 .Display {
     display: inline-flex;
+    width: var(--display-width, auto);
     gap: 8px;
+    justify-content: space-between;
     align-items: center;
     padding: 10px 12px;
     background: var(--White1);

@@ -2,7 +2,7 @@
     display: inline-flex;
     gap: var(--gap, 0);
     margin: var(--margin, 0);
-    border-bottom: 1px solid var(--Gray5);
+    border-bottom: 1px solid var(--text-color, var(--Gray5));
 }
 
 .Item {
@@ -10,7 +10,7 @@
     padding: var(--padding, 10px 0);
     font-size: var(--font-size);
     font-weight: var(--font-weight);
-    color: var(--Gray2);
+    color: var(--text-color, var(--Gray2));
     position: relative;
 }
 
@@ -31,9 +31,9 @@
 }
 
 .Item.Active {
-    color: var(--Primary1);
+    color: var(--active-color, var(--Primary1));
 }
 
 .Item.Active::after {
-    background: var(--Primary1);
+    background:  var(--active-color, var(--Primary1));
 }
