@@ -12,6 +12,8 @@
         align-items: center;
         justify-content: space-between;
         gap: 12px;
+        padding-bottom: 18px;
+        border-bottom: 1px solid var(--Gray5);
     }
     .Right {
         display: inline-flex;
@@ -25,12 +27,16 @@
     }
 
     .SubTitle {
-        font-size: 15px;
-        font-weight: 400;
-        color: var(--Gray2);
+        // font-size: 15px;
+        // font-weight: 400;
+        // color: var(--Gray2);
+        font-size: 20px;
+        font-weight: 600;
+        color: var(--Black1);
     }
     .Title {
-        font-size: 24px;
+        // font-size: 24px;
+        font-size: 32px;
         font-weight: 600;
         color: var(--Black1);
     }
