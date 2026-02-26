@@ -6,6 +6,7 @@ import styles from './BaseOutlineFileUploaderDropzone.module.scss';
 import { useFileUploader } from '../../../../FileUploader';
 
 import Button from '../../../../../Button/Button';
+import { GrFormUpload } from 'react-icons/gr';
 
 export type BaseOutlineFileUploaderDropzoneProps = Omit<HTMLAttributes<HTMLDivElement>, 'children'> & {
     guideText?: string;
@@ -106,11 +107,13 @@ const BaseOutlineFileUploaderDropzone: React.FC<BaseOutlineFileUploaderDropzoneP
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
         >
-            <div className={styles.Icon} aria-hidden="true">
-                <MdFileUpload />
-            </div>
+            <div className={styles.DescWrapper}>
+                <div className={styles.Icon} aria-hidden="true">
+                    <GrFormUpload />
+                </div>
 
-            <div className={styles.Text}>{resolvedGuideText}</div>
+                <div className={styles.Text}>{resolvedGuideText}</div>
+            </div>
 
             <Button
                 variant="base"
@@ -118,6 +121,8 @@ const BaseOutlineFileUploaderDropzone: React.FC<BaseOutlineFileUploaderDropzoneP
                 size="lg"
                 radius={8}
                 height={31}
+                width={80}
+                style={{ padding: 0 }}
                 primary
                 disabled={blocked}
                 onClick={openFileDialog}

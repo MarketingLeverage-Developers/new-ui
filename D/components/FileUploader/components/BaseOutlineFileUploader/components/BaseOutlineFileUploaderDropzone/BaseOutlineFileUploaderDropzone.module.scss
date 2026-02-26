@@ -1,14 +1,15 @@
 .Dropzone {
     width: 100%;
     border: 1.5px dashed var(--Primary1);
-    border-radius: 24px;
-    padding: 36px 24px;
+    border-radius: 12px;
+    padding: 24px 0;
+    // height: 150px;
 
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 16px;
+    gap: 8px;
 
     background-color: var(--White1, #fff);
     text-align: center;
@@ -17,6 +18,14 @@
         background-color 0.15s ease,
         border-color 0.15s ease,
         box-shadow 0.15s ease;
+}
+
+.DescWrapper{
+    display: flex;
+    flex-direction: column;
+    // gap: 3px;
+    justify-content: center;
+    align-items: center;
 }
 
 .Icon {
@@ -37,8 +46,8 @@
 
 .Text {
     font-size: 13px;
-    font-weight: 500;
-    line-height: 1.5;
+    font-weight: 400;
+    // line-height: 1.5;
     color: var(--Gray2);
     white-space: pre-line;
 }
