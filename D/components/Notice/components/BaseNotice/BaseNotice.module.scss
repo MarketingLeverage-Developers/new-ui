@@ -1,8 +1,8 @@
 .BaseNotice {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 9px;
 
     padding: 14px 20px;
     border-radius: 8px;
@@ -16,9 +16,10 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-
-    width: 18px;
-    height: 18px;
+    color: var(--Gray1);
+    font-size: 15px;
+    // width: 18px;
+    // height: 18px;
 }
 
 .Text {
