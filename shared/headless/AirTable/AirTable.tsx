@@ -21,7 +21,6 @@ import { usePinnedStyle } from './hooks/usePinnedStyle';
 import { useGridMeta } from './hooks/useGridMeta';
 import { useGridPointer } from './hooks/useGridPointer';
 import { CellContextMenuPortal } from './components/CellContextMenuPortal';
-import { USER_TABLE_SETTING_SYNC_EVENT, useUserTableSettingSync } from '../../hooks/client/useUserTableSettingSync';
 
 /* =========================
    Types
@@ -91,7 +90,8 @@ export type AirTableProps<T> = {
     getRowCanExpand?: (row: T, ri: number) => boolean;
     getRowStyle?: (row: T, index: number) => React.CSSProperties;
     storageKey?: string;
-    enableUserTableSettingSync?: boolean;
+    onPersistedStateChange?: (state: PersistedTableState) => void;
+    persistedStateSyncVersion?: number;
     defaultVisibleColumnKeys?: string[];
     style?: React.CSSProperties;
     children?: React.ReactNode;
@@ -469,7 +469,7 @@ const useTable = <T,>({
     containerWidth,
     rowKeyField,
     storageKey,
-    enableUserTableSettingSync,
+    persistedStateSyncVersion,
     defaultVisibleColumnKeys,
     initialPinnedColumnKeys,
     getExpandedRows,
@@ -484,7 +484,7 @@ const useTable = <T,>({
     containerWidth: number;
     rowKeyField?: string;
     storageKey?: string;
-    enableUserTableSettingSync?: boolean;
+    persistedStateSyncVersion?: number;
     defaultVisibleColumnKeys?: string[];
     initialPinnedColumnKeys?: string[];
 
@@ -617,7 +617,7 @@ const useTable = <T,>({
             return;
         }
         setPersisted(loadPersistedTableState(storageKey));
-    }, [storageKey]);
+    }, [storageKey, persistedStateSyncVersion]);
 
     const [columnWidths, setColumnWidths] = useState<Record<string, number>>(() => persisted?.columnWidths ?? {});
     const [columnOrder, setColumnOrder] = useState<string[]>(() => {
@@ -660,30 +660,7 @@ const useTable = <T,>({
             window.clearTimeout(stableLeafKeysTimerRef.current);
             stableLeafKeysTimerRef.current = null;
         }
-    }, [storageKey]);
-
-    useEffect(() => {
-        if (!storageKey || !enableUserTableSettingSync) return;
-
-        const onSynced = (event: Event) => {
-            const customEvent = event as CustomEvent<{ storageKey?: string }>;
-            if (customEvent.detail?.storageKey !== storageKey) return;
-
-            hydratedRef.current = false;
-            pendingHydrationRef.current = true;
-            if (stableLeafKeysTimerRef.current) {
-                window.clearTimeout(stableLeafKeysTimerRef.current);
-                stableLeafKeysTimerRef.current = null;
-            }
-
-            setPersisted(loadPersistedTableState(storageKey));
-        };
-
-        window.addEventListener(USER_TABLE_SETTING_SYNC_EVENT, onSynced as EventListener);
-        return () => {
-            window.removeEventListener(USER_TABLE_SETTING_SYNC_EVENT, onSynced as EventListener);
-        };
-    }, [storageKey, enableUserTableSettingSync]);
+    }, [storageKey, persistedStateSyncVersion]);
 
     useEffect(() => {
         if (!storageKey) return;
@@ -1111,7 +1088,8 @@ const AirTableInner = <T,>({
     getRowStyle,
     getRowCanExpand,
     storageKey,
-    enableUserTableSettingSync = false,
+    onPersistedStateChange,
+    persistedStateSyncVersion,
     defaultVisibleColumnKeys,
     style,
     children,
@@ -1190,9 +1168,6 @@ const AirTableInner = <T,>({
     const prevFilterRef = useRef<FilterState | undefined>(undefined);
 
     const containerWidth = useContainerWidth(wrapperRef);
-    const { persistSettings } = useUserTableSettingSync({
-        storageKey: enableUserTableSettingSync ? storageKey : undefined,
-    });
 
     const [expandedRowKeys, setExpandedRowKeys] = useState<Set<string>>(() => {
         if (persistExpandedRowKeys && storageKey) {
@@ -1265,13 +1240,13 @@ const AirTableInner = <T,>({
         containerWidth,
         rowKeyField: rowKeyField ? String(rowKeyField) : undefined,
         storageKey,
-        enableUserTableSettingSync,
+        persistedStateSyncVersion,
         defaultVisibleColumnKeys,
         initialPinnedColumnKeys,
         getExpandedRows,
         getRowLevel,
         expandedRowKeys,
-        onPersistedStateChange: enableUserTableSettingSync ? persistSettings : undefined,
+        onPersistedStateChange,
     });
 
     useEffect(() => {

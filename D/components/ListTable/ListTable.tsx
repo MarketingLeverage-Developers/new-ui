@@ -12,7 +12,8 @@ type ListTableProps<T> = {
     detailRenderer?: (params: { row: any; ri: number }) => React.ReactNode;
     getRowStyle?: (row: T, index: number) => React.CSSProperties;
     storageKey?: string;
-    enableUserTableSettingSync?: boolean;
+    onPersistedStateChange?: (state: Record<string, unknown>) => void;
+    persistedStateSyncVersion?: number;
     defaultVisibleColumnKeys?: string[];
     pinnedColumnKeys?: string[];
     getRowCanExpand?: (row: T, ri: number) => boolean;
@@ -59,7 +60,8 @@ export const ListTable = <T,>({
     detailRenderer,
     getRowStyle,
     storageKey,
-    enableUserTableSettingSync = false,
+    onPersistedStateChange,
+    persistedStateSyncVersion,
     defaultVisibleColumnKeys,
     pinnedColumnKeys = [],
     getRowCanExpand,
@@ -98,7 +100,8 @@ export const ListTable = <T,>({
         detailRenderer={detailRenderer}
         getRowStyle={getRowStyle}
         storageKey={storageKey}
-        enableUserTableSettingSync={enableUserTableSettingSync}
+        onPersistedStateChange={onPersistedStateChange}
+        persistedStateSyncVersion={persistedStateSyncVersion}
         defaultVisibleColumnKeys={defaultVisibleColumnKeys}
         pinnedColumnKeys={pinnedColumnKeys}
         getRowCanExpand={getRowCanExpand}
