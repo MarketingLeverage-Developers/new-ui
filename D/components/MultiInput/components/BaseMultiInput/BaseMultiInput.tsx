@@ -12,6 +12,7 @@ export type BaseMultiInputExtraProps = {
     message?: string;
     value?: string;
     onChange?: (combinedValue: string) => void;
+    formatValue?: (value: string) => string;
     separator?: string;
     minCount?: number;
     maxCount?: number;
@@ -27,6 +28,7 @@ const BaseMultiInputContent: React.FC<BaseMultiInputContentProps> = (props) => {
         status = 'default',
         message,
         addLabel = '추가',
+        formatValue,
         className,
         disabled,
         ...inputProps
@@ -53,7 +55,7 @@ const BaseMultiInputContent: React.FC<BaseMultiInputContentProps> = (props) => {
                             {...inputProps}
                             disabled={disabled}
                             value={value}
-                            onChange={(e) => setInputValue(idx, e.target.value)}
+                            onChange={(e) => setInputValue(idx, formatValue ? formatValue(e.target.value) : e.target.value)}
                         />
                         {canRemove && (
                             <button
