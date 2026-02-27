@@ -28,10 +28,12 @@ export const ExpandAllRowsButton = () => {
     return (
         <BaseButton
             type="button"
-            padding={{ x: 12, y: 8 }}
-            radius={10}
-            bgColor={getThemeColor('Gray6')}
+            radius={8}
+            height={40}
+            bgColor={getThemeColor('White1')}
             textColor={getThemeColor('Gray1')}
+            padding={{ y: 9.5, x: 11 }}
+            style={{ border: `1px solid ${getThemeColor('Gray5')}` }}
             onClick={handleClick}
             title={allExpanded ? '전체 닫기' : '전체 열기'}
             aria-label={allExpanded ? '전체 닫기' : '전체 열기'}
