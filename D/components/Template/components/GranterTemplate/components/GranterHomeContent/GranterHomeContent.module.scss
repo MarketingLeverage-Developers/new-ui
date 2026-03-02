@@ -1,0 +1,13 @@
+.Content {
+    width: 100%;
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+@media (max-width: 960px) {
+    .Content {
+        gap: 18px;
+    }
+}

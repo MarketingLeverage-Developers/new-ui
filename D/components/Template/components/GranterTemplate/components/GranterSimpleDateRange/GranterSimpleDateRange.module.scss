@@ -1,0 +1,72 @@
+.Wrap {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.RangePill {
+    border: 1px solid #7dd3fc;
+    border-radius: 999px;
+    height: 32px;
+    padding: 0 10px;
+    background: #eff6ff;
+    color: #0369a1;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+}
+
+.IconButton {
+    width: 28px;
+    height: 28px;
+    border-radius: 999px;
+    border: 1px solid #bae6fd;
+    background: #ffffff;
+    color: #0369a1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.IconButton:hover {
+    background: #eff6ff;
+}
+
+.RecentWrap {
+    position: relative;
+}
+
+.RecentPanel {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    min-width: 132px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    background: #ffffff;
+    box-shadow: 0 10px 24px rgba(17, 24, 39, 0.14);
+    padding: 6px;
+    z-index: 80;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.RecentButton {
+    border: 0;
+    border-radius: 6px;
+    height: 30px;
+    background: transparent;
+    color: #374151;
+    text-align: left;
+    padding: 0 8px;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.RecentButton:hover {
+    background: #eff6ff;
+    color: #0369a1;
+}

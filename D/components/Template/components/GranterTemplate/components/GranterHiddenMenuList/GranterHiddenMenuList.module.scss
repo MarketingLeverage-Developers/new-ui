@@ -1,0 +1,36 @@
+.Wrap {
+    margin-top: 12px;
+    border-radius: 8px;
+    background: #f9fafb;
+    padding: 8px;
+}
+
+.Summary {
+    list-style: none;
+    cursor: pointer;
+    margin: 0 0 8px;
+    color: #6b7280;
+    min-height: 18px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+}
+
+.Summary::-webkit-details-marker {
+    display: none;
+}
+
+.Count {
+    min-width: 18px;
+    height: 18px;
+    border-radius: 999px;
+    border: 1px solid #d1d5db;
+    background: #e5e7eb;
+    color: #6b7280;
+    font-size: 11px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 5px;
+}

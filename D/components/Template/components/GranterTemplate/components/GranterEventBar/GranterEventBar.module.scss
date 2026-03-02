@@ -1,0 +1,47 @@
+﻿.EventBar {
+    min-height: 48px;
+    border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 16px;
+    background: #fee2e2;
+
+    &[data-color='sky'] {
+        background: #e0f2fe;
+    }
+
+    &[data-color='yellow'] {
+        background: #fef3c7;
+    }
+}
+
+.Inner {
+    width: 100%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.Icon {
+    color: #ef4444;
+    font-size: 12px;
+}
+
+.Message {
+    margin: 0;
+    color: #1f2937;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.4;
+}
+
+.Action {
+    border: 0;
+    background: transparent;
+    color: #111827;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+}

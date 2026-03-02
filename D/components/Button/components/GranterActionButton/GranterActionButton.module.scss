@@ -1,0 +1,85 @@
+.Button {
+    border-radius: 8px;
+    border: 1px solid transparent;
+    height: 40px;
+    padding: 0 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background-color 0.14s ease, border-color 0.14s ease, color 0.14s ease, opacity 0.14s ease;
+}
+
+.Button:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.SizeSm {
+    height: 32px;
+    padding: 0 10px;
+    font-size: 13px;
+}
+
+.SizeMd {
+    height: 40px;
+}
+
+.SizeHeader {
+    height: 40px;
+    padding: 0 14px;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.VariantWhite {
+    background: #ffffff;
+    color: #111827;
+}
+
+.VariantWhite:hover {
+    background: #f3f4f6;
+}
+
+.VariantWhiteBorder {
+    background: #ffffff;
+    border-color: #e5e7eb;
+    color: #111827;
+}
+
+.VariantWhiteBorder:hover {
+    background: #f9fafb;
+}
+
+.VariantBlack {
+    background: #000000;
+    color: #ffffff;
+}
+
+.VariantBlack:hover {
+    opacity: 0.86;
+}
+
+.VariantGhost {
+    background: transparent;
+    color: #374151;
+}
+
+.VariantGhost:hover {
+    background: #f3f4f6;
+}
+
+.VariantRedGhost {
+    background: #ffffff;
+    border-color: #fecaca;
+    color: #dc2626;
+}
+
+.VariantRedGhost:hover {
+    background: #fef2f2;
+}

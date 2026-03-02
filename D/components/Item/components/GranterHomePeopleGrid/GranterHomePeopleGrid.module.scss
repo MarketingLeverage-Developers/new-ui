@@ -1,0 +1,88 @@
+.PeopleScroller {
+    display: flex;
+    gap: 14px;
+    overflow-x: auto;
+}
+
+.TeamCard {
+    width: 360px;
+    flex-shrink: 0;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    background: #ffffff;
+    padding: 12px;
+}
+
+.TeamHead {
+    border-bottom: 1px solid #edf0f4;
+    padding-bottom: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.TeamHead strong {
+    font-size: 18px;
+    color: oklch(21% 0.034 264.665);
+    font-weight: 400;
+}
+
+.TeamHead span {
+    font-size: 14px;
+    color: oklch(21% 0.034 264.665);
+}
+
+.TeamRows {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-top: 10px;
+}
+
+.TeamUserRow {
+    border: 0;
+    border-radius: 8px;
+    background: #ffffff;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.UserAvatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 999px;
+    background: #eef2f7;
+    color: oklch(44.6% 0.03 256.802);
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.UserName {
+    font-size: 14px;
+    font-weight: 600;
+    color: #000000;
+}
+
+.UserRatio {
+    margin-left: auto;
+    font-size: 12px;
+    color: oklch(55.1% 0.027 264.364);
+}
+
+.TeamUserRow strong {
+    font-size: 13px;
+    color: oklch(21% 0.034 264.665);
+    font-weight: 600;
+}
+
+@media (max-width: 640px) {
+    .TeamCard {
+        width: 300px;
+    }
+}

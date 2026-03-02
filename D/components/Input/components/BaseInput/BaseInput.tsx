@@ -3,6 +3,7 @@ import styles from './BaseInput.module.scss';
 import type { InputCommonProps } from '../../Input';
 
 export type BaseInputStatus = 'default' | 'error' | 'success';
+export type BaseInputStyleVariant = 'default' | 'granter';
 
 export type BaseInputExtraProps = {
     status?: BaseInputStatus;
@@ -16,12 +17,16 @@ export type BaseInputExtraProps = {
 };
 
 type BaseInputProps = InputCommonProps & BaseInputExtraProps;
+type BaseInputInternalProps = BaseInputProps & {
+    styleVariant?: BaseInputStyleVariant;
+};
 
-const BaseInput: React.FC<BaseInputProps> = (props) => {
-    const { status = 'default', message, disabled, className, prefix, suffix, ...inputProps } = props;
+const BaseInput: React.FC<BaseInputInternalProps> = (props) => {
+    const { status = 'default', styleVariant = 'default', message, disabled, className, prefix, suffix, ...inputProps } = props;
 
     const wrapperClassName = [
         styles.BaseInput,
+        styleVariant === 'granter' ? styles.Granter : '',
         status === 'error' ? styles.Error : '',
         status === 'success' ? styles.Success : '',
         disabled ? styles.Disabled : '',

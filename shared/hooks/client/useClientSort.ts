@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
-import type { Column, SortState } from '@/shared/headless/AirTable/AirTable';
-import { collectSortConfig, sortDataByConfig } from '@/shared/headless/AirTable/AirTable';
+import type { Column, SortState } from '../../headless/AirTable/AirTable';
+import { collectSortConfig, sortDataByConfig } from '../../headless/AirTable/AirTable';
 
 type UseClientSortParams<T> = {
     items: T[];

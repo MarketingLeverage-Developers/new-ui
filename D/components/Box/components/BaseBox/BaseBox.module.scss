@@ -24,3 +24,13 @@
     border-radius: var(--radius, 10px);
     border: 1px solid var(--border-color, transparent);
 }
+
+.GranterPanel {
+    --bg: var(--Surface1);
+    --border-color: var(--Border1);
+}
+
+.GranterMuted {
+    --bg: var(--Surface2);
+    --border-color: transparent;
+}

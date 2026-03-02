@@ -1,0 +1,66 @@
+.TagGrid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.TagCard {
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    background: #ffffff;
+    padding: 14px;
+    text-align: left;
+    cursor: pointer;
+}
+
+.TagHead {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.TagIcon {
+    width: 30px;
+    height: 30px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #e0f2fe;
+    color: #0ea5e9;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.TagName {
+    color: oklch(21% 0.034 264.665);
+    font-size: 16px;
+    font-weight: 400;
+}
+
+.TagIncome,
+.TagExpense {
+    margin: 6px 0 0;
+    text-align: right;
+    font-size: 13px;
+}
+
+.TagIncome {
+    color: #0ea5e9;
+}
+
+.TagExpense {
+    color: #000000;
+}
+
+@media (max-width: 960px) {
+    .TagGrid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 640px) {
+    .TagGrid {
+        grid-template-columns: 1fr;
+    }
+}

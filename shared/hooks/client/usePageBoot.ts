@@ -2,7 +2,7 @@
 // 기능: 여러 쿼리를 병렬로 실행하고, 페이지 부트 스트랩 상태를 일관되게 계산
 import { useEffect, useMemo, useRef, useCallback } from 'react';
 import type { UseQueryResult } from '@tanstack/react-query';
-import { useResultQueries, type ResultQueryInput } from '@/shared/hooks/client/useResultQueries';
+import { useResultQueries, type ResultQueryInput } from './useResultQueries';
 
 const isInitialPending = (status: string): boolean => status === 'loading' || status === 'pending';
 

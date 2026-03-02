@@ -2,9 +2,9 @@
 import { useEffect } from 'react';
 import { atom, useRecoilCallback } from 'recoil';
 import { useQuery, type UseQueryOptions, type QueryKey } from '@tanstack/react-query';
-import type { Result } from '@/shared/types';
+import type { Result } from '../../types';
 import { unwrapResult } from '../../utils/utils';
-import { toastBus } from '@/utils/toast/ToastUtils';
+import { toastBus } from '../../utils/toast/ToastUtils';
 
 export type ResultErrorMap = Record<string, string>;
 

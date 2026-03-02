@@ -1,0 +1,138 @@
+﻿.Header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    min-height: 64px;
+    max-height: 64px;
+    width: 100%;
+    border-bottom: 1px solid #e5e7eb;
+    background: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+
+    display: grid;
+    grid-template-columns: minmax(260px, 1fr) auto minmax(240px, 1fr);
+    align-items: center;
+    gap: 16px;
+    padding: 12px 16px;
+}
+
+.Left,
+.Center,
+.Right {
+    display: inline-flex;
+    align-items: center;
+    min-width: 0;
+}
+
+.Left {
+    gap: 12px;
+}
+
+.Center {
+    justify-content: center;
+}
+
+.Right {
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.SidebarButton,
+.BackButton,
+.DateNavButton {
+    border: 1px solid #d1d5db;
+    background: #ffffff;
+    color: oklch(55.1% 0.027 264.364);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.SidebarButton,
+.BackButton {
+    width: 32px;
+    height: 32px;
+    border-radius: 999px;
+}
+
+.IconChevron {
+    font-size: 16px;
+    line-height: 1;
+}
+
+.Breadcrumb {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+}
+
+.ParentTitle {
+    color: oklch(55.1% 0.027 264.364);
+    font-size: 14px;
+    font-weight: 400;
+    white-space: nowrap;
+}
+
+.Title {
+    color: oklch(55.1% 0.027 264.364);
+    font-size: 16px;
+    font-weight: 400;
+    white-space: nowrap;
+}
+
+.DatePicker {
+    height: 40px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    background: #f9fafb;
+    display: inline-flex;
+    align-items: center;
+    overflow: hidden;
+}
+
+.DateNavButton {
+    width: 40px;
+    height: 100%;
+    border: 0;
+    border-right: 1px solid #d1d5db;
+    border-radius: 0;
+    background: transparent;
+}
+
+.DateNavButton:last-of-type {
+    border-left: 1px solid #d1d5db;
+    border-right: 0;
+}
+
+.DateText {
+    color: oklch(44.6% 0.03 256.802);
+    font-size: 16px;
+    font-weight: 400;
+    padding: 0 14px;
+    white-space: nowrap;
+}
+
+@media (max-width: 1200px) {
+    .Header {
+        grid-template-columns: minmax(180px, 1fr) auto;
+    }
+
+    .Right {
+        display: none;
+    }
+}
+
+@media (max-width: 820px) {
+    .Header {
+        display: flex;
+        gap: 10px;
+    }
+
+    .Center {
+        display: none;
+    }
+}
+

@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from 'react';
-import { useListTableHeightFitMain } from '@/shared/hooks/client/useListTableHeightFitMain';
+import { useListTableHeightFitMain } from './useListTableHeightFitMain';
 
 export type ListTableLayoutFitMainState = {
     /**

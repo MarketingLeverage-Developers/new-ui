@@ -2,8 +2,8 @@ import Modal from '../../../shared/headless/Modal/Modal';
 import Portal from '../../../shared/headless/Portal/Portal';
 import RoundedBox from '../../../RoundedBox/RoundedBox';
 import Confirm from '../../../Confirm/Confirm';
-import { useToast } from '@/shared/headless/ToastProvider/ToastProvider';
-import type { Result } from '@/shared/types';
+import { useToast } from '../../../shared/headless/ToastProvider/ToastProvider';
+import type { Result } from '../../../shared/types';
 
 type Props<T> = {
     open: boolean;

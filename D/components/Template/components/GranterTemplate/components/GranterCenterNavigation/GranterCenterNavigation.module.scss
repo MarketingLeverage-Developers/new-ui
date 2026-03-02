@@ -1,0 +1,15 @@
+.Wrap {
+    flex: 1;
+    min-height: 0;
+    overflow: auto;
+    padding: 10px 8px 14px;
+}
+
+.Wrap::-webkit-scrollbar {
+    width: 6px;
+}
+
+.Wrap::-webkit-scrollbar-thumb {
+    border-radius: 999px;
+    background: rgba(107, 114, 128, 0.35);
+}

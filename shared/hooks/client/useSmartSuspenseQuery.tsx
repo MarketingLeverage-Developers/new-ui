@@ -1,7 +1,7 @@
 // useSmartSuspenseQuery.ts
 import { useEffect, useMemo } from 'react';
 import { useQueryClient, useSuspenseQuery, type UseSuspenseQueryOptions, type QueryKey } from '@tanstack/react-query';
-import type { Result } from '@/shared/types';
+import type { Result } from '../../types';
 
 // Result 타입 가드
 const isResult = <T = unknown,>(val: unknown): val is Result<T> => {

@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { buildHangulIndex, disassembleHangul, choseongOnly, isConsonantOnly } from '@/shared/utils/search/hangulSearch';
+import { buildHangulIndex, disassembleHangul, choseongOnly, isConsonantOnly } from '../../utils/search/hangulSearch';
 
 type HangulIndex = ReturnType<typeof buildHangulIndex>;
 export type WithIndex<T> = T & { _idx: HangulIndex };

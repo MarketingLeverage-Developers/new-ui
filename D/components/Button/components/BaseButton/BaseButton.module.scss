@@ -59,6 +59,26 @@
     --border-radius: 8px;
 }
 
+.Granter {
+    --height: 40px;
+    --font-size: 14px;
+    --padding: 10px 16px;
+    --border-radius: 10px;
+
+    border: 1px solid transparent;
+    background: var(--Primary1);
+    color: var(--White1);
+    font-weight: 600;
+}
+
+.Granter:hover:not(.Disabled) {
+    filter: brightness(1.05);
+}
+
+.Granter:active:not(.Disabled) {
+    filter: brightness(0.96);
+}
+
 .Primary {
     background: var(--Primary1);
     color: #fff;
@@ -88,4 +108,9 @@
 .BaseButton:focus-visible {
     outline: 2px solid var(--Primary1);
     outline-offset: 2px;
+}
+
+.Granter.BaseButton:focus-visible {
+    outline: 2px solid var(--Border2);
+    box-shadow: 0 0 0 3px var(--Focus1);
 }

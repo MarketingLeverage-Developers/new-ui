@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './InflowMetricItem.module.scss';
-import type { HexColor } from '@/shared/types/css/HexColor';
-import type { ThemeColorVar } from '@/shared/types/css/ThemeColorTokens';
+import type { HexColor } from '../../../../../shared/types/css/HexColor';
+import type { ThemeColorVar } from '../../../../../shared/types/css/ThemeColorTokens';
 
 export type InflowMetricItemProps = {
     value: number;

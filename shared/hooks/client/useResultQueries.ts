@@ -3,7 +3,7 @@
 //       Err면 throw, Ok면 data 또는 T를 그대로 반환
 
 import { useQueries, type UseQueryResult, type QueryFunction } from '@tanstack/react-query';
-import type { Result } from '@/shared/types';
+import type { Result } from '../../types';
 
 type MaybePromise<T> = T | Promise<T>;
 type ResultReturningFn<T> = () => MaybePromise<Result<T> | T>;

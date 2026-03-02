@@ -10,6 +10,7 @@ import type { HexColor } from '../../../../../shared/types/css/HexColor';
 import type { ThemeColorVar } from '../../../../../shared/types/css/ThemeColorTokens';
 
 export type BaseButtonSize = 'sm' | 'md' | 'lg';
+export type BaseButtonStyleVariant = 'default' | 'granter';
 
 export type BaseButtonProps = {
     size?: BaseButtonSize;
@@ -28,9 +29,14 @@ export type BaseButtonProps = {
     radius?: CSSLength;
 } & ButtonHTMLAttributes<HTMLButtonElement>;
 
-const BaseButton = forwardRef<HTMLButtonElement, BaseButtonProps>((props, ref) => {
+type BaseButtonInternalProps = BaseButtonProps & {
+    styleVariant?: BaseButtonStyleVariant;
+};
+
+const BaseButton = forwardRef<HTMLButtonElement, BaseButtonInternalProps>((props, ref) => {
     const {
         size = 'md',
+        styleVariant = 'default',
         fullWidth,
         padding,
         fontSize,
@@ -64,6 +70,7 @@ const BaseButton = forwardRef<HTMLButtonElement, BaseButtonProps>((props, ref) =
             [styles.Sm]: size === 'sm',
             [styles.Md]: size === 'md',
             [styles.Lg]: size === 'lg',
+            [styles.Granter]: styleVariant === 'granter',
             [styles.FullWidth]: fullWidth,
             [styles.Gradient]: gradient,
             [styles.Primary]: primary,

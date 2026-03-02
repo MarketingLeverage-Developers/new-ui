@@ -1,0 +1,268 @@
+﻿.SidebarLayout {
+    height: 100%;
+    min-height: 0;
+    display: flex;
+    background: #ffffff;
+}
+
+.WorkspaceRail {
+    width: 56px;
+    min-width: 56px;
+    border-right: 1px solid #e5e7eb;
+    padding: 16px 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.WorkspaceRailItems {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.WorkspaceButton,
+.WorkspaceCreateButton {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+    background: #ffffff;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #6b7280;
+    font-size: 14px;
+    transition: background-color 0.14s ease, border-color 0.14s ease;
+}
+
+.WorkspaceButton:hover,
+.WorkspaceCreateButton:hover {
+    background: #f3f4f6;
+}
+
+.WorkspaceButtonActive {
+    border-color: #0ea5e9;
+    box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.2);
+}
+
+.WorkspaceButtonDisabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.WorkspaceButtonAvatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 6px;
+    background: #f3f4f6;
+    color: #000000;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.NavigationSidebar {
+    width: 257px;
+    min-width: 257px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background: #ffffff;
+}
+
+.NavigationSidebarCompact {
+    width: 200px;
+    min-width: 200px;
+}
+
+.WorkspaceInfoLine {
+    min-height: 64px;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.WorkspaceInfoButton {
+    min-width: 0;
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border-radius: 8px;
+    padding: 6px 8px;
+}
+
+.WorkspaceInfoButton:hover {
+    background: #f3f4f6;
+}
+
+.WorkspaceAvatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 6px;
+    border: 1px solid #e5e7eb;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #ffffff;
+    flex-shrink: 0;
+}
+
+.WorkspaceInfoCopy {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.WorkspaceName {
+    margin: 0;
+    color: #111827;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.WorkspaceMeta {
+    margin: 2px 0 0;
+    color: #6b7280;
+    font-size: 12px;
+    line-height: 1.3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.CollapseButton {
+    width: 32px;
+    height: 32px;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: #6b7280;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.CollapseButton:hover {
+    background: #f3f4f6;
+}
+
+.TopMenuArea {
+    border-bottom: 1px solid #e5e7eb;
+    padding: 8px;
+}
+
+.CenterMenuArea {
+    flex: 1;
+    min-height: 0;
+    overflow: auto;
+    padding: 10px 8px 14px;
+
+    &::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        border-radius: 999px;
+        background: rgba(107, 114, 128, 0.35);
+    }
+}
+
+.HiddenMenu {
+    margin-top: 12px;
+    border-radius: 8px;
+    background: #f9fafb;
+    padding: 8px;
+}
+
+.HiddenSummary {
+    list-style: none;
+    cursor: pointer;
+    color: #6b7280;
+    font-size: 14px;
+    font-weight: 400;
+    margin-bottom: 8px;
+
+    &::-webkit-details-marker {
+        display: none;
+    }
+}
+
+.BottomArea {
+    border-top: 1px solid #e5e7eb;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.ProfileButton {
+    width: 100%;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    cursor: pointer;
+    padding: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    text-align: left;
+}
+
+.ProfileButton:hover {
+    background: #f3f4f6;
+}
+
+.ProfileAvatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 999px;
+    background: #f3f4f6;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.ProfileCopy {
+    min-width: 0;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.ProfileName {
+    color: #111827;
+    font-size: 14px;
+    font-weight: 400;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ProfileRole {
+    color: #6b7280;
+    font-size: 12px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ProfileArrow {
+    color: #9ca3af;
+    font-size: 16px;
+    flex-shrink: 0;
+}
+

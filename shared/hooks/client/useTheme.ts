@@ -1,5 +1,5 @@
 import { useRecoilState } from 'recoil';
-import { themeState } from '@/shared/recoil/theme/atom';
+import { themeState } from '../../recoil/theme/atom';
 import { useCallback } from 'react';
 
 export const useTheme = () => {

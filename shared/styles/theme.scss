@@ -32,6 +32,17 @@
     --Complementary1: #{$Complementary1}; /* 보색 */
     --Complementary2: #{$Complementary2}; /* 보색 */
 
+    /* Granter-style UI foundation */
+    --Surface1: #{$Surface1};
+    --Surface2: #{$Surface2};
+    --Surface3: #{$Surface3};
+    --Border1: #{$Border1};
+    --Border2: #{$Border2};
+    --Text1: #{$Text1};
+    --Text2: #{$Text2};
+    --Text3: #{$Text3};
+    --Focus1: #{$Focus1};
+
     /* 선택: 알파 토큰(경계/포커스 링 등) */
     --PrimaryAlpha16: #{$PrimaryAlpha16};
     --PrimaryAlpha24: #{$PrimaryAlpha24};
@@ -105,6 +116,17 @@
     --Primary6: #{$PrimaryD6}; /* 더 어두운 배경 */
     --Complementary1: #{$ComplementaryD1}; /* 보색 */
     --Complementary2: #{$ComplementaryD2}; /* 보색 */
+
+    /* Granter-style UI foundation (Dark) */
+    --Surface1: #{$SurfaceD1};
+    --Surface2: #{$SurfaceD2};
+    --Surface3: #{$SurfaceD3};
+    --Border1: #{$BorderD1};
+    --Border2: #{$BorderD2};
+    --Text1: #{$TextD1};
+    --Text2: #{$TextD2};
+    --Text3: #{$TextD3};
+    --Focus1: #{$FocusD1};
 
     /* 선택: 알фа 토큰 동일 사용(필요 시 다크 전용으로 분리 가능) */
     --PrimaryAlpha16: #{$PrimaryAlpha16};

@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './BaseChartTooltip.module.scss';
-import type { ThemeColorVar } from '@/shared/types/css/ThemeColorTokens';
-import type { HexColor } from '@/shared/types/css/HexColor';
+import type { ThemeColorVar } from '../../../../../shared/types/css/ThemeColorTokens';
+import type { HexColor } from '../../../../../shared/types/css/HexColor';
 
 const numberFmt = (value?: number | string) => {
     if (typeof value === 'number') return value.toLocaleString();

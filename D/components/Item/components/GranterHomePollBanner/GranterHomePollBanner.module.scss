@@ -1,0 +1,18 @@
+.PollBanner {
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    background: #ffffff;
+    padding: 14px 18px;
+    color: oklch(44.6% 0.03 256.802);
+    font-size: 13px;
+}
+
+.PollBanner p {
+    margin: 0;
+}
+
+@media (max-width: 640px) {
+    .PollBanner {
+        border-radius: 12px;
+    }
+}

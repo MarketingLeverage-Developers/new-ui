@@ -14,9 +14,16 @@ import PillButton, { type PillButtonProps } from './components/PillButton/PillBu
 import RoundedHoverButton, { type RoundedHoverButtonProps } from './components/RoundedHoverButton/RoundedHoverButton';
 import TrashButton, { type TrashButtonProps } from './components/TrashButton/TrashButton';
 import FileDownloadButton, { type FileDownloadButtonProps } from './components/FileDownloadButton/FileDownloadButton';
+import GranterActionButton, { type GranterActionButtonProps } from './components/GranterActionButton/GranterActionButton';
+import GranterNavButton, { type GranterNavButtonProps } from './components/GranterNavButton/GranterNavButton';
+import GranterBackButton, { type GranterBackButtonProps } from './components/GranterBackButton/GranterBackButton';
 
 export type ButtonVariant =
     | 'base'
+    | 'granter-primary'
+    | 'granter-action'
+    | 'granter-nav'
+    | 'granter-back'
     | 'text'
     | 'box'
     | 'hover'
@@ -30,6 +37,10 @@ export type ButtonVariant =
 
 export type ButtonProps =
     | ({ variant: 'base' } & BaseButtonProps)
+    | ({ variant: 'granter-primary' } & BaseButtonProps)
+    | ({ variant: 'granter-action' } & GranterActionButtonProps)
+    | ({ variant: 'granter-nav' } & GranterNavButtonProps)
+    | ({ variant: 'granter-back' } & GranterBackButtonProps)
     | ({ variant: 'text' } & TextButtonProps)
     | ({ variant: 'box' } & BoxButtonProps)
     | ({ variant: 'hover' } & HoverButtonProps)
@@ -44,6 +55,11 @@ export type ButtonProps =
 const Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
     const { variant, ...rest } = props;
 
+    if (variant === 'granter-primary')
+        return <BaseButton ref={ref} {...(rest as BaseButtonProps)} styleVariant="granter" />;
+    if (variant === 'granter-action') return <GranterActionButton {...(rest as GranterActionButtonProps)} />;
+    if (variant === 'granter-nav') return <GranterNavButton {...(rest as GranterNavButtonProps)} />;
+    if (variant === 'granter-back') return <GranterBackButton {...(rest as GranterBackButtonProps)} />;
     if (variant === 'text') return <TextButton ref={ref} {...(rest as TextButtonProps)} />;
     if (variant === 'box') return <BoxButton ref={ref} {...(rest as BoxButtonProps)} />;
     if (variant === 'hover') return <HoverButton ref={ref} {...(rest as HoverButtonProps)} />;

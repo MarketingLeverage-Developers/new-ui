@@ -1,0 +1,70 @@
+.Layout {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 26px;
+    width: 100%;
+}
+
+.TopRow {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 18px;
+    width: 100%;
+}
+
+.Panel {
+    width: min(500px, 100%);
+}
+
+.Connector {
+    width: 40px;
+    height: 1px;
+    background: #d1d5db;
+    margin-top: 58px;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.Connector::after {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-top: 1px solid #9ca3af;
+    border-right: 1px solid #9ca3af;
+    position: absolute;
+    right: -1px;
+    top: -4px;
+    transform: rotate(45deg);
+}
+
+.Footer {
+    width: min(1020px, 100%);
+    display: flex;
+    justify-content: center;
+}
+
+@media (max-width: 1120px) {
+    .TopRow {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .Connector {
+        width: 1px;
+        height: 30px;
+        margin: 0 auto;
+    }
+
+    .Connector::after {
+        right: -4px;
+        top: auto;
+        bottom: -1px;
+        transform: rotate(135deg);
+    }
+
+    .Panel {
+        width: 100%;
+    }
+}

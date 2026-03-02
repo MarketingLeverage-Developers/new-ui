@@ -1,0 +1,68 @@
+.Banner {
+    min-height: 96px;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 22px 24px;
+}
+
+.BannerSync {
+    background: linear-gradient(180deg, #f4f8ff 0%, #e8f0ff 100%);
+}
+
+.BannerGuide {
+    background: linear-gradient(180deg, #fffdf5 0%, #fff9e7 100%);
+}
+
+.BannerLastMonth {
+    background: linear-gradient(180deg, #fffaf2 0%, #fff3df 100%);
+}
+
+.BannerTitle {
+    margin: 0;
+    color: oklch(21% 0.034 264.665);
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 1.32;
+}
+
+.BannerDesc {
+    margin: 6px 0 0;
+    color: oklch(55.1% 0.027 264.364);
+    font-size: 13px;
+    line-height: 1.45;
+}
+
+.ActionButton {
+    border: 0;
+    border-radius: 8px;
+    background: #000000;
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    height: 38px;
+    padding: 0 14px;
+}
+
+@media (max-width: 960px) {
+    .Banner {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+@media (max-width: 640px) {
+    .Banner {
+        border-radius: 12px;
+        padding: 16px;
+    }
+
+    .BannerTitle {
+        font-size: 16px;
+    }
+}

@@ -19,6 +19,33 @@
     }
 }
 
+.Granter {
+    border-radius: 10px;
+    height: 42px;
+    padding: 10px 14px;
+    border: 1px solid var(--Border1);
+    background-color: var(--Surface1);
+
+    &:focus-within {
+        border: 1px solid var(--Border2);
+        box-shadow: 0 0 0 3px var(--Focus1);
+    }
+
+    input {
+        font-size: 14px;
+        color: var(--Text1);
+
+        &::placeholder {
+            color: var(--Text3);
+        }
+    }
+
+    .Prefix,
+    .Suffix {
+        color: var(--Text2);
+    }
+}
+
 .Error {
     border: 1px solid var(--Red1);
     color: var(--Red1);

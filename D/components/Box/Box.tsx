@@ -19,7 +19,7 @@ export type PaddingSize =
           b?: number;
       };
 
-export type BoxVariant = 'base' | 'flex' | 'grid' | 'rounded';
+export type BoxVariant = 'base' | 'granter-panel' | 'granter-muted' | 'flex' | 'grid' | 'rounded';
 
 export type BoxCommonProps = HTMLAttributes<HTMLDivElement> & {
     children: React.ReactNode;
@@ -45,6 +45,8 @@ export type BoxCommonProps = HTMLAttributes<HTMLDivElement> & {
 export type BoxProps =
     | ({ variant?: 'flex' } & BoxCommonProps & FlexBoxExtraProps)
     | ({ variant?: 'base' } & BoxCommonProps & BaseBoxExtraProps)
+    | ({ variant: 'granter-panel' } & BoxCommonProps & BaseBoxExtraProps)
+    | ({ variant: 'granter-muted' } & BoxCommonProps & BaseBoxExtraProps)
     | ({ variant: 'grid' } & BoxCommonProps & GridBoxExtraProps)
     | ({ variant: 'rounded' } & BoxCommonProps & RoundedBoxExtraProps);
 
@@ -53,6 +55,14 @@ const Box: React.FC<BoxProps> = (props) => {
 
     if (variant === 'base') {
         return <BaseBox {...(rest as BoxCommonProps & BaseBoxExtraProps)} />;
+    }
+
+    if (variant === 'granter-panel') {
+        return <BaseBox {...(rest as BoxCommonProps & BaseBoxExtraProps)} styleVariant="granter-panel" />;
+    }
+
+    if (variant === 'granter-muted') {
+        return <BaseBox {...(rest as BoxCommonProps & BaseBoxExtraProps)} styleVariant="granter-muted" />;
     }
 
     if (variant === 'grid') {

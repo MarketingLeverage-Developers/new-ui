@@ -12,22 +12,25 @@ export type BaseBoxExtraProps = {
     radius?: number;
     shadow?: boolean;
 
-    /** ✅ background-color로 들어갈 값 (예: 'var(--White1)' / '#fff') */
+    /** value for background-color (for example: 'var(--White1)' / '#fff') */
     background?: string;
 
-    /** ✅ border-color로 들어갈 값 */
+    /** value for border-color */
     borderColor?: string;
 };
 
 type BaseBoxProps = BoxCommonProps & BaseBoxExtraProps;
+type BaseBoxStyleVariant = 'default' | 'granter-panel' | 'granter-muted';
+type BaseBoxInternalProps = BaseBoxProps & {
+    styleVariant?: BaseBoxStyleVariant;
+};
 
-const BaseBox: React.FC<BaseBoxProps> = (props) => {
+const BaseBox: React.FC<BaseBoxInternalProps> = (props) => {
     const {
         children,
         className,
         style,
 
-        // ✅ 공통 props (DOM으로 내려가면 안 됨)
         direction,
         align,
         justify,
@@ -45,16 +48,19 @@ const BaseBox: React.FC<BaseBoxProps> = (props) => {
         minWidth,
         minHeight,
 
-        // ✅ base 전용
         radius = 12,
-        shadow = false,
+        shadow: _shadow = false,
+        styleVariant = 'default',
         background,
         borderColor,
 
         ...rest
     } = props;
 
-    const rootClassName = classNames(styles.BaseBox, className);
+    const rootClassName = classNames(styles.BaseBox, className, {
+        [styles.GranterPanel]: styleVariant === 'granter-panel',
+        [styles.GranterMuted]: styleVariant === 'granter-muted',
+    });
 
     const cssVariables: CSSVariables = {
         '--flex-direction': direction,
@@ -75,10 +81,7 @@ const BaseBox: React.FC<BaseBoxProps> = (props) => {
         '--min-height': toCssUnit(minHeight),
 
         '--radius': toCssUnit(radius),
-
-        /* ✅ 여기로 background-color 주입 */
         '--bg': background,
-
         '--border-color': borderColor,
     };
 

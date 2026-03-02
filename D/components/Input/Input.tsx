@@ -5,12 +5,20 @@ import InnerTextInput, { type InnerTextInputProps } from './components/InnerText
 import RoundedPassword, { type RoundedPasswordProps } from './components/RoundedPassword/RoundedPassword';
 import SearchInput, { type SearchInputProps } from './components/SearchInput/SearchInput';
 
-export type InputVariant = 'base' | 'rounded' | 'inner-text' | 'rounded-password' | 'search' | 'rounded-search';
+export type InputVariant =
+    | 'base'
+    | 'granter-primary'
+    | 'rounded'
+    | 'inner-text'
+    | 'rounded-password'
+    | 'search'
+    | 'rounded-search';
 
 export type InputCommonProps = Omit<InputHTMLAttributes<HTMLInputElement>, 'prefix' | 'suffix'>;
 
 export type InputProps =
     | ({ variant: 'base' } & InputCommonProps & BaseInputExtraProps)
+    | ({ variant: 'granter-primary' } & InputCommonProps & BaseInputExtraProps)
     | ({ variant: 'rounded' } & RoundedInputProps)
     | ({ variant: 'inner-text' } & InnerTextInputProps)
     | ({ variant: 'rounded-password' } & RoundedPasswordProps)
@@ -24,6 +32,8 @@ const Input = (props: InputProps) => {
     if (variant === 'inner-text') return <InnerTextInput {...(rest as InnerTextInputProps)} />;
     if (variant === 'rounded-password') return <RoundedPassword {...(rest as RoundedPasswordProps)} />;
     if (variant === 'search' || variant === 'rounded-search') return <SearchInput {...(rest as SearchInputProps)} />;
+    if (variant === 'granter-primary')
+        return <BaseInput {...(rest as BaseInputExtraProps & InputCommonProps)} styleVariant="granter" />;
 
     return <BaseInput {...(rest as BaseInputExtraProps & InputCommonProps)} />;
 };

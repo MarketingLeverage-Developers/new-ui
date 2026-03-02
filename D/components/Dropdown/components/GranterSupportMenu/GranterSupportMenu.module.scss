@@ -1,0 +1,94 @@
+.Wrap {
+    position: relative;
+}
+
+.Trigger {
+    height: 40px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #111827;
+    padding: 0 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.Trigger:hover {
+    background: #f9fafb;
+}
+
+.Caret {
+    color: #6b7280;
+}
+
+.Menu {
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    z-index: 90;
+    width: 176px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    box-shadow: 0 12px 24px rgba(17, 24, 39, 0.16);
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.Group {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.Group + .Group {
+    padding-top: 6px;
+    border-top: 1px solid #f3f4f6;
+}
+
+.MenuItem {
+    width: 100%;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: #374151;
+    font-size: 14px;
+    line-height: 1.3;
+    height: 32px;
+    padding: 0 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-align: left;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.MenuItem:hover {
+    background: #f3f4f6;
+    color: #111827;
+}
+
+.MenuItemDanger {
+    color: #dc2626;
+}
+
+.MenuItemDanger:hover {
+    background: #fef2f2;
+    color: #b91c1c;
+}
+
+.Icon {
+    width: 16px;
+    height: 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: currentColor;
+}

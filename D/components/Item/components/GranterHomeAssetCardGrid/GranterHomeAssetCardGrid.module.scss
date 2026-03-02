@@ -1,0 +1,155 @@
+.AssetGrid {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.AssetCard {
+    flex: 1 1 calc(50% - 8px);
+    min-width: 390px;
+    max-width: 650px;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    background: #ffffff;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.AssetCardHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.AssetCardHeader h3 {
+    margin: 0;
+    color: oklch(21% 0.034 264.665);
+    font-size: 30px;
+    font-weight: 600;
+    line-height: 1.2;
+}
+
+.GhostButton {
+    border: 0;
+    border-radius: 8px;
+    background: #f3f4f6;
+    color: oklch(44.6% 0.03 256.802);
+    font-size: 13px;
+    padding: 7px 10px;
+    cursor: pointer;
+}
+
+.AssetCardTotal {
+    margin: 0;
+    color: oklch(21% 0.034 264.665);
+    font-size: 32px;
+    font-weight: 600;
+    line-height: 1.15;
+}
+
+.SummaryStack {
+    display: grid;
+    gap: 8px;
+}
+
+.SummaryRow {
+    border-radius: 12px;
+    background: #f7f8fb;
+    padding: 11px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.SummaryRow span {
+    color: oklch(55.1% 0.027 264.364);
+    font-size: 14px;
+}
+
+.SummaryRow strong {
+    color: oklch(21% 0.034 264.665);
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.AssetRows {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.AssetRow {
+    border: 0;
+    border-radius: 10px;
+    background: #ffffff;
+    padding: 10px 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    text-align: left;
+    cursor: pointer;
+}
+
+.AssetRowName {
+    margin: 0;
+    color: oklch(21% 0.034 264.665);
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.AssetRowMeta {
+    margin: 2px 0 0;
+    color: oklch(55.1% 0.027 264.364);
+    font-size: 12px;
+}
+
+.AssetRowAmount {
+    color: oklch(21% 0.034 264.665);
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.AssetFooter {
+    margin-top: auto;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    color: oklch(44.6% 0.03 256.802);
+    font-size: 14px;
+    padding: 10px 0 0;
+    text-align: center;
+    cursor: pointer;
+}
+
+@media (max-width: 1280px) {
+    .AssetCard {
+        min-width: 320px;
+    }
+
+    .AssetCardHeader h3,
+    .AssetCardTotal {
+        font-size: 26px;
+    }
+}
+
+@media (max-width: 960px) {
+    .AssetGrid {
+        flex-direction: column;
+    }
+
+    .AssetCard {
+        min-width: 0;
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 640px) {
+    .AssetCard {
+        border-radius: 12px;
+    }
+}

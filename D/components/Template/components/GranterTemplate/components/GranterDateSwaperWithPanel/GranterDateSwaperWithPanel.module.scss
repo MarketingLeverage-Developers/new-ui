@@ -1,0 +1,178 @@
+.Wrap {
+    position: relative;
+    width: 300px;
+}
+
+.Bar {
+    width: 100%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ArrowButton {
+    width: 40px;
+    height: 40px;
+    border: 1px solid #e5e7eb;
+    background: #ffffff;
+    color: #6b7280;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.ArrowButton:first-child {
+    border-right: 0;
+    border-radius: 8px 0 0 8px;
+}
+
+.ArrowButton:last-child {
+    border-left: 0;
+    border-radius: 0 8px 8px 0;
+}
+
+.ArrowButton:hover {
+    background: #f3f4f6;
+    color: #111827;
+}
+
+.DateButton {
+    flex: 1;
+    min-width: 0;
+    height: 40px;
+    border: 1px solid #e5e7eb;
+    background: #ffffff;
+    color: #374151;
+    font-size: 14px;
+    font-weight: 400;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 12px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.DateButtonDefault {
+    color: #6b7280;
+}
+
+.DateButtonActive {
+    background: #eff6ff;
+    border-color: #0ea5e9;
+    color: #0369a1;
+}
+
+.DateText {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.Panel {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    width: 620px;
+    max-width: calc(100vw - 24px);
+    min-height: 336px;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    background: #ffffff;
+    box-shadow: 0 12px 30px rgba(17, 24, 39, 0.16);
+    z-index: 80;
+    display: grid;
+    grid-template-columns: 128px 1fr 128px;
+    overflow: hidden;
+}
+
+.PanelColumn {
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    overflow: auto;
+}
+
+.PanelColumnEdge {
+    border-right: 1px solid #e5e7eb;
+}
+
+.PanelColumnEdge:last-child {
+    border-left: 1px solid #e5e7eb;
+    border-right: 0;
+}
+
+.PresetButton {
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    height: 32px;
+    padding: 0 10px;
+    color: #374151;
+    font-size: 13px;
+    text-align: left;
+    cursor: pointer;
+}
+
+.PresetButton:hover {
+    background: #f3f4f6;
+    color: #111827;
+}
+
+.CalendarPlaceholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #6b7280;
+    gap: 8px;
+    font-size: 13px;
+}
+
+.CalendarGrid {
+    width: 240px;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+}
+
+.CalendarCell {
+    width: 30px;
+    height: 30px;
+    border-radius: 6px;
+    background: #f9fafb;
+}
+
+@media (max-width: 1024px) {
+    .Wrap {
+        width: 260px;
+    }
+
+    .Panel {
+        width: 540px;
+        grid-template-columns: 112px 1fr 112px;
+    }
+}
+
+@media (max-width: 820px) {
+    .Wrap {
+        width: 220px;
+    }
+
+    .Panel {
+        width: 94vw;
+        grid-template-columns: 1fr;
+        min-height: 0;
+    }
+
+    .PanelColumnEdge,
+    .PanelColumnEdge:last-child {
+        border: 0;
+    }
+
+    .PanelColumn {
+        max-height: 164px;
+    }
+}
