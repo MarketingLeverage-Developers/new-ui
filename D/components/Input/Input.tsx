@@ -35,8 +35,10 @@ const Input = (props: InputProps) => {
         return <BaseMultiInput {...(rest as MultiInputCommonProps & BaseMultiInputExtraProps)} />;
     }
 
-    if (props.variant === 'granter-primary')
+    if (props.variant === 'granter-primary') {
+        const { variant: _variant, ...rest } = props;
         return <BaseInput {...(rest as BaseInputExtraProps & InputCommonProps)} styleVariant="granter" />;
+    }
 
     if (props.variant === 'rounded') {
         const { variant: _variant, ...rest } = props;
