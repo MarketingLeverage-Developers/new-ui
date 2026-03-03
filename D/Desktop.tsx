@@ -34,6 +34,7 @@ import Pagination from './components/Pagination/Pagination';
 import Dropdown from './components/Dropdown/Dropdown';
 import ChartTooltip from './components/ChartTooltip/ChartTooltip';
 import Divider from './components/Divider/Divider';
+import Dot from './components/Dot/Dot';
 import { ConfirmModal } from './components/ComfirmModal/ConfirmModal';
 
 type DesktopProps = {
@@ -80,3 +81,4 @@ Desktop.Pagination = Pagination;
 Desktop.Dropdown = Dropdown;
 Desktop.ChartTooltip = ChartTooltip;
 Desktop.Divider = Divider;
+Desktop.Dot = Dot;
