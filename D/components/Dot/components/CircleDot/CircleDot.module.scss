@@ -1,0 +1,8 @@
+.CircleDot {
+    width: var(--dot-size, 8px);
+    height: var(--dot-size, 8px);
+    border-radius: 9999px;
+    background-color: var(--dot-color, var(--Black1));
+    display: inline-block;
+    flex-shrink: 0;
+}
