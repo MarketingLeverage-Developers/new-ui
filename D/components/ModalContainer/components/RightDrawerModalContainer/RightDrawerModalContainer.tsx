@@ -9,6 +9,7 @@ export type RightDrawerModalContainerProps = {
     content: React.ReactNode;
     width?: string | number;
     maxHeight?: string | number;
+    enterAction?: () => void;
 };
 
 const RightDrawerModalContainer = ({
@@ -17,12 +18,14 @@ const RightDrawerModalContainer = ({
     content,
     width = 480,
     maxHeight = '100%',
+    enterAction,
 }: RightDrawerModalContainerProps) => (
     <Modal
         value={open}
         onChange={(nextOpen) => {
             if (!nextOpen) onChange();
         }}
+        enterAction={enterAction}
     >
         <Portal>
             <Modal.Backdrop />

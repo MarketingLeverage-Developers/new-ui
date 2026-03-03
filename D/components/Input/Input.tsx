@@ -4,6 +4,8 @@ import RoundedInput, { type RoundedInputProps } from './components/RoundedInput/
 import InnerTextInput, { type InnerTextInputProps } from './components/InnerTextInput/InnerTextInput';
 import RoundedPassword, { type RoundedPasswordProps } from './components/RoundedPassword/RoundedPassword';
 import SearchInput, { type SearchInputProps } from './components/SearchInput/SearchInput';
+import BaseMultiInput, { type BaseMultiInputExtraProps } from '../MultiInput/components/BaseMultiInput/BaseMultiInput';
+import type { MultiInputCommonProps } from '../MultiInput/MultiInput';
 
 export type InputVariant =
     | 'base'
@@ -12,7 +14,8 @@ export type InputVariant =
     | 'inner-text'
     | 'rounded-password'
     | 'search'
-    | 'rounded-search';
+    | 'rounded-search'
+    | 'multi';
 
 export type InputCommonProps = Omit<InputHTMLAttributes<HTMLInputElement>, 'prefix' | 'suffix'>;
 
@@ -23,18 +26,39 @@ export type InputProps =
     | ({ variant: 'inner-text' } & InnerTextInputProps)
     | ({ variant: 'rounded-password' } & RoundedPasswordProps)
     | ({ variant: 'search' } & SearchInputProps)
-    | ({ variant: 'rounded-search' } & SearchInputProps);
+    | ({ variant: 'rounded-search' } & SearchInputProps)
+    | ({ variant: 'multi' } & MultiInputCommonProps & BaseMultiInputExtraProps);
 
 const Input = (props: InputProps) => {
-    const { variant, ...rest } = props as any;
+    if (props.variant === 'multi') {
+        const { variant: _variant, ...rest } = props;
+        return <BaseMultiInput {...(rest as MultiInputCommonProps & BaseMultiInputExtraProps)} />;
+    }
 
-    if (variant === 'rounded') return <RoundedInput {...(rest as RoundedInputProps)} />;
-    if (variant === 'inner-text') return <InnerTextInput {...(rest as InnerTextInputProps)} />;
-    if (variant === 'rounded-password') return <RoundedPassword {...(rest as RoundedPasswordProps)} />;
-    if (variant === 'search' || variant === 'rounded-search') return <SearchInput {...(rest as SearchInputProps)} />;
-    if (variant === 'granter-primary')
+    if (props.variant === 'granter-primary')
         return <BaseInput {...(rest as BaseInputExtraProps & InputCommonProps)} styleVariant="granter" />;
 
+    if (props.variant === 'rounded') {
+        const { variant: _variant, ...rest } = props;
+        return <RoundedInput {...(rest as RoundedInputProps)} />;
+    }
+
+    if (props.variant === 'inner-text') {
+        const { variant: _variant, ...rest } = props;
+        return <InnerTextInput {...(rest as InnerTextInputProps)} />;
+    }
+
+    if (props.variant === 'rounded-password') {
+        const { variant: _variant, ...rest } = props;
+        return <RoundedPassword {...(rest as RoundedPasswordProps)} />;
+    }
+
+    if (props.variant === 'search' || props.variant === 'rounded-search') {
+        const { variant: _variant, ...rest } = props;
+        return <SearchInput {...(rest as SearchInputProps)} />;
+    }
+
+    const { variant: _variant, ...rest } = props;
     return <BaseInput {...(rest as BaseInputExtraProps & InputCommonProps)} />;
 };
 
