@@ -10,10 +10,12 @@ type Props<T> = {
     onClose: () => void;
     onConfirm: () => Promise<Result<T>>;
     toastText?: string;
+    zIndex?: number;
 };
 
-export const DeleteConfirmModal = <T,>({ open, onClose, onConfirm, toastText = '내역' }: Props<T>) => {
+export const DeleteConfirmModal = <T,>({ open, onClose, onConfirm, toastText = '내역', zIndex }: Props<T>) => {
     const { addToast } = useToast();
+    const zIndexOffset = zIndex ?? 0;
 
     const handleConfirm = async () => {
         const res = await onConfirm();
@@ -40,8 +42,8 @@ export const DeleteConfirmModal = <T,>({ open, onClose, onConfirm, toastText = '
     return (
         <Modal value={open} onChange={onClose} enterAction={handleConfirm}>
             <Portal>
-                <Modal.Backdrop />
-                <Modal.Content>
+                <Modal.Backdrop style={{ zIndex: 999 + zIndexOffset }} />
+                <Modal.Content style={{ zIndex: 1000 + zIndexOffset }}>
                     <RoundedBox padding={20} width={320} height="auto">
                         <Confirm
                             onCancel={onClose}
