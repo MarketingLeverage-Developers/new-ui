@@ -17,6 +17,9 @@ import OnboardingModalTemplate, {
 } from './components/OnboardingModalTemplate/OnboardingModalTemplate';
 import { LogoLine, type LogoLineProps } from './components/PageTemplate/components/LogoLine/LogoLine';
 import GranterTemplate, { type GranterTemplateProps } from './components/GranterTemplate/GranterTemplate';
+import GranterWorkspaceInfo, {
+    type GranterWorkspaceInfoProps,
+} from './components/GranterTemplate/components/GranterWorkspaceInfo/GranterWorkspaceInfo';
 
 export type TemplateVariant =
     | 'page'
@@ -26,10 +29,12 @@ export type TemplateVariant =
     | 'request-detail'
     | 'onboarding-modal'
     | 'logo'
+    | 'granter_logo'
     | 'granter';
 export type TemplatePageProps = PageTemplateProps;
 export type TemplateMobilePageProps = MobilePageTemplateProps;
 export type TemplateLogoProps = LogoLineProps;
+export type TemplateGranterLogoProps = GranterWorkspaceInfoProps;
 
 export type TemplateProps<G extends string = string> =
     | ({ variant: 'page' } & PageTemplateProps)
@@ -39,6 +44,7 @@ export type TemplateProps<G extends string = string> =
     | ({ variant: 'request-detail' } & RequestDetailTemplateProps)
     | ({ variant: 'onboarding-modal' } & OnboardingModalTemplateProps<G>)
     | ({ variant: 'logo' } & LogoLineProps)
+    | ({ variant: 'granter_logo' } & GranterWorkspaceInfoProps)
     | ({ variant: 'granter' } & GranterTemplateProps);
 
 const Template = <G extends string = string>(props: TemplateProps<G>) => {
@@ -66,6 +72,10 @@ const Template = <G extends string = string>(props: TemplateProps<G>) => {
 
     if (variant === 'logo') {
         return <LogoLine {...(rest as LogoLineProps)} />;
+    }
+
+    if (variant === 'granter_logo') {
+        return <GranterWorkspaceInfo {...(rest as GranterWorkspaceInfoProps)} />;
     }
 
     if (variant === 'granter') {

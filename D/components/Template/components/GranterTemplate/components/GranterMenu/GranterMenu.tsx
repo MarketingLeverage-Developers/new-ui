@@ -3,10 +3,12 @@ import classNames from 'classnames';
 import GranterNavButton from '../../../../../Button/components/GranterNavButton/GranterNavButton';
 import styles from './GranterMenu.module.scss';
 
+type IconType = React.ComponentType<React.SVGProps<SVGSVGElement>>;
+
 export type GranterMenuItem = {
     key: string;
     label: React.ReactNode;
-    icon?: React.ReactNode;
+    icon?: IconType;
     badge?: React.ReactNode;
     disabled?: boolean;
 };

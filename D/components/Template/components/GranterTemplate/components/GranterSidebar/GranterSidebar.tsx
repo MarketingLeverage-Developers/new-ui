@@ -59,7 +59,7 @@ const GranterSidebar = ({
 
     return (
         <div className={styles.SidebarLayout}>
-            {hasWorkspaceRail ? (
+            {/* {hasWorkspaceRail ? (
                 <GranterWorkspaceSidebar
                     items={(workspaceItems ?? []).map((item) => ({
                         key: item.key,
@@ -71,7 +71,7 @@ const GranterSidebar = ({
                     onItemClick={onWorkspaceClick}
                     onCreateClick={onCreateWorkspaceClick}
                 />
-            ) : null}
+            ) : null} */}
 
             <aside className={classNames(styles.NavigationSidebar, { [styles.NavigationSidebarCompact]: hasWorkspaceRail })}>
                 <GranterWorkspaceInfo

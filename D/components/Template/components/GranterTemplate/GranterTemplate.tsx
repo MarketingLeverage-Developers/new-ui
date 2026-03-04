@@ -45,6 +45,7 @@ import GranterPatternLayout, {
 
 export type GranterTemplateProps = {
     sidebar: React.ReactNode;
+    subSidebar?: React.ReactNode;
     header: React.ReactNode;
     main: React.ReactNode;
     eventBar?: React.ReactNode;
@@ -79,9 +80,18 @@ type GranterTemplateCompound = React.FC<GranterTemplateProps> & {
     PatternLayout: React.FC<GranterPatternLayoutProps>;
 };
 
-const GranterTemplateRoot: React.FC<GranterTemplateProps> = ({ sidebar, header, main, eventBar, floating, overlay }) => (
+const GranterTemplateRoot: React.FC<GranterTemplateProps> = ({
+    sidebar,
+    subSidebar,
+    header,
+    main,
+    eventBar,
+    floating,
+    overlay,
+}) => (
     <div className={styles.GranterTemplate}>
         <aside className={styles.SidebarArea}>{sidebar}</aside>
+        {subSidebar ? <aside className={styles.SubSidebarArea}>{subSidebar}</aside> : null}
 
         <div className={styles.ContentArea}>
             {eventBar ? <div className={styles.EventBarArea}>{eventBar}</div> : null}
