@@ -1,0 +1,47 @@
+.Chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 26px;
+    border-radius: 999px;
+    padding: 0 10px;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.ToneCompleted {
+    background: #e9f6ed;
+    color: #277245;
+}
+
+.TonePending {
+    background: #fff2d9;
+    color: #8a5a06;
+}
+
+.ToneFailed {
+    background: #ffe7e8;
+    color: #b13139;
+}
+
+.ToneNeutral {
+    background: #edf1f7;
+    color: #4d5870;
+}
+
+.Pulse {
+    animation: chipPulse 1.2s ease-in-out infinite;
+}
+
+@keyframes chipPulse {
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.03);
+    }
+}

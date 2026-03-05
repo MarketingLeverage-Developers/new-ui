@@ -1,0 +1,105 @@
+.Toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+}
+
+.LeftGroup {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.SearchField {
+    width: min(540px, 100%);
+    min-width: 280px;
+    height: 40px;
+    border: 1px solid #d6dae3;
+    border-radius: 10px;
+    background: #ffffff;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 12px;
+    color: #75809a;
+}
+
+.SearchField input {
+    width: 100%;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: #344057;
+    font-size: 14px;
+}
+
+.SearchField input::placeholder {
+    color: #8c96aa;
+}
+
+.ClearButton {
+    border: 0;
+    background: transparent;
+    color: #77839a;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.RightGroup {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: auto;
+}
+
+.Toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.ToggleButton {
+    width: 34px;
+    height: 20px;
+    border-radius: 999px;
+    border: 1px solid #cfd5e2;
+    background: #e9edf4;
+    padding: 2px;
+    display: inline-flex;
+    justify-content: flex-start;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.ToggleButton span {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #ffffff;
+    transition: transform 0.2s ease;
+}
+
+.ToggleButtonChecked {
+    background: #2c3550;
+}
+
+.ToggleButtonChecked span {
+    transform: translateX(14px);
+}
+
+.ToggleText {
+    color: #4a556e;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+@media (max-width: 1024px) {
+    .RightGroup {
+        margin-left: 0;
+    }
+}

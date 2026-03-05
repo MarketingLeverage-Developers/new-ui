@@ -1,0 +1,59 @@
+.SubSidebarArea {
+    flex-shrink: 0;
+    min-width: 0;
+    min-height: 0;
+    height: 100%;
+    position: relative;
+    border-right: 1px solid var(--Gray5);
+    background: var(--White1);
+    overflow: hidden;
+}
+
+.SubSidebarArea[data-collapsed='true'] {
+    width: 0 !important;
+    min-width: 0;
+    border-right: none;
+}
+
+.SubSidebarContent {
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+    min-height: 0;
+}
+
+.ResizeHandle {
+    position: absolute;
+    top: 0;
+    right: -3px;
+    width: 6px;
+    height: 100%;
+    cursor: col-resize;
+    z-index: 3;
+}
+
+.ResizeHandle::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 2px;
+    width: 2px;
+    border-radius: 999px;
+    background-color: transparent;
+    transition: background-color 0.14s ease;
+}
+
+.SubSidebarArea:hover .ResizeHandle::after {
+    background-color: var(--Gray5);
+}
+
+.SubSidebarArea[data-resizing='true'] .ResizeHandle::after {
+    background-color: var(--Primary1);
+}
+
+@media (max-width: 1024px) {
+    .SubSidebarArea {
+        display: none;
+    }
+}

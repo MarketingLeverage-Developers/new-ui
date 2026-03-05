@@ -10,7 +10,7 @@
     gap: 8px;
     padding: 0 8px;
     text-align: left;
-    color: oklch(44.6% 0.03 256.802);
+    color: var(--Gray8);
     font-size: 14px;
     font-weight: 400;
     line-height: 1.25;
@@ -19,13 +19,13 @@
 }
 
 .NavButton:hover {
-    background: #f3f4f6;
-    color: oklch(21% 0.034 264.665);
+    background: var(--Gray5);
+    color: var(--Gray8);
 }
 
 .NavButtonActive {
-    background: #f3f4f6;
-    color: oklch(21% 0.034 264.665);
+    background:var(--Gray5);
+    color: var(--Black1);
 }
 
 .NavButtonDisabled {
@@ -70,8 +70,8 @@
     height: 18px;
     border-radius: 999px;
     padding: 0 6px;
-    background: #e5e7eb;
-    color: #6b7280;
+    background:var(--Gray4);
+    color:var(--Gray8);
     font-size: 11px;
     font-weight: 600;
     display: inline-flex;

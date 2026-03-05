@@ -1,0 +1,29 @@
+.GranterPageMenuDesktop {
+    height: calc(100dvh - 64px);
+    overflow: hidden;
+}
+
+.NavigationSidebar {
+    // width: 257px;
+    // min-width: 257px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background: var(--White1);
+}
+
+.CenterMenuArea {
+    flex: 1;
+    min-height: 0;
+    overflow: auto;
+    padding: 10px 8px 14px;
+
+    &::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        border-radius: 999px;
+        background: rgba(107, 114, 128, 0.35);
+    }
+}

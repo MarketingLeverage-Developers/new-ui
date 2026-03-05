@@ -1,0 +1,232 @@
+.SidebarLayout {
+    display: grid;
+    grid-template-rows: auto auto minmax(0, 1fr);
+    height: 100%;
+    width: 100%;
+    min-height: 0;
+    overflow: hidden;
+    background-color: var(--White1);
+}
+
+.Header {
+    background-color: var(--White1);
+}
+
+.CompanyRow {
+    min-height: 59px;
+    padding: 6px 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    border-bottom: 1px solid var(--Gray5);
+}
+
+.HeaderMain,
+.HeaderMainButton {
+    min-width: 0;
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.HeaderMainButton {
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    text-align: left;
+    padding: 0;
+}
+
+.HeaderImage {
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+    flex-shrink: 0;
+}
+
+.HeaderTitle {
+    min-width: 0;
+    color: var(--Gray8);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.HeaderRight {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.HeaderTrailing {
+    color: var(--Gray3);
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+.HeaderSettingButton {
+    width: 18px;
+    height: 18px;
+    border: 0;
+    background: transparent;
+    color: var(--Gray2);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 0;
+}
+
+.ControlArea {
+    padding: 10px 0 0;
+}
+
+.SearchRow {
+    padding: 0 8px;
+}
+
+.TotalRow {
+    padding: 8px 16px;
+    color: var(--Gray8);
+    font-size: 13px;
+}
+
+.TotalRow span {
+    color: var(--Black1);
+}
+
+.ListViewport {
+    min-height: 0;
+    overflow: auto;
+    scrollbar-gutter: stable;
+    background-color: var(--White1);
+}
+
+.ListViewport::-webkit-scrollbar {
+    width: 6px;
+}
+
+.ListViewport::-webkit-scrollbar-thumb {
+    border-radius: 999px;
+    background-color: var(--Gray4);
+}
+
+.ListViewport::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.List {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 8px 0 160px;
+}
+
+.ItemButton {
+    width: 100%;
+    min-height: 48px;
+    border: 1px solid transparent;
+    background: var(--White1);
+    text-align: left;
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2px;
+    cursor: pointer;
+    transition:
+        background-color 0.14s ease,
+        border-color 0.14s ease;
+}
+
+.ItemButton:hover {
+    background: var(--Gray6);
+    border-color: var(--Gray5);
+}
+
+.ItemButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.ItemButtonSelected {
+    background: var(--Gray5);
+}
+
+.ItemMain {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    width: 100%;
+}
+
+.ItemLeft {
+    min-width: 0;
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.ItemImage {
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+    flex-shrink: 0;
+}
+
+.ItemTitle {
+    min-width: 0;
+    color: var(--Gray8);
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ItemButtonSelected .ItemTitle {
+    color: var(--Black1);
+}
+
+.ItemTrailing {
+    color: var(--Gray3);
+    font-size: 12px;
+    padding: 2px 6px;
+    border-radius: 999px;
+    background-color: var(--Gray6);
+    border: 1px solid transparent;
+    flex-shrink: 0;
+}
+
+.ItemButtonSelected .ItemTrailing,
+.ItemButton:hover .ItemTrailing {
+    background-color: var(--White1);
+    border-color: var(--Gray5);
+}
+
+.ItemMeta {
+    margin: 0;
+    color: var(--Gray3);
+    font-size: 12px;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-left: 24px;
+}
+
+.Empty {
+    padding: 20px 12px;
+    color: var(--Gray3);
+    font-size: 13px;
+}

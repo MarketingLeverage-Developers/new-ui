@@ -2,9 +2,7 @@ import React from 'react';
 
 import type { PageTemplateProps } from './components/PageTemplate/PageTemplate';
 import PageTemplate from './components/PageTemplate/PageTemplate';
-import MobilePageTemplate, {
-    type MobilePageTemplateProps,
-} from './components/MobilePageTemplate/MobilePageTemplate';
+import MobilePageTemplate, { type MobilePageTemplateProps } from './components/MobilePageTemplate/MobilePageTemplate';
 
 import type { ModalTemplateExtraProps, ModalTemplateProps } from './components/ModalTemplate/ModalTemplate';
 import ModalTemplate from './components/ModalTemplate/ModalTemplate';
@@ -20,6 +18,9 @@ import GranterTemplate, { type GranterTemplateProps } from './components/Granter
 import GranterWorkspaceInfo, {
     type GranterWorkspaceInfoProps,
 } from './components/GranterTemplate/components/GranterWorkspaceInfo/GranterWorkspaceInfo';
+import { GranterPageMenu, type GranterPageMenuProps } from './components/GranterTemplate/components/GranterPageMenu/GranterPageMenu';
+import GranterSideSearchBar, { type GranterSideSearchBarProps } from './components/GranterTemplate/components/GranterSideSearchBar/GranterSideSearchBar';
+
 
 export type TemplateVariant =
     | 'page'
@@ -29,8 +30,12 @@ export type TemplateVariant =
     | 'request-detail'
     | 'onboarding-modal'
     | 'logo'
-    | 'granter_logo'
-    | 'granter';
+    | 'granter-logo'
+    | 'granter'
+    | 'granter-menu-desktop'
+    | 'granterMenu-desktop'
+    | 'granter-search-side'
+    | 'granter-companybar';
 export type TemplatePageProps = PageTemplateProps;
 export type TemplateMobilePageProps = MobilePageTemplateProps;
 export type TemplateLogoProps = LogoLineProps;
@@ -44,8 +49,11 @@ export type TemplateProps<G extends string = string> =
     | ({ variant: 'request-detail' } & RequestDetailTemplateProps)
     | ({ variant: 'onboarding-modal' } & OnboardingModalTemplateProps<G>)
     | ({ variant: 'logo' } & LogoLineProps)
-    | ({ variant: 'granter_logo' } & GranterWorkspaceInfoProps)
-    | ({ variant: 'granter' } & GranterTemplateProps);
+    | ({ variant: 'granter-logo' } & GranterWorkspaceInfoProps)
+    | ({ variant: 'granter' } & GranterTemplateProps)
+    | ({ variant: 'granter-menu-desktop' } & GranterPageMenuProps)
+    | ({ variant: 'granterMenu-desktop' } & GranterPageMenuProps)
+    | ({ variant: 'granter-search-side' } & GranterSideSearchBarProps);
 
 const Template = <G extends string = string>(props: TemplateProps<G>) => {
     const { variant, ...rest } = props;
@@ -74,12 +82,20 @@ const Template = <G extends string = string>(props: TemplateProps<G>) => {
         return <LogoLine {...(rest as LogoLineProps)} />;
     }
 
-    if (variant === 'granter_logo') {
+    if (variant === 'granter-logo') {
         return <GranterWorkspaceInfo {...(rest as GranterWorkspaceInfoProps)} />;
     }
 
     if (variant === 'granter') {
         return <GranterTemplate {...(rest as GranterTemplateProps)} />;
+    }
+
+    if (variant === 'granter-menu-desktop' || variant === 'granterMenu-desktop') {
+        return <GranterPageMenu {...(rest as GranterPageMenuProps)} />;
+    }
+
+    if (variant === 'granter-search-side') {
+        return <GranterSideSearchBar {...(rest as GranterSideSearchBarProps)} />;
     }
 
     return <PageTemplate {...(rest as PageTemplateProps)} />;

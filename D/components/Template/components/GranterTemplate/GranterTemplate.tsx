@@ -14,7 +14,6 @@ import GranterSimpleDateRange, {
 import GranterHeaderDatePicker, {
     type GranterHeaderDatePickerProps,
 } from './components/GranterHeaderDatePicker/GranterHeaderDatePicker';
-import GranterHeaderSlot, { type GranterHeaderSlotProps } from './components/GranterHeaderSlot/GranterHeaderSlot';
 import GranterSalaryHistoryDatePicker, {
     type GranterSalaryHistoryDatePickerProps,
 } from './components/GranterSalaryHistoryDatePicker/GranterSalaryHistoryDatePicker';
@@ -42,6 +41,9 @@ import GranterHomeContent, {
 import GranterPatternLayout, {
     type GranterPatternLayoutProps,
 } from './components/GranterPatternLayout/GranterPatternLayout';
+import GranterSubSidebar from './components/GranterSubSidebar/GranterSubSidebar';
+import { GranterPageMenu } from './components/GranterPageMenu/GranterPageMenu';
+import GranterSideSearchBar from './components/GranterSideSearchBar/GranterSideSearchBar';
 
 export type GranterTemplateProps = {
     sidebar: React.ReactNode;
@@ -68,7 +70,6 @@ type GranterTemplateCompound = React.FC<GranterTemplateProps> & {
     DateSwaper: React.FC<GranterDateSwaperProps>;
     SimpleDateRange: React.FC<GranterSimpleDateRangeProps>;
     HeaderDatePicker: React.FC<GranterHeaderDatePickerProps>;
-    HeaderSlot: React.FC<GranterHeaderSlotProps>;
     SalaryHistoryDatePicker: React.FC<GranterSalaryHistoryDatePickerProps>;
     WorkspaceInfo: React.FC<GranterWorkspaceInfoProps>;
     HiddenMenuList: React.FC<GranterHiddenMenuListProps>;
@@ -91,7 +92,7 @@ const GranterTemplateRoot: React.FC<GranterTemplateProps> = ({
 }) => (
     <div className={styles.GranterTemplate}>
         <aside className={styles.SidebarArea}>{sidebar}</aside>
-        {subSidebar ? <aside className={styles.SubSidebarArea}>{subSidebar}</aside> : null}
+        {subSidebar ? <GranterSubSidebar>{subSidebar}</GranterSubSidebar> : null}
 
         <div className={styles.ContentArea}>
             {eventBar ? <div className={styles.EventBarArea}>{eventBar}</div> : null}
@@ -116,7 +117,6 @@ const GranterTemplate = Object.assign(GranterTemplateRoot, {
     DateSwaper: GranterDateSwaper,
     SimpleDateRange: GranterSimpleDateRange,
     HeaderDatePicker: GranterHeaderDatePicker,
-    HeaderSlot: GranterHeaderSlot,
     SalaryHistoryDatePicker: GranterSalaryHistoryDatePicker,
     WorkspaceInfo: GranterWorkspaceInfo,
     HiddenMenuList: GranterHiddenMenuList,
@@ -126,6 +126,10 @@ const GranterTemplate = Object.assign(GranterTemplateRoot, {
     WorkspaceSidebar: GranterWorkspaceSidebar,
     HomeContent: GranterHomeContent,
     PatternLayout: GranterPatternLayout,
+    PageMenu : GranterPageMenu,
+    SideSearchBar : GranterSideSearchBar,
+    subSidebar: GranterSubSidebar,
+
 }) as GranterTemplateCompound;
 
 export default GranterTemplate;

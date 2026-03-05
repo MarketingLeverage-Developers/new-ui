@@ -8,7 +8,7 @@ const DEFAULT_LOGO_TEXT = '마케팅레버리지';
 export type GranterWorkspaceInfoProps = {
     imageSrc?: string;
     imageAlt?: string;
-    title: React.ReactNode;
+    text: React.ReactNode;
     meta?: React.ReactNode;
     onClick?: () => void;
     showToggle?: boolean;
@@ -18,7 +18,7 @@ export type GranterWorkspaceInfoProps = {
 const GranterWorkspaceInfo = ({
     imageSrc = Logo,
     imageAlt = DEFAULT_LOGO_ALT,
-    title,
+    text= DEFAULT_LOGO_TEXT,
     meta,
     onClick,
     showToggle,
@@ -29,7 +29,7 @@ const GranterWorkspaceInfo = ({
             {/* {avatar ? <span className={styles.Avatar}>{avatar}</span> : null} */}
             <img className={styles.Avatar} src={imageSrc} alt={imageAlt} />
             <span className={styles.Copy}>
-                <span className={styles.Title}>{title}</span>
+                <span className={styles.Title}>{text}</span>
                 {meta ? <span className={styles.Meta}>{meta}</span> : null}
             </span>
         </button>

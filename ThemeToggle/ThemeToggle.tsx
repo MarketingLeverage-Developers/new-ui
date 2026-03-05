@@ -13,7 +13,7 @@ type ThemeToggleProps = Omit<React.ComponentProps<typeof Toggle>, 'children'> & 
 
 const ThemeToggle = ({ label, defaultValue, onChange, value, onTriggerClick }: ThemeToggleProps) => (
     <Toggle defaultValue={defaultValue} onChange={onChange} value={value}>
-        <Flex align="center" gap={12}>
+        <Flex align="center" gap={12} >
             {label && (
                 <Text fontSize={13} color={getThemeColor('Gray2')}>
                     {label}

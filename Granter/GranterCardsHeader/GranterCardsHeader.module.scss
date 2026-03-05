@@ -1,0 +1,80 @@
+.CardsHeader {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.FirstRow {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.LeftGroup {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-width: 0;
+}
+
+.Title {
+    margin: 0;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 8px;
+    color: #2a3345;
+    font-size: 42px;
+    font-weight: 700;
+    line-height: 1.15;
+}
+
+.Title strong {
+    font-size: inherit;
+    font-weight: inherit;
+}
+
+.Actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.RightGroup {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.SecondRow {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.SortButton {
+    border: 0;
+    padding: 0;
+    background: transparent;
+    color: #55607a;
+    font-size: 14px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+}
+
+@media (max-width: 1024px) {
+    .FirstRow {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .Title {
+        font-size: 34px;
+    }
+
+    .SecondRow {
+        justify-content: flex-start;
+    }
+}

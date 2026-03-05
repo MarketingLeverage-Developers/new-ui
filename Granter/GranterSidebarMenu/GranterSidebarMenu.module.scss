@@ -1,0 +1,127 @@
+.SidebarMenu {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background: #ffffff;
+    color: #1f2a40;
+    border-right: 1px solid #e4e9f1;
+}
+
+.Logo {
+    min-height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 12px 10px;
+    border-bottom: 1px solid #e4e9f1;
+}
+
+.LogoTextGroup {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.LogoTextGroup strong {
+    color: #16253d;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.1;
+}
+
+.LogoTextGroup span {
+    color: #77839a;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.HeaderTrailing {
+    color: #617089;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.MenuNav {
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    overflow-y: auto;
+    padding: 0 8px 12px;
+}
+
+.MenuSection {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.SectionLabel {
+    margin: 0;
+    font-size: 13px;
+    color: #4f5d76;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    padding: 0 6px;
+}
+
+.ItemList {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.ItemButton {
+    min-height: 38px;
+    border: 0;
+    background: transparent;
+    border-radius: 8px;
+    color: #596783;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 0 8px;
+    font-size: 14px;
+    cursor: pointer;
+    text-align: left;
+}
+
+.ItemButton:hover {
+    background: #f4f7fc;
+}
+
+.ItemButtonActive {
+    background: #f1f4f9;
+    color: #101b31;
+    font-weight: 600;
+}
+
+.ItemMain {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.ItemBadge {
+    min-width: 20px;
+    height: 20px;
+    border-radius: 999px;
+    background: #e71f33;
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 0 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.Footer {
+    margin-top: auto;
+    min-height: 56px;
+    border-top: 1px solid #e4e9f1;
+    padding: 8px 12px;
+}

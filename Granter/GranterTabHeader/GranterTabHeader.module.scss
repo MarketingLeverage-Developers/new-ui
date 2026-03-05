@@ -1,0 +1,68 @@
+.TabHeader {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.HeaderRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.TitleGroup {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.TitleGroup h2 {
+    margin: 0;
+    color: #15253e;
+    font-size: 39px;
+    font-weight: 700;
+    line-height: 1.1;
+}
+
+.SettingButton {
+    width: 30px;
+    height: 30px;
+    border: 0;
+    background: transparent;
+    color: #5c667b;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.SettingButton:hover {
+    background: #f0f3f8;
+}
+
+.ActionGroup {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.TabRow {
+    display: inline-flex;
+    align-items: center;
+    border-bottom: 1px solid #e6eaf1;
+    gap: 2px;
+}
+
+.TabButton {
+    border-radius: 0;
+    min-height: 42px;
+    color: #5c667b;
+}
+
+.TabButtonActive {
+    color: #15253e;
+    font-weight: 700;
+    border-bottom: 2px solid #15253e;
+}
