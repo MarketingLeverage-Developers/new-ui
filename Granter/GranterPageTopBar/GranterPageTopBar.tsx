@@ -24,8 +24,9 @@ const GranterPageTopBar = ({
     <div className={[styles.TopBar, className ?? ''].filter(Boolean).join(' ')}>
         <div className={styles.LeftSection}>
             <GranterBaseButton
-                variant="outline"
-                size="icon"
+                width={40}
+                height={40}
+                padding={0}
                 className={styles.RoundButton}
                 aria-label="뒤로가기"
                 onClick={onBackClick}

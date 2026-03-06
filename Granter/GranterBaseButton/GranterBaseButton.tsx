@@ -1,45 +1,46 @@
-import React from 'react';
+import React, { forwardRef, type ButtonHTMLAttributes } from 'react';
+import classNames from 'classnames';
 import styles from './GranterBaseButton.module.scss';
 
-export type GranterBaseButtonVariant = 'solid' | 'outline' | 'ghost' | 'soft';
-export type GranterBaseButtonSize = 'sm' | 'md' | 'lg' | 'icon';
+import type { CSSLength } from '../../shared/types/css/CSSLength';
+import type { CSSVariables } from '../../shared/types/css/CSSVariables';
+import type { PaddingSize } from '../../shared/types/css/PaddingSize';
+import { toCssUnit } from '../../shared/utils/css/toCssUnit';
+import { toCssPadding } from '../../shared/utils/css/toCssPadding';
+import type { HexColor } from '../../shared/types/css/HexColor';
+import type { ThemeColorVar } from '../../shared/types/css/ThemeColorTokens';
 
-export type GranterBaseButtonProps = Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'color'> & {
-    variant?: GranterBaseButtonVariant;
-    size?: GranterBaseButtonSize;
-    leftIcon?: React.ReactNode;
-    rightIcon?: React.ReactNode;
-    fullWidth?: boolean;
-};
+export type GranterBaseButtonProps = {
+    padding?: PaddingSize;
+    fontSize?: CSSLength;
+    width?: CSSLength;
+    height?: CSSLength;
+    bgColor?: HexColor | ThemeColorVar;
+    textColor?: HexColor | ThemeColorVar;
+    gradient?: boolean;
+    radius?: CSSLength;
+} & ButtonHTMLAttributes<HTMLButtonElement>;
 
-const GranterBaseButton = ({
-    variant = 'outline',
-    size = 'md',
-    leftIcon,
-    rightIcon,
-    fullWidth = false,
-    className,
-    children,
-    type = 'button',
-    ...rest
-}: GranterBaseButtonProps) => {
-    const classes = [
-        styles.BaseButton,
-        styles[`Variant${variant.charAt(0).toUpperCase()}${variant.slice(1)}`],
-        styles[`Size${size.charAt(0).toUpperCase()}${size.slice(1)}`],
-        fullWidth ? styles.FullWidth : '',
-        className ?? '',
-    ]
-        .filter(Boolean)
-        .join(' ');
+const GranterBaseButton = forwardRef<HTMLButtonElement, GranterBaseButtonProps>(
+    ({ padding, fontSize, width, height, bgColor, textColor, radius, gradient, className, ...props }, ref) => {
+        const cssVariables: CSSVariables = {
+            '--font-size': fontSize != null ? toCssUnit(fontSize) : undefined,
+            '--padding': padding != null ? toCssPadding(padding) : undefined,
+            '--width': width != null ? toCssUnit(width) : undefined,
+            '--height': height != null ? toCssUnit(height) : undefined,
+            '--color': textColor,
+            '--background-color': bgColor,
+            '--border-radius': radius != null ? toCssUnit(radius) : undefined,
+        };
 
-    return (
-        <button type={type} className={classes} {...rest}>
-            {leftIcon ? <span className={styles.Icon}>{leftIcon}</span> : null}
-            {children ? <span className={styles.Label}>{children}</span> : null}
-            {rightIcon ? <span className={styles.Icon}>{rightIcon}</span> : null}
-        </button>
-    );
-};
+        const buttonClassName = classNames(styles.BaseButton, className, {
+            [styles.Gradient]: gradient,
+            [styles.Disabled]: props.disabled,
+        });
 
+        return <button ref={ref} {...props} className={buttonClassName} style={{ ...cssVariables, ...props.style }} />;
+    }
+);
+
+GranterBaseButton.displayName = 'GranterBaseButton';
 export default GranterBaseButton;

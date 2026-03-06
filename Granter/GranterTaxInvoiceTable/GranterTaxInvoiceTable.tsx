@@ -1,5 +1,5 @@
 import React from 'react';
-import GranterBaseButton, { type GranterBaseButtonVariant } from '../GranterBaseButton/GranterBaseButton';
+import GranterBaseButton from '../GranterBaseButton/GranterBaseButton';
 import GranterTaxInvoiceStatusChip, {
     type GranterTaxInvoiceStatusTone,
 } from '../GranterTaxInvoiceStatusChip/GranterTaxInvoiceStatusChip';
@@ -17,7 +17,7 @@ export type GranterTaxInvoiceRow = {
     supplyAmount: React.ReactNode;
     taxAmount: React.ReactNode;
     actionLabel?: React.ReactNode;
-    actionVariant?: GranterBaseButtonVariant;
+    actionVariant?: 'solid' | 'outline' | 'ghost' | 'soft';
     actionDisabled?: boolean;
 };
 
@@ -52,43 +52,60 @@ const GranterTaxInvoiceTable = ({
             </thead>
             <tbody>
                 {rows.length ? (
-                    rows.map((row) => (
-                        <tr key={row.key} onClick={() => onRowClick?.(row)}>
-                            <td>{row.issuedAt}</td>
-                            <td>{row.partnerName}</td>
-                            <td>{row.memo}</td>
-                            <td className={styles.Center}>
-                                <GranterTaxInvoiceStatusChip
-                                    tone={row.statusTone ?? 'neutral'}
-                                    label={row.statusLabel}
-                                    pulse={row.statusPulse}
-                                />
-                            </td>
-                            <td className={styles.Right}>{row.totalAmount}</td>
-                            <td className={styles.Right}>{row.supplyAmount}</td>
-                            <td className={styles.Right}>{row.taxAmount}</td>
-                            <td className={styles.Center}>
-                                {row.actionLabel ? (
-                                    <div
-                                        onClick={(event) => {
-                                            event.stopPropagation();
-                                        }}
-                                    >
-                                        <GranterBaseButton
-                                            variant={row.actionVariant ?? 'outline'}
-                                            size="sm"
-                                            disabled={row.actionDisabled}
-                                            onClick={() => onActionClick?.(row)}
+                    rows.map((row) => {
+                        const actionVariant = row.actionVariant ?? 'outline';
+                        const actionTheme =
+                            actionVariant === 'solid'
+                                ? { bgColor: '#191b20', textColor: '#ffffff', borderColor: '#191b20' }
+                                : actionVariant === 'ghost'
+                                  ? { bgColor: 'transparent', textColor: '#55607a', borderColor: 'transparent' }
+                                  : actionVariant === 'soft'
+                                    ? { bgColor: '#f1f3f7', textColor: '#354057', borderColor: '#f1f3f7' }
+                                    : { bgColor: '#ffffff', textColor: '#2a3345', borderColor: '#d6dae3' };
+
+                        return (
+                            <tr key={row.key} onClick={() => onRowClick?.(row)}>
+                                <td>{row.issuedAt}</td>
+                                <td>{row.partnerName}</td>
+                                <td>{row.memo}</td>
+                                <td className={styles.Center}>
+                                    <GranterTaxInvoiceStatusChip
+                                        tone={row.statusTone ?? 'neutral'}
+                                        label={row.statusLabel}
+                                        pulse={row.statusPulse}
+                                    />
+                                </td>
+                                <td className={styles.Right}>{row.totalAmount}</td>
+                                <td className={styles.Right}>{row.supplyAmount}</td>
+                                <td className={styles.Right}>{row.taxAmount}</td>
+                                <td className={styles.Center}>
+                                    {row.actionLabel ? (
+                                        <div
+                                            onClick={(event) => {
+                                                event.stopPropagation();
+                                            }}
                                         >
-                                            {row.actionLabel}
-                                        </GranterBaseButton>
-                                    </div>
-                                ) : (
-                                    <span className={styles.EmptyAction}>-</span>
-                                )}
-                            </td>
-                        </tr>
-                    ))
+                                            <GranterBaseButton
+                                                height={34}
+                                                padding={{ x: 12, y: 0 }}
+                                                fontSize={13}
+                                                radius={9}
+                                                bgColor={actionTheme.bgColor}
+                                                textColor={actionTheme.textColor}
+                                                style={{ borderColor: actionTheme.borderColor }}
+                                                disabled={row.actionDisabled}
+                                                onClick={() => onActionClick?.(row)}
+                                            >
+                                                {row.actionLabel}
+                                            </GranterBaseButton>
+                                        </div>
+                                    ) : (
+                                        <span className={styles.EmptyAction}>-</span>
+                                    )}
+                                </td>
+                            </tr>
+                        );
+                    })
                 ) : (
                     <tr>
                         <td colSpan={8} className={styles.EmptyRow}>

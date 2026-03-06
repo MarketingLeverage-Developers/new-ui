@@ -47,7 +47,16 @@ const GranterAssetCardGrid = ({
             <article key={card.key} className={styles.Card}>
                 <header className={styles.CardHeader}>
                     <h3>{card.title}</h3>
-                    <GranterBaseButton variant="soft" size="sm" onClick={() => onViewAllClick?.(card.key)}>
+                    <GranterBaseButton
+                        bgColor="#f1f3f7"
+                        textColor="#354057"
+                        height={34}
+                        padding={{ x: 12, y: 0 }}
+                        fontSize={13}
+                        radius={9}
+                        style={{ borderColor: '#f1f3f7' }}
+                        onClick={() => onViewAllClick?.(card.key)}
+                    >
                         {card.viewAllLabel ?? defaultViewAllLabel}
                     </GranterBaseButton>
                 </header>

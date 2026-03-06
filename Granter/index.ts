@@ -1,9 +1,17 @@
 export { default as GranterBaseButton } from './GranterBaseButton/GranterBaseButton';
+export type { GranterBaseButtonProps } from './GranterBaseButton/GranterBaseButton';
+
+export { default as GranterBaseBox } from './GranterBaseBox/GranterBaseBox';
 export type {
-    GranterBaseButtonProps,
-    GranterBaseButtonSize,
-    GranterBaseButtonVariant,
-} from './GranterBaseButton/GranterBaseButton';
+    GranterBaseBoxDirection,
+    GranterBaseBoxAlign,
+    GranterBaseBoxJustify,
+    GranterBaseBoxWrap,
+    GranterBaseBoxProps,
+} from './GranterBaseBox/GranterBaseBox';
+
+export { default as GranterBaseText } from './GranterBaseText/GranterBaseText';
+export type { GranterBaseTextProps } from './GranterBaseText/GranterBaseText';
 
 export { default as GranterPageTopBar } from './GranterPageTopBar/GranterPageTopBar';
 export type { GranterPageTopBarProps } from './GranterPageTopBar/GranterPageTopBar';

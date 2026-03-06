@@ -50,10 +50,15 @@ const GranterFilterToolbar = ({
                 ) : null}
             </div>
 
-            <GranterBaseButton variant="soft" size="md" onClick={onBulkEditClick}>
+            <GranterBaseButton bgColor="#f1f3f7" textColor="#354057" style={{ borderColor: '#f1f3f7' }} onClick={onBulkEditClick}>
                 다중 수정
             </GranterBaseButton>
-            <GranterBaseButton variant="soft" size="md" onClick={onAutoCategorizeClick}>
+            <GranterBaseButton
+                bgColor="#f1f3f7"
+                textColor="#354057"
+                style={{ borderColor: '#f1f3f7' }}
+                onClick={onAutoCategorizeClick}
+            >
                 분류 자동화
             </GranterBaseButton>
         </div>
@@ -74,21 +79,19 @@ const GranterFilterToolbar = ({
                 <span className={styles.ToggleText}>제외내역 보기</span>
             </label>
 
-            <GranterBaseButton
-                variant="outline"
-                size="md"
-                leftIcon={<FiDownload size={16} />}
-                onClick={onDownloadClick}
-            >
+            <GranterBaseButton onClick={onDownloadClick}>
+                <FiDownload size={16} />
                 {downloadLabel}
             </GranterBaseButton>
             <GranterBaseButton
-                variant="outline"
-                size="icon"
-                leftIcon={<FiSettings size={17} />}
+                width={40}
+                height={40}
+                padding={0}
                 aria-label="필터 설정"
                 onClick={onSettingClick}
-            />
+            >
+                <FiSettings size={17} />
+            </GranterBaseButton>
         </div>
     </section>
 );

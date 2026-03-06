@@ -35,7 +35,16 @@ const GranterGuideModal = ({
             <div className={styles.Modal}>
                 <header className={styles.Header}>
                     <h3>{title}</h3>
-                    <GranterBaseButton variant="ghost" size="sm" onClick={onClose}>
+                    <GranterBaseButton
+                        bgColor="transparent"
+                        textColor="#55607a"
+                        height={34}
+                        padding={{ x: 12, y: 0 }}
+                        fontSize={13}
+                        radius={9}
+                        style={{ border: 'none' }}
+                        onClick={onClose}
+                    >
                         {closeLabel}
                     </GranterBaseButton>
                 </header>

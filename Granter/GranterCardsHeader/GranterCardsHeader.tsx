@@ -39,16 +39,18 @@ const GranterCardsHeader = ({
                 </h2>
                 <div className={styles.Actions}>
                     <GranterBaseButton
-                        variant="outline"
-                        size="icon"
+                        width={40}
+                        height={40}
+                        padding={0}
                         aria-label="새로고침"
                         onClick={onRefreshClick}
-                        leftIcon={<FiRefreshCw size={16} />}
-                    />
-                    <GranterBaseButton variant="outline" size="icon" aria-label="일시정지" onClick={onPauseClick}>
+                    >
+                        <FiRefreshCw size={16} />
+                    </GranterBaseButton>
+                    <GranterBaseButton width={40} height={40} padding={0} aria-label="일시정지" onClick={onPauseClick}>
                         {'||'}
                     </GranterBaseButton>
-                    <GranterBaseButton variant="solid" size="md" onClick={onViewAllClick}>
+                    <GranterBaseButton bgColor="#191b20" textColor="#ffffff" style={{ borderColor: '#191b20' }} onClick={onViewAllClick}>
                         전체내역
                     </GranterBaseButton>
                 </div>
@@ -56,12 +58,8 @@ const GranterCardsHeader = ({
 
             <div className={styles.RightGroup}>
                 {rightSlot}
-                <GranterBaseButton
-                    variant="outline"
-                    size="md"
-                    onClick={onDownloadClick}
-                    leftIcon={<FiDownload size={16} />}
-                >
+                <GranterBaseButton onClick={onDownloadClick}>
+                    <FiDownload size={16} />
                     {downloadLabel}
                 </GranterBaseButton>
             </div>

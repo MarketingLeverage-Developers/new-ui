@@ -44,10 +44,15 @@ const GranterTabHeader = ({
                 return (
                     <GranterBaseButton
                         key={tab.key}
-                        size="sm"
-                        variant="ghost"
+                        height={42}
+                        padding={{ x: 12, y: 0 }}
+                        fontSize={13}
+                        radius={0}
+                        bgColor="transparent"
+                        textColor="#5c667b"
                         role="tab"
                         aria-selected={isActive}
+                        style={{ border: 'none' }}
                         className={[styles.TabButton, isActive ? styles.TabButtonActive : ''].filter(Boolean).join(' ')}
                         onClick={() => onTabChange?.(tab.key)}
                     >
