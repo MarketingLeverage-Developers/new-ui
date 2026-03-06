@@ -2,7 +2,7 @@
     width: 378px;
     padding: 16px 18px 18px;
     border-radius: 18px;
-    background: #fff;
+    background: var(--White1);
     box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
     border: 1px solid var(--Gray7);
     .RdpRoot {
@@ -146,7 +146,7 @@
     border: none;
     border-radius: inherit;
     background: transparent;
-    color: inherit;
+    // color: inherit;
     font: inherit;
     cursor: pointer;
 }
@@ -169,12 +169,12 @@
 .DaySelected {
     background: var(--Primary1, #1e67ff);
     border: 1px solid var(--Primary1, #1e67ff);
-    color: #fff;
+    color:var(--White1);
     font-weight: 600;
 }
 
 .DaySelected .DayButton {
-    color: #fff;
+    color: var(--White1);
 }
 
 .DayDisabled .DayButton {

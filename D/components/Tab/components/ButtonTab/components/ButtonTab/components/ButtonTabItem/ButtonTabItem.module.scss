@@ -17,7 +17,7 @@
     font-weight: 500;
     line-height: 1;
 
-    color: #8b8b8b;
+    color: var(--text-color, #8b8b8b);
 
     cursor: pointer;
 
@@ -35,4 +35,5 @@
     background: var(--active-bg, var(--Primary6)); /* 스샷의 연파랑 배경 */
     border-color: var(--active-border, var(--Primary1)); /* 파란 테두리 */
     color: var(--active-text-color, var(--Primary1)); /* 파란 텍스트 */
+    --text-color: var(--active-text-color, var(--Primary1));
 }
