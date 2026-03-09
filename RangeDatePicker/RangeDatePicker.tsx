@@ -9,7 +9,7 @@ import { IoCaretBackSharp, IoCaretForwardSharp } from 'react-icons/io5';
 import { useDropdown } from '../shared/headless/Dropdown/Dropdown';
 import Select from '../shared/headless/Select/Select';
 
-type PresetKey =
+export type RangeDatePickerPresetKey =
     | 'YESTERDAY'
     | 'TODAY'
     | 'THIS_MONTH'
@@ -25,9 +25,12 @@ type PresetKey =
     | 'Q3'
     | 'Q4';
 
+type PresetKey = RangeDatePickerPresetKey;
+
 type RangeDatePickerProps = {
     range: DateRange;
     onChange: (r: DateRange | undefined) => void;
+    onPresetSelect?: (key: PresetKey) => void;
 } & Omit<DayPickerProps, 'mode' | 'selected' | 'onSelect' | 'month' | 'numberOfMonths'>;
 
 const YearMenu = ({ years, activeValue }: { years: number[]; activeValue: string }) => {
@@ -70,7 +73,7 @@ const MonthMenu = ({ months, activeValue }: { months: number[]; activeValue: str
     );
 };
 
-const RangeDatePicker = ({ range, onChange, ...props }: RangeDatePickerProps) => {
+const RangeDatePicker = ({ range, onChange, onPresetSelect, ...props }: RangeDatePickerProps) => {
     const [currentMonth, setCurrentMonth] = useState<Date>(range?.from ?? new Date());
     const [tempRange, setTempRange] = useState<DateRange | undefined>(range);
 
@@ -275,6 +278,7 @@ const RangeDatePicker = ({ range, onChange, ...props }: RangeDatePickerProps) =>
     const handleClickPreset = (key: PresetKey) => {
         const next = presetRanges[key];
 
+        onPresetSelect?.(key);
         commitRange(next);
         setCurrentMonth(next.from ?? new Date());
 
