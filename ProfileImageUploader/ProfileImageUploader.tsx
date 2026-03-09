@@ -12,6 +12,30 @@ type ProfileImageUploaderProps = {
     maxSize?: number;
 };
 
+const getApiOrigin = (): string => {
+    if (typeof window !== 'undefined' && window.runtimeConfig?.VITE_API_URL) {
+        return window.runtimeConfig.VITE_API_URL;
+    }
+
+    return import.meta.env.VITE_API_URL ?? '';
+};
+
+const resolveImageSrc = (src?: string): string => {
+    if (!src) return '';
+    if (/^(https?:)?\/\//i.test(src) || src.startsWith('data:') || src.startsWith('blob:')) {
+        return src;
+    }
+
+    const apiOrigin = getApiOrigin();
+    if (!apiOrigin) return src;
+
+    if (src.startsWith('/api/')) {
+        return `${apiOrigin}${src}`;
+    }
+
+    return `${apiOrigin}/api${src.startsWith('/') ? '' : '/'}${src}`;
+};
+
 const normalize = (arr: ImageItemInput[], fileFallbackName?: string): ImageItemInput[] => {
     const used = new Set<string>();
     return arr.map((it, idx) => {
@@ -37,6 +61,7 @@ const ProfileImageUploader: React.FC<ProfileImageUploaderProps> = ({
 }) => {
     const isControlled = value !== undefined;
     const [internalItems, setInternalItems] = useState<ImageItem[]>([]);
+    const [isImageLoadFailed, setIsImageLoadFailed] = useState(false);
 
     const ownedObjectUrlRef = useRef<string | null>(null);
     const inputRef = useRef<HTMLInputElement | null>(null);
@@ -45,7 +70,7 @@ const ProfileImageUploader: React.FC<ProfileImageUploaderProps> = ({
         if (ownedObjectUrlRef.current) {
             try {
                 URL.revokeObjectURL(ownedObjectUrlRef.current);
-            } catch (e) {
+            } catch {
                 //
             }
             ownedObjectUrlRef.current = null;
@@ -54,7 +79,12 @@ const ProfileImageUploader: React.FC<ProfileImageUploaderProps> = ({
     useEffect(() => () => revokeOwned(), []);
 
     const first = isControlled ? (value?.[0] as ImageItem | undefined) : internalItems[0];
-    const src = first?.url;
+    const rawSrc = first?.url || (typeof first?.id === 'string' ? first.id : '');
+    const src = resolveImageSrc(rawSrc);
+
+    useEffect(() => {
+        setIsImageLoadFailed(false);
+    }, [src]);
 
     const handleClick = () => {
         if (!disabled) inputRef.current?.click();
@@ -111,9 +141,15 @@ const ProfileImageUploader: React.FC<ProfileImageUploaderProps> = ({
     return (
         <div className={styles.ProfileImageUploader} data-disabled={disabled ? 'true' : 'false'}>
             <div className={styles.ImageWrapper} onClick={handleClick} role="button" aria-disabled={disabled}>
-                {src ? (
+                {src && !isImageLoadFailed ? (
                     <div className={styles.Image}>
-                        <img src={src} alt="이미지 업로드" />
+                        <img
+                            src={src}
+                            alt={first?.name || '이미지 업로드'}
+                            onError={() => {
+                                setIsImageLoadFailed(true);
+                            }}
+                        />
                     </div>
                 ) : (
                     <div className={styles.Placeholder}>이미지 없음</div>

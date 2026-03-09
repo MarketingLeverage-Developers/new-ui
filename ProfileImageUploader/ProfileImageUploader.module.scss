@@ -21,11 +21,13 @@
 .Image {
     width: 100%;
     height: 100%;
+}
+
+.Image img {
+    width: 100%;
+    height: 100%;
     object-fit: cover;
-    // display: flex;
-    // justify-content: center;
-    // align-items: center;
-    // padding: 20px;
+    display: block;
 }
 
 .Placeholder {
