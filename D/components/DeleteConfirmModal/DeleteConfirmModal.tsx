@@ -30,7 +30,7 @@ export const DeleteConfirmModal = <T,>({ open, onClose, onConfirm, toastText = '
         } else {
             addToast({
                 icon: '❌',
-                message: `${toastText} 삭제에 실패하였습니다.`,
+                message: res.message || `${toastText} 삭제에 실패하였습니다.`,
                 duration: 2400,
                 dismissible: true,
             });
