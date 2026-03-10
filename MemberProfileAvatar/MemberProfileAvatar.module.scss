@@ -1,0 +1,37 @@
+.MemberProfileAvatar {
+    --avatar-size: 24px;
+    --avatar-font-size: 11px;
+    --avatar-bg-color: var(--Gray3);
+
+    width: var(--avatar-size);
+    height: var(--avatar-size);
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex-shrink: 0;
+    background-color: transparent;
+    color: var(--White1);
+    font-size: var(--avatar-font-size);
+    font-weight: 600;
+    line-height: 1;
+    user-select: none;
+}
+
+.Fallback {
+    background-color: var(--avatar-bg-color);
+}
+
+.Image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border: none;
+    background: none;
+}
+
+.FallbackText {
+    transform: translateY(-0.5px);
+}
