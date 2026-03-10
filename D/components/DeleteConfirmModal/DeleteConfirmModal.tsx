@@ -11,9 +11,17 @@ type Props<T> = {
     onConfirm: () => Promise<Result<T>>;
     toastText?: string;
     zIndex?: number;
+    useResponseMessage?: boolean;
 };
 
-export const DeleteConfirmModal = <T,>({ open, onClose, onConfirm, toastText = '내역', zIndex }: Props<T>) => {
+export const DeleteConfirmModal = <T,>({
+    open,
+    onClose,
+    onConfirm,
+    toastText = '내역',
+    zIndex,
+    useResponseMessage = false,
+}: Props<T>) => {
     const { addToast } = useToast();
     const zIndexOffset = zIndex ?? 0;
 
@@ -30,7 +38,7 @@ export const DeleteConfirmModal = <T,>({ open, onClose, onConfirm, toastText = '
         } else {
             addToast({
                 icon: '❌',
-                message: res.message || `${toastText} 삭제에 실패하였습니다.`,
+                message: useResponseMessage ? res.message || `${toastText} 삭제에 실패하였습니다.` : `${toastText} 삭제에 실패하였습니다.`,
                 duration: 2400,
                 dismissible: true,
             });
