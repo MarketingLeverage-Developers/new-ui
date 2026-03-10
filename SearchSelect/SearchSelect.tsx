@@ -9,6 +9,7 @@ import { QuerySearch } from '../shared/headless/QuerySearch/QuerySearch';
 export type SelectItem = {
     label: string;
     uuid: string;
+    memberProfileUrl?: string;
 };
 
 type SearchSelectProps = {

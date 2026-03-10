@@ -14,9 +14,10 @@ type SelectProps = {
     height?: string | number;
     maxHeight?: string | number;
     textSize?: string | number;
+    children?: (item: SelectItem) => React.ReactNode;
 };
 
-const Select = ({ height = 120, maxHeight = 240, textSize = 14 }: SelectProps) => {
+const Select = ({ height = 120, maxHeight = 240, textSize = 14, children }: SelectProps) => {
     const { open, isOpen, close } = useDropdown();
     const { query, data, setQuery } = useQuerySearch<SelectItem>();
     const { isActive, changeSelectValue } = useSelect();
@@ -51,7 +52,7 @@ const Select = ({ height = 120, maxHeight = 240, textSize = 14 }: SelectProps) =
     // 모달이 닫힌 상태인데 query 값 갱신되면
     useEffect(() => {
         if (!isOpen && query.length > 1) open();
-    }, [query]);
+    }, [isOpen, open, query]);
 
     return (
         <Dropdown.Content matchTriggerWidth>
@@ -66,7 +67,7 @@ const Select = ({ height = 120, maxHeight = 240, textSize = 14 }: SelectProps) =
                     {uniqueFiltered.map((item) => (
                         <ManySelect.Item key={item.uuid} value={item.uuid}>
                             <div className={styles.Item} onClick={() => onSelectHandler(item.uuid)}>
-                                <span>{item.label}</span>
+                                {children ? children(item) : <span>{item.label}</span>}
                             </div>
                         </ManySelect.Item>
                     ))}
