@@ -187,7 +187,11 @@
     padding: 0;
     cursor: pointer;
     z-index: 6;
-    transition: color 0.16s ease;
+    transition:
+        color 0.16s ease,
+        border-color 0.16s ease,
+        background-color 0.16s ease,
+        box-shadow 0.16s ease;
 }
 
 .SidebarToggle:hover {
@@ -217,7 +221,11 @@
     cursor: pointer;
     z-index: 6;
     box-shadow: 0 2px 8px rgb(17 24 39 / 12%);
-    transition: color 0.16s ease;
+    transition:
+        color 0.16s ease,
+        border-color 0.16s ease,
+        background-color 0.16s ease,
+        box-shadow 0.16s ease;
 }
 
 .SubSidebarToggle:hover {
@@ -232,7 +240,15 @@
 }
 
 .PageTemplate[data-theme='dark'] .SidebarToggle {
-    color: var(--granter-gray-200);
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: var(--granter-black);
+    box-shadow: none;
+}
+
+.PageTemplate[data-theme='dark'] .SidebarToggle:hover {
+    color: var(--granter-gray-700);
 }
 
 .PageTemplate[data-theme='dark'] .HeaderSidebarOpenButton {
@@ -244,24 +260,42 @@
 }
 
 .PageTemplate[data-theme='dark'] .SubSidebarToggle {
-    border-color: var(--granter-gray-600);
-    background: var(--granter-gray-800);
-    color: var(--granter-gray-200);
+    border-color: var(--granter-gray-500);
+    background: var(--granter-gray-700);
+    color: var(--granter-gray-100);
+    box-shadow: 0 3px 10px rgb(0 0 0 / 28%);
+}
+
+.PageTemplate[data-theme='dark'] .SubSidebarToggle:hover {
+    color: var(--granter-white);
+    border-color: var(--granter-gray-300);
+    background: var(--granter-gray-600);
+    box-shadow: 0 4px 12px rgb(0 0 0 / 34%);
 }
 
 .PageTemplate[data-theme='dark'] .SidebarOverlayPanel {
     border-right-color: var(--granter-gray-700);
     background-color: var(--granter-gray-900);
+    box-shadow: 0 8px 20px rgb(0 0 0 / 30%);
 }
 
 .PageTemplate[data-theme='dark'] .SubSidebarOverlayPanel {
     border-right-color: var(--granter-gray-700);
     background-color: var(--granter-gray-900);
+    box-shadow: 0 8px 20px rgb(0 0 0 / 30%);
 }
 
 @media (prefers-color-scheme: dark) {
     .PageTemplate[data-theme='system'] .SidebarToggle {
-        color: var(--granter-gray-200);
+        border: 0;
+        border-radius: 0;
+        background: transparent;
+        color: var(--granter-black);
+        box-shadow: none;
+    }
+
+    .PageTemplate[data-theme='system'] .SidebarToggle:hover {
+        color: var(--granter-gray-700);
     }
 
     .PageTemplate[data-theme='system'] .HeaderSidebarOpenButton {
@@ -273,19 +307,29 @@
     }
 
     .PageTemplate[data-theme='system'] .SubSidebarToggle {
-        border-color: var(--granter-gray-600);
-        background: var(--granter-gray-800);
-        color: var(--granter-gray-200);
+        border-color: var(--granter-gray-500);
+        background: var(--granter-gray-700);
+        color: var(--granter-gray-100);
+        box-shadow: 0 3px 10px rgb(0 0 0 / 28%);
+    }
+
+    .PageTemplate[data-theme='system'] .SubSidebarToggle:hover {
+        color: var(--granter-white);
+        border-color: var(--granter-gray-300);
+        background: var(--granter-gray-600);
+        box-shadow: 0 4px 12px rgb(0 0 0 / 34%);
     }
 
     .PageTemplate[data-theme='system'] .SidebarOverlayPanel {
         border-right-color: var(--granter-gray-700);
         background-color: var(--granter-gray-900);
+        box-shadow: 0 8px 20px rgb(0 0 0 / 30%);
     }
 
     .PageTemplate[data-theme='system'] .SubSidebarOverlayPanel {
         border-right-color: var(--granter-gray-700);
         background-color: var(--granter-gray-900);
+        box-shadow: 0 8px 20px rgb(0 0 0 / 30%);
     }
 }
 
