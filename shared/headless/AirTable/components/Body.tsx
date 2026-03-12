@@ -139,8 +139,10 @@ type BodyProps = {
     className?: string;
     style?: React.CSSProperties;
     rowClassName?: string;
+    rowSelectedClassName?: string;
     cellClassName?: string;
     selectedCellClassName?: string;
+    activeCellClassName?: string;
     detailRowClassName?: string;
     detailCellClassName?: string;
 };
@@ -149,8 +151,10 @@ export const Body = <T,>({
     className,
     style,
     rowClassName,
+    rowSelectedClassName,
     cellClassName,
     selectedCellClassName,
+    activeCellClassName,
     detailRowClassName,
     detailCellClassName,
 }: BodyProps) => {
@@ -161,6 +165,8 @@ export const Body = <T,>({
         state,
         baseOrder,
         gridTemplateColumns,
+        selection,
+        getRange,
         getShiftStyle,
         getPinnedStyle,
         setSelection,
@@ -303,6 +309,13 @@ export const Body = <T,>({
     const INDENT_PX = 24;
     const indentTargetKey = pinnedColumnKeys[0] ?? baseOrder[0];
 
+    const range = getRange();
+    const activeCell = selection.start;
+    const isSingleCellSelection =
+        range !== null &&
+        range.top === range.bottom &&
+        range.left === range.right;
+
     return (
         <div
             className={className}
@@ -325,6 +338,13 @@ export const Body = <T,>({
                                 const actualRi = rowIndexOffset + ri;
                                 const rowStyleRaw = getRowStyle?.(row.item, actualRi) ?? {};
                                 const rowKey = row.key;
+                                const rowInSelection =
+                                    range !== null && actualRi >= range.top && actualRi <= range.bottom;
+                                const rowSelected =
+                                    rowInSelection &&
+                                    range !== null &&
+                                    range.left <= 0 &&
+                                    range.right >= baseOrder.length - 1;
 
                                 const canExpand =
                                     !!detailRenderer && (getRowCanExpand ? getRowCanExpand(row.item, actualRi) : true);
@@ -358,7 +378,12 @@ export const Body = <T,>({
                                                 duration: 0.26,
                                                 ease: [0.22, 1, 0.36, 1],
                                             }}
-                                            className={rowClassName}
+                                            className={[
+                                                rowClassName ?? '',
+                                                rowSelected ? (rowSelectedClassName ?? '') : '',
+                                            ].join(' ')}
+                                            data-row-selected={rowSelected ? 'true' : 'false'}
+                                            data-row-in-selection={rowInSelection ? 'true' : 'false'}
                                             style={{
                                                 display: 'grid',
                                                 gridTemplateColumns,
@@ -371,6 +396,18 @@ export const Body = <T,>({
 
                                                 const selected = isCellSelected(actualRi, ci);
                                                 const cellBg = selected ? undefined : rowBg ? rowBg : undefined;
+                                                const active =
+                                                    isSingleCellSelection &&
+                                                    activeCell?.ri === actualRi &&
+                                                    activeCell?.ci === ci;
+                                                const isTopEdge =
+                                                    selected && range !== null && actualRi === range.top;
+                                                const isBottomEdge =
+                                                    selected && range !== null && actualRi === range.bottom;
+                                                const isLeftEdge =
+                                                    selected && range !== null && ci === range.left;
+                                                const isRightEdge =
+                                                    selected && range !== null && ci === range.right;
 
                                                 const isIndentTarget = colKey === indentTargetKey;
                                                 const indentPadding = isChild ? row.level * INDENT_PX : 0;
@@ -381,7 +418,14 @@ export const Body = <T,>({
                                                     className: [
                                                         cellClassName ?? '',
                                                         selected ? (selectedCellClassName ?? '') : '',
+                                                        active ? (activeCellClassName ?? '') : '',
                                                     ].join(' '),
+                                                    'data-cell-selected': selected ? 'true' : 'false',
+                                                    'data-cell-active': active ? 'true' : 'false',
+                                                    'data-cell-edge-top': isTopEdge ? 'true' : 'false',
+                                                    'data-cell-edge-bottom': isBottomEdge ? 'true' : 'false',
+                                                    'data-cell-edge-left': isLeftEdge ? 'true' : 'false',
+                                                    'data-cell-edge-right': isRightEdge ? 'true' : 'false',
                                                     onMouseDown: (e: React.MouseEvent) => {
                                                         if (drag.draggingKey) return;
                                                         if (e.button !== 0) return;
@@ -474,6 +518,13 @@ export const Body = <T,>({
                             const actualRi = rowIndexOffset + ri;
                             const rowStyleRaw = getRowStyle?.(row.item, actualRi) ?? {};
                             const rowKey = row.key;
+                            const rowInSelection =
+                                range !== null && actualRi >= range.top && actualRi <= range.bottom;
+                            const rowSelected =
+                                rowInSelection &&
+                                range !== null &&
+                                range.left <= 0 &&
+                                range.right >= baseOrder.length - 1;
 
                             const canExpand =
                                 !!detailRenderer && (getRowCanExpand ? getRowCanExpand(row.item, actualRi) : true);
@@ -498,7 +549,12 @@ export const Body = <T,>({
                             return (
                                 <React.Fragment key={rowKey}>
                                     <div
-                                        className={rowClassName}
+                                        className={[
+                                            rowClassName ?? '',
+                                            rowSelected ? (rowSelectedClassName ?? '') : '',
+                                        ].join(' ')}
+                                        data-row-selected={rowSelected ? 'true' : 'false'}
+                                        data-row-in-selection={rowInSelection ? 'true' : 'false'}
                                         style={{
                                             display: 'grid',
                                             gridTemplateColumns,
@@ -511,6 +567,18 @@ export const Body = <T,>({
 
                                             const selected = isCellSelected(actualRi, ci);
                                             const cellBg = selected ? undefined : rowBg ? rowBg : undefined;
+                                            const active =
+                                                isSingleCellSelection &&
+                                                activeCell?.ri === actualRi &&
+                                                activeCell?.ci === ci;
+                                            const isTopEdge =
+                                                selected && range !== null && actualRi === range.top;
+                                            const isBottomEdge =
+                                                selected && range !== null && actualRi === range.bottom;
+                                            const isLeftEdge =
+                                                selected && range !== null && ci === range.left;
+                                            const isRightEdge =
+                                                selected && range !== null && ci === range.right;
 
                                             const isIndentTarget = colKey === indentTargetKey;
                                             const indentPadding = isChild ? row.level * INDENT_PX : 0;
@@ -522,7 +590,14 @@ export const Body = <T,>({
                                                     className={[
                                                         cellClassName ?? '',
                                                         selected ? (selectedCellClassName ?? '') : '',
+                                                        active ? (activeCellClassName ?? '') : '',
                                                     ].join(' ')}
+                                                    data-cell-selected={selected ? 'true' : 'false'}
+                                                    data-cell-active={active ? 'true' : 'false'}
+                                                    data-cell-edge-top={isTopEdge ? 'true' : 'false'}
+                                                    data-cell-edge-bottom={isBottomEdge ? 'true' : 'false'}
+                                                    data-cell-edge-left={isLeftEdge ? 'true' : 'false'}
+                                                    data-cell-edge-right={isRightEdge ? 'true' : 'false'}
                                                     onMouseDown={(e) => {
                                                         if (drag.draggingKey) return;
                                                         if (e.button !== 0) return;

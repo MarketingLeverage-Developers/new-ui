@@ -45,6 +45,14 @@
     background-color: var(--granter-gray-50);
 }
 
+.RowSelected .Cell {
+    background-color: rgba(2, 132, 199, 0.05);
+}
+
+.RowSelected:hover .Cell {
+    background-color: rgba(2, 132, 199, 0.05);
+}
+
 .Cell {
     display: flex;
     align-items: center;
@@ -52,10 +60,70 @@
     padding: 0 17px;
     border-right: 0;
     color: var(--granter-gray-900);
+    position: relative;
 }
 
 .CellSelected {
     background-color: rgba(2, 132, 199, 0.08) !important;
+}
+
+.CellActive {
+    background-color: rgba(2, 132, 199, 0.12) !important;
+    outline: 1px solid var(--granter-sky-500);
+    outline-offset: -1px;
+}
+
+.Row[data-row-selected='true'] .Cell[data-cell-selected='false'] {
+    background-color: rgba(2, 132, 199, 0.05);
+}
+
+.Row[data-row-selected='true'] {
+    border-bottom-color: transparent;
+}
+
+.Shell :global([data-row-in-selection='true']) {
+    border-bottom-color: transparent !important;
+}
+
+.Cell[data-cell-selected='true'] {
+    background-color: rgba(2, 132, 199, 0.08) !important;
+    --cell-selection-top: 0px;
+    --cell-selection-right: 0px;
+    --cell-selection-bottom: 0px;
+    --cell-selection-left: 0px;
+}
+
+.Cell[data-cell-selected='true'][data-cell-edge-top='true'] {
+    --cell-selection-top: 1px;
+}
+
+.Cell[data-cell-selected='true'][data-cell-edge-bottom='true'] {
+    --cell-selection-bottom: 1px;
+}
+
+.Cell[data-cell-selected='true'][data-cell-edge-left='true'] {
+    --cell-selection-left: 1px;
+}
+
+.Cell[data-cell-selected='true'][data-cell-edge-right='true'] {
+    --cell-selection-right: 1px;
+}
+
+.Cell[data-cell-selected='true']::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    border-style: solid;
+    border-color: var(--granter-sky-500);
+    border-width: var(--cell-selection-top) var(--cell-selection-right) var(--cell-selection-bottom)
+        var(--cell-selection-left);
+}
+
+.Cell[data-cell-active='true'] {
+    background-color: rgba(2, 132, 199, 0.12) !important;
+    outline: 1px solid var(--granter-sky-500);
+    outline-offset: -1px;
 }
 
 .Ghost {

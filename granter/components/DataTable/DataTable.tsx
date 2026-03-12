@@ -26,8 +26,10 @@ export type DataTableProps<T> = {
     headerCellClassName?: string;
     bodyClassName?: string;
     rowClassName?: string;
+    rowSelectedClassName?: string;
     cellClassName?: string;
     selectedCellClassName?: string;
+    activeCellClassName?: string;
     ghostClassName?: string;
     emptyStateClassName?: string;
 };
@@ -53,8 +55,10 @@ const DataTable = <T,>({
     headerCellClassName,
     bodyClassName,
     rowClassName,
+    rowSelectedClassName,
     cellClassName,
     selectedCellClassName,
+    activeCellClassName,
     ghostClassName,
     emptyStateClassName,
 }: DataTableProps<T>) => (
@@ -83,8 +87,10 @@ const DataTable = <T,>({
                     <AirTable.Body
                         className={classNames(styles.Body, bodyClassName)}
                         rowClassName={classNames(styles.Row, rowClassName)}
+                        rowSelectedClassName={classNames(styles.RowSelected, rowSelectedClassName)}
                         cellClassName={classNames(styles.Cell, cellClassName)}
                         selectedCellClassName={classNames(styles.CellSelected, selectedCellClassName)}
+                        activeCellClassName={classNames(styles.CellActive, activeCellClassName)}
                     />
                 ) : (
                     <div className={classNames(styles.EmptyState, emptyStateClassName)}>
