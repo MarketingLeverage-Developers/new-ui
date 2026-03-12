@@ -1,0 +1,152 @@
+.HomeContent {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+    background-color: var(--granter-gray-100);
+}
+
+.HomeContent[data-variant='empty'] {
+    justify-content: flex-start;
+    padding: 0;
+}
+
+.EmptyState {
+    display: flex;
+    justify-content: center;
+    padding: 56px 20px 0;
+}
+
+.StatusMessage {
+    margin: 0;
+    color: var(--granter-gray-400);
+    font-size: 18px;
+    line-height: 32px;
+    letter-spacing: -0.01em;
+    text-align: center;
+}
+
+.HomeContent[data-variant='overview'] {
+    gap: 20px;
+    padding: 24px;
+}
+
+.Hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(280px, 0.8fr);
+    gap: 18px;
+}
+
+.HeroCopy,
+.DateCard,
+.MetricCard {
+    border: 1px solid var(--granter-gray-200);
+    border-radius: 24px;
+    background-color: var(--granter-white);
+    box-shadow: 0 12px 40px rgba(17, 24, 39, 0.04);
+}
+
+.HeroCopy {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 28px 30px;
+}
+
+.Eyebrow {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--granter-gray-400);
+}
+
+.HeroTitle {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--granter-gray-900);
+    line-height: 1.15;
+}
+
+.HeroDescription {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--granter-gray-500);
+}
+
+.HeroDescription b {
+    color: var(--granter-gray-900);
+}
+
+.DateCard {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 10px;
+    padding: 28px;
+}
+
+.DateLabel,
+.MetricTitle {
+    font-size: 13px;
+    color: var(--granter-gray-400);
+}
+
+.DateValue {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--granter-gray-900);
+    line-height: 1.4;
+}
+
+.MetricGrid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.MetricCard {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 24px;
+}
+
+.MetricValue {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--granter-gray-900);
+    line-height: 1;
+}
+
+.MetricDescription {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--granter-gray-500);
+}
+
+@media (max-width: 1200px) {
+    .Hero,
+    .MetricGrid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+@media (max-width: 720px) {
+    .HomeContent[data-variant='overview'] {
+        padding: 16px;
+    }
+
+    .StatusMessage {
+        font-size: 15px;
+        line-height: 24px;
+    }
+
+    .HeroCopy,
+    .DateCard,
+    .MetricCard {
+        padding: 20px;
+        border-radius: 20px;
+    }
+}

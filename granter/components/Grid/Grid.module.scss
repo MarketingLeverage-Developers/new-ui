@@ -1,0 +1,35 @@
+.Grid {
+    display: grid;
+    grid-template-columns: var(
+        --granter-grid-template-columns,
+        repeat(var(--granter-grid-columns, 1), minmax(0, 1fr))
+    );
+    gap: var(--granter-grid-gap, 0);
+}
+
+@media (max-width: 1480px) {
+    .Grid {
+        grid-template-columns: var(
+            --granter-grid-template-columns-tablet,
+            var(
+                --granter-grid-template-columns,
+                repeat(var(--granter-grid-columns-tablet, var(--granter-grid-columns, 1)), minmax(0, 1fr))
+            )
+        );
+    }
+}
+
+@media (max-width: 1024px) {
+    .Grid {
+        grid-template-columns: var(
+            --granter-grid-template-columns-mobile,
+            var(
+                --granter-grid-template-columns-tablet,
+                var(
+                    --granter-grid-template-columns,
+                    repeat(var(--granter-grid-columns-mobile, var(--granter-grid-columns-tablet, var(--granter-grid-columns, 1))), minmax(0, 1fr))
+                )
+            )
+        );
+    }
+}

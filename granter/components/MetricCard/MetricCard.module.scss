@@ -1,0 +1,108 @@
+.Base {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 16px;
+    border: 1px solid var(--granter-gray-200);
+    border-radius: 12px;
+    background-color: var(--granter-white);
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.Base:hover {
+    background-color: var(--granter-gray-50);
+}
+
+.Compact {
+    width: 200px;
+    height: 120px;
+}
+
+.Standard {
+    gap: 10px;
+    min-height: 120px;
+}
+
+.Narrow {
+    justify-content: center;
+    gap: 8px;
+    width: 76px;
+    height: 120px;
+    padding: 14px 8px;
+    border: 1px solid var(--granter-sky-100);
+    border-radius: 8px;
+    color: var(--granter-sky-500);
+    text-align: center;
+}
+
+.Narrow:hover {
+    background-color: var(--granter-white);
+}
+
+.Detail {
+    gap: 0;
+    height: 160px;
+}
+
+.Detail:hover {
+    background-color: var(--granter-gray-100);
+}
+
+.DetailBody {
+    display: block;
+    width: 100%;
+    color: var(--granter-gray-700);
+}
+
+.DetailRows {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 0;
+}
+
+.DetailRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.DetailRow + .DetailRow {
+    margin-top: 4px;
+}
+
+.DetailRowLabel {
+    min-width: 0;
+    color: inherit;
+}
+
+.DetailRow[data-tone='danger'],
+.DetailRow[data-tone='down'] {
+    color: var(--granter-red-500);
+}
+
+.DetailRow[data-tone='up'] {
+    color: var(--granter-sky-600);
+}
+
+.DetailRowValue {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+.DetailTotalWrap {
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    width: 100%;
+    margin-top: 4px;
+}
+
+.DetailTotal {
+    letter-spacing: -0.01em;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}

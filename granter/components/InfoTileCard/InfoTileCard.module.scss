@@ -1,0 +1,125 @@
+.Tile {
+    position: relative;
+    z-index: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 80px;
+    padding: 16px;
+    border-radius: 12px;
+    background-color: var(--granter-gray-50);
+    transition:
+        background-color 0.16s ease,
+        opacity 0.16s ease;
+}
+
+.Tile:hover {
+    background-color: var(--granter-gray-100);
+}
+
+.TileLeft {
+    display: flex;
+    width: 50%;
+    flex-shrink: 0;
+    align-items: center;
+    gap: 16px;
+    min-width: 0;
+}
+
+.IconWrap {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 999px;
+    flex-shrink: 0;
+    overflow: hidden;
+    background-color: var(--granter-white);
+}
+
+.IconWrap img {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+}
+
+.Copy {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    gap: 4px;
+}
+
+.Name {
+    color: var(--granter-gray-500);
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 20px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.Amount {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--granter-gray-900);
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 20px;
+    letter-spacing: 0;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+}
+
+.Delta {
+    font-style: normal;
+    color: var(--granter-sky-600);
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 20px;
+}
+
+.Delta[data-tone='down'] {
+    color: var(--granter-red-500);
+}
+
+.TileRight {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 16px;
+    margin-left: 16px;
+    min-width: fit-content;
+}
+
+.OwnerAvatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 999px;
+    background-color: var(--granter-gray-300);
+    color: var(--granter-white);
+    font-size: 14px;
+    line-height: 20px;
+    flex-shrink: 0;
+}
+
+.LinkButton {
+    width: 54px !important;
+    min-width: 54px !important;
+    height: 40px !important;
+    padding: 0 !important;
+    border-radius: 10px !important;
+    border-color: var(--granter-red-100) !important;
+    background-color: var(--granter-white) !important;
+    color: var(--granter-red-400) !important;
+}
+
+.LinkButton:hover {
+    background-color: var(--granter-rose-50) !important;
+}

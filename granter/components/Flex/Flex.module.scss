@@ -1,0 +1,11 @@
+.Flex {
+    display: var(--granter-flex-display, flex);
+    flex-direction: var(--granter-flex-direction, row);
+    align-items: var(--granter-flex-align, stretch);
+    justify-content: var(--granter-flex-justify, flex-start);
+    flex-wrap: var(--granter-flex-wrap, nowrap);
+    gap: var(--granter-flex-gap, 0);
+    row-gap: var(--granter-flex-row-gap, var(--granter-flex-gap, 0));
+    column-gap: var(--granter-flex-column-gap, var(--granter-flex-gap, 0));
+    min-width: 0;
+}

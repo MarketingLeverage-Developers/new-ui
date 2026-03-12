@@ -1,0 +1,19 @@
+@use './theme' as theme;
+
+:root {
+    @include theme.granter-light-theme;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        @include theme.granter-dark-theme;
+    }
+}
+
+:root[data-theme='dark'] {
+    @include theme.granter-dark-theme;
+}
+
+:root[data-theme='light'] {
+    @include theme.granter-light-theme;
+}

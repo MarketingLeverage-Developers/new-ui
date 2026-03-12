@@ -1,0 +1,390 @@
+.Section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.ControlRow {
+    display: grid;
+    grid-template-columns: minmax(360px, 1fr) auto auto;
+    align-items: center;
+    gap: 8px;
+}
+
+.SearchField {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 40px;
+    padding: 0 10px;
+    border: 1px solid var(--granter-gray-300);
+    border-radius: 8px;
+    background-color: var(--granter-white);
+    color: var(--granter-gray-500);
+}
+
+.SearchField input {
+    flex: 1;
+    min-width: 0;
+    border: 0;
+    background: transparent;
+    color: var(--granter-gray-700);
+    font-size: 14px;
+    font-weight: 400;
+    outline: none;
+}
+
+.SearchField input::placeholder {
+    color: var(--granter-gray-400);
+}
+
+.ClearButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border: 0;
+    border-radius: 999px;
+    background-color: transparent;
+    color: var(--granter-gray-400);
+    cursor: pointer;
+}
+
+.ActionButtons {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.RightTools {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.ToggleLabel {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--granter-gray-500);
+    font-size: 14px;
+}
+
+.ToggleLabel input {
+    width: 32px;
+    height: 18px;
+    accent-color: var(--granter-gray-900);
+}
+
+.MetaRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 28px;
+}
+
+.HeaderCellInner {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-width: 0;
+    color: var(--granter-gray-500);
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 20px;
+    white-space: nowrap;
+}
+
+.HeaderCellInner[data-align='center'] {
+    justify-content: center;
+}
+
+.HeaderCellInner[data-align='right'] {
+    justify-content: flex-end;
+}
+
+.CellInner {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-width: 0;
+    gap: 6px;
+    font-size: 14px;
+    line-height: 20px;
+}
+
+.CellInner[data-align='center'] {
+    justify-content: center;
+}
+
+.CellInner[data-align='right'] {
+    justify-content: flex-end;
+}
+
+.CommentButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    background: transparent;
+    color: var(--granter-gray-500);
+    opacity: 0.2;
+    cursor: pointer;
+}
+
+.CommentButton:hover {
+    opacity: 0.5;
+}
+
+.CommentButton[data-active='true'] {
+    color: var(--granter-sky-500);
+    opacity: 0.35;
+}
+
+.DateCell {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 0;
+    min-width: 0;
+    margin-left: 1px;
+}
+
+.DateCell strong {
+    color: var(--granter-gray-900);
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: 400;
+}
+
+.DateCell em {
+    color: var(--granter-gray-400);
+    font-size: 14px;
+    line-height: 20px;
+    font-style: normal;
+}
+
+.MethodCell {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 4px;
+    min-width: 0;
+}
+
+.MethodCell span {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--granter-gray-900);
+    font-size: 14px;
+    line-height: 20px;
+}
+
+.MethodCell em {
+    color: var(--granter-gray-400);
+    font-size: 14px;
+    line-height: 20px;
+    font-style: normal;
+    font-variant-numeric: tabular-nums;
+}
+
+.Truncate {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--granter-gray-900);
+    font-size: 14px;
+    line-height: 20px;
+}
+
+.AmountText {
+    color: var(--granter-sky-600);
+    font-size: 14px;
+    line-height: 16px;
+    font-weight: 400;
+    font-variant-numeric: tabular-nums;
+}
+
+.SelectTriggerWrap {
+    display: inline-flex;
+    width: 100%;
+    margin: 0 2px;
+}
+
+.SelectTrigger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 48px;
+    padding: 8px;
+    border: 1px solid var(--granter-gray-200);
+    border-radius: 8px;
+    background-color: var(--granter-white);
+    color: var(--granter-gray-900);
+    cursor: pointer;
+}
+
+.SelectTrigger[data-tone='muted'] {
+    background-color: var(--granter-gray-50);
+}
+
+.SelectLabelWrap {
+    display: inline-flex;
+    align-items: center;
+    flex: 1;
+    min-width: 0;
+    gap: 4px;
+}
+
+.SelectIcon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 999px;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+.SelectLabel {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--granter-gray-900);
+    font-size: 14px;
+    line-height: 20px;
+}
+
+.SelectChevron {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    color: var(--granter-gray-900);
+    flex-shrink: 0;
+}
+
+.SelectMenu {
+    min-width: 184px;
+    padding: 4px;
+    border: 1px solid var(--granter-gray-300);
+    border-radius: 10px;
+    background-color: var(--granter-white);
+    box-shadow:
+        0 8px 20px rgba(17, 24, 39, 0.12),
+        0 1px 2px rgba(17, 24, 39, 0.04);
+}
+
+.SelectOption {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    min-height: 34px;
+    padding: 0 10px;
+    border-radius: 8px;
+    color: var(--granter-gray-700);
+    font-size: 14px;
+    line-height: 20px;
+    cursor: pointer;
+}
+
+.SelectOption:hover {
+    background-color: var(--granter-gray-50);
+}
+
+.SelectOption[data-active='true'] {
+    background-color: var(--granter-slate-100);
+    color: var(--granter-gray-900);
+    font-weight: 500;
+}
+
+.SettingsTrigger {
+    display: inline-flex;
+}
+
+.SettingsMenu {
+    width: 220px;
+    padding: 8px;
+    border: 1px solid var(--granter-gray-200);
+    border-radius: 10px;
+    background-color: var(--granter-white);
+    box-shadow:
+        0 8px 20px rgba(17, 24, 39, 0.12),
+        0 1px 2px rgba(17, 24, 39, 0.04);
+}
+
+.SettingsHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px 4px 8px;
+    border-bottom: 1px solid var(--granter-gray-100);
+}
+
+.SettingsTextButton {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--granter-gray-500);
+    font-size: 12px;
+    line-height: 16px;
+    cursor: pointer;
+}
+
+.SettingsTextButton:hover {
+    color: var(--granter-gray-900);
+}
+
+.SettingsDivider {
+    width: 1px;
+    height: 10px;
+    background-color: var(--granter-gray-200);
+}
+
+.SettingsList {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    max-height: 320px;
+    padding-top: 6px;
+    overflow-y: auto;
+}
+
+.SettingsRow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 30px;
+    padding: 0 4px;
+    color: var(--granter-gray-600);
+    font-size: 13px;
+    line-height: 18px;
+    user-select: none;
+    cursor: pointer;
+}
+
+.SettingsRow input {
+    width: 14px;
+    height: 14px;
+    accent-color: var(--granter-gray-900);
+}
+
+@media (max-width: 1480px) {
+    .ControlRow {
+        grid-template-columns: minmax(280px, 1fr);
+    }
+
+    .MetaRow {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+    }
+}

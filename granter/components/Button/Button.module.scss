@@ -1,0 +1,165 @@
+.Button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    border: 0;
+    cursor: pointer;
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease,
+        border-color 0.2s ease,
+        opacity 0.2s ease;
+}
+
+.Button:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+.Content {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-width: 0;
+}
+
+.Icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    line-height: 1;
+}
+
+.Label {
+    white-space: nowrap;
+}
+
+.Size-sm {
+    height: 32px;
+    padding: 0 12px;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 20px;
+}
+
+.Size-md {
+    height: 40px;
+    padding: 0 16px;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+}
+
+.Size-lg {
+    height: 40px;
+    padding: 0 16px;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 24px;
+}
+
+.Size-icon {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+}
+
+.Size-icon-wide {
+    width: 50px;
+    height: 40px;
+    padding: 0;
+}
+
+.Variant-black {
+    background-color: var(--granter-black);
+    color: var(--granter-white);
+}
+
+.Variant-black:hover:not(:disabled) {
+    opacity: 0.9;
+}
+
+.Variant-white {
+    border: 1px solid var(--granter-gray-200);
+    background-color: var(--granter-white);
+    color: var(--granter-gray-900);
+}
+
+.Variant-white:hover:not(:disabled) {
+    background-color: var(--granter-gray-50);
+}
+
+.Variant-gray {
+    background-color: var(--granter-gray-200);
+    color: var(--granter-gray-900);
+}
+
+.Variant-gray:hover:not(:disabled) {
+    background-color: var(--granter-gray-300);
+}
+
+.Variant-light {
+    border: 1px solid var(--granter-gray-300);
+    background-color: var(--granter-gray-100);
+    color: var(--granter-gray-600);
+}
+
+.Variant-light:hover:not(:disabled) {
+    background-color: var(--granter-gray-50);
+}
+
+.Variant-outline {
+    border: 1px solid var(--granter-gray-300);
+    background-color: var(--granter-white);
+    color: var(--granter-gray-600);
+}
+
+.Variant-outline:hover:not(:disabled) {
+    background-color: var(--granter-gray-50);
+}
+
+.Variant-icon {
+    border: 1px solid var(--granter-gray-300);
+    background-color: var(--granter-white);
+    color: var(--granter-gray-500);
+}
+
+.Variant-icon:hover:not(:disabled) {
+    background-color: var(--granter-gray-50);
+}
+
+.Variant-icon-strong {
+    border: 1px solid var(--granter-gray-200);
+    background-color: var(--granter-white);
+    color: var(--granter-gray-900);
+}
+
+.Variant-icon-strong:hover:not(:disabled) {
+    background-color: var(--granter-gray-50);
+}
+
+.Variant-danger-ghost {
+    border: 1px solid var(--granter-red-100);
+    background-color: transparent;
+    color: var(--granter-red-400);
+}
+
+.Variant-danger-ghost:hover:not(:disabled) {
+    background-color: var(--granter-rose-50);
+}
+
+.Variant-ghost {
+    background-color: transparent;
+    color: var(--granter-gray-900);
+}
+
+.Variant-ghost:hover:not(:disabled) {
+    background-color: var(--granter-gray-100);
+}
+
+.Button[data-icon-only='true'] .Content {
+    gap: 0;
+}

@@ -1,0 +1,73 @@
+.Text {
+    margin: 0;
+}
+
+.Size-xs {
+    font-size: 12px;
+    line-height: 16px;
+}
+
+.Size-sm {
+    font-size: 13px;
+    line-height: 18px;
+}
+
+.Size-md {
+    font-size: 14px;
+    line-height: 20px;
+}
+
+.Size-lg {
+    font-size: 16px;
+    line-height: 24px;
+}
+
+.Size-xl {
+    font-size: 20px;
+    line-height: 28px;
+    letter-spacing: -0.01em;
+}
+
+.Weight-regular {
+    font-weight: 400;
+}
+
+.Weight-medium {
+    font-weight: 500;
+}
+
+.Weight-semibold {
+    font-weight: 600;
+}
+
+.Weight-bold {
+    font-weight: 700;
+}
+
+.Tone-inherit {
+    color: inherit;
+}
+
+.Tone-default {
+    color: var(--granter-gray-900);
+}
+
+.Tone-muted {
+    color: var(--granter-gray-500);
+}
+
+.Tone-subtle {
+    color: var(--granter-gray-400);
+}
+
+.Tone-danger {
+    color: var(--granter-red-500);
+}
+
+.Tone-up {
+    color: var(--granter-sky-600);
+}
+
+.Tone-down {
+    color: var(--granter-red-500);
+}

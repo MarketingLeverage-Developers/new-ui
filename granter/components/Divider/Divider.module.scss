@@ -1,0 +1,11 @@
+.Divider {
+    display: block;
+    width: 100%;
+    height: var(--granter-divider-thickness, 1px);
+    background-color: var(--granter-divider-color, var(--granter-gray-200));
+}
+
+.Divider[data-orientation='vertical'] {
+    width: var(--granter-divider-thickness, 1px);
+    height: 100%;
+}

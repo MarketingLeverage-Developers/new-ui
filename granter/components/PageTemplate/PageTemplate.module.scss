@@ -1,0 +1,64 @@
+@use '../../styles/theme' as theme;
+
+.PageTemplate {
+    @include theme.granter-light-theme;
+
+    display: grid;
+    grid-template-areas:
+        'Sidebar Header'
+        'Sidebar Main';
+    grid-template-columns: 200px minmax(0, 1fr);
+    grid-template-rows: 64px minmax(0, 1fr);
+    height: 100vh;
+    overflow: hidden;
+    background-color: var(--granter-white);
+}
+
+.PageTemplate[data-theme='dark'] {
+    @include theme.granter-dark-theme;
+}
+
+@media (prefers-color-scheme: dark) {
+    .PageTemplate[data-theme='system'] {
+        @include theme.granter-dark-theme;
+    }
+}
+
+.PageTemplate[data-has-sub-sidebar='true'] {
+    grid-template-areas:
+        'Sidebar SubSidebar Header'
+        'Sidebar SubSidebar Main';
+    grid-template-columns: 200px 350px minmax(0, 1fr);
+}
+
+.PageTemplate[data-has-aside='true'] {
+    grid-template-areas:
+        'Sidebar Header Aside'
+        'Sidebar Main Aside';
+    grid-template-columns: 200px minmax(0, 1fr) 400px;
+}
+
+.PageTemplate[data-has-sub-sidebar='true'][data-has-aside='true'] {
+    grid-template-areas:
+        'Sidebar SubSidebar Header Aside'
+        'Sidebar SubSidebar Main Aside';
+    grid-template-columns: 200px 350px minmax(0, 1fr) 400px;
+}
+
+@media (max-width: 640px) {
+    .PageTemplate,
+    .PageTemplate[data-has-sub-sidebar='true'] {
+        grid-template-areas:
+            'Header'
+            'Main';
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .PageTemplate[data-has-aside='true'],
+    .PageTemplate[data-has-sub-sidebar='true'][data-has-aside='true'] {
+        grid-template-areas:
+            'Header'
+            'Main';
+        grid-template-columns: minmax(0, 1fr);
+    }
+}

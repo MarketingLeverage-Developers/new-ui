@@ -1,0 +1,18 @@
+.Dashed {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 140px;
+    border: 1px dashed var(--granter-gray-300);
+    border-radius: 12px;
+    background-color: var(--granter-gray-50);
+    color: var(--granter-gray-400);
+    font-size: 14px;
+}
+
+.Solid {
+    min-height: 520px;
+    border: 1px solid var(--granter-gray-200);
+    border-radius: 8px;
+    background-color: var(--granter-white);
+}

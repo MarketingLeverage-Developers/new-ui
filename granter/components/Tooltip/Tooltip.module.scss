@@ -1,0 +1,154 @@
+.Trigger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.Content {
+    z-index: 1300;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 420px;
+    min-height: 0;
+    padding: 10px 14px;
+    border: 1px solid var(--granter-gray-200);
+    border-radius: 10px;
+    background-color: var(--granter-white);
+    color: var(--granter-gray-600);
+    box-shadow:
+        0 8px 20px rgba(17, 24, 39, 0.12),
+        0 1px 2px rgba(17, 24, 39, 0.04);
+    pointer-events: none;
+    user-select: none;
+    transform-origin: var(--radix-tooltip-content-transform-origin);
+    animation-duration: 0.12s;
+    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.Content[data-state='delayed-open'] {
+    animation-name: TooltipFadeIn;
+}
+
+.Content[data-state='closed'] {
+    animation-name: TooltipFadeOut;
+    animation-duration: 0.1s;
+}
+
+.Content[data-side='top'][data-state='delayed-open'] {
+    animation-name: TooltipSlideDownAndFade;
+}
+
+.Content[data-side='bottom'][data-state='delayed-open'] {
+    animation-name: TooltipSlideUpAndFade;
+}
+
+.Content[data-side='left'][data-state='delayed-open'] {
+    animation-name: TooltipSlideRightAndFade;
+}
+
+.Content[data-side='right'][data-state='delayed-open'] {
+    animation-name: TooltipSlideLeftAndFade;
+}
+
+.Label {
+    color: inherit;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+    letter-spacing: -0.01em;
+    white-space: pre-line;
+    word-break: keep-all;
+}
+
+.Arrow {
+    fill: var(--granter-white);
+}
+
+.Content[data-side='top'] .Arrow {
+    filter: drop-shadow(0 -1px 0 var(--granter-gray-200));
+}
+
+.Content[data-side='bottom'] .Arrow {
+    filter: drop-shadow(0 1px 0 var(--granter-gray-200));
+}
+
+.Content[data-side='left'] .Arrow {
+    filter: drop-shadow(-1px 0 0 var(--granter-gray-200));
+}
+
+.Content[data-side='right'] .Arrow {
+    filter: drop-shadow(1px 0 0 var(--granter-gray-200));
+}
+
+@keyframes TooltipFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.96);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes TooltipFadeOut {
+    from {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    to {
+        opacity: 0;
+        transform: scale(0.98);
+    }
+}
+
+@keyframes TooltipSlideDownAndFade {
+    from {
+        opacity: 0;
+        transform: translateY(2px) scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes TooltipSlideUpAndFade {
+    from {
+        opacity: 0;
+        transform: translateY(-2px) scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes TooltipSlideRightAndFade {
+    from {
+        opacity: 0;
+        transform: translateX(2px) scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
+}
+
+@keyframes TooltipSlideLeftAndFade {
+    from {
+        opacity: 0;
+        transform: translateX(-2px) scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
+}

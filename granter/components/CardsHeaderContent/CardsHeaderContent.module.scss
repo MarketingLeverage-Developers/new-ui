@@ -1,0 +1,229 @@
+.CardsHeaderContent {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-width: 0;
+    gap: 12px;
+}
+
+.Left,
+.Center,
+.Right {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+}
+
+.Left {
+    flex: 1;
+    gap: 16px;
+}
+
+.Center {
+    justify-content: center;
+}
+
+.Right {
+    flex: 1;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-right: 16px;
+}
+
+.BackButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: 1px solid var(--granter-gray-300);
+    border-radius: 999px;
+    background-color: transparent;
+    color: var(--granter-gray-500);
+    cursor: pointer;
+}
+
+.BackButton:hover {
+    background-color: var(--granter-gray-50);
+}
+
+.Breadcrumb {
+    color: var(--granter-gray-500);
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 24px;
+    white-space: nowrap;
+}
+
+.DateRangeControl {
+    display: flex;
+    align-items: center;
+    width: 300px;
+    min-width: 300px;
+    height: 40px;
+}
+
+.DateEdgeButton,
+.DateLabelTrigger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    background-color: var(--granter-white);
+    color: var(--granter-gray-500);
+    border: 1px solid var(--granter-gray-200);
+}
+
+.DateEdgeButton {
+    width: 41px;
+    cursor: pointer;
+}
+
+.DateEdgeButton:first-child {
+    border-right: 0;
+    border-radius: 8px 0 0 8px;
+}
+
+.DateEdgeButton:last-child {
+    border-left: 0;
+    border-radius: 0 8px 8px 0;
+}
+
+.DateLabelTrigger {
+    flex: 1;
+    border-radius: 0;
+}
+
+.DateLabelButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    background-color: var(--granter-white);
+    color: var(--granter-gray-500);
+    padding: 0;
+    cursor: pointer;
+}
+
+.DateLabelButton[data-open='true'] {
+    background-color: var(--granter-sky-100);
+    color: var(--granter-sky-600);
+}
+
+.DateLabel {
+    color: var(--granter-gray-500);
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 24px;
+    letter-spacing: -0.01em;
+}
+
+.DateLabelButton[data-open='true'] .DateLabel {
+    color: inherit;
+}
+
+.DateDropdownContent {
+    padding: 0;
+    border: 1px solid var(--granter-gray-200);
+    border-radius: 8px;
+    box-shadow: 0 12px 30px rgba(15, 23, 42, 0.14);
+    background-color: var(--granter-white);
+    overflow: hidden;
+    position: relative;
+    isolation: isolate;
+    opacity: 1;
+    transform: translateZ(0);
+}
+
+.DateRangePanel {
+    background-color: var(--granter-white);
+    position: relative;
+    z-index: 1;
+}
+
+.RefreshingButton,
+.SupportButton,
+.AskButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    background-color: transparent;
+    color: var(--granter-gray-900);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.RefreshingButton {
+    width: 40px;
+    height: 40px;
+    border-radius: 999px;
+    color: var(--granter-gray-400);
+}
+
+.RefreshingButton:hover {
+    background-color: var(--granter-gray-100);
+}
+
+.SupportButton {
+    gap: 6px;
+    width: 120px;
+    height: 40px;
+    border-radius: 8px;
+    color: var(--granter-gray-900);
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.SupportButton:hover {
+    background-color: var(--granter-gray-100);
+}
+
+.SupportButton :global(svg) {
+    color: var(--granter-gray-500);
+}
+
+.AskButton {
+    gap: 6px;
+    height: 40px;
+    padding: 0 14px;
+    border-radius: 8px;
+    border: 1px solid var(--granter-gray-200);
+    background-color: var(--granter-white);
+    color: var(--granter-gray-900);
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.AskButton:hover {
+    background-color: var(--granter-gray-100);
+}
+
+.AskButton :global(svg) {
+    color: var(--granter-gray-500);
+}
+
+@media (max-width: 1280px) {
+    .CardsHeaderContent {
+        flex-wrap: wrap;
+        row-gap: 10px;
+    }
+
+    .Left,
+    .Center,
+    .Right {
+        width: 100%;
+    }
+
+    .Right {
+        margin-right: 0;
+    }
+
+    .Center {
+        order: 3;
+        justify-content: flex-start;
+    }
+}

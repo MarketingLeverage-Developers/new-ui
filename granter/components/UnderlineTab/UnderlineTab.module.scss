@@ -1,0 +1,80 @@
+.UnderlineTab {
+    display: flex;
+    align-items: flex-start;
+    gap: 0;
+}
+
+.UnderlineTab[data-scrollable='true'] {
+    overflow-x: auto;
+    overflow-y: hidden;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.UnderlineTab[data-scrollable='true']::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+}
+
+.Item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 6px;
+    border: 0 solid transparent;
+    border-bottom-width: 2px;
+    border-bottom: 2px solid transparent;
+    background-color: transparent;
+    transition: background-color 0.2s ease;
+    cursor: pointer;
+}
+
+.UnderlineTab[data-scrollable='true'] .Item {
+    flex: 0 0 auto;
+}
+
+.Item[data-active='true'] {
+    border-bottom-color: var(--granter-gray-900);
+}
+
+.ItemInner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    height: 32px;
+    padding: 0 8px;
+    border-radius: 4px;
+}
+
+.Label {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--granter-gray-500);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 24px;
+    letter-spacing: -0.01em;
+}
+
+.UnderlineTab[data-scrollable='true'] .Label {
+    white-space: nowrap;
+}
+
+.Item[data-active='true'] .Label {
+    color: var(--granter-gray-900);
+    font-weight: 500;
+}
+
+.Item:hover:not([data-active='true']):not(:disabled) {
+    background-color: var(--granter-gray-100);
+}
+
+.Item:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}

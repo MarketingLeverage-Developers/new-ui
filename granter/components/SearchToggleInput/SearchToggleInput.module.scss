@@ -1,0 +1,59 @@
+.Root {
+    position: relative;
+    display: inline-flex;
+}
+
+.Trigger {
+    display: inline-flex;
+}
+
+.Content {
+    width: 280px;
+    padding: 8px;
+    border: 1px solid var(--granter-gray-200);
+    border-radius: 8px;
+    background-color: var(--granter-white);
+    box-shadow:
+        0 8px 20px rgba(17, 24, 39, 0.12),
+        0 1px 2px rgba(17, 24, 39, 0.04);
+}
+
+.SearchField {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 40px;
+    padding: 0 10px;
+    border: 1px solid var(--granter-gray-300);
+    border-radius: 8px;
+    background-color: var(--granter-white);
+    color: var(--granter-gray-500);
+}
+
+.SearchField input {
+    flex: 1;
+    min-width: 0;
+    border: 0;
+    background: transparent;
+    color: var(--granter-gray-700);
+    font-size: 14px;
+    font-weight: 400;
+    outline: none;
+}
+
+.SearchField input::placeholder {
+    color: var(--granter-gray-400);
+}
+
+.ClearButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border: 0;
+    border-radius: 999px;
+    background-color: transparent;
+    color: var(--granter-gray-400);
+    cursor: pointer;
+}

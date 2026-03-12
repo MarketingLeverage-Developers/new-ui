@@ -1,0 +1,280 @@
+.SidebarMenu {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+    background-color: var(--granter-white);
+}
+
+.WorkspaceSection {
+    height: 64px;
+    padding: 8px;
+    border-bottom: 1px solid var(--granter-gray-200);
+}
+
+.WorkspaceButton,
+.ProfileButton {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    border: 0;
+    background-color: transparent;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.WorkspaceButton {
+    height: 100%;
+    padding: 0 8px;
+}
+
+.Navigation {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 0 8px 24px 8px;
+    margin-right: 0;
+    scrollbar-width: none;
+}
+
+.Navigation::-webkit-scrollbar {
+    display: none;
+}
+
+.WorkspaceButton:hover,
+.ProfileButton:hover,
+.MenuButton:hover {
+    background-color: var(--granter-gray-100);
+}
+
+.WorkspaceMeta,
+.ProfileMeta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    flex: 1;
+}
+
+.WorkspaceAvatar,
+.ProfileAvatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+    color: var(--granter-gray-900);
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.WorkspaceAvatar {
+    border-radius: 10px;
+    background-color: var(--granter-gray-100);
+}
+
+.WorkspaceCopy,
+.ProfileCopy {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    text-align: left;
+}
+
+.WorkspaceName {
+    color: var(--granter-gray-900);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 20px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.WorkspaceSummary {
+    color: var(--granter-gray-500);
+    font-size: 12px;
+    line-height: 16px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.WorkspaceChevron,
+.ProfileChevron {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    color: var(--granter-gray-500);
+}
+
+.Group {
+    padding-top: 16px;
+}
+
+.GroupTitle {
+    margin-bottom: 4px;
+    padding: 0 8px;
+    color: var(--granter-gray-500);
+    font-size: 14px;
+    line-height: 20px;
+}
+
+.MenuButton {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 32px;
+    padding: 0 8px;
+    border: 0;
+    border-radius: 6px;
+    background-color: transparent;
+    text-align: left;
+    cursor: pointer;
+    color: var(--granter-gray-700);
+    font-size: 14px;
+    line-height: 20px;
+    transition: color 0.2s ease;
+}
+
+.ActiveBackground {
+    position: absolute;
+    inset: 0;
+    border-radius: 6px;
+    background-color: var(--granter-gray-100);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.MenuButton[data-active='true'] {
+    color: var(--granter-gray-900);
+}
+
+.MenuButton[data-active='true'] .ActiveBackground {
+    opacity: 1;
+}
+
+.MenuButtonCopy {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+}
+
+.Icon {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    object-fit: contain;
+}
+
+.Label {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    letter-spacing: -0.01em;
+}
+
+.Badge {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 16px;
+    height: 16px;
+    padding: 0 4px;
+    border: 1px solid var(--granter-red-700);
+    border-radius: 9999px;
+    background-color: var(--granter-red-600);
+    color: var(--granter-white);
+    font-size: 10px;
+    line-height: 1;
+}
+
+.Footer {
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid var(--granter-gray-200);
+    padding: 8px;
+}
+
+.DropdownTrigger {
+    display: block;
+    width: 100%;
+}
+
+.Dropdown {
+    min-width: 128px;
+    border: 1px solid var(--granter-gray-200);
+    border-radius: 8px;
+    background-color: var(--granter-white);
+    padding: 6px;
+    box-shadow: 0 8px 24px rgba(17, 24, 39, 0.12);
+}
+
+.DropdownItem {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    min-height: 32px;
+    padding: 8px;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    cursor: pointer;
+    color: var(--granter-gray-700);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+    text-align: left;
+}
+
+.DropdownItem:hover:not(:disabled) {
+    background-color: var(--granter-gray-100);
+    color: var(--granter-gray-900);
+}
+
+.DropdownItem:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+.DropdownItem svg {
+    width: 16px;
+    height: 16px;
+    color: currentColor;
+    flex-shrink: 0;
+}
+
+.ProfileButton {
+    padding: 8px;
+}
+
+.ProfileAvatar {
+    border-radius: 9999px;
+    background-color: var(--granter-gray-200);
+}
+
+.ProfileName {
+    color: var(--granter-gray-900);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+}
+
+.ProfileRole {
+    color: var(--granter-gray-500);
+    font-size: 12px;
+    line-height: 16px;
+}

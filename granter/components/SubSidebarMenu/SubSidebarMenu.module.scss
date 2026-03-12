@@ -1,0 +1,86 @@
+.SubSidebarMenu {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+    padding: 24px 18px 32px;
+    background-color: var(--granter-white);
+}
+
+.Header {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-bottom: 12px;
+    padding: 0 14px;
+}
+
+.Eyebrow {
+    color: var(--granter-gray-400);
+    font-size: 12px;
+    line-height: 16px;
+}
+
+.Title {
+    color: var(--granter-gray-500);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+    letter-spacing: -0.01em;
+}
+
+.List {
+    display: flex;
+    flex-direction: column;
+    width: 184px;
+    min-width: 184px;
+    max-width: 100%;
+    gap: 4px;
+    overflow-y: auto;
+    padding-right: 4px;
+    scrollbar-width: none;
+}
+
+.List::-webkit-scrollbar {
+    display: none;
+}
+
+.ItemButton {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-height: 40px;
+    padding: 0 14px;
+    border: 0;
+    border-radius: 10px;
+    background-color: transparent;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.ItemButton:hover {
+    background-color: var(--granter-gray-100);
+}
+
+.ItemButton[data-active='true'] {
+    background-color: var(--granter-gray-300);
+}
+
+.ItemLabel {
+    color: var(--granter-gray-900);
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 22px;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+@media (max-width: 1024px) {
+    .List {
+        width: 100%;
+        min-width: 0;
+    }
+}

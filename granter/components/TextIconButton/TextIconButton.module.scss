@@ -1,0 +1,44 @@
+.Page {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 0;
+    border: 0;
+    background-color: transparent;
+    color: var(--granter-gray-900);
+    cursor: pointer;
+}
+
+.PageText {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 32px;
+}
+
+.Hero {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    align-self: flex-start;
+    padding: 4px 8px;
+    border: 0;
+    border-radius: 6px;
+    background-color: transparent;
+    color: var(--granter-gray-900);
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.Hero:hover {
+    background-color: var(--granter-gray-100);
+}
+
+.HeroText {
+    margin: 0;
+    color: inherit;
+    font-size: 30px;
+    font-weight: 600;
+    line-height: 36px;
+    letter-spacing: -0.01em;
+}

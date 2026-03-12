@@ -1,0 +1,498 @@
+.Root {
+    --calendar-accent: var(--granter-blue-500);
+    --calendar-border: var(--granter-gray-200);
+    --calendar-surface: var(--granter-white);
+    --calendar-muted: var(--granter-gray-400);
+
+    display: flex;
+    justify-content: center;
+    width: 589px;
+    height: 424px;
+    overflow: hidden;
+    background: var(--calendar-surface);
+    position: relative;
+    z-index: 1;
+    opacity: 1;
+}
+
+.LeftPreset,
+.RightMonths {
+    display: flex;
+    flex-direction: column;
+    font-weight: 400;
+    overflow-y: auto;
+    width: 126px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+
+    &::-webkit-scrollbar {
+        width: 0;
+        height: 0;
+        display: none;
+    }
+}
+
+.LeftPreset {
+    border-right: 1px solid var(--calendar-border);
+}
+
+.RightMonths {
+    border-left: 1px solid var(--calendar-border);
+}
+
+.PresetItem {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    width: 100%;
+    background: transparent;
+    text-align: left;
+    padding: 10px 12px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--granter-gray-900);
+}
+
+.MonthItem {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    text-align: left;
+    padding: 10px 12px;
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--granter-gray-900);
+}
+
+.PresetItem:hover,
+.PresetItemActive,
+.MonthItem:hover,
+.MonthItemActive {
+    background: var(--granter-slate-100);
+}
+
+.Center {
+    display: flex;
+    flex-direction: column;
+}
+
+.TopInputs {
+    display: flex;
+    gap: 10px;
+    color: var(--granter-gray-600);
+    padding: 10px 8px 10px;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--calendar-border);
+}
+
+.InputBlock {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.InputLabel {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--granter-gray-600);
+}
+
+.InputWrap {
+    position: relative;
+    width: 152px;
+}
+
+.InputBox {
+    width: 152px;
+    height: 40px;
+    border-radius: 8px;
+    border: 1px solid var(--calendar-border);
+    background: var(--granter-white);
+    color: var(--granter-gray-900);
+    font-size: 15px;
+    font-weight: 400;
+    text-align: center;
+    outline: none;
+}
+
+.InputBox:focus {
+    border: 1px solid var(--calendar-accent);
+}
+
+.InputError {
+    border-color: var(--granter-red-500);
+}
+
+.CalendarHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    height: 42px;
+    padding: 8px 8px 6px;
+}
+
+.NavButton {
+    width: 24px;
+    height: 24px;
+    border: none;
+    background: var(--granter-slate-100);
+    cursor: pointer;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.NavButton:hover {
+    background: var(--granter-slate-150);
+}
+
+.NavButton:disabled {
+    cursor: not-allowed;
+    opacity: 0.35;
+}
+
+.NavIcon {
+    color: var(--granter-gray-400);
+}
+
+.SelectGroup {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    height: 28px;
+}
+
+.SelectTrigger {
+    width: 74px;
+    height: 28px;
+    padding: 0 22px 0 8px;
+    border-radius: 4px;
+    background: transparent;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+    user-select: none;
+    border: none;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--granter-gray-600);
+}
+
+.SelectTrigger:hover {
+    background: var(--granter-slate-100);
+}
+
+.InlineSelectWrap {
+    position: relative;
+}
+
+.SelectMenuInline {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    width: 100%;
+    background: var(--granter-white);
+    border: 1px solid var(--calendar-border);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+    border-radius: 8px;
+    z-index: 40;
+}
+
+.SelectLabel {
+    line-height: 1;
+}
+
+.Arrow {
+    position: absolute;
+    right: 7px;
+    pointer-events: none;
+    color: var(--granter-gray-400);
+    font-size: 14px;
+}
+
+.SelectMenuInner {
+    max-height: 220px;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    padding: 4px;
+
+    &::-webkit-scrollbar {
+        width: 0;
+    }
+}
+
+.SelectItem {
+    padding: 10px 12px;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--granter-gray-900);
+    border: none;
+    border-radius: 6px;
+    background: transparent;
+}
+
+.SelectItem:hover {
+    background: var(--granter-slate-100);
+}
+
+.SelectItemActive {
+    background: var(--granter-slate-100);
+    font-weight: 600;
+}
+
+.CalendarBody {
+    padding: 2px 0 6px;
+
+    :global {
+        .rdp {
+            --rdp-cell-size: 24px;
+        }
+
+        .rdp-months {
+            width: 100%;
+        }
+
+        .rdp-month {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+        }
+
+        .rdp-nav {
+            display: none;
+        }
+
+        .rdp-caption,
+        .rdp-caption_label {
+            display: none;
+        }
+
+        .rdp-month_grid {
+            border-collapse: separate;
+            border-spacing: 0 2px;
+            width: 100%;
+            padding: 0 12px;
+        }
+
+        .rdp-weekday {
+            color: var(--calendar-muted);
+            text-align: center;
+            font-size: 13px;
+            font-weight: 400;
+            height: 22px;
+
+            &:first-child {
+                color: var(--granter-red-400);
+            }
+
+            &:last-child {
+                color: var(--granter-blue-500);
+            }
+        }
+
+        .rdp-day {
+            text-align: center;
+            width: 42px;
+            height: 26px;
+            position: relative;
+            overflow: visible !important;
+
+            .rdp-day_button {
+                display: block;
+                width: 100%;
+                height: 100%;
+                padding: 0;
+                border: none;
+                border-radius: 0;
+                color: var(--granter-gray-700);
+                background: transparent;
+                font-size: 13px;
+                font-weight: 400;
+                position: relative;
+                z-index: 2;
+            }
+
+            &.rdp-outside .rdp-day_button {
+                color: var(--granter-gray-300);
+            }
+        }
+
+        /* selected range fill */
+        .rdp-day.rdp-selected .rdp-day_button,
+        .rdp-day_button.rdp-selected,
+        .rdp-day.rdp-range_start .rdp-day_button,
+        .rdp-day_button.rdp-range_start,
+        .rdp-day.rdp-range_middle .rdp-day_button,
+        .rdp-day_button.rdp-range_middle,
+        .rdp-day.rdp-range_end .rdp-day_button,
+        .rdp-day_button.rdp-range_end {
+            background: var(--calendar-accent);
+            color: var(--granter-white);
+            border-radius: 0;
+        }
+
+        /* explicit middle state */
+        .rdp-day.rdp-range_middle .rdp-day_button:not(.rdp-range_start):not(.rdp-range_end),
+        .rdp-day_button.rdp-range_middle:not(.rdp-range_start):not(.rdp-range_end) {
+            border-radius: 0;
+        }
+
+        .rdp-day.rdp-range_start .rdp-day_button,
+        .rdp-day_button.rdp-range_start {
+            border-radius: 999px 0 0 999px;
+        }
+
+        .rdp-day.rdp-range_end .rdp-day_button,
+        .rdp-day_button.rdp-range_end {
+            border-radius: 0 999px 999px 0;
+        }
+
+        .rdp-day.rdp-range_start.rdp-range_end .rdp-day_button,
+        .rdp-day_button.rdp-range_start.rdp-range_end {
+            width: 26px;
+            border-radius: 999px;
+            margin: 0 auto;
+        }
+
+        .rdp-day.rdp-today:not(.rdp-selected) .rdp-day_button,
+        .rdp-day_button.rdp-today:not(.rdp-selected) {
+            width: 26px;
+            border-radius: 50%;
+            margin: 0 auto;
+            background: var(--granter-sky-100);
+            color: var(--calendar-accent);
+        }
+    }
+
+    /* Row break smoothing with explicit modifiers from DayPicker */
+    .RowRangeStart :global(.rdp-day_button),
+    :global(.rdp-day_button).RowRangeStart {
+        border-radius: 999px 0 0 999px !important;
+    }
+
+    .RowRangeEnd :global(.rdp-day_button),
+    :global(.rdp-day_button).RowRangeEnd {
+        border-radius: 0 999px 999px 0 !important;
+    }
+
+    .RowRangeSingle :global(.rdp-day_button),
+    :global(.rdp-day_button).RowRangeSingle {
+        width: 26px;
+        border-radius: 999px !important;
+        margin: 0 auto;
+    }
+
+    /* Preview border while selecting range end */
+    .PreviewRange :global(.rdp-day_button),
+    :global(.rdp-day_button).PreviewRange {
+        background: transparent !important;
+        color: var(--granter-gray-900);
+        border-top: 1px solid var(--calendar-accent);
+        border-bottom: 1px solid var(--calendar-accent);
+    }
+
+    .PreviewRangeStart :global(.rdp-day_button),
+    :global(.rdp-day_button).PreviewRangeStart {
+        border-left: 1px solid var(--calendar-accent);
+        border-radius: 999px 0 0 999px !important;
+    }
+
+    .PreviewRangeEnd :global(.rdp-day_button),
+    :global(.rdp-day_button).PreviewRangeEnd {
+        border-right: 1px solid var(--calendar-accent);
+        border-radius: 0 999px 999px 0 !important;
+    }
+
+    .PreviewRangeSingle :global(.rdp-day_button),
+    :global(.rdp-day_button).PreviewRangeSingle {
+        border: 1px solid var(--calendar-accent);
+        border-radius: 999px !important;
+    }
+
+    /* Always keep single selected date as a pill/circle */
+    :global(.rdp-day.rdp-range_start.rdp-range_end) :global(.rdp-day_button),
+    :global(.rdp-day_button.rdp-range_start.rdp-range_end),
+    .RowRangeSingle :global(.rdp-day_button),
+    :global(.rdp-day_button).RowRangeSingle {
+        width: 26px !important;
+        border-radius: 999px !important;
+        margin: 0 auto;
+    }
+
+    /* Start/End badges */
+    .RangeStartDate,
+    .RangeEndDate,
+    :global(.rdp-day_button).RangeStartDate,
+    :global(.rdp-day_button).RangeEndDate {
+        position: relative;
+        z-index: 20;
+        isolation: isolate;
+    }
+
+    .RangeStartDate :global(.rdp-day_button)::before,
+    :global(.rdp-day_button).RangeStartDate::before {
+        content: '시작일';
+        position: absolute;
+        left: 50%;
+        top: -34px;
+        transform: translateX(-50%);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 48px;
+        height: 26px;
+        padding: 0 10px;
+        border: 1px solid var(--granter-gray-200);
+        border-radius: 6px;
+        background: var(--granter-white) !important;
+        color: var(--granter-gray-900);
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 20px;
+        box-shadow: 0 1px 4px rgba(17, 24, 39, 0.12);
+        white-space: nowrap;
+        pointer-events: none;
+        opacity: 1;
+        mix-blend-mode: normal;
+        z-index: 30;
+    }
+
+    .RangeEndDate :global(.rdp-day_button)::after,
+    :global(.rdp-day_button).RangeEndDate::after {
+        content: '종료일';
+        position: absolute;
+        left: 50%;
+        top: calc(100% + 8px);
+        transform: translateX(-50%);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 48px;
+        height: 26px;
+        padding: 0 10px;
+        border: 1px solid var(--granter-gray-200);
+        border-radius: 6px;
+        background: var(--granter-white) !important;
+        color: var(--granter-gray-900);
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 20px;
+        box-shadow: 0 1px 4px rgba(17, 24, 39, 0.12);
+        white-space: nowrap;
+        pointer-events: none;
+        opacity: 1;
+        mix-blend-mode: normal;
+        z-index: 30;
+    }
+}

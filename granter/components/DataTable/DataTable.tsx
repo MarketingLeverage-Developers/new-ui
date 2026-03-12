@@ -1,0 +1,101 @@
+import React from 'react';
+import classNames from 'classnames';
+import type { Column, SortState } from '../../../shared/headless/AirTable/AirTable';
+import AirTable from '../../../shared/headless/AirTable/AirTable';
+import Text from '../Text/Text';
+import styles from './DataTable.module.scss';
+
+export type DataTableProps<T> = {
+    data: T[];
+    columns: Column<T>[];
+    rowKeyField: keyof T;
+    height?: number | string;
+    onScrollElReady?: (el: HTMLDivElement | null) => void;
+    defaultColWidth?: number;
+    storageKey?: string;
+    defaultSortState?: SortState;
+    fillContainerWidth?: boolean;
+    enableVirtualization?: boolean;
+    virtualRowHeight?: number;
+    virtualOverscan?: number;
+    emptyText?: React.ReactNode;
+    className?: string;
+    headerClassName?: string;
+    headerCellClassName?: string;
+    bodyClassName?: string;
+    rowClassName?: string;
+    cellClassName?: string;
+    selectedCellClassName?: string;
+    ghostClassName?: string;
+    emptyStateClassName?: string;
+};
+
+const DataTable = <T,>({
+    data,
+    columns,
+    rowKeyField,
+    height = 520,
+    onScrollElReady,
+    defaultColWidth = 120,
+    storageKey,
+    defaultSortState,
+    fillContainerWidth = true,
+    enableVirtualization = false,
+    virtualRowHeight,
+    virtualOverscan,
+    emptyText = '조건에 맞는 내역이 없습니다.',
+    className,
+    headerClassName,
+    headerCellClassName,
+    bodyClassName,
+    rowClassName,
+    cellClassName,
+    selectedCellClassName,
+    ghostClassName,
+    emptyStateClassName,
+}: DataTableProps<T>) => (
+    <div className={classNames(styles.Shell, className)}>
+        <AirTable<T>
+            data={data}
+            columns={columns}
+            rowKeyField={rowKeyField}
+            defaultColWidth={defaultColWidth}
+            storageKey={storageKey}
+            defaultSortState={defaultSortState}
+            fillContainerWidth={fillContainerWidth}
+            enableVirtualization={enableVirtualization}
+            virtualRowHeight={virtualRowHeight}
+            virtualOverscan={virtualOverscan}
+        >
+            <AirTable.Container className={styles.Container} height={height} onScrollElReady={onScrollElReady}>
+                <AirTable.Header
+                    className={classNames(styles.Header, headerClassName)}
+                    headerCellClassName={classNames(styles.HeaderCell, headerCellClassName)}
+                />
+
+                {data.length > 0 ? (
+                    <AirTable.Body
+                        className={classNames(styles.Body, bodyClassName)}
+                        rowClassName={classNames(styles.Row, rowClassName)}
+                        cellClassName={classNames(styles.Cell, cellClassName)}
+                        selectedCellClassName={classNames(styles.CellSelected, selectedCellClassName)}
+                    />
+                ) : (
+                    <div className={classNames(styles.EmptyState, emptyStateClassName)}>
+                        {typeof emptyText === 'string' ? (
+                            <Text size="md" tone="muted">
+                                {emptyText}
+                            </Text>
+                        ) : (
+                            emptyText
+                        )}
+                    </div>
+                )}
+
+                <AirTable.Ghost className={classNames(styles.Ghost, ghostClassName)} />
+            </AirTable.Container>
+        </AirTable>
+    </div>
+);
+
+export default DataTable;

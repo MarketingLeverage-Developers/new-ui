@@ -1,0 +1,126 @@
+.Shell {
+    border-top: 1px solid var(--granter-gray-200);
+    border-bottom: 1px solid var(--granter-gray-200);
+    border-left: 0;
+    border-right: 0;
+    border-radius: 0;
+    overflow: hidden;
+    background-color: var(--granter-white);
+}
+
+.Container {
+    width: 100%;
+}
+
+.Header {
+    border-bottom: 1px solid var(--granter-gray-200);
+    background-color: var(--granter-gray-50);
+}
+
+.HeaderCell {
+    display: flex;
+    align-items: center;
+    min-height: 48px;
+    padding: 0 18px;
+    border-right: 0;
+    color: var(--granter-gray-500);
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 20px;
+}
+
+.Body {
+    background-color: var(--granter-white);
+}
+
+.Row {
+    border-bottom: 1px solid var(--granter-gray-200);
+}
+
+.Row:last-child {
+    border-bottom: 0;
+}
+
+.Row:hover .Cell {
+    background-color: var(--granter-gray-50);
+}
+
+.Cell {
+    display: flex;
+    align-items: center;
+    min-height: 69px;
+    padding: 0 17px;
+    border-right: 0;
+    color: var(--granter-gray-900);
+}
+
+.CellSelected {
+    background-color: rgba(2, 132, 199, 0.08) !important;
+}
+
+.Ghost {
+    pointer-events: none;
+}
+
+.EmptyState {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 220px;
+    background-color: var(--granter-white);
+}
+
+.Shell :global([data-col-sort-btn='true']) {
+    right: 32px !important;
+    width: 16px !important;
+    height: 16px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    color: var(--granter-gray-400) !important;
+    opacity: 1 !important;
+    z-index: 70 !important;
+}
+
+.Shell :global([data-col-sort-btn='true'] svg) {
+    display: block !important;
+}
+
+.Shell :global(.air-table-header-cell:has([data-col-sort-btn='true'], [data-col-menu-btn='true']) > div) {
+    padding-right: 58px !important;
+}
+
+.Shell :global([data-col-menu-btn='true']) {
+    right: 12px !important;
+    width: 16px !important;
+    height: 16px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    z-index: 70 !important;
+}
+
+.Shell :global([data-col-menu-btn='true'] svg) {
+    display: block !important;
+}
+
+.Shell :global([data-col-resize-handle='true'] > div) {
+    width: 1px !important;
+    height: 100% !important;
+    border-radius: 999px !important;
+    background: rgba(148, 163, 184, 0.7) !important;
+}
+
+.Shell :global([data-col-resize-handle='true']) {
+    top: 25% !important;
+    height: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.Shell :global(.air-table-header-cell:last-child) {
+    border-right: 0 !important;
+}

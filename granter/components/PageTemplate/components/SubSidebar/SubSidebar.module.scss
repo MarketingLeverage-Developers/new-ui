@@ -1,0 +1,14 @@
+.SubSidebar {
+    grid-area: SubSidebar;
+    min-width: 0;
+    height: 100vh;
+    border-right: 1px solid var(--granter-gray-200);
+    background-color: var(--granter-white);
+    overflow: hidden;
+}
+
+@media (max-width: 640px) {
+    .SubSidebar {
+        display: none;
+    }
+}

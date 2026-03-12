@@ -1,0 +1,189 @@
+.CardsMainContent {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    background-color: var(--granter-gray-100);
+}
+
+.StatusRow {
+    position: absolute;
+    top: -18px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    pointer-events: none;
+}
+
+.LoaderWrap {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 35px;
+    height: 35px;
+    border-radius: 999px;
+    color: var(--granter-gray-400);
+}
+
+.StatusMessage {
+    color: var(--granter-gray-400);
+    font-size: 16px;
+    line-height: 24px;
+    white-space: nowrap;
+}
+
+.Content {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    padding: 20px;
+}
+
+.TopRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.LeftActions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.Title {
+    margin: 0;
+    color: var(--granter-gray-900);
+    font-size: 30px;
+    font-weight: 700;
+    line-height: 36px;
+}
+
+.ControlButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 40px;
+    border: 1px solid var(--granter-gray-300);
+    border-radius: 8px;
+    background-color: var(--granter-white);
+    color: var(--granter-gray-900);
+    cursor: pointer;
+}
+
+.ControlButton:hover {
+    background-color: var(--granter-gray-50);
+}
+
+.PrimaryButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    padding: 0 16px;
+    border: 0;
+    border-radius: 8px;
+    background-color: var(--granter-black);
+    color: var(--granter-white);
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 20px;
+    cursor: pointer;
+}
+
+.PrimaryButton:hover {
+    opacity: 0.85;
+}
+
+.DownloadButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 110px;
+    height: 40px;
+    border: 1px solid var(--granter-gray-300);
+    border-radius: 8px;
+    background-color: transparent;
+    color: var(--granter-gray-600);
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 24px;
+    cursor: pointer;
+}
+
+.DownloadButton:hover {
+    background-color: var(--granter-gray-50);
+}
+
+.FilterRow {
+    margin-top: 24px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 8px;
+}
+
+.SortButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-width: 109px;
+    height: 40px;
+    padding: 8px 12px;
+    border: 0;
+    border-radius: 8px;
+    background-color: var(--granter-white);
+    color: var(--granter-gray-900);
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 20px;
+    cursor: pointer;
+}
+
+.SearchButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--granter-gray-300);
+    border-radius: 8px;
+    background-color: var(--granter-white);
+    color: var(--granter-gray-600);
+    cursor: pointer;
+}
+
+.SearchButton:hover,
+.SortButton:hover {
+    background-color: var(--granter-gray-50);
+}
+
+@media (max-width: 1180px) {
+    .StatusRow {
+        position: static;
+        transform: none;
+        margin-bottom: 12px;
+        pointer-events: auto;
+    }
+
+    .StatusMessage {
+        white-space: normal;
+    }
+
+    .TopRow {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .FilterRow {
+        justify-content: flex-start;
+    }
+}

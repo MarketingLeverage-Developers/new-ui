@@ -1,0 +1,34 @@
+.RoundedTextInput {
+    width: 100%;
+    height: 44px;
+    padding: 0 14px;
+    border: 1px solid var(--granter-gray-300);
+    border-radius: 10px;
+    background-color: var(--granter-white);
+    color: var(--granter-gray-900);
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 22px;
+    letter-spacing: -0.01em;
+    outline: none;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+}
+
+.RoundedTextInput::placeholder {
+    color: var(--granter-gray-400);
+}
+
+.RoundedTextInput:hover {
+    border-color: var(--granter-gray-400);
+}
+
+.RoundedTextInput:focus {
+    border-color: var(--granter-blue-500);
+    box-shadow: 0 0 0 3px rgb(59 130 246 / 18%);
+}
+
+.RoundedTextInput:disabled {
+    background-color: var(--granter-gray-100);
+    color: var(--granter-gray-500);
+    cursor: not-allowed;
+}

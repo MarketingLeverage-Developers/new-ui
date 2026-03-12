@@ -1,0 +1,81 @@
+.BasicConfirm {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 24px;
+    gap: 16px;
+    background-color: transparent;
+}
+
+.Icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    color: var(--granter-gray-500);
+    background-color: var(--granter-gray-100);
+}
+
+.Texts {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.Title {
+    margin: 0;
+    color: var(--granter-gray-900);
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 24px;
+    letter-spacing: -0.01em;
+    text-align: left;
+}
+
+.Title span {
+    color: var(--granter-red-500);
+}
+
+.Description {
+    margin: 0;
+    color: var(--granter-gray-600);
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 21px;
+    letter-spacing: -0.01em;
+    text-align: left;
+}
+
+.Actions {
+    width: 100%;
+    margin-top: 4px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+.ActionButton {
+    min-width: 84px;
+    height: 38px;
+    padding: 0 16px;
+    border: 1px solid transparent;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+    letter-spacing: -0.01em;
+    cursor: pointer;
+}
+
+.ActionButton[data-variant='secondary'] {
+    border-color: var(--granter-gray-200);
+    background-color: var(--granter-white);
+    color: var(--granter-gray-700);
+}
+
+.ActionButton[data-variant='primary'] {
+    background-color: var(--granter-gray-900);
+    color: var(--granter-white);
+}

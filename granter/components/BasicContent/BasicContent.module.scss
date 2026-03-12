@@ -1,0 +1,330 @@
+.BasicContent {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    background-color: var(--granter-white);
+}
+
+.Header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 68px;
+    padding: 0 28px;
+    border-bottom: 1px solid var(--granter-gray-200);
+    background-color: var(--granter-white);
+}
+
+.Title {
+    margin: 0;
+    color: var(--granter-gray-900);
+    font-size: 21px;
+    font-weight: 700;
+    line-height: 30px;
+    letter-spacing: -0.02em;
+}
+
+.CloseButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border: 0;
+    border-radius: 8px;
+    background-color: transparent;
+    color: var(--granter-gray-700);
+    cursor: pointer;
+}
+
+.CloseButton:hover {
+    background-color: var(--granter-slate-150);
+}
+
+.Body {
+    flex: 1;
+    min-height: 0;
+    padding: 18px 28px 16px;
+    overflow-y: auto;
+}
+
+.Hero {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.HeroMeta {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-width: 0;
+}
+
+.HeroIcon {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.HeroTitle {
+    margin: 0;
+    color: var(--granter-gray-700);
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 30px;
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.HeroSuffix {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--granter-gray-700);
+    flex-shrink: 0;
+}
+
+.Alert {
+    padding: 12px 14px 10px;
+    border-radius: 10px;
+    margin-bottom: 16px;
+}
+
+.Alert[data-tone='danger'] {
+    background-color: var(--granter-rose-50);
+    color: var(--granter-red-500);
+}
+
+.Alert[data-tone='neutral'] {
+    background-color: var(--granter-gray-100);
+    color: var(--granter-gray-700);
+}
+
+.AlertMain {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.AlertText {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 24px;
+    letter-spacing: -0.01em;
+}
+
+.AlertAction {
+    margin-top: 10px;
+    margin-left: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 66px;
+    height: 38px;
+    padding: 0 14px;
+    border: 1px solid var(--granter-gray-300);
+    border-radius: 8px;
+    background-color: var(--granter-slate-100);
+    color: var(--granter-gray-900);
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 22px;
+    letter-spacing: -0.01em;
+    cursor: pointer;
+}
+
+.List {
+    border-top: none;
+}
+
+.Item {
+    display: grid;
+    grid-template-columns: minmax(0, 110px) minmax(0, 1fr);
+    align-items: center;
+    gap: 16px;
+    min-height: 64px;
+    border-bottom: 1px solid var(--granter-gray-300);
+}
+
+.Item[data-size='lg'] {
+    min-height: 72px;
+}
+
+.Label {
+    display: block;
+    min-width: 0;
+    color: var(--granter-gray-500);
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 24px;
+    letter-spacing: -0.01em;
+    white-space: normal;
+    word-break: keep-all;
+    overflow-wrap: anywhere;
+}
+
+.RequiredMark {
+    color: var(--granter-red-500);
+    font-weight: 600;
+    line-height: 1;
+}
+
+.Value {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    width: 100%;
+    color: var(--granter-gray-700);
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 24px;
+    letter-spacing: -0.01em;
+}
+
+.Value[data-layout='between'] {
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.ValueText {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ValueSide {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.ValueSide[data-tone='default'] {
+    color: var(--granter-gray-600);
+}
+
+.ValueSide[data-tone='muted'] {
+    color: var(--granter-gray-400);
+}
+
+.ValueSide[data-tone='danger'] {
+    color: var(--granter-red-500);
+}
+
+.ValueSide[data-variant='button'] {
+    width: 50px;
+    height: 40px;
+    border: 1px solid var(--granter-gray-300);
+    border-radius: 9px;
+    background-color: var(--granter-white);
+}
+
+.HintIcon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--granter-gray-400);
+}
+
+.InlineMeta {
+    display: inline-flex;
+    align-items: center;
+    color: var(--granter-gray-500);
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 24px;
+}
+
+.Avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 999px;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.DashedButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border: 2px dashed var(--granter-gray-300);
+    border-radius: 999px;
+    background-color: var(--granter-white);
+    color: var(--granter-gray-400);
+    cursor: pointer;
+}
+
+.Switch {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    width: 36px;
+    height: 22px;
+    padding: 2px;
+    border: 0;
+    border-radius: 999px;
+    background-color: var(--granter-gray-300);
+    transition: background-color 0.2s ease;
+    cursor: pointer;
+}
+
+.Switch[data-checked='true'] {
+    background-color: var(--granter-gray-900);
+}
+
+.SwitchThumb {
+    width: 18px;
+    height: 18px;
+    border-radius: 999px;
+    background-color: var(--granter-white);
+    box-shadow: 0 1px 2px rgb(0 0 0 / 24%);
+    transform: translateX(0);
+    transition: transform 0.2s ease;
+}
+
+.Switch[data-checked='true'] .SwitchThumb {
+    transform: translateX(14px);
+}
+
+.Footer {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    padding: 16px 28px 18px;
+    background-color: var(--granter-white);
+}
+
+.ActionButton {
+    height: 36px;
+    padding: 0 14px;
+    border: 0;
+    border-radius: 9px;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 20px;
+    letter-spacing: -0.02em;
+    cursor: pointer;
+}
+
+.ActionButton[data-variant='secondary'] {
+    background-color: var(--granter-slate-150);
+    color: var(--granter-gray-700);
+}
+
+.ActionButton[data-variant='primary'] {
+    background-color: var(--granter-gray-900);
+    color: var(--granter-white);
+}

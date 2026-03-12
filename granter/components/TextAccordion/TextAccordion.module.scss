@@ -1,0 +1,95 @@
+.TextAccordion {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+}
+
+.Header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 0;
+}
+
+.TitleButton {
+    display: inline-flex;
+    align-items: center;
+    gap: 0;
+    min-width: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    user-select: none;
+}
+
+.Title {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 2px;
+    margin: 0;
+    min-width: 0;
+}
+
+.TitleText {
+    color: var(--granter-gray-900);
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 24px;
+    letter-spacing: 0;
+}
+
+.TitleCount {
+    color: var(--granter-gray-700);
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 24px;
+    letter-spacing: 0;
+}
+
+.ViewAllButton {
+    height: 32px !important;
+    padding: 0 12px !important;
+    border: 1px solid var(--granter-gray-300) !important;
+    background-color: var(--granter-white) !important;
+    color: var(--granter-gray-600) !important;
+    font-size: 14px !important;
+    font-weight: 400 !important;
+    line-height: 20px !important;
+}
+
+.ViewAllButton:hover {
+    background-color: var(--granter-gray-50) !important;
+}
+
+.Content {
+    width: 100%;
+}
+
+.Grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+}
+
+@media (min-width: 1024px) {
+    .Grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (min-width: 1536px) {
+    .Grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 1024px) {
+    .TitleText,
+    .TitleCount {
+        font-size: 16px;
+        line-height: 24px;
+    }
+}

@@ -1,0 +1,50 @@
+.Trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--granter-gray-500);
+    font-size: 14px;
+    line-height: 20px;
+    cursor: pointer;
+}
+
+.Trigger:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+.Track {
+    position: relative;
+    width: 32px;
+    height: 18px;
+    border-radius: 999px;
+    background-color: var(--granter-gray-300);
+    transition: background-color 0.2s ease;
+}
+
+.Thumb {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 14px;
+    height: 14px;
+    border-radius: 999px;
+    background-color: var(--granter-white);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.16);
+    transition: transform 0.2s ease;
+}
+
+.Trigger[data-on='true'] .Track {
+    background-color: var(--granter-gray-900);
+}
+
+.Trigger[data-on='true'] .Thumb {
+    transform: translateX(14px);
+}
+
+.Label {
+    color: inherit;
+}

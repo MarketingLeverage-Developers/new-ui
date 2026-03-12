@@ -1,0 +1,85 @@
+@mixin granter-light-theme {
+    --granter-white: #ffffff;
+    --granter-black: #000000;
+
+    --granter-gray-900: #111827;
+    --granter-gray-700: #374151;
+    --granter-gray-600: #4b5563;
+    --granter-gray-500: #6b7280;
+    --granter-gray-400: #9ca3af;
+    --granter-gray-300: #d1d5db;
+    --granter-gray-200: #e5e7eb;
+    --granter-gray-100: #f3f4f6;
+    --granter-gray-50: #f9fafb;
+
+    --granter-slate-100: #eef2f7;
+    --granter-slate-150: #eceef2;
+
+    --granter-sky-600: #0284c7;
+    --granter-sky-500: #0ea5e9;
+    --granter-sky-100: #e0f2fe;
+    --granter-blue-600: #2563eb;
+    --granter-blue-500: #3b82f6;
+    --granter-blue-100: #dbeafe;
+
+    --granter-teal-500: #0ea5a4;
+    --granter-teal-100: #99f6e4;
+    --granter-teal-50: #f0fdfa;
+
+    --granter-violet-500: #8b5cf6;
+    --granter-violet-100: #ddd6fe;
+
+    --granter-red-700: #b91c1c;
+    --granter-red-600: #dc2626;
+    --granter-red-500: #ef4444;
+    --granter-red-400: #f87171;
+    --granter-red-100: #fecaca;
+    --granter-rose-50: #fff1f2;
+
+    --granter-orange-100: #fed7aa;
+    --granter-orange-50: #fff7ed;
+    --granter-orange-500: #e88731;
+}
+
+@mixin granter-dark-theme {
+    --granter-white: #0f172a;
+    --granter-black: #f8fafc;
+
+    --granter-gray-900: #f3f4f6;
+    --granter-gray-700: #d1d5db;
+    --granter-gray-600: #9ca3af;
+    --granter-gray-500: #94a3b8;
+    --granter-gray-400: #64748b;
+    --granter-gray-300: #334155;
+    --granter-gray-200: #1e293b;
+    --granter-gray-100: #111827;
+    --granter-gray-50: #0b1220;
+
+    --granter-slate-100: #0b1220;
+    --granter-slate-150: #111827;
+
+    --granter-sky-600: #38bdf8;
+    --granter-sky-500: #0ea5e9;
+    --granter-sky-100: #082f49;
+    --granter-blue-600: #60a5fa;
+    --granter-blue-500: #3b82f6;
+    --granter-blue-100: #172554;
+
+    --granter-teal-500: #2dd4bf;
+    --granter-teal-100: #134e4a;
+    --granter-teal-50: #042f2e;
+
+    --granter-violet-500: #a78bfa;
+    --granter-violet-100: #312e81;
+
+    --granter-red-700: #f87171;
+    --granter-red-600: #ef4444;
+    --granter-red-500: #f87171;
+    --granter-red-400: #fca5a5;
+    --granter-red-100: #7f1d1d;
+    --granter-rose-50: #3f0d14;
+
+    --granter-orange-100: #7c2d12;
+    --granter-orange-50: #431407;
+    --granter-orange-500: #fb923c;
+}
