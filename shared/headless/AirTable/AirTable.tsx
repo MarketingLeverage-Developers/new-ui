@@ -92,6 +92,7 @@ export type AirTableProps<T> = {
     storageKey?: string;
     onPersistedStateChange?: (state: PersistedTableState) => void;
     persistedStateSyncVersion?: number;
+    showColumnVisibilityControl?: boolean;
     defaultVisibleColumnKeys?: string[];
     style?: React.CSSProperties;
     children?: React.ReactNode;
@@ -1090,6 +1091,7 @@ const AirTableInner = <T,>({
     storageKey,
     onPersistedStateChange,
     persistedStateSyncVersion,
+    showColumnVisibilityControl = true,
     defaultVisibleColumnKeys,
     style,
     children,
@@ -1590,7 +1592,9 @@ const AirTableInner = <T,>({
             >
                 {children ?? (
                     <>
-                        <ColumnVisibilityControl portalId="column-select-box-portal" />
+                        {showColumnVisibilityControl ? (
+                            <ColumnVisibilityControl portalId="column-select-box-portal" />
+                        ) : null}
                         <Container>
                             <div
                                 style={{

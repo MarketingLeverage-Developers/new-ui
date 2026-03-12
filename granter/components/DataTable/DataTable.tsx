@@ -13,6 +13,8 @@ export type DataTableProps<T> = {
     onScrollElReady?: (el: HTMLDivElement | null) => void;
     defaultColWidth?: number;
     storageKey?: string;
+    persistedStateSyncVersion?: number;
+    showColumnVisibilityControl?: boolean;
     defaultSortState?: SortState;
     fillContainerWidth?: boolean;
     enableVirtualization?: boolean;
@@ -38,6 +40,8 @@ const DataTable = <T,>({
     onScrollElReady,
     defaultColWidth = 120,
     storageKey,
+    persistedStateSyncVersion,
+    showColumnVisibilityControl = true,
     defaultSortState,
     fillContainerWidth = true,
     enableVirtualization = false,
@@ -61,6 +65,8 @@ const DataTable = <T,>({
             rowKeyField={rowKeyField}
             defaultColWidth={defaultColWidth}
             storageKey={storageKey}
+            persistedStateSyncVersion={persistedStateSyncVersion}
+            showColumnVisibilityControl={showColumnVisibilityControl}
             defaultSortState={defaultSortState}
             fillContainerWidth={fillContainerWidth}
             enableVirtualization={enableVirtualization}
