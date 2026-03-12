@@ -7,9 +7,19 @@
 }
 
 .WorkspaceSection {
+    display: flex;
+    align-items: center;
     height: 64px;
     padding: 8px;
     border-bottom: 1px solid var(--granter-gray-200);
+}
+
+.WorkspaceSection img {
+    display: block;
+}
+
+.WorkspaceSection > * {
+    margin: 0;
 }
 
 .WorkspaceButton,

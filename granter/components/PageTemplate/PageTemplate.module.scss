@@ -3,15 +3,43 @@
 .PageTemplate {
     @include theme.granter-light-theme;
 
+    --granter-sidebar-width: 200px;
+    --granter-sidebar-collapsed-width: 56px;
+    --granter-sub-sidebar-width: 280px;
+    --granter-sub-sidebar-collapsed-width: 56px;
+    --granter-aside-width: 400px;
+    --granter-sidebar-overlay-width: 200px;
+    --granter-sub-sidebar-overlay-width: 280px;
+    --granter-header-height: 64px;
+
+    position: relative;
     display: grid;
     grid-template-areas:
         'Sidebar Header'
         'Sidebar Main';
-    grid-template-columns: 200px minmax(0, 1fr);
+    grid-template-columns: var(--granter-sidebar-width) minmax(0, 1fr);
     grid-template-rows: 64px minmax(0, 1fr);
     height: 100vh;
     overflow: hidden;
     background-color: var(--granter-white);
+}
+
+.PageTemplate[data-sidebar-collapsible='true'][data-sidebar-collapsed='true'] {
+    --granter-sidebar-width: var(--granter-sidebar-collapsed-width);
+}
+
+.PageTemplate[data-sidebar-collapse-mode='overlay'][data-sidebar-collapsible='true'][data-sidebar-collapsed='true'] {
+    --granter-sidebar-width: 0px;
+    --granter-sidebar-collapsed-width: 0px;
+}
+
+.PageTemplate[data-has-sub-sidebar='true'][data-sub-sidebar-collapsible='true'][data-sub-sidebar-collapsed='true'] {
+    --granter-sub-sidebar-width: var(--granter-sub-sidebar-collapsed-width);
+}
+
+.PageTemplate[data-has-sub-sidebar='true'][data-sub-sidebar-collapse-mode='overlay'][data-sub-sidebar-collapsible='true'][data-sub-sidebar-collapsed='true'] {
+    --granter-sub-sidebar-width: 0px;
+    --granter-sub-sidebar-collapsed-width: 0px;
 }
 
 .PageTemplate[data-theme='dark'] {
@@ -28,21 +56,237 @@
     grid-template-areas:
         'Sidebar SubSidebar Header'
         'Sidebar SubSidebar Main';
-    grid-template-columns: 200px 350px minmax(0, 1fr);
+    grid-template-columns: var(--granter-sidebar-width) var(--granter-sub-sidebar-width) minmax(0, 1fr);
 }
 
 .PageTemplate[data-has-aside='true'] {
     grid-template-areas:
         'Sidebar Header Aside'
         'Sidebar Main Aside';
-    grid-template-columns: 200px minmax(0, 1fr) 400px;
+    grid-template-columns: var(--granter-sidebar-width) minmax(0, 1fr) var(--granter-aside-width);
 }
 
 .PageTemplate[data-has-sub-sidebar='true'][data-has-aside='true'] {
     grid-template-areas:
         'Sidebar SubSidebar Header Aside'
         'Sidebar SubSidebar Main Aside';
-    grid-template-columns: 200px 350px minmax(0, 1fr) 400px;
+    grid-template-columns: var(--granter-sidebar-width) var(--granter-sub-sidebar-width) minmax(0, 1fr) var(--granter-aside-width);
+}
+
+.SidebarOverlayPanel {
+    position: fixed;
+    top: var(--granter-header-height);
+    left: var(--granter-sidebar-collapsed-width);
+    width: var(--granter-sidebar-overlay-width);
+    height: calc(100vh - var(--granter-header-height));
+    border-right: 1px solid var(--granter-gray-200);
+    background-color: var(--granter-white);
+    box-shadow: 0 8px 24px rgb(17 24 39 / 18%);
+    z-index: 200;
+    overflow: hidden;
+}
+
+.SubSidebarOverlayPanel {
+    position: fixed;
+    top: var(--granter-header-height);
+    left: calc(var(--granter-sidebar-width) + var(--granter-sub-sidebar-collapsed-width));
+    width: var(--granter-sub-sidebar-overlay-width);
+    height: calc(100vh - var(--granter-header-height));
+    border-right: 1px solid var(--granter-gray-200);
+    background-color: var(--granter-white);
+    box-shadow: 0 8px 24px rgb(17 24 39 / 18%);
+    z-index: 200;
+    overflow: hidden;
+}
+
+.SidebarSlotCollapsedOverlay {
+    width: 0 !important;
+    border-right: 0 !important;
+    overflow: hidden !important;
+}
+
+.SubSidebarSlotCollapsedOverlay {
+    width: 0 !important;
+    border-right: 0 !important;
+    overflow: hidden !important;
+}
+
+.HeaderContent {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+    flex: 1;
+}
+
+.HeaderSidebarOpenButton {
+    width: 20px;
+    height: 20px;
+    margin-right: 12px;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: var(--granter-gray-600);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: color 0.16s ease;
+}
+
+.HeaderSubSidebarOpenButton {
+    width: 20px;
+    height: 20px;
+    margin-right: 12px;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: var(--granter-gray-600);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: color 0.16s ease;
+}
+
+.HeaderSubSidebarOpenButton:hover {
+    color: var(--granter-gray-900);
+}
+
+.HeaderSubSidebarOpenButton:focus-visible {
+    outline: 2px solid var(--granter-sky-500);
+    outline-offset: 1px;
+}
+
+.HeaderSidebarOpenButton:hover {
+    color: var(--granter-gray-900);
+}
+
+.HeaderSidebarOpenButton:focus-visible {
+    outline: 2px solid var(--granter-sky-500);
+    outline-offset: 1px;
+}
+
+.SidebarToggle {
+    grid-area: Sidebar;
+    justify-self: end;
+    align-self: start;
+    margin: 20px 8px 0 0;
+    width: 20px;
+    height: 20px;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: var(--granter-gray-600);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    cursor: pointer;
+    z-index: 6;
+    transition: color 0.16s ease;
+}
+
+.SidebarToggle:hover {
+    color: var(--granter-gray-900);
+}
+
+.SidebarToggle:focus-visible {
+    outline: 2px solid var(--granter-sky-500);
+    outline-offset: 1px;
+}
+
+.SubSidebarToggle {
+    position: absolute;
+    left: calc(var(--granter-sidebar-width) + var(--granter-sub-sidebar-width) - 32px);
+    top: 50%;
+    transform: translateY(-50%);
+    width: 24px;
+    height: 24px;
+    border: 1px solid var(--granter-gray-300);
+    border-radius: 999px;
+    background: var(--granter-white);
+    color: var(--granter-gray-700);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    cursor: pointer;
+    z-index: 6;
+    box-shadow: 0 2px 8px rgb(17 24 39 / 12%);
+    transition: color 0.16s ease;
+}
+
+.SubSidebarToggle:hover {
+    color: var(--granter-gray-900);
+    border-color: var(--granter-gray-400);
+    box-shadow: 0 4px 12px rgb(17 24 39 / 18%);
+}
+
+.SubSidebarToggle:focus-visible {
+    outline: 2px solid var(--granter-sky-500);
+    outline-offset: 1px;
+}
+
+.PageTemplate[data-theme='dark'] .SidebarToggle {
+    color: var(--granter-gray-200);
+}
+
+.PageTemplate[data-theme='dark'] .HeaderSidebarOpenButton {
+    color: var(--granter-gray-200);
+}
+
+.PageTemplate[data-theme='dark'] .HeaderSubSidebarOpenButton {
+    color: var(--granter-gray-200);
+}
+
+.PageTemplate[data-theme='dark'] .SubSidebarToggle {
+    border-color: var(--granter-gray-600);
+    background: var(--granter-gray-800);
+    color: var(--granter-gray-200);
+}
+
+.PageTemplate[data-theme='dark'] .SidebarOverlayPanel {
+    border-right-color: var(--granter-gray-700);
+    background-color: var(--granter-gray-900);
+}
+
+.PageTemplate[data-theme='dark'] .SubSidebarOverlayPanel {
+    border-right-color: var(--granter-gray-700);
+    background-color: var(--granter-gray-900);
+}
+
+@media (prefers-color-scheme: dark) {
+    .PageTemplate[data-theme='system'] .SidebarToggle {
+        color: var(--granter-gray-200);
+    }
+
+    .PageTemplate[data-theme='system'] .HeaderSidebarOpenButton {
+        color: var(--granter-gray-200);
+    }
+
+    .PageTemplate[data-theme='system'] .HeaderSubSidebarOpenButton {
+        color: var(--granter-gray-200);
+    }
+
+    .PageTemplate[data-theme='system'] .SubSidebarToggle {
+        border-color: var(--granter-gray-600);
+        background: var(--granter-gray-800);
+        color: var(--granter-gray-200);
+    }
+
+    .PageTemplate[data-theme='system'] .SidebarOverlayPanel {
+        border-right-color: var(--granter-gray-700);
+        background-color: var(--granter-gray-900);
+    }
+
+    .PageTemplate[data-theme='system'] .SubSidebarOverlayPanel {
+        border-right-color: var(--granter-gray-700);
+        background-color: var(--granter-gray-900);
+    }
 }
 
 @media (max-width: 640px) {
@@ -60,5 +304,29 @@
             'Header'
             'Main';
         grid-template-columns: minmax(0, 1fr);
+    }
+
+    .SidebarToggle {
+        display: none;
+    }
+
+    .SubSidebarToggle {
+        display: none;
+    }
+
+    .SidebarOverlayPanel {
+        display: none;
+    }
+
+    .SubSidebarOverlayPanel {
+        display: none;
+    }
+
+    .HeaderSidebarOpenButton {
+        display: none;
+    }
+
+    .HeaderSubSidebarOpenButton {
+        display: none;
     }
 }
