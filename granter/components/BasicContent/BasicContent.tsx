@@ -11,6 +11,7 @@ export type BasicContentProps = {
 export type BasicContentHeaderProps = {
     children: React.ReactNode;
     className?: string;
+    showBorder?: boolean;
 };
 
 export type BasicContentTitleProps = {
@@ -158,8 +159,14 @@ export type BasicContentActionButtonProps = Omit<React.ButtonHTMLAttributes<HTML
     type?: 'button' | 'submit' | 'reset';
 };
 
-const BasicContentHeader = ({ children, className }: BasicContentHeaderProps) => (
-    <header className={classNames(styles.Header, className)}>{children}</header>
+const BasicContentHeader = ({
+    children,
+    className,
+    showBorder = true,
+}: BasicContentHeaderProps) => (
+    <header className={classNames(styles.Header, className)} data-border={showBorder ? 'true' : 'false'}>
+        {children}
+    </header>
 );
 
 const BasicContentTitle = ({ children, className }: BasicContentTitleProps) => (

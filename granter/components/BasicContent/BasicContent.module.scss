@@ -17,6 +17,10 @@
     background-color: var(--granter-white);
 }
 
+.Header[data-border='false'] {
+    border-bottom: 0;
+}
+
 .Title {
     margin: 0;
     color: var(--granter-gray-900);
