@@ -43,7 +43,9 @@ const MetricCard = ({
         <PlainButton className={classNames(styles.Base, variantClassName[variant])} onClick={onClick}>
             {useDetailLayout ? (
                 <>
-                    <Text tone="muted">{title}</Text>
+                    <Text tone="muted" size="lg" className={styles.Title}>
+                        {title}
+                    </Text>
 
                     <div className={styles.DetailBody}>
                         <div className={styles.DetailRows}>

@@ -1,6 +1,7 @@
 .Base {
     display: flex;
     flex-direction: column;
+    align-items: start;
     justify-content: space-between;
     padding: 16px;
     border: 1px solid var(--granter-gray-200);
@@ -56,6 +57,11 @@
     color: var(--granter-gray-700);
 }
 
+.Title {
+    font-size: 16px;
+    line-height: 24px;
+}
+
 .DetailRows {
     display: flex;
     flex-direction: column;
@@ -77,6 +83,9 @@
 .DetailRowLabel {
     min-width: 0;
     color: inherit;
+    font-size: 16px;
+    line-height: 24px;
+    font-weight: 400;
 }
 
 .DetailRow[data-tone='danger'],
@@ -91,6 +100,9 @@
 .DetailRowValue {
     text-align: right;
     font-variant-numeric: tabular-nums;
+    font-size: 20px;
+    line-height: 28px;
+    font-weight: 400;
 }
 
 .DetailTotalWrap {
