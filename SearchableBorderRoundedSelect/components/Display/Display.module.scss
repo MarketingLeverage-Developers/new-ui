@@ -1,0 +1,32 @@
+.Display {
+    display: inline-flex;
+    width: var(--width, auto);
+    height: var(--height, auto);
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--White1);
+    border: 1px solid var(--Gray5);
+    gap: 8px;
+    padding: var(--padding, 0);
+    border-radius: 7px;
+    font-size: 15px;
+    color: var(--Gray1);
+    cursor: pointer;
+}
+
+.Content {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.FullWidth {
+    flex: 1;
+    min-width: 0;
+}
+
+.Arrow {
+    font-size: 14px;
+    flex: 0 0 auto;
+}
