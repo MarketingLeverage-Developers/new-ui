@@ -123,6 +123,7 @@ export type { CheckboxTextToggleProps } from './components/CheckboxTextToggle/Ch
 export type { SearchToggleInputProps } from './components/SearchToggleInput/SearchToggleInput';
 export type { SearchInputProps, SearchInputWidthPreset } from './components/SearchInput/SearchInput';
 export type { RoundedTextInputProps } from './components/RoundedTextInput/RoundedTextInput';
+export type { SingleDatePickerProps } from './components/SingleDatePicker/SingleDatePicker';
 export type { ThemeModeToggleProps, ThemeModeToggleTheme } from './components/ThemeModeToggle/ThemeModeToggle';
 export type { UnderlineTabProps, UnderlineTabItemProps } from './components/UnderlineTab/UnderlineTab';
 export type { RoundedSegmentTabProps, RoundedSegmentTabItemProps } from './components/RoundedSegmentTab/RoundedSegmentTab';

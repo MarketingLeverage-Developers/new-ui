@@ -1,0 +1,145 @@
+.Root {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px 14px 10px;
+    border: 1px solid var(--granter-gray-200);
+    border-radius: 12px;
+    background: var(--granter-white);
+    box-shadow: 0 12px 30px rgb(15 23 42 / 14%);
+
+    :global {
+        .rdp {
+            margin: 0;
+            --rdp-cell-size: 32px;
+        }
+
+        .rdp-nav,
+        .rdp-caption,
+        .rdp-caption_label {
+            display: none;
+        }
+
+        .rdp-weekday {
+            color: var(--granter-gray-400);
+            text-align: center;
+            font-size: 13px;
+            font-weight: 500;
+            line-height: 18px;
+
+            &:first-child {
+                color: var(--granter-red-400);
+            }
+
+            &:last-child {
+                color: var(--granter-blue-500);
+            }
+        }
+
+        .rdp-day {
+            text-align: center;
+            width: 32px;
+            height: 32px;
+
+            .rdp-day_button {
+                width: 30px;
+                height: 30px;
+                padding: 0;
+                border: 0;
+                border-radius: 8px;
+                color: var(--granter-gray-700);
+                background: transparent;
+                font-size: 14px;
+                font-weight: 400;
+            }
+
+            .rdp-day_button:hover {
+                background: var(--granter-gray-100);
+            }
+
+            &.rdp-outside .rdp-day_button,
+            &.rdp-disabled .rdp-day_button {
+                color: var(--granter-gray-300);
+            }
+
+            &.rdp-selected .rdp-day_button {
+                background: var(--granter-blue-500);
+                color: var(--granter-white);
+            }
+
+            &.rdp-today:not(.rdp-selected) .rdp-day_button {
+                background: var(--granter-sky-100);
+                color: var(--granter-blue-600);
+            }
+        }
+    }
+}
+
+.NavRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.MonthText {
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: var(--granter-gray-900);
+}
+
+.NavButtons {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.NavButton {
+    width: 28px;
+    height: 28px;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--granter-gray-600);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.16s ease;
+}
+
+.NavButton:hover {
+    background: var(--granter-gray-100);
+}
+
+.Legend {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    color: var(--granter-gray-600);
+    font-size: 13px;
+    font-weight: 400;
+}
+
+.LegendItem {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.LegendDot {
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+}
+
+.LegendDotToday {
+    background: var(--granter-sky-100);
+    border: 1px solid var(--granter-blue-500);
+}
+
+.LegendDotSelected {
+    background: var(--granter-blue-500);
+}

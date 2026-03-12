@@ -104,6 +104,9 @@ export type { SearchInputProps, SearchInputWidthPreset } from './SearchInput/Sea
 export { default as RoundedTextInput } from './RoundedTextInput/RoundedTextInput';
 export type { RoundedTextInputProps } from './RoundedTextInput/RoundedTextInput';
 
+export { default as SingleDatePicker } from './SingleDatePicker/SingleDatePicker';
+export type { SingleDatePickerProps } from './SingleDatePicker/SingleDatePicker';
+
 export { default as ThemeModeToggle } from './ThemeModeToggle/ThemeModeToggle';
 export type { ThemeModeToggleProps, ThemeModeToggleTheme } from './ThemeModeToggle/ThemeModeToggle';
 
