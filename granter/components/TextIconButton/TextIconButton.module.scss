@@ -2,11 +2,17 @@
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    padding: 4px 0;
+    padding: 4px 8px;
     border: 0;
+    border-radius: 6px;
     background-color: transparent;
     color: var(--granter-gray-900);
     cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.Page:hover {
+    background-color: var(--granter-gray-100);
 }
 
 .PageText {
