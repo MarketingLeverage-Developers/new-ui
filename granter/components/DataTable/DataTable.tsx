@@ -5,6 +5,14 @@ import AirTable from '../../../shared/headless/AirTable/AirTable';
 import Text from '../Text/Text';
 import styles from './DataTable.module.scss';
 
+export type DataTablePersistedState = {
+    columnWidths: Record<string, number>;
+    columnOrder: string[];
+    visibleColumnKeys: string[];
+    knownColumnKeys: string[];
+    pinnedColumnKeys?: string[];
+};
+
 export type DataTableProps<T> = {
     data: T[];
     columns: Column<T>[];
@@ -13,6 +21,7 @@ export type DataTableProps<T> = {
     onScrollElReady?: (el: HTMLDivElement | null) => void;
     defaultColWidth?: number;
     storageKey?: string;
+    onPersistedStateChange?: (state: DataTablePersistedState) => void;
     persistedStateSyncVersion?: number;
     showColumnVisibilityControl?: boolean;
     defaultSortState?: SortState;
@@ -42,6 +51,7 @@ const DataTable = <T,>({
     onScrollElReady,
     defaultColWidth = 120,
     storageKey,
+    onPersistedStateChange,
     persistedStateSyncVersion,
     showColumnVisibilityControl = true,
     defaultSortState,
@@ -69,6 +79,7 @@ const DataTable = <T,>({
             rowKeyField={rowKeyField}
             defaultColWidth={defaultColWidth}
             storageKey={storageKey}
+            onPersistedStateChange={onPersistedStateChange}
             persistedStateSyncVersion={persistedStateSyncVersion}
             showColumnVisibilityControl={showColumnVisibilityControl}
             defaultSortState={defaultSortState}
