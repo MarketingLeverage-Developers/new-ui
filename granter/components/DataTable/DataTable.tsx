@@ -1,6 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
-import type { Column, SortState } from '../../../shared/headless/AirTable/AirTable';
+import type { Column, FilterState, SortState } from '../../../shared/headless/AirTable/AirTable';
 import AirTable from '../../../shared/headless/AirTable/AirTable';
 import Text from '../Text/Text';
 import styles from './DataTable.module.scss';
@@ -25,10 +25,22 @@ export type DataTableProps<T> = {
     persistedStateSyncVersion?: number;
     showColumnVisibilityControl?: boolean;
     defaultSortState?: SortState;
+    sortState?: SortState;
+    onSortChange?: (next: SortState) => void;
+    sortMode?: 'internal' | 'external';
+    filterState?: FilterState;
+    onFilterChange?: (next: FilterState) => void;
+    filterMode?: 'internal' | 'external';
+    filterOptionsData?: T[];
     fillContainerWidth?: boolean;
     enableVirtualization?: boolean;
     virtualRowHeight?: number;
     virtualOverscan?: number;
+    enableAnimation?: boolean;
+    animationRowLimit?: number;
+    detailRenderer?: (params: { row: T; ri: number }) => React.ReactNode;
+    getRowCanExpand?: (row: T, ri: number) => boolean;
+    getRowStyle?: (row: T, index: number) => React.CSSProperties;
     emptyText?: React.ReactNode;
     className?: string;
     headerClassName?: string;
@@ -55,10 +67,22 @@ const DataTable = <T,>({
     persistedStateSyncVersion,
     showColumnVisibilityControl = true,
     defaultSortState,
+    sortState,
+    onSortChange,
+    sortMode = 'internal',
+    filterState,
+    onFilterChange,
+    filterMode = 'internal',
+    filterOptionsData,
     fillContainerWidth = true,
     enableVirtualization = false,
     virtualRowHeight,
     virtualOverscan,
+    enableAnimation = false,
+    animationRowLimit,
+    detailRenderer,
+    getRowCanExpand,
+    getRowStyle,
     emptyText = '조건에 맞는 내역이 없습니다.',
     className,
     headerClassName,
@@ -83,10 +107,22 @@ const DataTable = <T,>({
             persistedStateSyncVersion={persistedStateSyncVersion}
             showColumnVisibilityControl={showColumnVisibilityControl}
             defaultSortState={defaultSortState}
+            sortState={sortState}
+            onSortChange={onSortChange}
+            sortMode={sortMode}
+            filterState={filterState}
+            onFilterChange={onFilterChange}
+            filterMode={filterMode}
+            filterOptionsData={filterOptionsData}
             fillContainerWidth={fillContainerWidth}
             enableVirtualization={enableVirtualization}
             virtualRowHeight={virtualRowHeight}
             virtualOverscan={virtualOverscan}
+            enableAnimation={enableAnimation}
+            animationRowLimit={animationRowLimit}
+            detailRenderer={detailRenderer}
+            getRowCanExpand={getRowCanExpand}
+            getRowStyle={getRowStyle}
         >
             <AirTable.Container className={styles.Container} height={height} onScrollElReady={onScrollElReady}>
                 <AirTable.Header
