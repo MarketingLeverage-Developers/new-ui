@@ -154,7 +154,9 @@
     display: block !important;
 }
 
-.Shell :global(.air-table-header-cell:has([data-col-sort-btn='true'], [data-col-menu-btn='true']) > div) {
+.Shell :global(
+        .air-table-header-cell:has([data-col-sort-btn='true'], [data-col-menu-btn='true']) > [data-col-header-content='true']
+    ) {
     padding-right: 58px !important;
 }
 

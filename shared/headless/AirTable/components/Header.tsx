@@ -111,6 +111,10 @@ const DefaultColumnFilter = <T,>({
     }, [options, keyword]);
 
     const excludedSet = useMemo(() => new Set(filterState[colKey]?.excluded ?? []), [filterState, colKey]);
+    const visibleCount = useMemo(
+        () => options.reduce((count, opt) => (excludedSet.has(opt.key) ? count : count + 1), 0),
+        [options, excludedSet]
+    );
 
     const toggleExclude = (key: string) => {
         const nextExcluded = new Set(excludedSet);
@@ -130,6 +134,12 @@ const DefaultColumnFilter = <T,>({
         if (!filterState[colKey]) return;
         const nextState = { ...filterState };
         delete nextState[colKey];
+        setFilterState(nextState);
+    };
+
+    const hideAll = () => {
+        if (options.length === 0) return;
+        const nextState = { ...filterState, [colKey]: { excluded: options.map((opt) => opt.key) } };
         setFilterState(nextState);
     };
 
@@ -165,15 +175,14 @@ const DefaultColumnFilter = <T,>({
                 ) : (
                     filteredOptions.map((opt) => {
                         const excluded = excludedSet.has(opt.key);
+                        const checked = !excluded;
                         return (
-                            <button
+                            <label
                                 key={opt.key || '__empty__'}
-                                type="button"
-                                onClick={() => toggleExclude(opt.key)}
                                 style={{
                                     width: '100%',
                                     border: 'none',
-                                    background: excluded ? 'rgba(0,0,0,0.04)' : 'transparent',
+                                    background: excluded ? 'rgba(0,0,0,0.02)' : 'transparent',
                                     borderRadius: 6,
                                     padding: '6px 8px',
                                     textAlign: 'left',
@@ -183,37 +192,78 @@ const DefaultColumnFilter = <T,>({
                                     justifyContent: 'space-between',
                                     gap: 12,
                                     fontSize: 12,
-                                    color: excluded ? getThemeColor('Gray2') : getThemeColor('Black1'),
-                                    textDecoration: excluded ? 'line-through' : 'none',
+                                    color: getThemeColor('Black1'),
                                 }}
                                 title={opt.label}
                             >
-                                <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                                    {opt.label}
+                                <span
+                                    style={{
+                                        display: 'inline-flex',
+                                        alignItems: 'center',
+                                        gap: 8,
+                                        minWidth: 0,
+                                        flex: 1,
+                                    }}
+                                >
+                                    <input
+                                        type="checkbox"
+                                        checked={checked}
+                                        onChange={() => toggleExclude(opt.key)}
+                                        style={{
+                                            width: 14,
+                                            height: 14,
+                                            cursor: 'pointer',
+                                        }}
+                                    />
+                                    <span
+                                        style={{
+                                            overflow: 'hidden',
+                                            textOverflow: 'ellipsis',
+                                            whiteSpace: 'nowrap',
+                                            color: checked ? getThemeColor('Black1') : getThemeColor('Gray2'),
+                                        }}
+                                    >
+                                        {opt.label}
+                                    </span>
                                 </span>
                                 <span style={{ color: getThemeColor('Gray3'), fontSize: 11 }}>{opt.count}</span>
-                            </button>
+                            </label>
                         );
                     })
                 )}
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <span style={{ fontSize: 11, color: getThemeColor('Gray2') }}>
-                    제외 {excludedSet.size}개
+                    표시 {visibleCount} / 전체 {options.length}
                 </span>
-                <button
-                    type="button"
-                    onClick={clearFilter}
-                    style={{
-                        border: 'none',
-                        background: 'transparent',
-                        color: getThemeColor('Primary1'),
-                        fontSize: 12,
-                        cursor: 'pointer',
-                    }}
-                >
-                    전체 보기
-                </button>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <button
+                        type="button"
+                        onClick={hideAll}
+                        style={{
+                            border: 'none',
+                            background: 'transparent',
+                            color: getThemeColor('Gray2'),
+                            fontSize: 12,
+                            cursor: 'pointer',
+                        }}
+                    >
+                        전체 숨김
+                    </button>
+                    <button
+                        type="button"
+                        onClick={clearFilter}
+                        style={{
+                            border: 'none',
+                            background: 'transparent',
+                            color: getThemeColor('Primary1'),
+                            fontSize: 12,
+                            cursor: 'pointer',
+                        }}
+                    >
+                        전체 표시
+                    </button>
+                </div>
             </div>
         </div>
     );
@@ -676,7 +726,16 @@ export const Header = <T,>({ className, headerCellClassName, resizeHandleClassNa
                 setFilterState={setFilterState}
             />
         );
-    }, [filterPopup.open, filterPopup.colKey, columnRow.columns, sortConfigByKey, filterOptionsData, filterState, setFilterState]);
+    }, [
+        filterPopup.open,
+        filterPopup.colKey,
+        columnRow.columns,
+        sortConfigByKey,
+        filterOptionsData,
+        columnByKey,
+        filterState,
+        setFilterState,
+    ]);
 
     const isContextPinned = useMemo(() => {
         if (!contextMenu.colKey) return false;
@@ -769,6 +828,7 @@ export const Header = <T,>({ className, headerCellClassName, resizeHandleClassNa
                                 onContextMenu={handleContextMenu(colKey)}
                             >
                                 <div
+                                    data-col-header-content="true"
                                     style={{
                                         display: 'flex',
                                         alignItems: 'center',
