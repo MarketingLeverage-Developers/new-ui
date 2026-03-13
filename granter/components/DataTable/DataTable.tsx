@@ -40,6 +40,13 @@ export type DataTableProps<T> = {
     animationRowLimit?: number;
     detailRenderer?: (params: { row: T; ri: number }) => React.ReactNode;
     getRowCanExpand?: (row: T, ri: number) => boolean;
+    getExpandedRows?: (row: T, ri: number) => T[];
+    getRowLevel?: (row: T, ri: number) => number;
+    defaultExpandedRowKeys?: string[];
+    persistExpandedRowKeys?: boolean;
+    pinnedColumnKeys?: string[];
+    pinnedHeaderBgColor?: string | ((colKey: string) => string | undefined);
+    pinnedHeaderTextColor?: string | ((colKey: string) => string | undefined);
     getRowStyle?: (row: T, index: number) => React.CSSProperties;
     emptyText?: React.ReactNode;
     className?: string;
@@ -82,6 +89,13 @@ const DataTable = <T,>({
     animationRowLimit,
     detailRenderer,
     getRowCanExpand,
+    getExpandedRows,
+    getRowLevel,
+    defaultExpandedRowKeys,
+    persistExpandedRowKeys,
+    pinnedColumnKeys,
+    pinnedHeaderBgColor,
+    pinnedHeaderTextColor,
     getRowStyle,
     emptyText = '조건에 맞는 내역이 없습니다.',
     className,
@@ -122,6 +136,13 @@ const DataTable = <T,>({
             animationRowLimit={animationRowLimit}
             detailRenderer={detailRenderer}
             getRowCanExpand={getRowCanExpand}
+            getExpandedRows={getExpandedRows}
+            getRowLevel={getRowLevel}
+            defaultExpandedRowKeys={defaultExpandedRowKeys}
+            persistExpandedRowKeys={persistExpandedRowKeys}
+            pinnedColumnKeys={pinnedColumnKeys}
+            pinnedHeaderBgColor={pinnedHeaderBgColor}
+            pinnedHeaderTextColor={pinnedHeaderTextColor}
             getRowStyle={getRowStyle}
         >
             <AirTable.Container className={styles.Container} height={height} onScrollElReady={onScrollElReady}>
