@@ -1,7 +1,10 @@
-import React, { useEffect, useMemo, useRef, type ReactNode } from 'react';
-import { FiAlertTriangle } from 'react-icons/fi';
+import type { ReactNode } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
+import StaticOverlay from '../../../StaticOverlay/StaticOverlay';
+import LogoLottie from '../../../LogoLottie/LogoLottie';
+import BlurOverlay from '../../../BlurOverlay/BlurOverlay';
+import ErrorFallback from '../../../ErrorFallback/ErrorFallback';
 import DeferredComponent from '@/components/feature/deferred/DeferredComponent';
-import { toastBus } from '@/utils/toast/ToastUtils';
 import styles from './MainOverlay.module.scss';
 
 export type MainOverlayProps = {
@@ -12,153 +15,107 @@ export type MainOverlayProps = {
     errorMessage?: string;
     suspenseFallbackCenterNode?: ReactNode;
     fetchingOverlayCenterNode?: ReactNode;
-    onRetry?: () => void | Promise<void>;
-};
-
-const normalizeErrorMessage = (error: unknown): string => {
-    const defaultMessage = '일시적인 오류입니다. 잠시 후 다시 시도해 주세요.';
-    if (!error) return defaultMessage;
-
-    if (error instanceof Error) return error.message || defaultMessage;
-
-    const anyObj = error as {
-        response?: { data?: { message?: string; error?: { message?: string } } };
-        message?: string;
-    };
-
-    const message = anyObj?.response?.data?.message ?? anyObj?.response?.data?.error?.message ?? anyObj?.message;
-
-    return message || defaultMessage;
-};
-
-const ErrorToastOnce = ({ message }: { message: string }) => {
-    const fired = useRef(false);
-
-    useEffect(() => {
-        if (fired.current) return;
-        fired.current = true;
-        toastBus.emit({ kind: 'error', text: message });
-    }, [message]);
-
-    return null;
+    onRetry?: () => void | Promise<unknown>;
 };
 
 type OverlayMode = 'none' | 'initial' | 'blur';
 
-const LoadingFallback = ({ compact = false }: { compact?: boolean }) => (
-    <div className={styles.LoadingCard} data-compact={compact ? 'true' : 'false'}>
-        <span className={styles.Spinner} aria-hidden="true" />
-        <p className={styles.LoadingTitle}>데이터를 불러오는 중입니다</p>
-        <p className={styles.LoadingDescription}>잠시만 기다려 주세요.</p>
-    </div>
-);
-
-const ErrorFallback = ({
-    message,
-    onRetry,
-}: {
-    message?: string;
-    onRetry?: () => void | Promise<void>;
-}) => (
-    <div className={styles.ErrorCard} role="alert">
-        <span className={styles.ErrorIcon} aria-hidden="true">
-            <FiAlertTriangle size={18} />
-        </span>
-        <p className={styles.ErrorTitle}>오류가 발생했습니다</p>
-        <p className={styles.ErrorDescription}>{message || '잠시 후에 다시 시도해 주세요.'}</p>
-        {onRetry ? (
-            <button
-                type="button"
-                className={styles.RetryButton}
-                onClick={() => {
-                    void onRetry();
-                }}
-            >
-                다시 시도
-            </button>
-        ) : null}
-    </div>
-);
-
-const MainOverlay = ({
+const MainOverlay: React.FC<MainOverlayProps> = ({
     children,
     isFetching = false,
     isEmpty = false,
     hasError = false,
-    errorMessage = '',
+    errorMessage,
     suspenseFallbackCenterNode,
     fetchingOverlayCenterNode,
     onRetry,
-}: MainOverlayProps) => {
-    const normalizedErrorMessage = useMemo(() => errorMessage || normalizeErrorMessage(null), [errorMessage]);
-    const fallbackMessage = useMemo(
-        () => (errorMessage && errorMessage.trim().length > 0 ? errorMessage : undefined),
-        [errorMessage]
-    );
-
-    const hasEverHadDataRef = useRef(false);
+}) => {
+    const hasStartedFirstFetchRef = useRef(false);
+    const hasCompletedFirstFetchRef = useRef(false);
 
     useEffect(() => {
-        if (!hasError && !isEmpty) {
-            hasEverHadDataRef.current = true;
+        if (isFetching) {
+            hasStartedFirstFetchRef.current = true;
+            return;
         }
-    }, [hasError, isEmpty]);
+
+        if (hasStartedFirstFetchRef.current) {
+            hasCompletedFirstFetchRef.current = true;
+        }
+    }, [isFetching]);
+
+    useEffect(() => {
+        // 페이지 진입 시 이미 데이터가 있는 경우, 첫 fetch를 initial로 취급하지 않는다.
+        if (!isFetching && !isEmpty) {
+            hasCompletedFirstFetchRef.current = true;
+        }
+    }, [isFetching, isEmpty]);
 
     const mode: OverlayMode = useMemo(() => {
-        if (hasError) return 'none';
-        if (!isFetching) return 'none';
-
-        if (isEmpty) {
-            if (!hasEverHadDataRef.current) return 'initial';
-            return 'blur';
-        }
-
+        if (hasError || !isFetching) return 'none';
+        if (!hasCompletedFirstFetchRef.current) return 'initial';
         return 'blur';
-    }, [hasError, isEmpty, isFetching]);
+    }, [hasError, isFetching]);
 
     const deferredConfig = useMemo(() => {
-        if (mode === 'initial') return { delay: 300, minVisibleMs: 1000 };
-        if (mode === 'blur') return { delay: 300, minVisibleMs: 1000 };
+        if (mode === 'initial' || mode === 'blur') {
+            return { delay: 300, minVisibleMs: 1000 };
+        }
         return { delay: 0, minVisibleMs: 0 };
     }, [mode]);
 
     const overlayNode = useMemo(() => {
         if (mode === 'initial') {
             return (
-                <div className={styles.StaticOverlay}>
-                    <div className={styles.Center}>{suspenseFallbackCenterNode ?? <LoadingFallback />}</div>
-                </div>
+                <StaticOverlay
+                    centerNode={
+                        suspenseFallbackCenterNode ?? (
+                            <div className={styles.LoadingLogoSmall}>
+                                <LogoLottie />
+                            </div>
+                        )
+                    }
+                />
             );
         }
-
         if (mode === 'blur') {
             return (
-                <div className={styles.BlurOverlay}>
-                    <div className={styles.Center}>
-                        {fetchingOverlayCenterNode ?? <LoadingFallback compact />}
-                    </div>
-                </div>
+                <BlurOverlay
+                    centerNode={
+                        fetchingOverlayCenterNode ?? (
+                            <div className={styles.LoadingLogoSmall}>
+                                <LogoLottie />
+                            </div>
+                        )
+                    }
+                />
             );
         }
-
         return null;
-    }, [fetchingOverlayCenterNode, mode, suspenseFallbackCenterNode]);
+    }, [mode, suspenseFallbackCenterNode, fetchingOverlayCenterNode]);
+
+    if (hasError) {
+        return (
+            <div className={styles.Root}>
+                {children}
+                <StaticOverlay
+                    centerNode={
+                        <ErrorFallback
+                            message={errorMessage}
+                            onRetry={async () => {
+                                await onRetry?.();
+                            }}
+                        />
+                    }
+                />
+            </div>
+        );
+    }
 
     return (
-        <>
+        <div className={styles.Root}>
             {children}
-            {hasError ? (
-                <>
-                    <ErrorToastOnce message={normalizedErrorMessage} />
-                    <div className={styles.StaticOverlay}>
-                        <div className={styles.Center}>
-                            <ErrorFallback message={fallbackMessage} onRetry={onRetry} />
-                        </div>
-                    </div>
-                </>
-            ) : null}
-
-            {!hasError && overlayNode !== null ? (
+            {overlayNode ? (
                 <DeferredComponent
                     active={mode !== 'none'}
                     delay={deferredConfig.delay}
@@ -167,7 +124,7 @@ const MainOverlay = ({
                     {overlayNode}
                 </DeferredComponent>
             ) : null}
-        </>
+        </div>
     );
 };
 
