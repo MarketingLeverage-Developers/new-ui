@@ -49,30 +49,12 @@ const ImagePreviewContent = ({ src, name, prefix }: { src: string; name: string;
     return (
         <div
             ref={scrollRef}
-            style={{
-                width: '100%',
-                height: '100%',
-                padding: '0 10%',
-                boxSizing: 'border-box',
-                overflowY: 'auto',
-                overflowX: 'hidden',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                cursor: 'pointer',
-            }}
+            className={styles.ImagePreviewViewport}
             onClick={() => closeModal()}
         >
             <div
-                style={{
-                    width: `${zoom * 100}%`,
-                    transition: 'width 0.1s ease-out',
-                    flexShrink: 0,
-                    margin: 'auto 0',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    cursor: 'default',
-                }}
+                className={styles.ImagePreviewCanvas}
+                style={{ width: `${zoom * 100}%` }}
                 onClick={(e) => e.stopPropagation()}
             >
                 <Common.Image
@@ -84,8 +66,8 @@ const ImagePreviewContent = ({ src, name, prefix }: { src: string; name: string;
                     block
                     style={{
                         height: 'auto',
-                        maxHeight: 'none',
-                        maxWidth: 'none',
+                        maxHeight: '100%',
+                        maxWidth: '100%',
                     }}
                 />
             </div>
@@ -275,10 +257,7 @@ const BaseFileUploaderList: React.FC = () => {
                             </Modal.Trigger>
                             <Portal>
                                 <Modal.Backdrop className={styles.ImageModalBackdrop} />
-                                <Modal.Content
-                                    className={styles.ImageModalContent}
-                                    style={{ overflow: 'hidden', display: 'block' }}
-                                >
+                                <Modal.Content className={styles.ImageModalContent}>
                                     <ImagePreviewContent src={p.url} prefix={apiPrefix} name={p.name} />
                                 </Modal.Content>
                             </Portal>
