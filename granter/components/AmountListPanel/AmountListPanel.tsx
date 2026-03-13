@@ -44,6 +44,8 @@ export type AmountListPanelProps = {
     emptyText?: React.ReactNode;
     maxHeight?: number | string;
     className?: string;
+    size?: 'default' | 'compact';
+    surface?: 'plain' | 'card';
 };
 
 const AmountListPanel = ({
@@ -60,12 +62,14 @@ const AmountListPanel = ({
     emptyText = '표시할 항목이 없습니다.',
     maxHeight,
     className,
+    size = 'default',
+    surface = 'plain',
 }: AmountListPanelProps) => {
     const selectedKeySet = React.useMemo(() => new Set(selectedKeys), [selectedKeys]);
     const bodyStyle = typeof maxHeight !== 'undefined' ? { maxHeight } : undefined;
 
     return (
-        <section className={classNames(styles.Panel, className)}>
+        <section className={classNames(styles.Panel, className)} data-size={size} data-surface={surface}>
             <header className={styles.Header}>
                 {tabs && tabs.length > 0 ? (
                     <div className={styles.Tabs}>

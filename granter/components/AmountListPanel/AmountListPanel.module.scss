@@ -8,6 +8,12 @@
     background-color: var(--granter-white);
 }
 
+.Panel[data-surface='card'] {
+    border: 1px solid var(--granter-gray-200);
+    border-radius: 12px;
+    padding: 12px;
+}
+
 .Header {
     display: flex;
     align-items: center;
@@ -199,4 +205,40 @@
     padding: 12px 4px;
     font-size: 14px;
     line-height: 20px;
+}
+
+.Panel[data-size='compact'] .Header {
+    padding: 0 0 8px;
+}
+
+.Panel[data-size='compact'] .Title {
+    font-size: 16px;
+    line-height: 22px;
+}
+
+.Panel[data-size='compact'] .Subtitle {
+    font-size: 12px;
+    line-height: 18px;
+}
+
+.Panel[data-size='compact'] .Body {
+    padding-right: 0;
+}
+
+.Panel[data-size='compact'] .Item {
+    min-height: 40px;
+    padding: 4px 2px;
+    border-radius: 8px;
+}
+
+.Panel[data-size='compact'] .IconWrap {
+    width: 24px;
+    height: 24px;
+}
+
+.Panel[data-size='compact'] .Label,
+.Panel[data-size='compact'] .Meta,
+.Panel[data-size='compact'] .Amount {
+    font-size: 13px;
+    line-height: 18px;
 }
