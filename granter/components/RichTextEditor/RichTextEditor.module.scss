@@ -1,0 +1,101 @@
+.Root {
+    width: 100%;
+    border: 1px solid var(--granter-gray-200, var(--Gray5));
+    border-radius: 12px;
+    background: var(--granter-white, var(--White1));
+    overflow: hidden;
+}
+
+.Loading {
+    width: 100%;
+    min-height: 140px;
+    padding: 14px;
+    border: 1px solid var(--granter-gray-200, var(--Gray5));
+    border-radius: 12px;
+    color: var(--granter-gray-500, var(--Gray2));
+    font-size: 14px;
+    background: var(--granter-gray-50, #f9fafb);
+}
+
+.Toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: center;
+    padding: 8px;
+    border-bottom: 1px solid var(--granter-gray-200, var(--Gray5));
+    background: var(--granter-gray-50, #f9fafb);
+}
+
+.ToolbarButton {
+    min-height: 30px;
+    padding: 5px 10px;
+    border: 1px solid var(--granter-gray-200, var(--Gray5));
+    border-radius: 8px;
+    background: var(--granter-white, var(--White1));
+    color: var(--granter-gray-700, var(--Gray1));
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.16s ease, border-color 0.16s ease, color 0.16s ease;
+
+    &:hover {
+        background: var(--granter-gray-100, var(--Gray6));
+    }
+}
+
+.Active {
+    background: var(--granter-primary-500, var(--Primary1));
+    border-color: var(--granter-primary-500, var(--Primary1));
+    color: var(--granter-white, var(--White1));
+}
+
+.Disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.ClearButton {
+    margin-left: auto;
+}
+
+.HiddenInput {
+    display: none;
+}
+
+.ContentWrap {
+    position: relative;
+    min-height: 220px;
+    max-height: 420px;
+    overflow-y: auto;
+    padding: 12px;
+    background: var(--granter-white, var(--White1));
+}
+
+.Placeholder {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    pointer-events: none;
+    color: var(--granter-gray-400, var(--Gray3));
+    font-size: 14px;
+}
+
+.Content {
+    outline: none;
+    font-size: 14px;
+    line-height: 1.58;
+    color: var(--granter-gray-800, var(--Gray1));
+
+    :global(.ProseMirror) {
+        outline: none;
+    }
+
+    img {
+        max-width: 100%;
+        height: auto;
+        display: block;
+        border: 1px solid var(--granter-gray-200, var(--Gray5));
+        border-radius: 8px;
+    }
+}

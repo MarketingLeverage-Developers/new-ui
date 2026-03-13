@@ -104,6 +104,20 @@ export type { SearchInputProps, SearchInputWidthPreset } from './SearchInput/Sea
 export { default as RoundedTextInput } from './RoundedTextInput/RoundedTextInput';
 export type { RoundedTextInputProps } from './RoundedTextInput/RoundedTextInput';
 
+export { default as FileUploader } from './FileUploader/FileUploader';
+export type {
+    FileUploaderProps,
+    FileUploaderDropzoneProps,
+    FileUploaderFileListProps,
+    FileUploaderImageListProps,
+} from './FileUploader/FileUploader';
+
+export { default as RichTextEditor } from './RichTextEditor/RichTextEditor';
+export type {
+    RichTextEditorProps,
+    RichTextEditorUploadedImage,
+} from './RichTextEditor/RichTextEditor';
+
 export { default as SingleDatePicker } from './SingleDatePicker/SingleDatePicker';
 export type { SingleDatePickerProps } from './SingleDatePicker/SingleDatePicker';
 
