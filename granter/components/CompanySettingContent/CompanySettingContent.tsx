@@ -36,6 +36,7 @@ import UnderlineTab from '../UnderlineTab/UnderlineTab';
 export type CompanySettingContentProps = {
     state: CompanySettingContentState;
     actions: CompanySettingContentActions;
+    embedded?: boolean;
 };
 
 type InlineCreateFormProps = {
@@ -283,7 +284,7 @@ const InlineUpdateForm = ({
     </Box>
 );
 
-const CompanySettingContent = ({ state, actions }: CompanySettingContentProps) => {
+const CompanySettingContent = ({ state, actions, embedded = false }: CompanySettingContentProps) => {
     const { open, companyUuid, homepageUuid, updateModal } = state;
     const companyAdMediaLinkSetting = state.companyAdMediaLinkSetting;
     const companyAdMediaInlineCreateForms = state.companyAdMediaInlineCreateForms;
@@ -294,7 +295,9 @@ const CompanySettingContent = ({ state, actions }: CompanySettingContentProps) =
     const companyInquiryAccessActions = actions.companyInquiryAccessSetting;
     const companyDailyReportActions = actions.companyDailyReportSetting;
 
-    if (!open || !companyUuid || !homepageUuid) return null;
+    const hasHomepageContext = Boolean(homepageUuid || updateModal.selectedHomepageUuid);
+
+    if (!open || !companyUuid || (!embedded && !hasHomepageContext)) return null;
 
     const profileSrc = updateModal.selectedCompany?.profileImageUrl || defaultProfile;
     const selectedCompanyName = updateModal.selectedCompany?.name ?? '업체 설정';
@@ -626,9 +629,11 @@ const CompanySettingContent = ({ state, actions }: CompanySettingContentProps) =
             </BasicContent.Body>
 
             <BasicContent.Footer>
-                <BasicContent.ActionButton variant="secondary" onClick={actions.close}>
-                    닫기
-                </BasicContent.ActionButton>
+                {!embedded ? (
+                    <BasicContent.ActionButton variant="secondary" onClick={actions.close}>
+                        닫기
+                    </BasicContent.ActionButton>
+                ) : null}
                 <BasicContent.ActionButton
                     variant="primary"
                     disabled={updateModal.isCompanyDetailFetching || !updateModal.companyUpdateParam.uuid}
@@ -925,9 +930,11 @@ const CompanySettingContent = ({ state, actions }: CompanySettingContentProps) =
             </BasicContent.Body>
 
             <BasicContent.Footer>
-                <BasicContent.ActionButton variant="secondary" onClick={actions.close}>
-                    닫기
-                </BasicContent.ActionButton>
+                {!embedded ? (
+                    <BasicContent.ActionButton variant="secondary" onClick={actions.close}>
+                        닫기
+                    </BasicContent.ActionButton>
+                ) : null}
                 <BasicContent.ActionButton
                     variant="primary"
                     disabled={companyInquiryAccessSetting.isSaving || !companyInquiryAccessSetting.selectedHomepageUuid}
@@ -1056,9 +1063,11 @@ const CompanySettingContent = ({ state, actions }: CompanySettingContentProps) =
             </BasicContent.Body>
 
             <BasicContent.Footer>
-                <BasicContent.ActionButton variant="secondary" onClick={actions.close}>
-                    닫기
-                </BasicContent.ActionButton>
+                {!embedded ? (
+                    <BasicContent.ActionButton variant="secondary" onClick={actions.close}>
+                        닫기
+                    </BasicContent.ActionButton>
+                ) : null}
                 <BasicContent.ActionButton
                     variant="primary"
                     disabled={companyDailyReportSetting.isSaving || !companyDailyReportSetting.selectedHomepageUuid}
@@ -1257,10 +1266,12 @@ const CompanySettingContent = ({ state, actions }: CompanySettingContentProps) =
 
     return (
         <BasicContent>
-            <BasicContent.Header>
-                <BasicContent.Title>업체 설정</BasicContent.Title>
-                <BasicContent.CloseButton onClick={actions.close} />
-            </BasicContent.Header>
+            {!embedded ? (
+                <BasicContent.Header>
+                    <BasicContent.Title>업체 설정</BasicContent.Title>
+                    <BasicContent.CloseButton onClick={actions.close} />
+                </BasicContent.Header>
+            ) : null}
 
             {updateModal.isCheckingAdMediaLink ? (
                 <BasicContent.Body>
@@ -1288,9 +1299,11 @@ const CompanySettingContent = ({ state, actions }: CompanySettingContentProps) =
                     </BasicContent.Body>
 
                     <BasicContent.Footer>
-                        <BasicContent.ActionButton variant="secondary" onClick={actions.close}>
-                            닫기
-                        </BasicContent.ActionButton>
+                        {!embedded ? (
+                            <BasicContent.ActionButton variant="secondary" onClick={actions.close}>
+                                닫기
+                            </BasicContent.ActionButton>
+                        ) : null}
                         <BasicContent.ActionButton
                             variant="primary"
                             disabled={
@@ -1306,23 +1319,25 @@ const CompanySettingContent = ({ state, actions }: CompanySettingContentProps) =
                 </>
             ) : (
                 <>
-                    <Flex justify='center'>
-                        <UnderlineTab
-                            value={updateModal.tabValue}
-                            scrollable
-                            onChange={(value) =>
-                                updateModal.setTabValue(
-                                    value as 'company_info' | 'ad_media_link' | 'inquiry_access' | 'report' | 'alarm'
-                                )
-                            }
-                        >
-                            <UnderlineTab.Item value="company_info">업체 설정</UnderlineTab.Item>
-                            <UnderlineTab.Item value="ad_media_link">광고 매체 연동</UnderlineTab.Item>
-                            <UnderlineTab.Item value="inquiry_access">문의 · 접속 설정</UnderlineTab.Item>
-                            <UnderlineTab.Item value="report">일일보고 설정</UnderlineTab.Item>
-                            <UnderlineTab.Item value="alarm">알림 설정</UnderlineTab.Item>
-                        </UnderlineTab>
-                    </Flex>
+                    {!embedded ? (
+                        <Flex justify="center">
+                            <UnderlineTab
+                                value={updateModal.tabValue}
+                                scrollable
+                                onChange={(value) =>
+                                    updateModal.setTabValue(
+                                        value as 'company_info' | 'ad_media_link' | 'inquiry_access' | 'report' | 'alarm'
+                                    )
+                                }
+                            >
+                                <UnderlineTab.Item value="company_info">업체 설정</UnderlineTab.Item>
+                                <UnderlineTab.Item value="ad_media_link">광고 매체 연동</UnderlineTab.Item>
+                                <UnderlineTab.Item value="inquiry_access">문의 · 접속 설정</UnderlineTab.Item>
+                                <UnderlineTab.Item value="report">일일보고 설정</UnderlineTab.Item>
+                                <UnderlineTab.Item value="alarm">알림 설정</UnderlineTab.Item>
+                            </UnderlineTab>
+                        </Flex>
+                    ) : null}
 
                     {renderTabPanel()}
                 </>
