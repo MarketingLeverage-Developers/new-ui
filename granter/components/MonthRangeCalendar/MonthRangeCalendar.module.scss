@@ -1,0 +1,328 @@
+.Root {
+    --calendar-accent: var(--granter-blue-500);
+    --calendar-border: var(--granter-gray-200);
+    --calendar-surface: var(--granter-white);
+    --calendar-muted: var(--granter-gray-400);
+
+    display: flex;
+    justify-content: center;
+    width: 589px;
+    height: 424px;
+    overflow: hidden;
+    background: var(--calendar-surface);
+    position: relative;
+    z-index: 1;
+    opacity: 1;
+}
+
+.LeftPreset,
+.RightMonths {
+    display: flex;
+    flex-direction: column;
+    font-weight: 400;
+    overflow-y: auto;
+    width: 126px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+
+    &::-webkit-scrollbar {
+        width: 0;
+        height: 0;
+        display: none;
+    }
+}
+
+.LeftPreset {
+    border-right: 1px solid var(--calendar-border);
+}
+
+.RightMonths {
+    border-left: 1px solid var(--calendar-border);
+}
+
+.PresetItem,
+.MonthItem {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    width: 100%;
+    background: transparent;
+    text-align: left;
+    padding: 10px 12px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--granter-gray-900);
+}
+
+.PresetItem:hover,
+.PresetItemActive,
+.MonthItem:hover,
+.MonthItemActive {
+    background: var(--granter-slate-100);
+}
+
+.Center {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.TopInputs {
+    display: flex;
+    gap: 10px;
+    color: var(--granter-gray-600);
+    padding: 10px 8px 10px;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--calendar-border);
+}
+
+.InputBlock {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.InputLabel {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--granter-gray-600);
+}
+
+.InputWrap {
+    position: relative;
+    width: 152px;
+}
+
+.InputBox {
+    width: 152px;
+    height: 40px;
+    border-radius: 8px;
+    border: 1px solid var(--calendar-border);
+    background: var(--granter-white);
+    color: var(--granter-gray-900);
+    font-size: 15px;
+    font-weight: 400;
+    text-align: center;
+    outline: none;
+}
+
+.InputBox:focus {
+    border: 1px solid var(--calendar-accent);
+}
+
+.InputError {
+    border-color: var(--granter-red-500);
+}
+
+.CalendarHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    height: 42px;
+    padding: 8px 8px 6px;
+}
+
+.NavButton {
+    width: 24px;
+    height: 24px;
+    border: none;
+    background: var(--granter-slate-100);
+    cursor: pointer;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.NavButton:hover {
+    background: var(--granter-slate-150);
+}
+
+.NavButton:disabled {
+    cursor: not-allowed;
+    opacity: 0.35;
+}
+
+.NavIcon {
+    color: var(--granter-gray-400);
+}
+
+.SelectGroup {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    height: 28px;
+}
+
+.SelectTrigger {
+    width: 90px;
+    height: 28px;
+    padding: 0 22px 0 8px;
+    border-radius: 4px;
+    background: transparent;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+    user-select: none;
+    border: none;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--granter-gray-600);
+}
+
+.SelectTrigger:hover {
+    background: var(--granter-slate-100);
+}
+
+.InlineSelectWrap {
+    position: relative;
+}
+
+.SelectMenuInline {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    width: 100%;
+    background: var(--granter-white);
+    border: 1px solid var(--calendar-border);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+    border-radius: 8px;
+    z-index: 40;
+}
+
+.SelectLabel {
+    line-height: 1;
+}
+
+.Arrow {
+    position: absolute;
+    right: 7px;
+    pointer-events: none;
+    color: var(--granter-gray-400);
+    font-size: 14px;
+}
+
+.SelectMenuInner {
+    max-height: 220px;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    padding: 4px;
+
+    &::-webkit-scrollbar {
+        width: 0;
+    }
+}
+
+.SelectItem {
+    padding: 10px 12px;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--granter-gray-900);
+    border: none;
+    border-radius: 6px;
+    background: transparent;
+}
+
+.SelectItem:hover {
+    background: var(--granter-slate-100);
+}
+
+.SelectItemActive {
+    background: var(--granter-slate-100);
+    font-weight: 600;
+}
+
+.MonthGridWrap {
+    flex: 1;
+    padding: 14px 18px 18px;
+}
+
+.MonthGrid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.MonthButton {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 64px;
+    border: 0;
+    border-radius: 18px;
+    background: transparent;
+    color: var(--granter-gray-700);
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition:
+        background-color 0.18s ease,
+        color 0.18s ease;
+}
+
+.MonthButton:hover {
+    background: var(--granter-slate-100);
+}
+
+.MonthButtonDisabled,
+.MonthButtonDisabled:hover {
+    background: transparent;
+    color: var(--granter-gray-300);
+    cursor: not-allowed;
+}
+
+.MonthButtonInRange {
+    background: var(--granter-sky-100);
+    color: var(--granter-gray-900);
+    border-radius: 0;
+}
+
+.MonthButtonRangeStart,
+.MonthButtonRangeEnd,
+.MonthButtonRangeSingle {
+    background: var(--calendar-accent);
+    color: var(--granter-white);
+}
+
+.MonthButtonRangeStart {
+    border-radius: 999px 0 0 999px;
+}
+
+.MonthButtonRangeEnd {
+    border-radius: 0 999px 999px 0;
+}
+
+.MonthButtonRangeSingle {
+    border-radius: 999px;
+}
+
+.MonthButtonPreview {
+    background: transparent;
+    color: var(--granter-gray-900);
+    border-top: 1px solid var(--calendar-accent);
+    border-bottom: 1px solid var(--calendar-accent);
+    border-radius: 0;
+}
+
+.MonthButtonPreviewStart {
+    border-left: 1px solid var(--calendar-accent);
+    border-radius: 999px 0 0 999px;
+}
+
+.MonthButtonPreviewEnd {
+    border-right: 1px solid var(--calendar-accent);
+    border-radius: 0 999px 999px 0;
+}
+
+.MonthButtonPreviewSingle {
+    border: 1px solid var(--calendar-accent);
+    border-radius: 999px;
+}

@@ -5,6 +5,7 @@ import { HiOutlineChevronDown, HiOutlineSparkles } from 'react-icons/hi2';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 import type { DateRange } from 'react-day-picker';
 import DateRangeCalendar from '../DateRangeCalendar/DateRangeCalendar';
+import MonthRangeCalendar from '../MonthRangeCalendar/MonthRangeCalendar';
 import Dropdown, { useDropdown } from '../../../shared/headless/Dropdown/Dropdown';
 import styles from './CardsHeaderContent.module.scss';
 
@@ -32,6 +33,7 @@ export type HeaderBreadcrumbProps = {
 
 export type HeaderDateRangeControlProps = {
     dateLabel: React.ReactNode;
+    mode?: 'date' | 'month';
     onPrevDate?: () => void;
     onNextDate?: () => void;
     onDateLabelClick?: () => void;
@@ -149,12 +151,39 @@ const formatDateRangeLabel = (value?: DateRange) => {
     const from = formatIsoDate(value?.from);
     const to = formatIsoDate(value?.to);
 
+    if (!from && !to) return undefined;
+    if (from && !to) return from;
     if (!from || !to) return undefined;
     return `${from} ~ ${to}`;
 };
 
-const buildFallbackRange = (): DateRange => {
+const formatMonthRangeLabel = (value?: DateRange) => {
+    const from = value?.from;
+    const to = value?.to ?? value?.from;
+
+    if (!from && !to) return undefined;
+    if (!from) return undefined;
+
+    const fromLabel = `${from.getFullYear()}.${String(from.getMonth() + 1).padStart(2, '0')}`;
+    if (!to) return fromLabel;
+
+    const toLabel = `${to.getFullYear()}.${String(to.getMonth() + 1).padStart(2, '0')}`;
+    if (from.getFullYear() === to.getFullYear() && from.getMonth() === to.getMonth()) {
+        return fromLabel;
+    }
+
+    return `${fromLabel} ~ ${toLabel}`;
+};
+
+const buildFallbackRange = (mode: 'date' | 'month'): DateRange => {
     const today = new Date();
+    if (mode === 'month') {
+        return {
+            from: new Date(today.getFullYear(), today.getMonth(), 1),
+            to: new Date(today.getFullYear(), today.getMonth() + 1, 0),
+        };
+    }
+
     return {
         from: new Date(today.getFullYear(), today.getMonth(), 1),
         to: new Date(today.getFullYear(), today.getMonth() + 1, 0),
@@ -186,6 +215,7 @@ const HeaderDateRangeTrigger = ({
 
 const HeaderDateRangeControl = ({
     dateLabel,
+    mode = 'date',
     onPrevDate = noop,
     onNextDate = noop,
     onDateLabelClick,
@@ -198,11 +228,11 @@ const HeaderDateRangeControl = ({
         toDateRange(defaultValue) ??
         toDateRange(value) ??
         parseDateRangeLabel(dateLabel) ??
-        buildFallbackRange();
+        buildFallbackRange(mode);
 
     const [innerRange, setInnerRange] = React.useState<DateRange | undefined>(initialRange);
     const controlledRange = toDateRange(value);
-    const selectedRange = controlledRange ?? innerRange ?? buildFallbackRange();
+    const selectedRange = controlledRange ?? innerRange ?? buildFallbackRange(mode);
 
     React.useEffect(() => {
         if (value || defaultValue) return;
@@ -213,7 +243,8 @@ const HeaderDateRangeControl = ({
         setInnerRange(parsed);
     }, [dateLabel, defaultValue, value]);
 
-    const displayLabel = formatDateRangeLabel(selectedRange) ?? dateLabel;
+    const displayLabel =
+        (mode === 'month' ? formatMonthRangeLabel(selectedRange) : formatDateRangeLabel(selectedRange)) ?? dateLabel;
 
     const handleRangeChange = (nextRange: DateRange | undefined) => {
         if (!value) setInnerRange(nextRange);
@@ -236,7 +267,11 @@ const HeaderDateRangeControl = ({
 
             <Dropdown.Content className={styles.DateDropdownContent} placement="bottom-center" offset={8}>
                 <div className={styles.DateRangePanel}>
-                    <DateRangeCalendar range={selectedRange} onChange={handleRangeChange} />
+                    {mode === 'month' ? (
+                        <MonthRangeCalendar range={selectedRange} onChange={handleRangeChange} />
+                    ) : (
+                        <DateRangeCalendar range={selectedRange} onChange={handleRangeChange} />
+                    )}
                 </div>
             </Dropdown.Content>
         </Dropdown>
