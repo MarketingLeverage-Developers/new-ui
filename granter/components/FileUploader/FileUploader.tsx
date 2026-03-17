@@ -1,12 +1,25 @@
 import React from 'react';
 import classNames from 'classnames';
 import { FiImage, FiX } from 'react-icons/fi';
-import ImageUploader, { useImageUploader } from '@/shared/headless/ImageUploader/ImageUploader';
+import ImageUploader, {
+    type ImageItem,
+    type ImageItemInput,
+    useImageUploader,
+} from '@/shared/headless/ImageUploader/ImageUploader';
 import styles from './FileUploader.module.scss';
+
+type LegacyImageItem = {
+    imageUUID: string;
+    imageUrl: string;
+    imageName: string;
+};
 
 export type FileUploaderProps = {
     children: React.ReactNode;
-} & React.ComponentProps<typeof ImageUploader>;
+    value?: ImageItemInput[] | LegacyImageItem[];
+    onChange?: (next: ImageItem[] | LegacyImageItem[]) => void;
+    uploader?: (args: { files: File[] }) => Promise<ImageItemInput[] | LegacyImageItem[]>;
+} & Omit<React.ComponentProps<typeof ImageUploader>, 'value' | 'onChange' | 'onResolveFiles'>;
 
 export type FileUploaderDropzoneProps = {
     buttonText?: string;
@@ -17,11 +30,61 @@ export type FileUploaderDropzoneProps = {
 export type FileUploaderFileListProps = React.HTMLAttributes<HTMLDivElement>;
 export type FileUploaderImageListProps = React.HTMLAttributes<HTMLDivElement>;
 
-const FileUploaderRoot = ({ children, className, ...props }: FileUploaderProps) => (
-    <ImageUploader {...props} className={classNames(styles.HeadlessRoot, className)}>
-        <div className={styles.Root}>{children}</div>
-    </ImageUploader>
-);
+const isLegacyImageItem = (item: ImageItemInput | LegacyImageItem): item is LegacyImageItem =>
+    typeof (item as LegacyImageItem).imageUUID === 'string';
+
+const toHeadlessValue = (items: Array<ImageItemInput | LegacyImageItem> = []): ImageItemInput[] =>
+    items.map((item) =>
+        isLegacyImageItem(item)
+            ? {
+                  id: item.imageUUID,
+                  url: item.imageUrl,
+                  name: item.imageName,
+                  owned: false,
+              }
+            : item
+    );
+
+const toLegacyValue = (items: ImageItem[] = []): LegacyImageItem[] =>
+    items.map((item) => ({
+        imageUUID: item.id,
+        imageUrl: item.url,
+        imageName: item.name ?? '',
+    }));
+
+const FileUploaderRoot = ({
+    children,
+    className,
+    value,
+    onChange,
+    uploader,
+    onResolveFiles,
+    ...props
+}: FileUploaderProps) => {
+    const usesLegacyShape = Boolean(uploader) || Boolean(value?.some(isLegacyImageItem));
+
+    return (
+        <ImageUploader
+            {...props}
+            value={value ? toHeadlessValue(value) : undefined}
+            onChange={(next) => {
+                if (!onChange) return;
+                onChange(usesLegacyShape ? toLegacyValue(next) : next);
+            }}
+            onResolveFiles={
+                uploader
+                    ? async (files) => {
+                          const resolved = await uploader({ files });
+                          return toHeadlessValue(resolved ?? []);
+                      }
+                    : onResolveFiles
+            }
+            className={classNames(styles.HeadlessRoot, className)}
+        >
+            <div className={styles.Root}>{children}</div>
+        </ImageUploader>
+    );
+};
 
 const FileUploaderDropzone = ({
     buttonText = '파일 선택',

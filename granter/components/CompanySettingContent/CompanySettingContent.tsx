@@ -17,6 +17,7 @@ import danngnLogo from '@/shared/assets/images/danngn-icon.svg';
 import logo from '@/shared/assets/images/logo.svg';
 import defaultProfile from '@/shared/assets/images/default-profile.png';
 import type { MediaListItem } from '@/types/ad-media-link/adMediaLinkMediaTypes';
+import { COMPANY_ADVERTISING_STATUS_OPTIONS } from '@/types/company-management/companyAdvertisingStatusTypes';
 import { formatPhoneNumber } from '@/utils/inquiry-sequence/InquirySequenceUtils';
 import BasicConfirm from '../BasicConfirm/BasicConfirm';
 import BasicModal from '../BasicModal/BasicModal';
@@ -43,6 +44,9 @@ export type CompanySettingContentProps = {
     state: CompanySettingContentState;
     actions: CompanySettingContentActions;
     embedded?: boolean;
+    embeddedSaveLabel?: string;
+    onEmbeddedSaveSuccess?: () => void;
+    hideEmbeddedFooterAction?: boolean;
 };
 
 type InlineCreateFormProps = {
@@ -264,7 +268,14 @@ const InlineUpdateForm = ({
     </SectionBlock>
 );
 
-const CompanySettingContent = ({ state, actions, embedded = false }: CompanySettingContentProps) => {
+const CompanySettingContent = ({
+    state,
+    actions,
+    embedded = false,
+    embeddedSaveLabel = '저장하기',
+    onEmbeddedSaveSuccess,
+    hideEmbeddedFooterAction = false,
+}: CompanySettingContentProps) => {
     const { open, companyUuid, homepageUuid, updateModal } = state;
     const companyAdMediaLinkSetting = state.companyAdMediaLinkSetting;
     const companyAdMediaInlineCreateForms = state.companyAdMediaInlineCreateForms;
@@ -566,31 +577,6 @@ const CompanySettingContent = ({ state, actions, embedded = false }: CompanySett
             <BasicContent.Body className={embeddedBodyClassName}>
                 {embedded ? (
                     <Flex direction="column" gap={16}>
-                        <SectionBlock title="업체 개요" description="현재 작업 중인 업체와 연결된 홈페이지를 먼저 확인합니다.">
-                            <Flex direction="column">
-                                <SectionFieldRow label="업체" labelWidth={EMBEDDED_FIELD_LABEL_WIDTH}>
-                                    <Flex align="center" gap={12}>
-                                        <img
-                                            src={profileSrc}
-                                            alt={selectedCompanyName}
-                                            width={40}
-                                            height={40}
-                                            style={{ borderRadius: 999, objectFit: 'cover', flexShrink: 0 }}
-                                        />
-                                        <Text size="md" weight="semibold">
-                                            {selectedCompanyName}
-                                        </Text>
-                                    </Flex>
-                                </SectionFieldRow>
-                                <SectionFieldRow
-                                    label="기본 홈페이지"
-                                    value={selectedHomepageName}
-                                    labelWidth={EMBEDDED_FIELD_LABEL_WIDTH}
-                                    divider={false}
-                                />
-                            </Flex>
-                        </SectionBlock>
-
                         <div
                             style={{
                                 display: 'grid',
@@ -627,17 +613,29 @@ const CompanySettingContent = ({ state, actions, embedded = false }: CompanySett
                                     <SectionFieldRow
                                         label="사업자등록번호"
                                         labelWidth={EMBEDDED_FIELD_LABEL_WIDTH}
-                                        divider={false}
                                     >
                                         <SectionFieldInput
                                             {...updateModal.businessNumber}
                                             placeholder="사업자등록번호를 입력해주세요."
                                         />
                                     </SectionFieldRow>
+                                    <SectionFieldRow label="우편번호" labelWidth={EMBEDDED_FIELD_LABEL_WIDTH}>
+                                        <SectionFieldInput {...updateModal.zipCode} placeholder="우편번호를 입력해주세요." />
+                                    </SectionFieldRow>
+                                    <SectionFieldRow
+                                        label="주소"
+                                        labelWidth={EMBEDDED_FIELD_LABEL_WIDTH}
+                                        divider={false}
+                                    >
+                                        <SectionFieldInput
+                                            {...updateModal.address}
+                                            placeholder="주소를 입력해주세요."
+                                        />
+                                    </SectionFieldRow>
                                 </Flex>
                             </SectionBlock>
 
-                            <SectionBlock title="연락처 정보" description="업체와 담당자 연락 수단을 관리합니다.">
+                            <SectionBlock title="연락처 정보" description="업체와 업체 담당자 연락 수단을 관리합니다.">
                                 <Flex direction="column">
                                     <SectionFieldRow label="업체 연락처" labelWidth={EMBEDDED_FIELD_LABEL_WIDTH}>
                                         <SectionFieldInput
@@ -654,99 +652,76 @@ const CompanySettingContent = ({ state, actions, embedded = false }: CompanySett
                                             placeholder="업체 이메일을 입력해주세요."
                                         />
                                     </SectionFieldRow>
-                                    <SectionFieldRow label="담당자명" labelWidth={EMBEDDED_FIELD_LABEL_WIDTH}>
+                                    <SectionFieldRow label="업체 담당자명" labelWidth={EMBEDDED_FIELD_LABEL_WIDTH}>
                                         <SectionFieldInput
                                             {...updateModal.form.register('managerName')}
-                                            placeholder="담당자명을 입력해주세요."
+                                            placeholder="업체 담당자명을 입력해주세요."
                                         />
                                     </SectionFieldRow>
-                                    <SectionFieldRow label="담당자 연락처" labelWidth={EMBEDDED_FIELD_LABEL_WIDTH}>
+                                    <SectionFieldRow label="업체 담당자 연락처" labelWidth={EMBEDDED_FIELD_LABEL_WIDTH}>
                                         <SectionFieldInput
                                             {...updateModal.managerPhoneNumber}
                                             onChange={(event) => {
                                                 updateModal.managerPhoneNumber.onChange(formatPhoneNumber(event.target.value));
                                             }}
-                                            placeholder="담당자 연락처를 입력해주세요."
+                                            placeholder="업체 담당자 연락처를 입력해주세요."
                                         />
                                     </SectionFieldRow>
                                     <SectionFieldRow
-                                        label="담당자 이메일"
+                                        label="업체 담당자 이메일"
                                         labelWidth={EMBEDDED_FIELD_LABEL_WIDTH}
                                         divider={false}
                                     >
                                         <SectionFieldInput
                                             {...updateModal.form.register('managerEmail')}
-                                            placeholder="담당자 이메일을 입력해주세요."
+                                            placeholder="업체 담당자 이메일을 입력해주세요."
                                         />
                                     </SectionFieldRow>
                                 </Flex>
                             </SectionBlock>
                         </div>
 
-                        <SectionBlock title="운영 정보" description="주소와 자동화/라이브 상태를 함께 조정합니다.">
-                            <div
-                                style={{
-                                    display: 'grid',
-                                    gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1fr)',
-                                    gap: 16,
-                                }}
-                            >
-                                <Flex direction="column">
-                                    <SectionFieldRow label="우편번호" labelWidth={EMBEDDED_FIELD_LABEL_WIDTH}>
-                                        <SectionFieldInput {...updateModal.zipCode} placeholder="우편번호를 입력해주세요." />
-                                    </SectionFieldRow>
-                                    <SectionFieldRow
-                                        label="주소"
-                                        labelWidth={EMBEDDED_FIELD_LABEL_WIDTH}
-                                        divider={false}
+                        <SectionBlock title="운영 정보" description="광고 상태와 자동화 기본값을 함께 조정합니다.">
+                            <Flex direction="column">
+                                <SectionFieldRow label="광고 상태" labelWidth={EMBEDDED_FIELD_LABEL_WIDTH}>
+                                    <SectionFieldSelect
+                                        value={updateModal.advertisingStatus.value}
+                                        onChange={(value) => updateModal.advertisingStatus.onChange(value)}
+                                        options={COMPANY_ADVERTISING_STATUS_OPTIONS}
+                                    />
+                                </SectionFieldRow>
+                                <SectionFieldRow label="마레 솔루션" labelWidth={EMBEDDED_FIELD_LABEL_WIDTH}>
+                                    <SectionFieldTab
+                                        value={updateModal.isMlSolution.value ? 'true' : 'false'}
+                                        onChange={(value) => updateModal.isMlSolution.onChange(value === 'true')}
                                     >
-                                        <SectionFieldInput {...updateModal.address} placeholder="주소를 입력해주세요." />
-                                    </SectionFieldRow>
-                                </Flex>
-
-                                <Flex direction="column">
-                                    <SectionFieldRow label="라이브 여부" labelWidth={EMBEDDED_FIELD_LABEL_WIDTH}>
-                                        <SectionFieldTab
-                                            value={updateModal.isLive.value ? 'true' : 'false'}
-                                            onChange={(value) => updateModal.isLive.onChange(value === 'true')}
-                                        >
-                                            <SectionFieldTab.Item value="true">라이브</SectionFieldTab.Item>
-                                            <SectionFieldTab.Item value="false">중단</SectionFieldTab.Item>
-                                        </SectionFieldTab>
-                                    </SectionFieldRow>
-                                    <SectionFieldRow label="마레 솔루션" labelWidth={EMBEDDED_FIELD_LABEL_WIDTH}>
-                                        <SectionFieldTab
-                                            value={updateModal.isMlSolution.value ? 'true' : 'false'}
-                                            onChange={(value) => updateModal.isMlSolution.onChange(value === 'true')}
-                                        >
-                                            <SectionFieldTab.Item value="true">활성화</SectionFieldTab.Item>
-                                            <SectionFieldTab.Item value="false">비활성화</SectionFieldTab.Item>
-                                        </SectionFieldTab>
-                                    </SectionFieldRow>
-                                    <SectionFieldRow label="자동 보고" labelWidth={EMBEDDED_FIELD_LABEL_WIDTH}>
-                                        <SectionFieldTab
-                                            value={updateModal.isReportAuto.value ? 'true' : 'false'}
-                                            onChange={(value) => updateModal.isReportAuto.onChange(value === 'true')}
-                                        >
-                                            <SectionFieldTab.Item value="true">활성화</SectionFieldTab.Item>
-                                            <SectionFieldTab.Item value="false">비활성화</SectionFieldTab.Item>
-                                        </SectionFieldTab>
-                                    </SectionFieldRow>
-                                    <SectionFieldRow
-                                        label="주간 자동 보고"
-                                        labelWidth={EMBEDDED_FIELD_LABEL_WIDTH}
-                                        divider={false}
+                                        <SectionFieldTab.Item value="true">활성화</SectionFieldTab.Item>
+                                        <SectionFieldTab.Item value="false">비활성화</SectionFieldTab.Item>
+                                    </SectionFieldTab>
+                                </SectionFieldRow>
+                                <SectionFieldRow label="자동 보고" labelWidth={EMBEDDED_FIELD_LABEL_WIDTH}>
+                                    <SectionFieldTab
+                                        value={updateModal.isReportAuto.value ? 'true' : 'false'}
+                                        onChange={(value) => updateModal.isReportAuto.onChange(value === 'true')}
                                     >
-                                        <SectionFieldTab
-                                            value={updateModal.isWeeklyReportAuto.value ? 'true' : 'false'}
-                                            onChange={(value) => updateModal.isWeeklyReportAuto.onChange(value === 'true')}
-                                        >
-                                            <SectionFieldTab.Item value="true">활성화</SectionFieldTab.Item>
-                                            <SectionFieldTab.Item value="false">비활성화</SectionFieldTab.Item>
-                                        </SectionFieldTab>
-                                    </SectionFieldRow>
-                                </Flex>
-                            </div>
+                                        <SectionFieldTab.Item value="true">활성화</SectionFieldTab.Item>
+                                        <SectionFieldTab.Item value="false">비활성화</SectionFieldTab.Item>
+                                    </SectionFieldTab>
+                                </SectionFieldRow>
+                                <SectionFieldRow
+                                    label="주간 자동 보고"
+                                    labelWidth={EMBEDDED_FIELD_LABEL_WIDTH}
+                                    divider={false}
+                                >
+                                    <SectionFieldTab
+                                        value={updateModal.isWeeklyReportAuto.value ? 'true' : 'false'}
+                                        onChange={(value) => updateModal.isWeeklyReportAuto.onChange(value === 'true')}
+                                    >
+                                        <SectionFieldTab.Item value="true">활성화</SectionFieldTab.Item>
+                                        <SectionFieldTab.Item value="false">비활성화</SectionFieldTab.Item>
+                                    </SectionFieldTab>
+                                </SectionFieldRow>
+                            </Flex>
                         </SectionBlock>
                     </Flex>
                 ) : (
@@ -829,34 +804,34 @@ const CompanySettingContent = ({ state, actions, embedded = false }: CompanySett
                             />
                             <BasicContent.Item
                                 size="lg"
-                                label="담당자명"
+                                label="업체 담당자명"
                                 value={
                                     <RoundedTextInput
                                         {...updateModal.form.register('managerName')}
-                                        placeholder="담당자명을 입력해주세요."
+                                        placeholder="업체 담당자명을 입력해주세요."
                                     />
                                 }
                             />
                             <BasicContent.Item
                                 size="lg"
-                                label="담당자 연락처"
+                                label="업체 담당자 연락처"
                                 value={
                                     <RoundedTextInput
                                         {...updateModal.managerPhoneNumber}
                                         onChange={(event) => {
                                             updateModal.managerPhoneNumber.onChange(formatPhoneNumber(event.target.value));
                                         }}
-                                        placeholder="담당자 연락처를 입력해주세요."
+                                        placeholder="업체 담당자 연락처를 입력해주세요."
                                     />
                                 }
                             />
                             <BasicContent.Item
                                 size="lg"
-                                label="담당자 이메일"
+                                label="업체 담당자 이메일"
                                 value={
                                     <RoundedTextInput
                                         {...updateModal.form.register('managerEmail')}
-                                        placeholder="담당자 이메일을 입력해주세요."
+                                        placeholder="업체 담당자 이메일을 입력해주세요."
                                     />
                                 }
                             />
@@ -882,15 +857,13 @@ const CompanySettingContent = ({ state, actions, embedded = false }: CompanySett
                             />
                             <BasicContent.Item
                                 size="lg"
-                                label="라이브 여부"
+                                label="광고 상태"
                                 value={
-                                    <RoundedSegmentTab
-                                        value={updateModal.isLive.value ? 'true' : 'false'}
-                                        onChange={(value) => updateModal.isLive.onChange(value === 'true')}
-                                    >
-                                        <RoundedSegmentTab.Item value="true">라이브</RoundedSegmentTab.Item>
-                                        <RoundedSegmentTab.Item value="false">중단</RoundedSegmentTab.Item>
-                                    </RoundedSegmentTab>
+                                    <SectionFieldSelect
+                                        value={updateModal.advertisingStatus.value}
+                                        onChange={(value) => updateModal.advertisingStatus.onChange(value)}
+                                        options={COMPANY_ADVERTISING_STATUS_OPTIONS}
+                                    />
                                 }
                             />
                             <BasicContent.Item
@@ -937,23 +910,25 @@ const CompanySettingContent = ({ state, actions, embedded = false }: CompanySett
                 )}
             </BasicContent.Body>
 
-            <BasicContent.Footer className={embeddedFooterClassName}>
-                {!embedded ? (
-                    <BasicContent.ActionButton variant="secondary" onClick={actions.close}>
-                        닫기
+            {!embedded || !hideEmbeddedFooterAction ? (
+                <BasicContent.Footer className={embeddedFooterClassName}>
+                    {!embedded ? (
+                        <BasicContent.ActionButton variant="secondary" onClick={actions.close}>
+                            닫기
+                        </BasicContent.ActionButton>
+                    ) : null}
+                    <BasicContent.ActionButton
+                        variant="primary"
+                        disabled={updateModal.isCompanyDetailFetching || !updateModal.companyUpdateParam.uuid}
+                        onClick={updateModal.form.handleSubmit(async () => {
+                            const isSaved = await updateModal.onSaveCompanyInfo();
+                            if (isSaved) onEmbeddedSaveSuccess?.();
+                        }, updateModal.onInvalidCompanyInfo)}
+                    >
+                        {embeddedSaveLabel}
                     </BasicContent.ActionButton>
-                ) : null}
-                <BasicContent.ActionButton
-                    variant="primary"
-                    disabled={updateModal.isCompanyDetailFetching || !updateModal.companyUpdateParam.uuid}
-                    onClick={updateModal.form.handleSubmit(
-                        updateModal.onSaveCompanyInfo,
-                        updateModal.onInvalidCompanyInfo
-                    )}
-                >
-                    저장하기
-                </BasicContent.ActionButton>
-            </BasicContent.Footer>
+                </BasicContent.Footer>
+            ) : null}
         </>
     );
 
@@ -980,40 +955,83 @@ const CompanySettingContent = ({ state, actions, embedded = false }: CompanySett
                         </SectionBlock>
 
                         <div className={styles.EmbeddedGrid}>
-                            <SectionBlock title="사이트 기본 정보" description="사이트 식별 정보와 저장소 연결 정보를 관리합니다.">
+                            <SectionBlock title="중복 문의 방지" description="중복 문의 판단 여부와 기준 시간을 설정합니다.">
                                 <Flex direction="column">
-                                    <SectionFieldRow label="사이트 이름" labelWidth={EMBEDDED_FIELD_LABEL_WIDTH}>
-                                        <SectionFieldInput
-                                            value={companyInquiryAccessSetting.form.name}
-                                            onChange={(event) =>
-                                                companyInquiryAccessActions.changeField('name', event.target.value)
+                                    <SectionFieldRow label="중복 문의 방지" labelWidth={EMBEDDED_FIELD_LABEL_WIDTH}>
+                                        <SectionFieldTab
+                                            value={companyInquiryAccessSetting.form.preventDuplicateInquiry ? 'true' : 'false'}
+                                            onChange={(next) =>
+                                                companyInquiryAccessActions.changeField(
+                                                    'preventDuplicateInquiry',
+                                                    next === 'true'
+                                                )
                                             }
-                                            placeholder="사이트 이름을 입력해주세요."
-                                        />
-                                    </SectionFieldRow>
-                                    <SectionFieldRow label="사이트 URL" labelWidth={EMBEDDED_FIELD_LABEL_WIDTH}>
-                                        <SectionFieldInput
-                                            value={companyInquiryAccessSetting.form.url}
-                                            onChange={(event) =>
-                                                companyInquiryAccessActions.changeField('url', event.target.value)
-                                            }
-                                            placeholder="사이트 URL을 입력해주세요."
-                                        />
+                                        >
+                                            <SectionFieldTab.Item value="true">사용</SectionFieldTab.Item>
+                                            <SectionFieldTab.Item value="false">미사용</SectionFieldTab.Item>
+                                        </SectionFieldTab>
                                     </SectionFieldRow>
                                     <SectionFieldRow
-                                        label="Git 저장소 URL"
+                                        label="중복 문의 기준 시간(초)"
+                                        labelWidth={EMBEDDED_FIELD_LABEL_WIDTH}
+                                    >
+                                        <SectionFieldInput
+                                            type="text"
+                                            inputMode="numeric"
+                                            value={String(companyInquiryAccessSetting.form.duplicateInquiryThresholdSecond)}
+                                            onChange={(event) =>
+                                                companyInquiryAccessActions.changeIntegerField(
+                                                    'duplicateInquiryThresholdSecond',
+                                                    event.target.value
+                                                )
+                                            }
+                                            placeholder="중복 문의 기준 시간을 입력해주세요."
+                                        />
+                                    </SectionFieldRow>
+                                    <SectionFieldRow label="스팸 문의 기준 건수" labelWidth={EMBEDDED_FIELD_LABEL_WIDTH}>
+                                        <SectionFieldInput
+                                            type="text"
+                                            inputMode="numeric"
+                                            value={String(companyInquiryAccessSetting.form.spamInquiryThresholdCount)}
+                                            onChange={(event) =>
+                                                companyInquiryAccessActions.changeIntegerField(
+                                                    'spamInquiryThresholdCount',
+                                                    event.target.value
+                                                )
+                                            }
+                                            placeholder="스팸 문의 기준 건수를 입력해주세요."
+                                        />
+                                    </SectionFieldRow>
+                                    <SectionFieldRow label="전 IP 스팸전화 차단" labelWidth={EMBEDDED_FIELD_LABEL_WIDTH}>
+                                        <SectionFieldTab
+                                            value={companyInquiryAccessSetting.form.preventSpamPhoneAllIps ? 'true' : 'false'}
+                                            onChange={(next) =>
+                                                companyInquiryAccessActions.changeField(
+                                                    'preventSpamPhoneAllIps',
+                                                    next === 'true'
+                                                )
+                                            }
+                                        >
+                                            <SectionFieldTab.Item value="true">사용</SectionFieldTab.Item>
+                                            <SectionFieldTab.Item value="false">미사용</SectionFieldTab.Item>
+                                        </SectionFieldTab>
+                                    </SectionFieldRow>
+                                    <SectionFieldRow
+                                        label="네이버 방문 차단 기준 건수"
                                         labelWidth={EMBEDDED_FIELD_LABEL_WIDTH}
                                         divider={false}
                                     >
                                         <SectionFieldInput
-                                            value={companyInquiryAccessSetting.form.gitRepositoryUrl}
+                                            type="text"
+                                            inputMode="numeric"
+                                            value={String(companyInquiryAccessSetting.form.naverVisitBlockThresholdCount)}
                                             onChange={(event) =>
-                                                companyInquiryAccessActions.changeField(
-                                                    'gitRepositoryUrl',
+                                                companyInquiryAccessActions.changeIntegerField(
+                                                    'naverVisitBlockThresholdCount',
                                                     event.target.value
                                                 )
                                             }
-                                            placeholder="Git 저장소 URL을 입력해주세요."
+                                            placeholder="네이버 방문 차단 기준 건수를 입력해주세요."
                                         />
                                     </SectionFieldRow>
                                 </Flex>
@@ -1094,120 +1112,6 @@ const CompanySettingContent = ({ state, actions, embedded = false }: CompanySett
                             </SectionBlock>
                         </div>
 
-                        <div className={styles.EmbeddedGrid}>
-                            <SectionBlock title="템플릿 / 중복 문의" description="알림 템플릿과 중복 문의 조건을 관리합니다.">
-                                <Flex direction="column">
-                                    <SectionFieldRow label="광고주용 템플릿 ID" labelWidth={EMBEDDED_FIELD_LABEL_WIDTH}>
-                                        <SectionFieldInput
-                                            value={companyInquiryAccessSetting.form.kakaoInquiryTemplateId}
-                                            onChange={(event) =>
-                                                companyInquiryAccessActions.changeField(
-                                                    'kakaoInquiryTemplateId',
-                                                    event.target.value
-                                                )
-                                            }
-                                            placeholder="광고주용 카카오 템플릿 ID를 입력해주세요."
-                                        />
-                                    </SectionFieldRow>
-                                    <SectionFieldRow label="문의자용 템플릿 ID" labelWidth={EMBEDDED_FIELD_LABEL_WIDTH}>
-                                        <SectionFieldInput
-                                            value={companyInquiryAccessSetting.form.kakaoClientTemplateId}
-                                            onChange={(event) =>
-                                                companyInquiryAccessActions.changeField(
-                                                    'kakaoClientTemplateId',
-                                                    event.target.value
-                                                )
-                                            }
-                                            placeholder="문의자용 카카오 템플릿 ID를 입력해주세요."
-                                        />
-                                    </SectionFieldRow>
-                                    <SectionFieldRow label="중복 문의 방지" labelWidth={EMBEDDED_FIELD_LABEL_WIDTH}>
-                                        <SectionFieldTab
-                                            value={companyInquiryAccessSetting.form.preventDuplicateInquiry ? 'true' : 'false'}
-                                            onChange={(next) =>
-                                                companyInquiryAccessActions.changeField(
-                                                    'preventDuplicateInquiry',
-                                                    next === 'true'
-                                                )
-                                            }
-                                        >
-                                            <SectionFieldTab.Item value="true">사용</SectionFieldTab.Item>
-                                            <SectionFieldTab.Item value="false">미사용</SectionFieldTab.Item>
-                                        </SectionFieldTab>
-                                    </SectionFieldRow>
-                                    <SectionFieldRow
-                                        label="중복 문의 기준 시간(초)"
-                                        labelWidth={EMBEDDED_FIELD_LABEL_WIDTH}
-                                        divider={false}
-                                    >
-                                        <SectionFieldInput
-                                            type="text"
-                                            inputMode="numeric"
-                                            value={String(companyInquiryAccessSetting.form.duplicateInquiryThresholdSecond)}
-                                            onChange={(event) =>
-                                                companyInquiryAccessActions.changeIntegerField(
-                                                    'duplicateInquiryThresholdSecond',
-                                                    event.target.value
-                                                )
-                                            }
-                                            placeholder="중복 문의 기준 시간을 입력해주세요."
-                                        />
-                                    </SectionFieldRow>
-                                </Flex>
-                            </SectionBlock>
-
-                            <SectionBlock title="스팸 차단" description="문의 및 방문 기반 차단 조건을 설정합니다.">
-                                <Flex direction="column">
-                                    <SectionFieldRow label="스팸 문의 기준 건수" labelWidth={EMBEDDED_FIELD_LABEL_WIDTH}>
-                                        <SectionFieldInput
-                                            type="text"
-                                            inputMode="numeric"
-                                            value={String(companyInquiryAccessSetting.form.spamInquiryThresholdCount)}
-                                            onChange={(event) =>
-                                                companyInquiryAccessActions.changeIntegerField(
-                                                    'spamInquiryThresholdCount',
-                                                    event.target.value
-                                                )
-                                            }
-                                            placeholder="스팸 문의 기준 건수를 입력해주세요."
-                                        />
-                                    </SectionFieldRow>
-                                    <SectionFieldRow label="전 IP 스팸전화 차단" labelWidth={EMBEDDED_FIELD_LABEL_WIDTH}>
-                                        <SectionFieldTab
-                                            value={companyInquiryAccessSetting.form.preventSpamPhoneAllIps ? 'true' : 'false'}
-                                            onChange={(next) =>
-                                                companyInquiryAccessActions.changeField(
-                                                    'preventSpamPhoneAllIps',
-                                                    next === 'true'
-                                                )
-                                            }
-                                        >
-                                            <SectionFieldTab.Item value="true">사용</SectionFieldTab.Item>
-                                            <SectionFieldTab.Item value="false">미사용</SectionFieldTab.Item>
-                                        </SectionFieldTab>
-                                    </SectionFieldRow>
-                                    <SectionFieldRow
-                                        label="네이버 방문 차단 기준 건수"
-                                        labelWidth={EMBEDDED_FIELD_LABEL_WIDTH}
-                                        divider={false}
-                                    >
-                                        <SectionFieldInput
-                                            type="text"
-                                            inputMode="numeric"
-                                            value={String(companyInquiryAccessSetting.form.naverVisitBlockThresholdCount)}
-                                            onChange={(event) =>
-                                                companyInquiryAccessActions.changeIntegerField(
-                                                    'naverVisitBlockThresholdCount',
-                                                    event.target.value
-                                                )
-                                            }
-                                            placeholder="네이버 방문 차단 기준 건수를 입력해주세요."
-                                        />
-                                    </SectionFieldRow>
-                                </Flex>
-                            </SectionBlock>
-                        </div>
-
                         {companyInquiryAccessSetting.isFetching ? (
                             <Text as="p" size="sm" tone="muted">
                                 설정 정보를 불러오는 중입니다.
@@ -1216,22 +1120,25 @@ const CompanySettingContent = ({ state, actions, embedded = false }: CompanySett
                     </Flex>
                 </BasicContent.Body>
 
-                <BasicContent.Footer className={embeddedFooterClassName}>
-                    {!embedded ? (
-                        <BasicContent.ActionButton variant="secondary" onClick={actions.close}>
-                            닫기
+                {!embedded || !hideEmbeddedFooterAction ? (
+                    <BasicContent.Footer className={embeddedFooterClassName}>
+                        {!embedded ? (
+                            <BasicContent.ActionButton variant="secondary" onClick={actions.close}>
+                                닫기
+                            </BasicContent.ActionButton>
+                        ) : null}
+                        <BasicContent.ActionButton
+                            variant="primary"
+                            disabled={companyInquiryAccessSetting.isSaving || !companyInquiryAccessSetting.selectedHomepageUuid}
+                            onClick={async () => {
+                                const isSaved = await companyInquiryAccessActions.save();
+                                if (isSaved) onEmbeddedSaveSuccess?.();
+                            }}
+                        >
+                            {embeddedSaveLabel}
                         </BasicContent.ActionButton>
-                    ) : null}
-                    <BasicContent.ActionButton
-                        variant="primary"
-                        disabled={companyInquiryAccessSetting.isSaving || !companyInquiryAccessSetting.selectedHomepageUuid}
-                        onClick={() => {
-                            void companyInquiryAccessActions.save();
-                        }}
-                    >
-                        저장하기
-                    </BasicContent.ActionButton>
-                </BasicContent.Footer>
+                    </BasicContent.Footer>
+                ) : null}
             </>
         ) : (
             <>
@@ -1266,44 +1173,6 @@ const CompanySettingContent = ({ state, actions, embedded = false }: CompanySett
                                     ))}
                                     </ButtonDropdown.Content>
                                 </ButtonDropdown>
-                            }
-                        />
-
-                        <BasicContent.Item
-                            size="lg"
-                            label="사이트 이름"
-                            value={
-                                <RoundedTextInput
-                                    value={companyInquiryAccessSetting.form.name}
-                                    onChange={(event) => companyInquiryAccessActions.changeField('name', event.target.value)}
-                                    placeholder="사이트 이름을 입력해주세요."
-                                />
-                            }
-                        />
-
-                        <BasicContent.Item
-                            size="lg"
-                            label="사이트 URL"
-                            value={
-                                <RoundedTextInput
-                                    value={companyInquiryAccessSetting.form.url}
-                                    onChange={(event) => companyInquiryAccessActions.changeField('url', event.target.value)}
-                                    placeholder="사이트 URL을 입력해주세요."
-                                />
-                            }
-                        />
-
-                        <BasicContent.Item
-                            size="lg"
-                            label="Git 저장소 URL"
-                            value={
-                                <RoundedTextInput
-                                    value={companyInquiryAccessSetting.form.gitRepositoryUrl}
-                                    onChange={(event) =>
-                                        companyInquiryAccessActions.changeField('gitRepositoryUrl', event.target.value)
-                                    }
-                                    placeholder="Git 저장소 URL을 입력해주세요."
-                                />
                             }
                         />
 
@@ -1367,34 +1236,6 @@ const CompanySettingContent = ({ state, actions, embedded = false }: CompanySett
                                     <RoundedSegmentTab.Item value="NONE">미수신</RoundedSegmentTab.Item>
                                     <RoundedSegmentTab.Item value="SMS">SMS</RoundedSegmentTab.Item>
                                 </RoundedSegmentTab>
-                            }
-                        />
-
-                        <BasicContent.Item
-                            size="lg"
-                            label="광고주용 카카오 템플릿 ID"
-                            value={
-                                <RoundedTextInput
-                                    value={companyInquiryAccessSetting.form.kakaoInquiryTemplateId}
-                                    onChange={(event) =>
-                                        companyInquiryAccessActions.changeField('kakaoInquiryTemplateId', event.target.value)
-                                    }
-                                    placeholder="광고주용 카카오 템플릿 ID를 입력해주세요."
-                                />
-                            }
-                        />
-
-                        <BasicContent.Item
-                            size="lg"
-                            label="문의자용 카카오 템플릿 ID"
-                            value={
-                                <RoundedTextInput
-                                    value={companyInquiryAccessSetting.form.kakaoClientTemplateId}
-                                    onChange={(event) =>
-                                        companyInquiryAccessActions.changeField('kakaoClientTemplateId', event.target.value)
-                                    }
-                                    placeholder="문의자용 카카오 템플릿 ID를 입력해주세요."
-                                />
                             }
                         />
 
@@ -1599,22 +1440,25 @@ const CompanySettingContent = ({ state, actions, embedded = false }: CompanySett
                     </Flex>
                 </BasicContent.Body>
 
-                <BasicContent.Footer className={embeddedFooterClassName}>
-                    {!embedded ? (
-                        <BasicContent.ActionButton variant="secondary" onClick={actions.close}>
-                            닫기
+                {!embedded || !hideEmbeddedFooterAction ? (
+                    <BasicContent.Footer className={embeddedFooterClassName}>
+                        {!embedded ? (
+                            <BasicContent.ActionButton variant="secondary" onClick={actions.close}>
+                                닫기
+                            </BasicContent.ActionButton>
+                        ) : null}
+                        <BasicContent.ActionButton
+                            variant="primary"
+                            disabled={companyDailyReportSetting.isSaving || !companyDailyReportSetting.selectedHomepageUuid}
+                            onClick={async () => {
+                                const isSaved = await companyDailyReportActions.save();
+                                if (isSaved) onEmbeddedSaveSuccess?.();
+                            }}
+                        >
+                            {embeddedSaveLabel}
                         </BasicContent.ActionButton>
-                    ) : null}
-                    <BasicContent.ActionButton
-                        variant="primary"
-                        disabled={companyDailyReportSetting.isSaving || !companyDailyReportSetting.selectedHomepageUuid}
-                        onClick={() => {
-                            void companyDailyReportActions.save();
-                        }}
-                    >
-                        저장하기
-                    </BasicContent.ActionButton>
-                </BasicContent.Footer>
+                    </BasicContent.Footer>
+                ) : null}
             </>
         ) : (
             <>
