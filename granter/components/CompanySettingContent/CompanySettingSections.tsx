@@ -172,9 +172,11 @@ const InlineCreateForm = ({
             </Flex>
 
             {form.selectedMediaName && INLINE_NOTICE_BY_MEDIA[form.selectedMediaName] ? (
-                <BasicContent.Alert tone="neutral">
-                    <BasicContent.AlertMain>
-                        <BasicContent.AlertText>{INLINE_NOTICE_BY_MEDIA[form.selectedMediaName]}</BasicContent.AlertText>
+                <BasicContent.Alert tone="neutral" className={styles.InlineNotice}>
+                    <BasicContent.AlertMain className={styles.InlineNoticeMain}>
+                        <BasicContent.AlertText className={styles.InlineNoticeText}>
+                            {INLINE_NOTICE_BY_MEDIA[form.selectedMediaName]}
+                        </BasicContent.AlertText>
                     </BasicContent.AlertMain>
                 </BasicContent.Alert>
             ) : null}
@@ -242,9 +244,11 @@ const InlineUpdateForm = ({
         )}
 
         {!isLoading && INLINE_NOTICE_BY_MEDIA[mediaName] ? (
-            <BasicContent.Alert tone="neutral">
-                <BasicContent.AlertMain>
-                    <BasicContent.AlertText>{INLINE_NOTICE_BY_MEDIA[mediaName]}</BasicContent.AlertText>
+            <BasicContent.Alert tone="neutral" className={styles.InlineNotice}>
+                <BasicContent.AlertMain className={styles.InlineNoticeMain}>
+                    <BasicContent.AlertText className={styles.InlineNoticeText}>
+                        {INLINE_NOTICE_BY_MEDIA[mediaName]}
+                    </BasicContent.AlertText>
                 </BasicContent.AlertMain>
             </BasicContent.Alert>
         ) : null}

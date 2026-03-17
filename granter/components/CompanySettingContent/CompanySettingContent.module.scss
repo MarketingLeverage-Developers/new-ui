@@ -58,6 +58,28 @@
     background: var(--granter-gray-50);
 }
 
+.InlineNotice {
+    margin-top: 6px;
+    margin-bottom: 0;
+    padding: 10px 12px;
+    border: 1px solid var(--granter-gray-200);
+    border-radius: 10px;
+    background: var(--granter-gray-50);
+}
+
+.InlineNoticeMain {
+    display: block;
+}
+
+.InlineNoticeText {
+    margin: 0;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 18px;
+    letter-spacing: -0.01em;
+    color: var(--granter-gray-600);
+}
+
 .LegacyPanel {
     flex: 1;
     min-height: 0;
