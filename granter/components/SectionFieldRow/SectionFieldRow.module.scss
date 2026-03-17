@@ -1,0 +1,34 @@
+.Root {
+    display: grid;
+    grid-template-columns: var(--granter-section-field-label-width, 160px) minmax(0, 1fr);
+    gap: 16px;
+    align-items: center;
+    padding: 12px 0;
+}
+
+.Root[data-align='start'] {
+    align-items: start;
+}
+
+.Root[data-divider='true'] {
+    border-bottom: 1px solid var(--granter-gray-100);
+}
+
+.Label {
+    min-width: 0;
+    color: var(--granter-gray-500);
+    font-size: 13px;
+    line-height: 20px;
+}
+
+.Content {
+    min-width: 0;
+}
+
+.Value {
+    color: var(--granter-gray-900);
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: 600;
+    word-break: break-word;
+}

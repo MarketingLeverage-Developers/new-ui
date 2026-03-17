@@ -9,11 +9,13 @@ import BasicContent from '../BasicContent/BasicContent';
 import RoundedSegmentTab from '../RoundedSegmentTab/RoundedSegmentTab';
 import RoundedTextInput from '../RoundedTextInput/RoundedTextInput';
 import ButtonDropdown from '../ButtonDropdown/ButtonDropdown';
+import TimeSlotSelector from '../TimeSlotSelector/TimeSlotSelector';
 import styles from './CompanyDailyReportSettingContent.module.scss';
 
 const HOURS = Array.from({ length: 24 }, (_, index) => index);
 
 const formatHourLabel = (hour: number) => `${String(hour).padStart(2, '0')}시`;
+const HOUR_OPTIONS = HOURS.map((hour) => ({ value: String(hour), label: formatHourLabel(hour) }));
 
 export type CompanyDailyReportSettingContentProps = {
     state: CompanyDailyReportSettingState;
@@ -95,30 +97,13 @@ const CompanyDailyReportSettingContent = ({ state, actions, className }: Company
                     size="lg"
                     label="보고 시간대 설정"
                     value={
-                        <div className={styles.HourSection}>
-                            <p className={styles.HourGuide}>보고 받을 시간대를 선택해주세요.</p>
-
-                            <div className={styles.HourGrid}>
-                                {HOURS.map((hour) => {
-                                    const hourValue = String(hour);
-                                    const isActive = state.selectedHours.includes(hourValue);
-
-                                    return (
-                                        <button
-                                            key={hourValue}
-                                            type="button"
-                                            className={styles.HourButton}
-                                            data-active={isActive ? 'true' : 'false'}
-                                            onClick={() => actions.toggleHour(hourValue)}
-                                        >
-                                            {formatHourLabel(hour)}
-                                        </button>
-                                    );
-                                })}
-                            </div>
-
-                            <p className={styles.HourSummary}>{state.selectedHoursLabel}</p>
-                        </div>
+                        <TimeSlotSelector
+                            options={HOUR_OPTIONS}
+                            selectedValues={state.selectedHours}
+                            onToggle={actions.toggleHour}
+                            guide="보고 받을 시간대를 선택해주세요."
+                            summary={state.selectedHoursLabel}
+                        />
                     }
                 />
             </BasicContent.List>

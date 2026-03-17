@@ -35,6 +35,29 @@
     padding-top: 16px;
 }
 
+.EmbeddedBody {
+    padding: 0;
+}
+
+.EmbeddedFooter {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: end;
+    padding: 16px 0 0;
+}
+
+.EmbeddedGrid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 16px;
+}
+
+.HourSummary {
+    padding: 10px 12px;
+    border: 1px solid var(--granter-gray-200);
+    border-radius: 12px;
+    background: var(--granter-gray-50);
+}
+
 .LegacyPanel {
     flex: 1;
     min-height: 0;

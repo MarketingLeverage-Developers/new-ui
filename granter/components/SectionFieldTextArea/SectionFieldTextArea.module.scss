@@ -1,0 +1,41 @@
+.TextArea {
+    width: 100%;
+    min-width: 0;
+    min-height: 108px;
+    padding: 12px 14px;
+    border: 1px solid var(--granter-gray-200);
+    border-radius: 12px;
+    background-color: var(--granter-gray-50);
+    color: var(--granter-gray-900);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 22px;
+    outline: none;
+    resize: vertical;
+    transition:
+        border-color 0.15s ease,
+        box-shadow 0.15s ease,
+        background-color 0.15s ease;
+}
+
+.TextArea::placeholder {
+    color: var(--granter-gray-400);
+    font-weight: 400;
+}
+
+.TextArea:hover:not(:disabled) {
+    border-color: var(--granter-gray-300);
+    background-color: var(--granter-white);
+}
+
+.TextArea:focus {
+    border-color: var(--granter-sky-500);
+    box-shadow: 0 0 0 4px rgb(14 165 233 / 12%);
+    background-color: var(--granter-white);
+}
+
+.TextArea:disabled {
+    background-color: var(--granter-gray-100);
+    color: var(--granter-gray-500);
+    cursor: not-allowed;
+}
