@@ -1,10 +1,12 @@
 // src/shared/primitives/ListTable/ListTable.tsx
 
 import React from 'react';
+import type AirTable from '../../../shared/headless/AirTable/AirTable';
 import type { Column, FilterState, SortState } from '../../../shared/headless/AirTable/AirTable';
 import { BasicTable, type TableFilterItem } from '../../../BasicTable/BasicTable';
 
 type ListTableProps<T> = {
+    airTableComponent?: typeof AirTable;
     data: T[];
     columns: Column<T>[];
     rowKeyField?: string;
@@ -53,6 +55,7 @@ type ListTableProps<T> = {
 };
 
 export const ListTable = <T,>({
+    airTableComponent,
     data,
     columns,
     rowKeyField,
@@ -93,6 +96,7 @@ export const ListTable = <T,>({
     fillContainerWidth,
 }: ListTableProps<T>) => (
     <BasicTable
+        airTableComponent={airTableComponent}
         data={data}
         columns={columns}
         rowKeyField={rowKeyField as any}

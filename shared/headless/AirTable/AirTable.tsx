@@ -939,9 +939,13 @@ const useTable = <T,>({
         return { key: 'column', columns: headerColumns };
     }, [orderedLeafColumns, visibleColumnKeys, baseLeafWidthByKey, defaultColWidth, columnWidths, data]);
 
+    const expandedRowsDependency = getExpandedRows ? expandedRowKeys : null;
+
     /** ✅✅✅ rows: flatten 적용 */
     const rows = useMemo(() => {
         const result: UseTableResult<T>['rows'] = [];
+        const shouldAttachExpandedRows = !!getExpandedRows;
+        const currentExpandedRowKeys = expandedRowsDependency ?? new Set<string>();
 
         data.forEach((item, ri) => {
             const rowKey = getRowKey({ item, ri, rowKeyField });
@@ -962,7 +966,7 @@ const useTable = <T,>({
                 cells,
             });
 
-            const expanded = expandedRowKeys.has(rowKey);
+            const expanded = shouldAttachExpandedRows && currentExpandedRowKeys.has(rowKey);
             if (!expanded) return;
             if (!getExpandedRows) return;
 
@@ -980,7 +984,7 @@ const useTable = <T,>({
         });
 
         return result;
-    }, [data, rowKeyField, orderedLeafColumns, visibleColumnKeys, getExpandedRows, getRowLevel, expandedRowKeys]);
+    }, [data, rowKeyField, orderedLeafColumns, visibleColumnKeys, getExpandedRows, getRowLevel, expandedRowsDependency]);
 
     return {
         columnRow,

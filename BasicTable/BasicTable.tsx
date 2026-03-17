@@ -28,6 +28,7 @@ export type TableFilterItem = {
 type TabKey = 'columns' | 'pinned' | 'filters';
 
 type BasicTableProps<T> = React.ComponentProps<typeof AirTable<T>> & {
+    airTableComponent?: typeof AirTable;
     height?: number;
     showGhost?: boolean;
     showHeader?: boolean;
@@ -43,6 +44,7 @@ type BasicTableProps<T> = React.ComponentProps<typeof AirTable<T>> & {
 };
 
 export const BasicTable = <T,>({
+    airTableComponent: AirTableComponent = AirTable,
     height,
     showGhost = true,
     showHeader = true,
@@ -101,7 +103,7 @@ export const BasicTable = <T,>({
     const data = props.data;
 
     return (
-        <AirTable
+        <AirTableComponent
             {...props}
             defaultExpandedRowKeys={defaultExpandedRowKeys}
             persistExpandedRowKeys={persistExpandedRowKeys}
@@ -153,17 +155,20 @@ export const BasicTable = <T,>({
                             boxSizing: 'border-box',
                         }}
                     >
-                        <AirTable.Container
+                        <AirTableComponent.Container
                             height="100%"
                             className={classNames(styles.container)}
                             onScrollElReady={onScrollElReady}
                         >
                             {showHeader && (
-                                <AirTable.Header className={styles.header} headerCellClassName={styles.headerCell} />
+                                <AirTableComponent.Header
+                                    className={styles.header}
+                                    headerCellClassName={styles.headerCell}
+                                />
                             )}
 
                             {data.length ? (
-                                <AirTable.Body
+                                <AirTableComponent.Body
                                     className={classNames(styles.body)}
                                     rowClassName={styles.row}
                                     cellClassName={styles.cell}
@@ -190,8 +195,8 @@ export const BasicTable = <T,>({
                                 </Flex>
                             )}
 
-                            {showGhost && <AirTable.Ghost className={styles.ghost} />}
-                        </AirTable.Container>
+                            {showGhost && <AirTableComponent.Ghost className={styles.ghost} />}
+                        </AirTableComponent.Container>
                     </div>
 
                     {/* ✅ 설정 패널: 테이블 영역 컨테이너를 기준으로 absolute 고정 => 높이 100% 확정 */}
@@ -242,7 +247,7 @@ export const BasicTable = <T,>({
                     )}
                 </div>
             </Flex>
-        </AirTable>
+        </AirTableComponent>
     );
 };
 
