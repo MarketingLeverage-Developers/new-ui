@@ -1380,20 +1380,10 @@ const CompanySettingContent = ({
             <>
                 <BasicContent.Body className={embeddedBodyClassName}>
                     <Flex direction="column" gap={16}>
-                        <SectionBlock title="적용 대상" description="자동 보고를 설정할 홈페이지를 선택합니다.">
+                        <SectionBlock title="설정 기준" description="일일보고는 현재 업체 단위로 저장됩니다.">
                             <Flex direction="column">
                                 <SectionFieldRow label="회사명" value={companyDailyReportSetting.companyName || '-'} labelWidth={EMBEDDED_FIELD_LABEL_WIDTH} />
-                                <SectionFieldRow label="홈페이지" labelWidth={EMBEDDED_FIELD_LABEL_WIDTH} divider={false}>
-                                    <SectionFieldSelect
-                                        value={companyDailyReportSetting.selectedHomepageUuid}
-                                        onChange={companyDailyReportActions.changeHomepageUuid}
-                                        placeholder="홈페이지 선택"
-                                        options={companyDailyReportSetting.homepageOptions.map((option) => ({
-                                            value: option.value,
-                                            label: getOptionLabel(option.label),
-                                        }))}
-                                    />
-                                </SectionFieldRow>
+                                <SectionFieldRow label="적용 범위" value="업체 기준" labelWidth={EMBEDDED_FIELD_LABEL_WIDTH} divider={false} />
                             </Flex>
                         </SectionBlock>
 
@@ -1449,7 +1439,7 @@ const CompanySettingContent = ({
                         ) : null}
                         <BasicContent.ActionButton
                             variant="primary"
-                            disabled={companyDailyReportSetting.isSaving || !companyDailyReportSetting.selectedHomepageUuid}
+                            disabled={companyDailyReportSetting.isSaving || !companyDailyReportSetting.companyUuid}
                             onClick={async () => {
                                 const isSaved = await companyDailyReportActions.save();
                                 if (isSaved) onEmbeddedSaveSuccess?.();
@@ -1465,36 +1455,7 @@ const CompanySettingContent = ({
                 <BasicContent.Body className={embeddedBodyClassName}>
                     <BasicContent.List>
                         <BasicContent.Item size="lg" label="회사명" value={companyDailyReportSetting.companyName || '-'} />
-
-                        <BasicContent.Item
-                            size="lg"
-                            label="홈페이지 선택"
-                            value={
-                                <ButtonDropdown
-                                    value={companyDailyReportSetting.selectedHomepageUuid}
-                                    onChange={companyDailyReportActions.changeHomepageUuid}
-                                    widthPreset="fit"
-                                >
-                                    <ButtonDropdown.Trigger
-                                        label={
-                                            companyDailyReportSetting.homepageOptions.find(
-                                                (option) => option.value === companyDailyReportSetting.selectedHomepageUuid
-                                            )?.label ?? '홈페이지 선택'
-                                        }
-                                        variant="outline"
-                                        size="lg"
-                                        aria-label="홈페이지 선택"
-                                    />
-                                    <ButtonDropdown.Content placement="bottom-start">
-                                    {companyDailyReportSetting.homepageOptions.map((option) => (
-                                        <ButtonDropdown.Item key={option.value} value={option.value}>
-                                            {option.label}
-                                        </ButtonDropdown.Item>
-                                    ))}
-                                    </ButtonDropdown.Content>
-                                </ButtonDropdown>
-                            }
-                        />
+                        <BasicContent.Item size="lg" label="설정 기준" value="업체 기준" />
 
                         <BasicContent.Item
                             size="lg"
@@ -1550,7 +1511,7 @@ const CompanySettingContent = ({
                     ) : null}
                     <BasicContent.ActionButton
                         variant="primary"
-                        disabled={companyDailyReportSetting.isSaving || !companyDailyReportSetting.selectedHomepageUuid}
+                        disabled={companyDailyReportSetting.isSaving || !companyDailyReportSetting.companyUuid}
                         onClick={() => {
                             void companyDailyReportActions.save();
                         }}
