@@ -21,6 +21,7 @@ export type SectionFormDrawerContentProps = {
     introClassName?: string;
     sectionStackClassName?: string;
     headerShowBorder?: boolean;
+    footer?: React.ReactNode | null;
 };
 
 const SectionFormDrawerContent = ({
@@ -40,6 +41,7 @@ const SectionFormDrawerContent = ({
     introClassName,
     sectionStackClassName,
     headerShowBorder = true,
+    footer,
 }: SectionFormDrawerContentProps) => (
     <BasicContent>
         <BasicContent.Header showBorder={headerShowBorder}>
@@ -64,14 +66,16 @@ const SectionFormDrawerContent = ({
             </div>
         </BasicContent.Body>
 
-        <BasicContent.Footer>
-            <BasicContent.ActionButton variant="secondary" onClick={onCancel ?? onClose}>
-                {cancelLabel}
-            </BasicContent.ActionButton>
-            <BasicContent.ActionButton variant="primary" onClick={onConfirm} disabled={confirmDisabled}>
-                {confirmLabel}
-            </BasicContent.ActionButton>
-        </BasicContent.Footer>
+        {footer === null ? null : footer ?? (
+            <BasicContent.Footer>
+                <BasicContent.ActionButton variant="secondary" onClick={onCancel ?? onClose}>
+                    {cancelLabel}
+                </BasicContent.ActionButton>
+                <BasicContent.ActionButton variant="primary" onClick={onConfirm} disabled={confirmDisabled}>
+                    {confirmLabel}
+                </BasicContent.ActionButton>
+            </BasicContent.Footer>
+        )}
     </BasicContent>
 );
 
