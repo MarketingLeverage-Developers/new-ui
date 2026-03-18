@@ -97,6 +97,9 @@ export type { SectionBlockProps } from './SectionBlock/SectionBlock';
 export { default as SectionIntro } from './SectionIntro/SectionIntro';
 export type { SectionIntroProps } from './SectionIntro/SectionIntro';
 
+export { default as SectionFormDrawerContent } from './SectionFormDrawerContent/SectionFormDrawerContent';
+export type { SectionFormDrawerContentProps } from './SectionFormDrawerContent/SectionFormDrawerContent';
+
 export { default as SectionFieldRow } from './SectionFieldRow/SectionFieldRow';
 export type { SectionFieldRowProps } from './SectionFieldRow/SectionFieldRow';
 
