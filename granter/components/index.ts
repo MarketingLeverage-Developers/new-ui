@@ -65,6 +65,14 @@ export type { InlineTextButtonProps } from './InlineTextButton/InlineTextButton'
 export { default as MetricCard } from './MetricCard/MetricCard';
 export type { MetricCardProps, MetricCardVariant, MetricCardDetailRow } from './MetricCard/MetricCard';
 
+export { default as SnapshotSummaryCard } from './SnapshotSummaryCard/SnapshotSummaryCard';
+export type {
+    SnapshotSummaryCardProps,
+    SnapshotSummaryCardRow,
+    SnapshotSummaryCardRowTone,
+    SnapshotSummaryCardSection,
+} from './SnapshotSummaryCard/SnapshotSummaryCard';
+
 export { default as MetricValueCard } from './MetricValueCard/MetricValueCard';
 export type { MetricValueCardProps, MetricValueCardVariant, MetricValueTone } from './MetricValueCard/MetricValueCard';
 

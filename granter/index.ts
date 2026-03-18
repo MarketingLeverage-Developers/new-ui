@@ -154,6 +154,12 @@ export type { ThemeModeToggleProps, ThemeModeToggleTheme } from './components/Th
 export type { UnderlineTabProps, UnderlineTabItemProps } from './components/UnderlineTab/UnderlineTab';
 export type { RoundedSegmentTabProps, RoundedSegmentTabItemProps } from './components/RoundedSegmentTab/RoundedSegmentTab';
 export type { TextProps, TextSize, TextTone, TextWeight } from './components/Text/Text';
+export type {
+    SnapshotSummaryCardProps,
+    SnapshotSummaryCardRow,
+    SnapshotSummaryCardRowTone,
+    SnapshotSummaryCardSection,
+} from './components/SnapshotSummaryCard/SnapshotSummaryCard';
 export type { ButtonSelectProps, ButtonSelectOption, ButtonSelectItemProps } from './components/ButtonSelect/ButtonSelect';
 export type {
     ButtonDropdownProps,
