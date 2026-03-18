@@ -28,6 +28,7 @@ export { default as HomeItemElementsContent } from './components/HomeItemElement
 export { default as AmountListPanel } from './components/AmountListPanel/AmountListPanel';
 export { default as FileUploader } from './components/FileUploader/FileUploader';
 export { default as RichTextEditor } from './components/RichTextEditor/RichTextEditor';
+export { default as Tooltip } from './components/Tooltip/Tooltip';
 
 export type { HeaderProps } from './components/PageTemplate/components/Header/Header';
 export type { MainProps } from './components/PageTemplate/components/Main/Main';

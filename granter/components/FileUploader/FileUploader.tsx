@@ -114,7 +114,14 @@ const DropzoneRenderer = ({ buttonText, guideText, helperText, className, ...pro
             <div className={styles.Dropzone} data-dragging={dragging ? 'true' : 'false'}>
                 <FiImage className={styles.DropzoneIcon} />
                 <p>{dragging ? '여기에 놓으세요.' : (guideText ?? '파일을 드래그하여 업로드하세요.')}</p>
-                <button type="button" className={styles.SelectButton} onClick={openFileDialog}>
+                <button
+                    type="button"
+                    className={styles.SelectButton}
+                    onClick={(event) => {
+                        event.stopPropagation();
+                        openFileDialog();
+                    }}
+                >
                     {buttonText}
                 </button>
             </div>
