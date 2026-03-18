@@ -8,6 +8,7 @@ import type { ServerImage } from '@/shared/types/common/model';
 import VideoDefaultImage from '../../../../../../../shared/assets/components/C/components/Image/video-default.svg';
 import Modal, { useModal } from '../../../../../../../shared/headless/Modal/Modal'; // ✅ 추가
 import Portal from '../../../../../../../shared/headless/Portal/Portal'; // ✅ 추가
+import { isMp4Preview, resolveMediaUrl, useVideoThumbnailMap } from './videoPreview';
 
 type FileType = 'IMAGE' | 'ZIP' | 'VIDEO' | 'ETC';
 
@@ -29,8 +30,6 @@ type PreviewItem =
 
 const isFileType = (value: unknown): value is FileType =>
     value === 'IMAGE' || value === 'ZIP' || value === 'VIDEO' || value === 'ETC';
-
-const isMp4Preview = (name?: string, url?: string) => /\.mp4(?:$|[?#])/i.test(name ?? '') || /\.mp4(?:$|[?#])/i.test(url ?? '');
 
 const ImagePreviewContent = ({
     src,
@@ -171,6 +170,17 @@ const BaseStackedFileUploaderList: React.FC<BaseStackedFileUploaderListProps> = 
         return mapped;
     }, [getItemKey, serverItems, type]);
 
+    const videoPreviewTargets = useMemo(
+        () =>
+            previews.flatMap((preview) =>
+                preview.kind === 'image' && isMp4Preview(preview.name, preview.url)
+                    ? [{ key: preview.key, name: preview.name, url: preview.url }]
+                    : []
+            ),
+        [previews]
+    );
+    const videoThumbnailMap = useVideoThumbnailMap(videoPreviewTargets, apiPrefix, apiOrigin);
+
     if (previews.length === 0) return null;
 
     const handleRemove = (key: string) => {
@@ -222,21 +232,18 @@ const BaseStackedFileUploaderList: React.FC<BaseStackedFileUploaderListProps> = 
         );
     }
 
-    const resolveDownloadUrl = (url: string) => {
-        if (/^https?:\/\//i.test(url)) return url;
-        if (url.startsWith('/api/') && apiOrigin) return `${apiOrigin}${url}`;
-        if (apiPrefix) return `${apiPrefix}${url.startsWith('/') ? '' : '/'}${url}`;
-        return url;
-    };
-
     return (
         <div className={styles.ImageList}>
             {previews.map((p) => {
                 if (p.kind !== 'image') return null;
 
-                const downloadUrl = resolveDownloadUrl(p.url);
+                const downloadUrl = resolveMediaUrl(p.url, apiPrefix, apiOrigin);
                 const isSelected = Boolean(selectedImageUUID) && p.source.imageUUID === selectedImageUUID;
-                const fallbackSrc = isMp4Preview(p.name, p.url) ? VideoDefaultImage : undefined;
+                const isVideoPreview = isMp4Preview(p.name, p.url);
+                const fallbackSrc = isVideoPreview ? VideoDefaultImage : undefined;
+                const videoThumbnail = videoThumbnailMap[p.key];
+                const previewSrc =
+                    isVideoPreview && videoThumbnail?.sourceUrl === downloadUrl ? videoThumbnail.thumbnailUrl || p.url : p.url;
 
                 // ✅ 클릭 핸들러 로직 분기: 선택 모드 vs 모달 열기 모드
                 // onSelect가 있으면 선택(Select), 없으면 모달 Trigger로 동작해야 함.
@@ -246,7 +253,7 @@ const BaseStackedFileUploaderList: React.FC<BaseStackedFileUploaderListProps> = 
                     <div className={styles.ImageThumb}>
                         <Common.Image
                             className={styles.ImageThumbImg}
-                            src={p.url}
+                            src={previewSrc}
                             prefix={apiPrefix}
                             fallbackSrc={fallbackSrc}
                             alt={p.name}
@@ -325,7 +332,7 @@ const BaseStackedFileUploaderList: React.FC<BaseStackedFileUploaderListProps> = 
                                         style={{ overflow: 'hidden', display: 'block' }}
                                     >
                                         <ImagePreviewContent
-                                            src={p.url}
+                                            src={previewSrc}
                                             prefix={apiPrefix}
                                             name={p.name}
                                             fallbackSrc={fallbackSrc}
@@ -346,7 +353,6 @@ const BaseStackedFileUploaderList: React.FC<BaseStackedFileUploaderListProps> = 
 };
 
 export default BaseStackedFileUploaderList;
-
 // import React, { useMemo } from 'react';
 // import { RiDownload2Fill } from 'react-icons/ri';
 // import { FaCheck } from 'react-icons/fa';
