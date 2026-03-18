@@ -2,6 +2,14 @@
    FILE: bar 형태
 ========================= */
 
+.FileList {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    min-width: 0;
+}
+
 .FileBar {
     width: 100%;
     height: 40px;
@@ -14,6 +22,8 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 10px;
+    min-width: 0;
 
     background-color: var(--White1, #fff);
 }
@@ -22,7 +32,16 @@
     display: flex;
     align-items: center;
     gap: 10px;
+    flex: 1 1 0;
     min-width: 0;
+    overflow: hidden;
+}
+
+.FileBarNameWrap {
+    flex: 1 1 0;
+    width: 0;
+    min-width: 0;
+    overflow: hidden;
 }
 
 .FileBarName {
@@ -31,6 +50,8 @@
 
     color: var(--Black1);
 
+    display: block;
+    width: 100%;
     min-width: 0;
 
     white-space: nowrap;
@@ -43,6 +64,23 @@
     font-weight: 400;
     color: var(--Gray2);
     flex: 0 0 auto;
+}
+
+.FileBarRight {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 0 0 auto;
+}
+
+.FileBarLink {
+    border: none;
+    background: transparent;
+    color: var(--Gray2);
+    font-size: 13px;
+    cursor: pointer;
+    padding: 0;
+    text-decoration: underline;
 }
 
 .FileBarRemove {

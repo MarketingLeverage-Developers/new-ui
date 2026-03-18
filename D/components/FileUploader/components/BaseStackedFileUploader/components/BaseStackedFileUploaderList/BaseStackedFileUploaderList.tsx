@@ -172,7 +172,11 @@ const BaseStackedFileUploaderList: React.FC<BaseStackedFileUploaderListProps> = 
                     return (
                         <div key={p.key} className={styles.FileBar}>
                             <div className={styles.FileBarLeft}>
-                                <span className={styles.FileBarName}>{p.name}</span>
+                                <div className={styles.FileBarNameWrap}>
+                                    <span className={styles.FileBarName} title={p.name}>
+                                        {p.name}
+                                    </span>
+                                </div>
                                 {p.metaText ? <span className={styles.FileBarSize}>{p.metaText}</span> : null}
                             </div>
 
