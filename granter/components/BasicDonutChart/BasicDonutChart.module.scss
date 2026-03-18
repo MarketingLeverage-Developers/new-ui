@@ -1,0 +1,70 @@
+.Tooltip {
+    min-width: 180px;
+    max-width: 240px;
+    border: 1px solid var(--granter-gray-200);
+    border-radius: 10px;
+    background: var(--granter-white);
+    box-shadow:
+        0 10px 28px rgb(17 24 39 / 14%),
+        0 2px 8px rgb(17 24 39 / 8%);
+    overflow: hidden;
+}
+
+.TooltipHeader {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--granter-gray-100);
+    color: var(--granter-gray-700);
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 18px;
+}
+
+.TooltipBody {
+    padding: 8px;
+}
+
+.TooltipRow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 28px;
+    padding: 4px;
+}
+
+.TooltipDot {
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    flex-shrink: 0;
+}
+
+.TooltipLabel {
+    flex: 1;
+    min-width: 0;
+    color: var(--granter-gray-700);
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 16px;
+}
+
+.TooltipValue {
+    flex-shrink: 0;
+    color: var(--granter-gray-900);
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 16px;
+    font-variant-numeric: tabular-nums;
+}
+
+.PieLabelName {
+    fill: var(--granter-gray-700);
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.PieInnerValue {
+    fill: var(--granter-gray-700);
+    font-size: 11px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+}

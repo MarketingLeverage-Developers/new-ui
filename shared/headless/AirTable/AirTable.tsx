@@ -166,6 +166,14 @@ export type DragState = {
 };
 
 export type UseTableResult<T> = {
+    groupColumnRow: {
+        key: string;
+        columns: {
+            key: string;
+            colSpan: number;
+            render: (key: string, data?: T[]) => React.ReactElement;
+        }[];
+    };
     columnRow: {
         key: string;
         columns: {
@@ -940,6 +948,63 @@ const useTable = <T,>({
     }, [orderedLeafColumns, visibleColumnKeys, baseLeafWidthByKey, defaultColWidth, columnWidths, data]);
 
     const expandedRowsDependency = getExpandedRows ? expandedRowKeys : null;
+    const groupColumnRow = useMemo(() => {
+        const hasGroupedColumns = columns.some((column) => column.children && column.children.length > 0);
+        if (!hasGroupedColumns) {
+            return { key: 'group', columns: [] };
+        }
+
+        const parentMetaByLeafKey = new Map<
+            string,
+            {
+                key: string;
+                render: (key: string, data?: T[]) => React.ReactElement;
+            }
+        >();
+
+        columns.forEach((column) => {
+            if (column.children && column.children.length > 0) {
+                column.children.forEach((child) => {
+                    parentMetaByLeafKey.set(String(child.key), {
+                        key: String(column.key),
+                        render: () => column.header(String(column.key), data),
+                    });
+                });
+                return;
+            }
+
+            parentMetaByLeafKey.set(String(column.key), {
+                key: String(column.key),
+                render: () => column.header(String(column.key), data),
+            });
+        });
+
+        const visibleOrderedLeafKeys = columnRow.columns.map((column) => column.key);
+        const groupColumns: {
+            key: string;
+            colSpan: number;
+            render: (key: string, data?: T[]) => React.ReactElement;
+        }[] = [];
+
+        visibleOrderedLeafKeys.forEach((leafKey) => {
+            const parentMeta = parentMetaByLeafKey.get(leafKey);
+            if (!parentMeta) return;
+
+            const lastGroup = groupColumns[groupColumns.length - 1];
+            if (lastGroup && lastGroup.key === parentMeta.key) {
+                lastGroup.colSpan += 1;
+                return;
+            }
+
+            groupColumns.push({
+                key: parentMeta.key,
+                colSpan: 1,
+                render: parentMeta.render,
+            });
+        });
+
+        return { key: 'group', columns: groupColumns };
+    }, [columns, columnRow.columns, data]);
 
     /** ✅✅✅ rows: flatten 적용 */
     const rows = useMemo(() => {
@@ -987,6 +1052,7 @@ const useTable = <T,>({
     }, [data, rowKeyField, orderedLeafColumns, visibleColumnKeys, getExpandedRows, getRowLevel, expandedRowsDependency]);
 
     return {
+        groupColumnRow,
         columnRow,
         rows,
 

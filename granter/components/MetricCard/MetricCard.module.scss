@@ -17,8 +17,10 @@
 }
 
 .Compact {
-    width: 200px;
+    min-width: 200px;
+    width: fit-content;
     height: 120px;
+    white-space: nowrap;
 }
 
 .Standard {

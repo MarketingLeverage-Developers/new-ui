@@ -1,0 +1,44 @@
+.Input {
+    width: 100%;
+    min-width: 0;
+    height: 40px;
+    padding: 0 14px;
+    border: 1px solid var(--granter-gray-200);
+    border-radius: 12px;
+    background-color: var(--granter-gray-50);
+    color: var(--granter-gray-900);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+    outline: none;
+    transition:
+        border-color 0.15s ease,
+        box-shadow 0.15s ease,
+        background-color 0.15s ease;
+}
+
+.Input::placeholder {
+    color: var(--granter-gray-400);
+    font-weight: 400;
+}
+
+.Input:hover:not(:disabled) {
+    border-color: var(--granter-gray-300);
+    background-color: var(--granter-white);
+}
+
+.Input:focus {
+    border-color: var(--granter-sky-500);
+    box-shadow: 0 0 0 4px rgb(14 165 233 / 12%);
+    background-color: var(--granter-white);
+}
+
+.Input:disabled {
+    background-color: var(--granter-gray-100);
+    color: var(--granter-gray-500);
+    cursor: not-allowed;
+}
+
+.Input[type='date'] {
+    color-scheme: light;
+}

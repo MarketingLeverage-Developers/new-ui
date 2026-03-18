@@ -1,6 +1,5 @@
 import React from 'react';
 import classNames from 'classnames';
-import { FiChevronDown } from 'react-icons/fi';
 import type {
     CompanyDailyReportSettingActions,
     CompanyDailyReportSettingState,
@@ -8,12 +7,13 @@ import type {
 import BasicContent from '../BasicContent/BasicContent';
 import RoundedSegmentTab from '../RoundedSegmentTab/RoundedSegmentTab';
 import RoundedTextInput from '../RoundedTextInput/RoundedTextInput';
-import ButtonDropdown from '../ButtonDropdown/ButtonDropdown';
+import TimeSlotSelector from '../TimeSlotSelector/TimeSlotSelector';
 import styles from './CompanyDailyReportSettingContent.module.scss';
 
 const HOURS = Array.from({ length: 24 }, (_, index) => index);
 
 const formatHourLabel = (hour: number) => `${String(hour).padStart(2, '0')}시`;
+const HOUR_OPTIONS = HOURS.map((hour) => ({ value: String(hour), label: formatHourLabel(hour) }));
 
 export type CompanyDailyReportSettingContentProps = {
     state: CompanyDailyReportSettingState;
@@ -21,47 +21,12 @@ export type CompanyDailyReportSettingContentProps = {
     className?: string;
 };
 
-type HomepageSelectProps = {
-    value: string;
-    options: Array<{ value: string; label: string }>;
-    onChange: (next: string) => void;
-};
-
-const HomepageSelect = ({ value, options, onChange }: HomepageSelectProps) => (
-    <ButtonDropdown value={value} onChange={onChange} widthPreset="full">
-        <ButtonDropdown.Trigger
-            label={options.find((option) => option.value === value)?.label ?? '홈페이지 선택'}
-            variant="outline"
-            size="lg"
-            dropdownIcon={<FiChevronDown size={14} />}
-        />
-        <ButtonDropdown.Content placement="bottom-start">
-            {options.map((option) => (
-                <ButtonDropdown.Item key={option.value} value={option.value}>
-                    {option.label}
-                </ButtonDropdown.Item>
-            ))}
-        </ButtonDropdown.Content>
-    </ButtonDropdown>
-);
-
 const CompanyDailyReportSettingContent = ({ state, actions, className }: CompanyDailyReportSettingContentProps) => (
     <>
         <BasicContent.Body className={classNames(styles.Body, className)}>
             <BasicContent.List>
                 <BasicContent.Item size="lg" label="회사명" value={state.companyName || '-'} />
-
-                <BasicContent.Item
-                    size="lg"
-                    label="홈페이지 선택"
-                    value={
-                        <HomepageSelect
-                            value={state.selectedHomepageUuid}
-                            options={state.homepageOptions}
-                            onChange={actions.changeHomepageUuid}
-                        />
-                    }
-                />
+                <BasicContent.Item size="lg" label="설정 기준" value="업체 기준" />
 
                 <BasicContent.Item
                     size="lg"
@@ -95,30 +60,13 @@ const CompanyDailyReportSettingContent = ({ state, actions, className }: Company
                     size="lg"
                     label="보고 시간대 설정"
                     value={
-                        <div className={styles.HourSection}>
-                            <p className={styles.HourGuide}>보고 받을 시간대를 선택해주세요.</p>
-
-                            <div className={styles.HourGrid}>
-                                {HOURS.map((hour) => {
-                                    const hourValue = String(hour);
-                                    const isActive = state.selectedHours.includes(hourValue);
-
-                                    return (
-                                        <button
-                                            key={hourValue}
-                                            type="button"
-                                            className={styles.HourButton}
-                                            data-active={isActive ? 'true' : 'false'}
-                                            onClick={() => actions.toggleHour(hourValue)}
-                                        >
-                                            {formatHourLabel(hour)}
-                                        </button>
-                                    );
-                                })}
-                            </div>
-
-                            <p className={styles.HourSummary}>{state.selectedHoursLabel}</p>
-                        </div>
+                        <TimeSlotSelector
+                            options={HOUR_OPTIONS}
+                            selectedValues={state.selectedHours}
+                            onToggle={actions.toggleHour}
+                            guide="보고 받을 시간대를 선택해주세요."
+                            summary={state.selectedHoursLabel}
+                        />
                     }
                 />
             </BasicContent.List>
@@ -128,7 +76,7 @@ const CompanyDailyReportSettingContent = ({ state, actions, className }: Company
             <BasicContent.ActionButton
                 variant="primary"
                 className={styles.SingleActionButton}
-                disabled={state.isSaving || !state.selectedHomepageUuid}
+                disabled={state.isSaving || !state.companyUuid}
                 onClick={() => {
                     void actions.save();
                 }}

@@ -1,0 +1,29 @@
+.Body {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.Intro {
+    position: sticky;
+    top: -18px;
+    z-index: 2;
+    margin: -18px -28px 0;
+    padding: 18px 28px 14px;
+    background:
+        linear-gradient(
+            180deg,
+            rgb(255 255 255 / 98%) 0%,
+            rgb(255 255 255 / 95%) 68%,
+            rgb(255 255 255 / 82%) 86%,
+            rgb(255 255 255 / 0%) 100%
+        );
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.SectionStack {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}

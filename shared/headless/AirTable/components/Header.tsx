@@ -492,7 +492,7 @@ export const Header = <T,>({ className, headerCellClassName, resizeHandleClassNa
 
     const { data, defaultColWidth = 160 } = props;
     const filterOptionsData = props.filterOptionsData ?? data;
-    const { columnRow, startColumnDrag, visibleColumnKeys, setVisibleColumnKeys } = state;
+    const { groupColumnRow, columnRow, startColumnDrag, visibleColumnKeys, setVisibleColumnKeys } = state;
     const columnByKey = useMemo(
         () => new Map(state.allLeafColumns.map((col) => [col.key, col])),
         [state.allLeafColumns]
@@ -749,6 +749,8 @@ export const Header = <T,>({ className, headerCellClassName, resizeHandleClassNa
 
     const OuterWrapper = enableAnimation ? motion.div : 'div';
     const HeaderCellWrapper = enableAnimation ? motion.div : 'div';
+    const hasGroupHeader = groupColumnRow.columns.length > 0;
+    const groupHeaderHeight = hasGroupHeader ? 40 : 0;
 
     return (
         <>
@@ -763,6 +765,45 @@ export const Header = <T,>({ className, headerCellClassName, resizeHandleClassNa
                     minWidth: '100%',
                 }}
             >
+                {hasGroupHeader ? (
+                    <div
+                        style={{
+                            display: 'grid',
+                            gridTemplateColumns,
+                            minWidth: 'fit-content',
+                            width: 'fit-content',
+                        }}
+                    >
+                        {groupColumnRow.columns.map((col, index) => (
+                            <div
+                                key={`g-${col.key}-${index}`}
+                                className={[headerCellClassName, 'air-table-group-header-cell'].filter(Boolean).join(' ')}
+                                style={{
+                                    gridColumn: `span ${col.colSpan}`,
+                                    minHeight: groupHeaderHeight,
+                                    height: groupHeaderHeight,
+                                    justifyContent: 'center',
+                                    alignItems: 'stretch',
+                                    padding: 0,
+                                    borderBottom: '1px solid rgba(148, 163, 184, 0.22)',
+                                }}
+                            >
+                                <div
+                                    style={{
+                                        flex: 1,
+                                        height: '100%',
+                                        minWidth: 0,
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                    }}
+                                >
+                                    {col.render(col.key, data)}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                ) : null}
                 <OuterWrapper
                     {...(enableAnimation
                         ? {
