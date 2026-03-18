@@ -9,6 +9,7 @@ export { default as BasicContent } from './components/BasicContent/BasicContent'
 export { default as BasicConfirm } from './components/BasicConfirm/BasicConfirm';
 export { default as MainOverlay } from './components/MainOverlay/MainOverlay';
 export { default as SectionBlock } from './components/SectionBlock/SectionBlock';
+export { default as SectionIntro } from './components/SectionIntro/SectionIntro';
 export { default as SectionFieldRow } from './components/SectionFieldRow/SectionFieldRow';
 export { default as SectionFieldInput } from './components/SectionFieldInput/SectionFieldInput';
 export { default as SectionFieldTextArea } from './components/SectionFieldTextArea/SectionFieldTextArea';
@@ -127,6 +128,7 @@ export type { BoxLength, BoxProps } from './components/Box/Box';
 export type { FlexProps } from './components/Flex/Flex';
 export type { GridProps } from './components/Grid/Grid';
 export type { SectionBlockProps } from './components/SectionBlock/SectionBlock';
+export type { SectionIntroProps } from './components/SectionIntro/SectionIntro';
 export type { SectionFieldRowProps } from './components/SectionFieldRow/SectionFieldRow';
 export type { SectionFieldInputProps } from './components/SectionFieldInput/SectionFieldInput';
 export type { SectionFieldTextAreaProps } from './components/SectionFieldTextArea/SectionFieldTextArea';

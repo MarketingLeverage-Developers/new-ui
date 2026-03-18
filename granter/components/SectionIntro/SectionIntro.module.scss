@@ -1,0 +1,20 @@
+.SectionIntro {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.Eyebrow {
+    letter-spacing: 0.08em;
+    color: var(--granter-gray-500);
+}
+
+.Title {
+    margin: 0;
+    letter-spacing: -0.02em;
+}
+
+.Description {
+    word-break: keep-all;
+}
