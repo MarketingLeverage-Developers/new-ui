@@ -1182,6 +1182,51 @@ const CompanySettingContent = ({
 
                         <BasicContent.Item
                             size="lg"
+                            label="사이트 이름"
+                            value={
+                                <RoundedTextInput
+                                    value={companyInquiryAccessSetting.form.name}
+                                    onChange={(event) =>
+                                        companyInquiryAccessActions.changeField('name', event.target.value)
+                                    }
+                                    placeholder="사이트 이름을 입력해주세요."
+                                />
+                            }
+                        />
+
+                        <BasicContent.Item
+                            size="lg"
+                            label="사이트 URL"
+                            value={
+                                <RoundedTextInput
+                                    value={companyInquiryAccessSetting.form.url}
+                                    onChange={(event) =>
+                                        companyInquiryAccessActions.changeField('url', event.target.value)
+                                    }
+                                    placeholder="사이트 URL을 입력해주세요."
+                                />
+                            }
+                        />
+
+                        <BasicContent.Item
+                            size="lg"
+                            label="Git 저장소 URL"
+                            value={
+                                <RoundedTextInput
+                                    value={companyInquiryAccessSetting.form.gitRepositoryUrl}
+                                    onChange={(event) =>
+                                        companyInquiryAccessActions.changeField(
+                                            'gitRepositoryUrl',
+                                            event.target.value
+                                        )
+                                    }
+                                    placeholder="Git 저장소 URL을 입력해주세요."
+                                />
+                            }
+                        />
+
+                        <BasicContent.Item
+                            size="lg"
                             label="문의 알림 발송 방법"
                             value={
                                 <RoundedSegmentTab
@@ -1240,6 +1285,40 @@ const CompanySettingContent = ({
                                     <RoundedSegmentTab.Item value="NONE">미수신</RoundedSegmentTab.Item>
                                     <RoundedSegmentTab.Item value="SMS">SMS</RoundedSegmentTab.Item>
                                 </RoundedSegmentTab>
+                            }
+                        />
+
+                        <BasicContent.Item
+                            size="lg"
+                            label="광고주용 카카오 템플릿 ID"
+                            value={
+                                <RoundedTextInput
+                                    value={companyInquiryAccessSetting.form.kakaoInquiryTemplateId}
+                                    onChange={(event) =>
+                                        companyInquiryAccessActions.changeField(
+                                            'kakaoInquiryTemplateId',
+                                            event.target.value
+                                        )
+                                    }
+                                    placeholder="광고주용 카카오 템플릿 ID를 입력해주세요."
+                                />
+                            }
+                        />
+
+                        <BasicContent.Item
+                            size="lg"
+                            label="문의자용 카카오 템플릿 ID"
+                            value={
+                                <RoundedTextInput
+                                    value={companyInquiryAccessSetting.form.kakaoClientTemplateId}
+                                    onChange={(event) =>
+                                        companyInquiryAccessActions.changeField(
+                                            'kakaoClientTemplateId',
+                                            event.target.value
+                                        )
+                                    }
+                                    placeholder="문의자용 카카오 템플릿 ID를 입력해주세요."
+                                />
                             }
                         />
 
