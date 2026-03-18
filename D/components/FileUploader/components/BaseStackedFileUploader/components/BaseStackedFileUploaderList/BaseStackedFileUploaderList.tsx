@@ -4,7 +4,8 @@ import { FaCheck } from 'react-icons/fa';
 import styles from './BaseStackedFileUploaderList.module.scss';
 import { useFileUploader } from '../../../../FileUploader';
 import { Common } from '../../../../../../../C/Common';
-import type { ServerImage } from '../../../../../../../shared/types/common/model';
+import type { ServerImage } from '@/shared/types/common/model';
+import VideoDefaultImage from '../../../../../../../shared/assets/components/C/components/Image/video-default.svg';
 import Modal, { useModal } from '../../../../../../../shared/headless/Modal/Modal'; // ✅ 추가
 import Portal from '../../../../../../../shared/headless/Portal/Portal'; // ✅ 추가
 
@@ -29,7 +30,19 @@ type PreviewItem =
 const isFileType = (value: unknown): value is FileType =>
     value === 'IMAGE' || value === 'ZIP' || value === 'VIDEO' || value === 'ETC';
 
-const ImagePreviewContent = ({ src, name, prefix }: { src: string; name: string; prefix?: string }) => {
+const isMp4Preview = (name?: string, url?: string) => /\.mp4(?:$|[?#])/i.test(name ?? '') || /\.mp4(?:$|[?#])/i.test(url ?? '');
+
+const ImagePreviewContent = ({
+    src,
+    name,
+    prefix,
+    fallbackSrc,
+}: {
+    src: string;
+    name: string;
+    prefix?: string;
+    fallbackSrc?: string;
+}) => {
     const { closeModal } = useModal();
     const [zoom, setZoom] = React.useState(1);
     const scrollRef = React.useRef<HTMLDivElement>(null);
@@ -81,6 +94,7 @@ const ImagePreviewContent = ({ src, name, prefix }: { src: string; name: string;
                     className={styles.ImageModalImage}
                     src={src}
                     prefix={prefix}
+                    fallbackSrc={fallbackSrc}
                     alt={name}
                     width="100%"
                     block
@@ -222,6 +236,7 @@ const BaseStackedFileUploaderList: React.FC<BaseStackedFileUploaderListProps> = 
 
                 const downloadUrl = resolveDownloadUrl(p.url);
                 const isSelected = Boolean(selectedImageUUID) && p.source.imageUUID === selectedImageUUID;
+                const fallbackSrc = isMp4Preview(p.name, p.url) ? VideoDefaultImage : undefined;
 
                 // ✅ 클릭 핸들러 로직 분기: 선택 모드 vs 모달 열기 모드
                 // onSelect가 있으면 선택(Select), 없으면 모달 Trigger로 동작해야 함.
@@ -233,6 +248,7 @@ const BaseStackedFileUploaderList: React.FC<BaseStackedFileUploaderListProps> = 
                             className={styles.ImageThumbImg}
                             src={p.url}
                             prefix={apiPrefix}
+                            fallbackSrc={fallbackSrc}
                             alt={p.name}
                             width="100%"
                             height="100%"
@@ -308,7 +324,12 @@ const BaseStackedFileUploaderList: React.FC<BaseStackedFileUploaderListProps> = 
                                         className={styles.ImageModalContent}
                                         style={{ overflow: 'hidden', display: 'block' }}
                                     >
-                                        <ImagePreviewContent src={p.url} prefix={apiPrefix} name={p.name} />
+                                        <ImagePreviewContent
+                                            src={p.url}
+                                            prefix={apiPrefix}
+                                            name={p.name}
+                                            fallbackSrc={fallbackSrc}
+                                        />
                                     </Modal.Content>
                                 </Portal>
                             </Modal>
