@@ -8,6 +8,8 @@ export { default as BasicRightDrawer } from './components/BasicRightDrawer/Basic
 export { default as BasicContent } from './components/BasicContent/BasicContent';
 export { default as BasicConfirm } from './components/BasicConfirm/BasicConfirm';
 export { default as MainOverlay } from './components/MainOverlay/MainOverlay';
+export { default as BasicBarChart } from './components/BasicBarChart/BasicBarChart';
+export { default as BasicDonutChart } from './components/BasicDonutChart/BasicDonutChart';
 export { default as SectionBlock } from './components/SectionBlock/SectionBlock';
 export { default as SectionIntro } from './components/SectionIntro/SectionIntro';
 export { default as SectionFormDrawerContent } from './components/SectionFormDrawerContent/SectionFormDrawerContent';
@@ -69,6 +71,8 @@ export type { BasicModalProps } from './components/BasicModal/BasicModal';
 export type { BasicRightDrawerProps } from './components/BasicRightDrawer/BasicRightDrawer';
 export type { BasicConfirmProps } from './components/BasicConfirm/BasicConfirm';
 export type { MainOverlayProps } from './components/MainOverlay/MainOverlay';
+export type { BasicBarChartProps, BasicBarChartDatum, BasicBarChartSeries } from './components/BasicBarChart/BasicBarChart';
+export type { BasicDonutChartProps, BasicDonutChartDatum } from './components/BasicDonutChart/BasicDonutChart';
 export type { CompanySettingContentProps } from './components/CompanySettingContent/CompanySettingContent';
 export type { CompanyAdMediaLinkContentProps } from './components/CompanyAdMediaLinkContent/CompanyAdMediaLinkContent';
 export type { CompanyInquiryAccessContentProps } from './components/CompanyInquiryAccessContent/CompanyInquiryAccessContent';

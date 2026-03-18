@@ -121,6 +121,12 @@ export type { TimeSlotSelectorProps, TimeSlotSelectorOption } from './TimeSlotSe
 export { default as Divider } from './Divider/Divider';
 export type { DividerProps } from './Divider/Divider';
 
+export { default as BasicBarChart } from './BasicBarChart/BasicBarChart';
+export type { BasicBarChartProps, BasicBarChartDatum, BasicBarChartSeries } from './BasicBarChart/BasicBarChart';
+
+export { default as BasicDonutChart } from './BasicDonutChart/BasicDonutChart';
+export type { BasicDonutChartProps, BasicDonutChartDatum } from './BasicDonutChart/BasicDonutChart';
+
 export { default as DataTable } from './DataTable/DataTable';
 export type { DataTableProps } from './DataTable/DataTable';
 
