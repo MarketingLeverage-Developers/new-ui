@@ -5,13 +5,25 @@ import classNames from 'classnames';
 import styles from './Content.module.scss';
 import Header from '../Header/Header';
 import Main from '../Main/Main';
+import type { CSSVariables } from '../../shared/types/css/CSSVariables';
+import type { CSSLength } from '../../shared/types';
+import { toCssUnit } from '../../shared/utils';
 
-const Content = ({ children }: { children: React.ReactNode }) => {
+type ContentProps = {
+    children: React.ReactNode;
+    width?: CSSLength;
+};
+
+const Content = ({ children, width }: ContentProps) => {
     const { modalValue } = useModal();
     const classnames = classNames(styles.SideModalContent, {
         [styles.Open]: modalValue,
         [styles.Closed]: !modalValue,
     });
+
+    const cssVariables: CSSVariables = {
+        '--side-modal-width': width != null ? toCssUnit(width) : undefined,
+    };
 
     return (
         <Portal>
@@ -28,6 +40,7 @@ const Content = ({ children }: { children: React.ReactNode }) => {
                     pointerEvents: modalValue ? 'auto' : 'none',
                     visibility: modalValue ? 'visible' : 'hidden',
                     zIndex: modalValue ? 1000 : -1,
+                    ...cssVariables,
                 }}
             >
                 {children}

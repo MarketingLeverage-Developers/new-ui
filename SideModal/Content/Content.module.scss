@@ -1,4 +1,6 @@
 .SideModalContent {
+    --side-modal-width: 580px;
+
     position: fixed;
     top: 0 !important;
     right: 0 !important;
@@ -20,8 +22,8 @@
 }
 
 .Open {
-    width: 580px;
-    min-width: 580px;
+    width: var(--side-modal-width);
+    min-width: var(--side-modal-width);
     pointer-events: auto;
     visibility: visible;
 }

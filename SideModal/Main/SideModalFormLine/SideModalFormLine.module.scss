@@ -5,6 +5,7 @@
     display: flex;
     align-items: center;
     min-height: 35px;
+    width: 100%;
 
     &.NoBorder {
         border: none;
@@ -16,14 +17,22 @@
     }
 
     .Label {
+        // flex: 0 0 150px;
         min-width: 150px;
     }
 
     .Children {
-        width: 100%;
+        flex: 1 1 0;
+        min-width: 0;
 
         &.Copyable {
             cursor: pointer;
+        }
+    }
+
+    &.AlignColumn {
+        .Children {
+            width: 100%;
         }
     }
 }
