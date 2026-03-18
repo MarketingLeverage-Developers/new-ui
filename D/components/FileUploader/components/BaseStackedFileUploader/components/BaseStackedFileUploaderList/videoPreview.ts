@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 export type VideoPreviewTarget = {
     key: string;
@@ -125,6 +125,11 @@ export const useVideoThumbnailMap = (
     apiOrigin?: string
 ) => {
     const [videoThumbnailMap, setVideoThumbnailMap] = useState<Record<string, VideoThumbnailEntry>>({});
+    const videoThumbnailMapRef = useRef(videoThumbnailMap);
+
+    useEffect(() => {
+        videoThumbnailMapRef.current = videoThumbnailMap;
+    }, [videoThumbnailMap]);
 
     useEffect(() => {
         const normalizedTargets = targets.map((target) => ({
@@ -153,12 +158,13 @@ export const useVideoThumbnailMap = (
         let cancelled = false;
 
         normalizedTargets.forEach(({ key, sourceUrl }) => {
-            const existing = videoThumbnailMap[key];
-            if (existing?.sourceUrl === sourceUrl) return;
+            const existing = videoThumbnailMapRef.current[key];
+            if (existing?.sourceUrl === sourceUrl && existing.thumbnailUrl !== undefined) return;
 
             setVideoThumbnailMap((prev) => {
                 const current = prev[key];
-                if (current?.sourceUrl === sourceUrl) return prev;
+                if (current?.sourceUrl === sourceUrl && current.thumbnailUrl === undefined) return prev;
+                if (current?.sourceUrl === sourceUrl && current.thumbnailUrl !== undefined) return prev;
 
                 return {
                     ...prev,
@@ -198,7 +204,7 @@ export const useVideoThumbnailMap = (
         return () => {
             cancelled = true;
         };
-    }, [apiOrigin, apiPrefix, targets, videoThumbnailMap]);
+    }, [apiOrigin, apiPrefix, targets]);
 
     return videoThumbnailMap;
 };
