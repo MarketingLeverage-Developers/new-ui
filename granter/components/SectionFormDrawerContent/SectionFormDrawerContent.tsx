@@ -7,13 +7,13 @@ import styles from './SectionFormDrawerContent.module.scss';
 export type SectionFormDrawerContentProps = {
     title: React.ReactNode;
     onClose: () => void;
-    onConfirm: () => void;
+    onConfirm: React.MouseEventHandler<HTMLButtonElement>;
     children: React.ReactNode;
     introEyebrow?: React.ReactNode;
     introTitle?: React.ReactNode;
     introDescription?: React.ReactNode;
     introTitleAs?: React.ElementType;
-    onCancel?: () => void;
+    onCancel?: React.MouseEventHandler<HTMLButtonElement>;
     cancelLabel?: React.ReactNode;
     confirmLabel?: React.ReactNode;
     confirmDisabled?: boolean;
