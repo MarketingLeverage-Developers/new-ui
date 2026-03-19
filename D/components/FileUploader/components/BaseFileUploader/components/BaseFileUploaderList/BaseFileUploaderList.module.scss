@@ -239,8 +239,8 @@
     text-overflow: ellipsis;
 }
 
-.ImageModalBackdrop {
-    z-index: 1300;
+.ImageModalBackdrop.ImageModalBackdrop {
+    z-index: 9990;
 }
 
 .ImagePreviewViewport {
@@ -266,7 +266,7 @@
 }
 
 .ImageModalContent.ImageModalContent {
-    z-index: 1201;
+    z-index: 9991;
     width: 100%;
     height: 90%;
     min-width: min(320px, calc(100vw - 32px));

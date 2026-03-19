@@ -259,29 +259,57 @@
     text-overflow: ellipsis;
 }
 
-.ImageModalBackdrop {
-    z-index: 1200;
+.ImageModalBackdrop.ImageModalBackdrop {
+    z-index: 9990;
 }
 
-.ImageModalContent.ImageModalContent {
-    z-index: 1201;
-    height: 90%;
+.ImagePreviewViewport {
+    width: 100%;
+    height: 100%;
+    padding: 0 10%;
+    box-sizing: border-box;
     overflow-y: auto;
     overflow-x: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
+    cursor: pointer;
+}
+
+.ImagePreviewCanvas {
+    flex-shrink: 0;
+    margin: auto 0;
+    display: flex;
+    justify-content: center;
+    cursor: default;
+    transition: width 0.1s ease-out;
+}
+
+.ImageModalContent.ImageModalContent {
+    z-index: 9991;
+    width: 100%;
+    height: 90%;
+    min-width: min(320px, calc(100vw - 32px));
+    max-width: 60%;
+    overflow: hidden;
+    display: block;
 }
 
 .ImageModalImage.ImageModalImage {
     display: block;
-    width: auto;
+    width: 100%;
     height: auto;
     max-width: 100%;
-    max-height: none;
+    max-height: 100%;
     object-fit: contain;
     border-radius: 8px;
     margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+    .ImageModalContent.ImageModalContent {
+        max-width: calc(100vw - 32px);
+    }
 }
 
 /* =========================
