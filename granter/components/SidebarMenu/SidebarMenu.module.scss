@@ -88,6 +88,12 @@
     background-color: var(--granter-gray-100);
 }
 
+.ProfileAvatar {
+    border-radius: 999px;
+    background-color: var(--granter-gray-100);
+    overflow: hidden;
+}
+
 .WorkspaceCopy,
 .ProfileCopy {
     display: flex;
