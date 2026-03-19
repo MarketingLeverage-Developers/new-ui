@@ -7,7 +7,10 @@ export const useContainerWidth = (wrapperRef: React.MutableRefObject<HTMLDivElem
         const el = wrapperRef.current;
         if (!el) return;
 
-        const update = () => setContainerWidth(el.clientWidth);
+        const update = () => {
+            const nextWidth = el.clientWidth;
+            setContainerWidth((prev) => (prev === nextWidth ? prev : nextWidth));
+        };
         update();
 
         const ro = new ResizeObserver(update);

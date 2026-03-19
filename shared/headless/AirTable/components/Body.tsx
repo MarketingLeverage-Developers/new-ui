@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, { memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import type { CellRenderMeta } from '../AirTable';
 import { useAirTableContext } from '../AirTable';
 import styles from './Body.module.scss';
@@ -15,8 +15,78 @@ type ExpandableDetailRowProps = {
     children: React.ReactNode;
 };
 
+type BodyProps = {
+    className?: string;
+    style?: React.CSSProperties;
+    rowClassName?: string;
+    rowSelectedClassName?: string;
+    cellClassName?: string;
+    selectedCellClassName?: string;
+    activeCellClassName?: string;
+    detailRowClassName?: string;
+    detailCellClassName?: string;
+};
+
+type BodyRowData<T> = {
+    key: string;
+    item: T;
+    level: number;
+    cells: Array<{
+        key: string;
+        render: (it: T, idx: number, meta: CellRenderMeta<T>) => React.ReactElement;
+    }>;
+};
+
+type BodyRowProps<T> = {
+    row: BodyRowData<T>;
+    actualRi: number;
+    baseOrder: string[];
+    gridTemplateColumns: string;
+    rowClassName?: string;
+    rowSelectedClassName?: string;
+    cellClassName?: string;
+    selectedCellClassName?: string;
+    activeCellClassName?: string;
+    detailRowClassName?: string;
+    detailCellClassName?: string;
+    detailRenderer?: (params: { row: T; ri: number }) => React.ReactNode;
+    getRowStyle?: (row: T, ri: number) => React.CSSProperties;
+    rangeTop: number | null;
+    rangeBottom: number | null;
+    rangeLeft: number | null;
+    rangeRight: number | null;
+    activeRi: number | null;
+    activeCi: number | null;
+    isSingleCellSelection: boolean;
+    draggingKey: string | null;
+    beginSelect: (ri: number, ci: number) => void;
+    updateSelect: (ri: number, ci: number) => void;
+    setSelection: React.Dispatch<
+        React.SetStateAction<{
+            start: { ri: number; ci: number } | null;
+            end: { ri: number; ci: number } | null;
+            isSelecting: boolean;
+        }>
+    >;
+    getShiftStyle: (colKey: string) => React.CSSProperties;
+    getPinnedStyle: (colKey: string, bg?: string, options?: { isHeader?: boolean }) => React.CSSProperties;
+    toggleRowExpanded: (rowKey: string) => void;
+    isRowExpanded: (rowKey: string) => boolean;
+    indentTargetKey?: string;
+    canExpand: boolean;
+    expanded: boolean;
+};
+
+type VirtualWindowState = {
+    startIndex: number;
+    endIndex: number;
+    paddingTop: number;
+    paddingBottom: number;
+};
+
 const TRANSITION_MS = 260;
 const APPEAR_DELAY_MS = 40;
+const INDENT_PX = 24;
 
 const ExpandableDetailRow = ({
     expanded,
@@ -135,17 +205,218 @@ const ExpandableDetailRow = ({
     );
 };
 
-type BodyProps = {
-    className?: string;
-    style?: React.CSSProperties;
-    rowClassName?: string;
-    rowSelectedClassName?: string;
-    cellClassName?: string;
-    selectedCellClassName?: string;
-    activeCellClassName?: string;
-    detailRowClassName?: string;
-    detailCellClassName?: string;
+const BodyRowInner = <T,>({
+    row,
+    actualRi,
+    baseOrder,
+    gridTemplateColumns,
+    rowClassName,
+    rowSelectedClassName,
+    cellClassName,
+    selectedCellClassName,
+    activeCellClassName,
+    detailRowClassName,
+    detailCellClassName,
+    detailRenderer,
+    getRowStyle,
+    rangeTop,
+    rangeBottom,
+    rangeLeft,
+    rangeRight,
+    activeRi,
+    activeCi,
+    isSingleCellSelection,
+    draggingKey,
+    beginSelect,
+    updateSelect,
+    setSelection,
+    getShiftStyle,
+    getPinnedStyle,
+    toggleRowExpanded,
+    isRowExpanded,
+    indentTargetKey,
+    canExpand,
+    expanded,
+}: BodyRowProps<T>) => {
+    const rowKey = row.key;
+    const rowStyleRaw = getRowStyle?.(row.item, actualRi) ?? {};
+    const rowBg = rowStyleRaw.backgroundColor;
+    const { backgroundColor: _bg, ...rowStyle } = rowStyleRaw;
+
+    const rowInSelection = rangeTop !== null && rangeBottom !== null && actualRi >= rangeTop && actualRi <= rangeBottom;
+    const rowSelected =
+        rowInSelection &&
+        rangeLeft !== null &&
+        rangeRight !== null &&
+        rangeLeft <= 0 &&
+        rangeRight >= baseOrder.length - 1;
+
+    const meta: CellRenderMeta<T> = {
+        rowKey,
+        ri: actualRi,
+        level: row.level,
+        toggleRowExpanded,
+        isRowExpanded,
+    };
+
+    const cellMap = useMemo(() => new Map(row.cells.map((cell) => [cell.key, cell])), [row.cells]);
+    const isChild = row.level > 0;
+
+    return (
+        <>
+            <div
+                className={[rowClassName ?? '', rowSelected ? (rowSelectedClassName ?? '') : ''].join(' ')}
+                data-row-selected={rowSelected ? 'true' : 'false'}
+                data-row-in-selection={rowInSelection ? 'true' : 'false'}
+                style={{
+                    display: 'grid',
+                    gridTemplateColumns,
+                    ...rowStyle,
+                }}
+            >
+                {baseOrder.map((colKey, ci) => {
+                    const cell = cellMap.get(colKey);
+                    if (!cell) return null;
+
+                    const selected =
+                        rangeTop !== null &&
+                        rangeBottom !== null &&
+                        rangeLeft !== null &&
+                        rangeRight !== null &&
+                        actualRi >= rangeTop &&
+                        actualRi <= rangeBottom &&
+                        ci >= rangeLeft &&
+                        ci <= rangeRight;
+                    const cellBg = selected ? undefined : rowBg ? rowBg : undefined;
+                    const active = isSingleCellSelection && activeRi === actualRi && activeCi === ci;
+                    const isTopEdge = selected && rangeTop !== null && actualRi === rangeTop;
+                    const isBottomEdge = selected && rangeBottom !== null && actualRi === rangeBottom;
+                    const isLeftEdge = selected && rangeLeft !== null && ci === rangeLeft;
+                    const isRightEdge = selected && rangeRight !== null && ci === rangeRight;
+                    const isIndentTarget = colKey === indentTargetKey;
+                    const indentPadding = isChild ? row.level * INDENT_PX : 0;
+
+                    return (
+                        <div
+                            key={`c-${rowKey}-${colKey}`}
+                            id={`__cell_${row.key}_${colKey}`}
+                            className={[
+                                cellClassName ?? '',
+                                selected ? (selectedCellClassName ?? '') : '',
+                                active ? (activeCellClassName ?? '') : '',
+                            ].join(' ')}
+                            data-cell-selected={selected ? 'true' : 'false'}
+                            data-cell-active={active ? 'true' : 'false'}
+                            data-cell-edge-top={isTopEdge ? 'true' : 'false'}
+                            data-cell-edge-bottom={isBottomEdge ? 'true' : 'false'}
+                            data-cell-edge-left={isLeftEdge ? 'true' : 'false'}
+                            data-cell-edge-right={isRightEdge ? 'true' : 'false'}
+                            onMouseDown={(e) => {
+                                if (draggingKey) return;
+                                if (e.button !== 0) return;
+                                e.preventDefault();
+
+                                const target = e.target as HTMLElement;
+                                if (target.closest('[data-row-toggle="true"]')) return;
+
+                                beginSelect(actualRi, ci);
+                            }}
+                            onMouseEnter={() => {
+                                if (draggingKey) return;
+                                updateSelect(actualRi, ci);
+                            }}
+                            onContextMenu={(e) => {
+                                if (draggingKey) return;
+
+                                e.preventDefault();
+                                e.stopPropagation();
+
+                                if (!selected) {
+                                    setSelection({
+                                        start: { ri: actualRi, ci },
+                                        end: { ri: actualRi, ci },
+                                        isSelecting: false,
+                                    });
+                                }
+
+                                window.dispatchEvent(
+                                    new CustomEvent('AIR_TABLE_OPEN_CONTEXT_MENU', {
+                                        detail: {
+                                            x: e.clientX,
+                                            y: e.clientY,
+                                            ri: actualRi,
+                                            ci,
+                                            rowKey: row.key,
+                                            colKey,
+                                        },
+                                    })
+                                );
+                            }}
+                            style={{
+                                backgroundColor: cellBg,
+                                color: rowStyleRaw.color,
+                                ...getShiftStyle(colKey),
+                                ...getPinnedStyle(colKey, cellBg ?? getThemeColor('White1')),
+                                ...(isIndentTarget ? { paddingLeft: indentPadding } : {}),
+                            }}
+                        >
+                            {cell.render(row.item, actualRi, meta)}
+                        </div>
+                    );
+                })}
+            </div>
+
+            {canExpand && (
+                <ExpandableDetailRow
+                    expanded={expanded}
+                    gridTemplateColumns={gridTemplateColumns}
+                    rowClassName={detailRowClassName}
+                    cellClassName={detailCellClassName}
+                >
+                    {detailRenderer?.({ row: row.item, ri: actualRi })}
+                </ExpandableDetailRow>
+            )}
+        </>
+    );
 };
+
+const areBodyRowPropsEqual = (prev: BodyRowProps<unknown>, next: BodyRowProps<unknown>) =>
+    prev.row.key === next.row.key &&
+    prev.row.item === next.row.item &&
+    prev.row.level === next.row.level &&
+    prev.row.cells === next.row.cells &&
+    prev.actualRi === next.actualRi &&
+    prev.baseOrder === next.baseOrder &&
+    prev.gridTemplateColumns === next.gridTemplateColumns &&
+    prev.rowClassName === next.rowClassName &&
+    prev.rowSelectedClassName === next.rowSelectedClassName &&
+    prev.cellClassName === next.cellClassName &&
+    prev.selectedCellClassName === next.selectedCellClassName &&
+    prev.activeCellClassName === next.activeCellClassName &&
+    prev.detailRowClassName === next.detailRowClassName &&
+    prev.detailCellClassName === next.detailCellClassName &&
+    prev.detailRenderer === next.detailRenderer &&
+    prev.getRowStyle === next.getRowStyle &&
+    prev.rangeTop === next.rangeTop &&
+    prev.rangeBottom === next.rangeBottom &&
+    prev.rangeLeft === next.rangeLeft &&
+    prev.rangeRight === next.rangeRight &&
+    prev.activeRi === next.activeRi &&
+    prev.activeCi === next.activeCi &&
+    prev.isSingleCellSelection === next.isSingleCellSelection &&
+    prev.draggingKey === next.draggingKey &&
+    prev.beginSelect === next.beginSelect &&
+    prev.updateSelect === next.updateSelect &&
+    prev.setSelection === next.setSelection &&
+    prev.getShiftStyle === next.getShiftStyle &&
+    prev.getPinnedStyle === next.getPinnedStyle &&
+    prev.toggleRowExpanded === next.toggleRowExpanded &&
+    prev.isRowExpanded === next.isRowExpanded &&
+    prev.indentTargetKey === next.indentTargetKey &&
+    prev.canExpand === next.canExpand &&
+    prev.expanded === next.expanded;
+
+const BodyRow = memo(BodyRowInner, areBodyRowPropsEqual) as typeof BodyRowInner;
 
 export const Body = <T,>({
     className,
@@ -194,9 +465,15 @@ export const Body = <T,>({
 
     const bodyRef = useRef<HTMLDivElement | null>(null);
     const virtualScrollRef = useRef<HTMLElement | null>(null);
-    const [virtualState, setVirtualState] = useState<{ top: number; height: number }>({
-        top: 0,
-        height: 0,
+    const [virtualWindow, setVirtualWindow] = useState<VirtualWindowState>(() => {
+        const initialEndIndex = rows.length > 0 ? Math.min(rows.length - 1, virtualOverscan) : -1;
+
+        return {
+            startIndex: 0,
+            endIndex: initialEndIndex,
+            paddingTop: 0,
+            paddingBottom: rows.length > 0 ? Math.max(0, (rows.length - initialEndIndex - 1) * virtualRowHeight) : 0,
+        };
     });
 
     const resolveVirtualScrollEl = useCallback(() => {
@@ -224,7 +501,7 @@ export const Body = <T,>({
         return internal;
     }, [scrollRef]);
 
-    const updateVirtualState = useCallback(() => {
+    const updateVirtualWindow = useCallback(() => {
         const scrollEl = virtualScrollRef.current ?? resolveVirtualScrollEl();
         const bodyEl = bodyRef.current;
         if (!scrollEl || !bodyEl) return;
@@ -244,14 +521,36 @@ export const Body = <T,>({
         const visibleBottom = Math.min(bodyBottomInScroll, viewportBottom);
         const bodyScrollTop = Math.max(0, visibleTop - bodyTopInScroll);
         const viewportHeight = Math.max(0, visibleBottom - visibleTop);
+        const nextStartIndex = Math.max(0, Math.floor(bodyScrollTop / virtualRowHeight) - virtualOverscan);
+        const nextEndIndex = Math.min(
+            rows.length - 1,
+            Math.ceil((bodyScrollTop + viewportHeight) / virtualRowHeight) + virtualOverscan
+        );
+        const nextWindow: VirtualWindowState = {
+            startIndex: nextStartIndex,
+            endIndex: nextEndIndex,
+            paddingTop: nextStartIndex * virtualRowHeight,
+            paddingBottom: Math.max(0, (rows.length - nextEndIndex - 1) * virtualRowHeight),
+        };
 
-        setVirtualState({ top: bodyScrollTop, height: viewportHeight });
-    }, [resolveVirtualScrollEl]);
+        setVirtualWindow((prev) => {
+            if (
+                prev.startIndex === nextWindow.startIndex &&
+                prev.endIndex === nextWindow.endIndex &&
+                prev.paddingTop === nextWindow.paddingTop &&
+                prev.paddingBottom === nextWindow.paddingBottom
+            ) {
+                return prev;
+            }
+
+            return nextWindow;
+        });
+    }, [resolveVirtualScrollEl, rows.length, virtualOverscan, virtualRowHeight]);
 
     useEffect(() => {
         if (!canVirtualize) return;
-        updateVirtualState();
-    }, [canVirtualize, rows.length, virtualRowHeight, updateVirtualState]);
+        updateVirtualWindow();
+    }, [canVirtualize, rows.length, virtualRowHeight, updateVirtualWindow]);
 
     useEffect(() => {
         if (!canVirtualize) return;
@@ -263,7 +562,7 @@ export const Body = <T,>({
             if (raf) return;
             raf = window.requestAnimationFrame(() => {
                 raf = 0;
-                updateVirtualState();
+                updateVirtualWindow();
             });
         };
 
@@ -275,46 +574,48 @@ export const Body = <T,>({
             window.removeEventListener('resize', handle);
             if (raf) window.cancelAnimationFrame(raf);
         };
-    }, [canVirtualize, resolveVirtualScrollEl, updateVirtualState]);
+    }, [canVirtualize, resolveVirtualScrollEl, updateVirtualWindow]);
 
-    let rowsToRender = rows;
+    const typedRows = rows as BodyRowData<T>[];
+    let rowsToRender = typedRows;
     let rowIndexOffset = 0;
     let paddingTop = 0;
     let paddingBottom = 0;
 
     if (canVirtualize && rows.length > 0) {
-        const startIndex = Math.max(0, Math.floor(virtualState.top / virtualRowHeight) - virtualOverscan);
-        const endIndex = Math.min(
-            rows.length - 1,
-            Math.ceil((virtualState.top + virtualState.height) / virtualRowHeight) + virtualOverscan
-        );
-
-        rowsToRender = rows.slice(startIndex, endIndex + 1);
-        rowIndexOffset = startIndex;
-        paddingTop = startIndex * virtualRowHeight;
-        paddingBottom = Math.max(0, (rows.length - endIndex - 1) * virtualRowHeight);
+        rowsToRender = typedRows.slice(virtualWindow.startIndex, virtualWindow.endIndex + 1);
+        rowIndexOffset = virtualWindow.startIndex;
+        paddingTop = virtualWindow.paddingTop;
+        paddingBottom = virtualWindow.paddingBottom;
     }
 
-    const beginSelect = (ri: number, ci: number) => {
-        setSelection({ start: { ri, ci }, end: { ri, ci }, isSelecting: true });
-    };
+    const beginSelect = useCallback(
+        (ri: number, ci: number) => {
+            setSelection({ start: { ri, ci }, end: { ri, ci }, isSelecting: true });
+        },
+        [setSelection]
+    );
 
-    const updateSelect = (ri: number, ci: number) => {
-        setSelection((prev) => {
-            if (!prev.isSelecting) return prev;
-            return { ...prev, end: { ri, ci } };
-        });
-    };
+    const updateSelect = useCallback(
+        (ri: number, ci: number) => {
+            setSelection((prev) => {
+                if (!prev.isSelecting) return prev;
+                return { ...prev, end: { ri, ci } };
+            });
+        },
+        [setSelection]
+    );
 
-    const INDENT_PX = 24;
     const indentTargetKey = pinnedColumnKeys[0] ?? baseOrder[0];
-
     const range = getRange();
     const activeCell = selection.start;
-    const isSingleCellSelection =
-        range !== null &&
-        range.top === range.bottom &&
-        range.left === range.right;
+    const isSingleCellSelection = range !== null && range.top === range.bottom && range.left === range.right;
+    const rangeTop = range?.top ?? null;
+    const rangeBottom = range?.bottom ?? null;
+    const rangeLeft = range?.left ?? null;
+    const rangeRight = range?.right ?? null;
+    const activeRi = activeCell?.ri ?? null;
+    const activeCi = activeCell?.ci ?? null;
 
     return (
         <div
@@ -338,8 +639,7 @@ export const Body = <T,>({
                                 const actualRi = rowIndexOffset + ri;
                                 const rowStyleRaw = getRowStyle?.(row.item, actualRi) ?? {};
                                 const rowKey = row.key;
-                                const rowInSelection =
-                                    range !== null && actualRi >= range.top && actualRi <= range.bottom;
+                                const rowInSelection = range !== null && actualRi >= range.top && actualRi <= range.bottom;
                                 const rowSelected =
                                     rowInSelection &&
                                     range !== null &&
@@ -351,9 +651,7 @@ export const Body = <T,>({
 
                                 const expanded = canExpand && isRowExpanded(rowKey);
                                 const rowBg = rowStyleRaw.backgroundColor;
-
                                 const { backgroundColor: _bg, ...rowStyle } = rowStyleRaw;
-
                                 const meta: CellRenderMeta<T> = {
                                     rowKey,
                                     ri: actualRi,
@@ -361,9 +659,7 @@ export const Body = <T,>({
                                     toggleRowExpanded,
                                     isRowExpanded,
                                 };
-
                                 const isChild = row.level > 0;
-
                                 const cellMap = new Map(row.cells.map((c) => [c.key, c]));
 
                                 return (
@@ -400,18 +696,13 @@ export const Body = <T,>({
                                                     isSingleCellSelection &&
                                                     activeCell?.ri === actualRi &&
                                                     activeCell?.ci === ci;
-                                                const isTopEdge =
-                                                    selected && range !== null && actualRi === range.top;
+                                                const isTopEdge = selected && range !== null && actualRi === range.top;
                                                 const isBottomEdge =
                                                     selected && range !== null && actualRi === range.bottom;
-                                                const isLeftEdge =
-                                                    selected && range !== null && ci === range.left;
-                                                const isRightEdge =
-                                                    selected && range !== null && ci === range.right;
-
+                                                const isLeftEdge = selected && range !== null && ci === range.left;
+                                                const isRightEdge = selected && range !== null && ci === range.right;
                                                 const isIndentTarget = colKey === indentTargetKey;
                                                 const indentPadding = isChild ? row.level * INDENT_PX : 0;
-
                                                 const cellKey = `c-${rowKey}-${colKey}`;
                                                 const cellProps = {
                                                     id: `__cell_${row.key}_${colKey}`,
@@ -516,156 +807,45 @@ export const Body = <T,>({
                     ) : (
                         rowsToRender.map((row, ri) => {
                             const actualRi = rowIndexOffset + ri;
-                            const rowStyleRaw = getRowStyle?.(row.item, actualRi) ?? {};
-                            const rowKey = row.key;
-                            const rowInSelection =
-                                range !== null && actualRi >= range.top && actualRi <= range.bottom;
-                            const rowSelected =
-                                rowInSelection &&
-                                range !== null &&
-                                range.left <= 0 &&
-                                range.right >= baseOrder.length - 1;
-
                             const canExpand =
                                 !!detailRenderer && (getRowCanExpand ? getRowCanExpand(row.item, actualRi) : true);
-
-                            const expanded = canExpand && isRowExpanded(rowKey);
-                            const rowBg = rowStyleRaw.backgroundColor;
-
-                            const { backgroundColor: _bg, ...rowStyle } = rowStyleRaw;
-
-                            const meta: CellRenderMeta<T> = {
-                                rowKey,
-                                ri: actualRi,
-                                level: row.level,
-                                toggleRowExpanded,
-                                isRowExpanded,
-                            };
-
-                            const isChild = row.level > 0;
-
-                            const cellMap = new Map(row.cells.map((c) => [c.key, c]));
+                            const expanded = canExpand && isRowExpanded(row.key);
 
                             return (
-                                <React.Fragment key={rowKey}>
-                                    <div
-                                        className={[
-                                            rowClassName ?? '',
-                                            rowSelected ? (rowSelectedClassName ?? '') : '',
-                                        ].join(' ')}
-                                        data-row-selected={rowSelected ? 'true' : 'false'}
-                                        data-row-in-selection={rowInSelection ? 'true' : 'false'}
-                                        style={{
-                                            display: 'grid',
-                                            gridTemplateColumns,
-                                            ...rowStyle,
-                                        }}
-                                    >
-                                        {baseOrder.map((colKey, ci) => {
-                                            const cell = cellMap.get(colKey);
-                                            if (!cell) return null;
-
-                                            const selected = isCellSelected(actualRi, ci);
-                                            const cellBg = selected ? undefined : rowBg ? rowBg : undefined;
-                                            const active =
-                                                isSingleCellSelection &&
-                                                activeCell?.ri === actualRi &&
-                                                activeCell?.ci === ci;
-                                            const isTopEdge =
-                                                selected && range !== null && actualRi === range.top;
-                                            const isBottomEdge =
-                                                selected && range !== null && actualRi === range.bottom;
-                                            const isLeftEdge =
-                                                selected && range !== null && ci === range.left;
-                                            const isRightEdge =
-                                                selected && range !== null && ci === range.right;
-
-                                            const isIndentTarget = colKey === indentTargetKey;
-                                            const indentPadding = isChild ? row.level * INDENT_PX : 0;
-
-                                            return (
-                                                <div
-                                                    key={`c-${rowKey}-${colKey}`}
-                                                    id={`__cell_${row.key}_${colKey}`}
-                                                    className={[
-                                                        cellClassName ?? '',
-                                                        selected ? (selectedCellClassName ?? '') : '',
-                                                        active ? (activeCellClassName ?? '') : '',
-                                                    ].join(' ')}
-                                                    data-cell-selected={selected ? 'true' : 'false'}
-                                                    data-cell-active={active ? 'true' : 'false'}
-                                                    data-cell-edge-top={isTopEdge ? 'true' : 'false'}
-                                                    data-cell-edge-bottom={isBottomEdge ? 'true' : 'false'}
-                                                    data-cell-edge-left={isLeftEdge ? 'true' : 'false'}
-                                                    data-cell-edge-right={isRightEdge ? 'true' : 'false'}
-                                                    onMouseDown={(e) => {
-                                                        if (drag.draggingKey) return;
-                                                        if (e.button !== 0) return;
-                                                        e.preventDefault();
-
-                                                        const target = e.target as HTMLElement;
-                                                        if (target.closest('[data-row-toggle="true"]')) return;
-
-                                                        beginSelect(actualRi, ci);
-                                                    }}
-                                                    onMouseEnter={() => {
-                                                        if (drag.draggingKey) return;
-                                                        updateSelect(actualRi, ci);
-                                                    }}
-                                                    onContextMenu={(e) => {
-                                                        if (drag.draggingKey) return;
-
-                                                        e.preventDefault();
-                                                        e.stopPropagation();
-
-                                                        const alreadySelected = isCellSelected(actualRi, ci);
-
-                                                        if (!alreadySelected) {
-                                                            setSelection({
-                                                                start: { ri: actualRi, ci },
-                                                                end: { ri: actualRi, ci },
-                                                                isSelecting: false,
-                                                            });
-                                                        }
-
-                                                        window.dispatchEvent(
-                                                            new CustomEvent('AIR_TABLE_OPEN_CONTEXT_MENU', {
-                                                                detail: {
-                                                                    x: e.clientX,
-                                                                    y: e.clientY,
-                                                                    ri: actualRi,
-                                                                    ci,
-                                                                    rowKey: row.key,
-                                                                    colKey,
-                                                                },
-                                                            })
-                                                        );
-                                                    }}
-                                                    style={{
-                                                        backgroundColor: cellBg,
-                                                        color: rowStyleRaw.color,
-                                                        ...getShiftStyle(colKey),
-                                                        ...getPinnedStyle(colKey, cellBg ?? getThemeColor('White1')),
-                                                        ...(isIndentTarget ? { paddingLeft: indentPadding } : {}),
-                                                    }}
-                                                >
-                                                    {cell.render(row.item, actualRi, meta)}
-                                                </div>
-                                            );
-                                        })}
-                                    </div>
-
-                                    {canExpand && (
-                                        <ExpandableDetailRow
-                                            expanded={expanded}
-                                            gridTemplateColumns={gridTemplateColumns}
-                                            rowClassName={detailRowClassName}
-                                            cellClassName={detailCellClassName}
-                                        >
-                                            {detailRenderer?.({ row: row.item, ri: actualRi })}
-                                        </ExpandableDetailRow>
-                                    )}
-                                </React.Fragment>
+                                <BodyRow
+                                    key={row.key}
+                                    row={row}
+                                    actualRi={actualRi}
+                                    baseOrder={baseOrder}
+                                    gridTemplateColumns={gridTemplateColumns}
+                                    rowClassName={rowClassName}
+                                    rowSelectedClassName={rowSelectedClassName}
+                                    cellClassName={cellClassName}
+                                    selectedCellClassName={selectedCellClassName}
+                                    activeCellClassName={activeCellClassName}
+                                    detailRowClassName={detailRowClassName}
+                                    detailCellClassName={detailCellClassName}
+                                    detailRenderer={detailRenderer}
+                                    getRowStyle={getRowStyle}
+                                    rangeTop={rangeTop}
+                                    rangeBottom={rangeBottom}
+                                    rangeLeft={rangeLeft}
+                                    rangeRight={rangeRight}
+                                    activeRi={activeRi}
+                                    activeCi={activeCi}
+                                    isSingleCellSelection={isSingleCellSelection}
+                                    draggingKey={drag.draggingKey}
+                                    beginSelect={beginSelect}
+                                    updateSelect={updateSelect}
+                                    setSelection={setSelection}
+                                    getShiftStyle={getShiftStyle}
+                                    getPinnedStyle={getPinnedStyle}
+                                    toggleRowExpanded={toggleRowExpanded}
+                                    isRowExpanded={isRowExpanded}
+                                    indentTargetKey={indentTargetKey}
+                                    canExpand={canExpand}
+                                    expanded={expanded}
+                                />
                             );
                         })
                     )}

@@ -457,6 +457,31 @@ const mergeOrderByLeafKeys = (prevOrder: string[], leafKeys: string[]) => {
     return uniq(next);
 };
 
+const areStringArraysEqual = (a: string[], b: string[]) => {
+    if (a === b) return true;
+    if (a.length !== b.length) return false;
+
+    for (let i = 0; i < a.length; i += 1) {
+        if (a[i] !== b[i]) return false;
+    }
+
+    return true;
+};
+
+const areNumberRecordsEqual = (a: Record<string, number>, b: Record<string, number>) => {
+    if (a === b) return true;
+
+    const aKeys = Object.keys(a);
+    const bKeys = Object.keys(b);
+    if (aKeys.length !== bKeys.length) return false;
+
+    for (const key of aKeys) {
+        if (a[key] !== b[key]) return false;
+    }
+
+    return true;
+};
+
 /* =========================
    ✅✅✅ 추가: rowKey 생성 유틸
    - 펼침 rowKey가 항상 여기 기준으로 만들어져야 한다
@@ -651,9 +676,8 @@ const useTable = <T,>({
     const knownSetRef = useRef<Set<string>>(
         new Set(persisted?.knownColumnKeys && persisted.knownColumnKeys.length > 0 ? persisted.knownColumnKeys : leafKeys)
     );
-    useMemo(() => {
+    useEffect(() => {
         knownSetRef.current = new Set(knownColumnKeys);
-        return null;
     }, [knownColumnKeys]);
 
     // storageKey 변경 시 persisted hydrate 준비
@@ -721,7 +745,7 @@ const useTable = <T,>({
         pinnedColumnKeys,
     });
 
-    useMemo(() => {
+    useEffect(() => {
         stateRef.current = {
             columnWidths,
             columnOrder,
@@ -729,7 +753,6 @@ const useTable = <T,>({
             knownColumnKeys,
             pinnedColumnKeys,
         };
-        return null;
     }, [columnWidths, columnOrder, visibleColumnKeysDesired, knownColumnKeys, pinnedColumnKeys]);
 
     const persistNow = useCallback(() => {
@@ -781,46 +804,61 @@ const useTable = <T,>({
         [normalizePinnedColumnKeys, persistNow]
     );
 
-    useMemo(() => {
-        if (leafKeys.length === 0) return null;
+    useEffect(() => {
+        if (leafKeys.length === 0) return;
 
         const knownSet = knownSetRef.current;
         const newKeys = leafKeys.filter((k) => !knownSet.has(k));
+        const nextKnown = Array.from(new Set([...knownSet, ...leafKeys]));
 
-        const nextKnown = new Set(knownSet);
-        leafKeys.forEach((k) => nextKnown.add(k));
-        knownSetRef.current = nextKnown;
-        setKnownColumnKeys(Array.from(nextKnown));
+        knownSetRef.current = new Set(nextKnown);
+        setKnownColumnKeys((prev) => (areStringArraysEqual(prev, nextKnown) ? prev : nextKnown));
 
         setColumnWidths((prev) => {
             const next: Record<string, number> = { ...prev };
+            let changed = false;
 
             leafKeys.forEach((k) => {
                 const existing = next[k];
                 if (typeof existing !== 'number' || existing <= 0) {
                     const base = baseLeafWidthByKey.get(k) ?? defaultColWidth;
                     next[k] = Math.max(MIN_COL_WIDTH, Number.isFinite(base) ? base : defaultColWidth);
+                    changed = true;
                 }
             });
 
             Object.keys(next).forEach((k) => {
-                if (!leafKeySet.has(k)) delete next[k];
+                if (!leafKeySet.has(k)) {
+                    delete next[k];
+                    changed = true;
+                }
             });
 
+            if (!changed || areNumberRecordsEqual(prev, next)) return prev;
             return next;
         });
 
-        setColumnOrder((prev) => mergeOrderByLeafKeys(prev, leafKeys));
-
-        setVisibleColumnKeysDesired((prevDesired) => {
-            if (!prevDesired || prevDesired.length === 0) return defaultVisibleLeafKeys;
-            if (newKeys.length > 0) return uniq([...prevDesired, ...newKeys]);
-            return prevDesired;
+        setColumnOrder((prev) => {
+            const next = mergeOrderByLeafKeys(prev, leafKeys);
+            return areStringArraysEqual(prev, next) ? prev : next;
         });
 
-        setPinnedColumnKeysState((prevPinned) => normalizePinnedColumnKeys(prevPinned));
+        setVisibleColumnKeysDesired((prevDesired) => {
+            let next = prevDesired;
 
-        return null;
+            if (!prevDesired || prevDesired.length === 0) {
+                next = defaultVisibleLeafKeys;
+            } else if (newKeys.length > 0) {
+                next = uniq([...prevDesired, ...newKeys]);
+            }
+
+            return areStringArraysEqual(prevDesired, next) ? prevDesired : next;
+        });
+
+        setPinnedColumnKeysState((prevPinned) => {
+            const next = normalizePinnedColumnKeys(prevPinned);
+            return areStringArraysEqual(prevPinned, next) ? prevPinned : next;
+        });
     }, [leafKeys, leafKeySet, baseLeafWidthByKey, defaultColWidth, defaultVisibleLeafKeys, normalizePinnedColumnKeys]);
 
     const resizeColumn = useCallback(

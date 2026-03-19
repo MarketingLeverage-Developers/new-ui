@@ -97,7 +97,10 @@ export const Grid = <T,>() => {
         const el = bodyScrollRef.current;
         if (!el) return;
 
-        const handleScroll = () => setHeaderScrollLeft(el.scrollLeft);
+        const handleScroll = () => {
+            const nextScrollLeft = el.scrollLeft;
+            setHeaderScrollLeft((prev) => (prev === nextScrollLeft ? prev : nextScrollLeft));
+        };
 
         handleScroll();
         el.addEventListener('scroll', handleScroll);
