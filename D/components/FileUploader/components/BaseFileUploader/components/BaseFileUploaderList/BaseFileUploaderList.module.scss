@@ -286,6 +286,17 @@
     margin: 0 auto;
 }
 
+.VideoModalPlayer {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 8px;
+    margin: 0 auto;
+    background-color: var(--Black1);
+}
+
 @media (max-width: 768px) {
     .ImageModalContent.ImageModalContent {
         max-width: calc(100vw - 32px);

@@ -90,6 +90,18 @@ const ImagePreviewContent = ({
     );
 };
 
+const VideoPreviewContent = ({ src, name }: { src: string; name: string }) => {
+    const { closeModal } = useModal();
+
+    return (
+        <div className={styles.ImagePreviewViewport} onClick={() => closeModal()}>
+            <div className={styles.ImagePreviewCanvas} style={{ width: '100%' }} onClick={(e) => e.stopPropagation()}>
+                <video className={styles.VideoModalPlayer} src={src} controls autoPlay playsInline aria-label={name} />
+            </div>
+        </div>
+    );
+};
+
 export type BaseStackedFileUploaderListProps = {
     onSelect?: (item: ServerImage) => void;
     selectedImageUUID?: string;
@@ -310,12 +322,16 @@ const BaseStackedFileUploaderList: React.FC<BaseStackedFileUploaderListProps> = 
                                 <Portal>
                                     <Modal.Backdrop className={styles.ImageModalBackdrop} />
                                     <Modal.Content className={styles.ImageModalContent}>
-                                        <ImagePreviewContent
-                                            src={previewSrc}
-                                            prefix={apiPrefix}
-                                            name={p.name}
-                                            fallbackSrc={fallbackSrc}
-                                        />
+                                        {isVideoPreview ? (
+                                            <VideoPreviewContent src={downloadUrl} name={p.name} />
+                                        ) : (
+                                            <ImagePreviewContent
+                                                src={previewSrc}
+                                                prefix={apiPrefix}
+                                                name={p.name}
+                                                fallbackSrc={fallbackSrc}
+                                            />
+                                        )}
                                     </Modal.Content>
                                 </Portal>
                             </Modal>

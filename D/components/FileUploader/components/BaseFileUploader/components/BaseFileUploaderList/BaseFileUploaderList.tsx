@@ -27,6 +27,8 @@ type PreviewItem =
 const isFileType = (value: unknown): value is FileType =>
     value === 'IMAGE' || value === 'ZIP' || value === 'VIDEO' || value === 'ETC';
 
+const isMp4Preview = (name?: string, url?: string) => /\.mp4(?:$|[?#])/i.test(name ?? '') || /\.mp4(?:$|[?#])/i.test(url ?? '');
+
 const ImagePreviewContent = ({ src, name, prefix }: { src: string; name: string; prefix?: string }) => {
     const { closeModal } = useModal();
     const [zoom, setZoom] = React.useState(1);
@@ -70,6 +72,18 @@ const ImagePreviewContent = ({ src, name, prefix }: { src: string; name: string;
                         maxWidth: '100%',
                     }}
                 />
+            </div>
+        </div>
+    );
+};
+
+const VideoPreviewContent = ({ src, name }: { src: string; name: string }) => {
+    const { closeModal } = useModal();
+
+    return (
+        <div className={styles.ImagePreviewViewport} onClick={() => closeModal()}>
+            <div className={styles.ImagePreviewCanvas} style={{ width: '100%' }} onClick={(e) => e.stopPropagation()}>
+                <video className={styles.VideoModalPlayer} src={src} controls autoPlay playsInline aria-label={name} />
             </div>
         </div>
     );
@@ -212,6 +226,7 @@ const BaseFileUploaderList: React.FC = () => {
                 if (p.kind !== 'image') return null;
 
                 const downloadUrl = resolveDownloadUrl(p.url);
+                const isVideoPreview = isMp4Preview(p.name, p.url);
 
                 return (
                     <div key={p.key} className={styles.ImageItem}>
@@ -262,7 +277,11 @@ const BaseFileUploaderList: React.FC = () => {
                             <Portal>
                                 <Modal.Backdrop className={styles.ImageModalBackdrop} />
                                 <Modal.Content className={styles.ImageModalContent}>
-                                    <ImagePreviewContent src={p.url} prefix={apiPrefix} name={p.name} />
+                                    {isVideoPreview ? (
+                                        <VideoPreviewContent src={downloadUrl} name={p.name} />
+                                    ) : (
+                                        <ImagePreviewContent src={p.url} prefix={apiPrefix} name={p.name} />
+                                    )}
                                 </Modal.Content>
                             </Portal>
                         </Modal>
