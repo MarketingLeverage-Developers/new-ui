@@ -2,6 +2,7 @@ import React, { memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, 
 import type { CellRenderMeta, SelectionState } from '../AirTable';
 import { useAirTableContext } from '../AirTable';
 import { getThemeColor } from '../../../utils/css/getThemeColor';
+import styles from './Body.module.scss';
 
 type ExpandableDetailRowProps = {
     expanded: boolean;
@@ -74,7 +75,12 @@ type RowMeasurement = {
     end: number;
 };
 
+type HeightState = number | 'auto';
+
 const INDENT_PX = 24;
+const MAX_EXPANDED_DETAIL_ROWS = 3;
+const TRANSITION_MS = 220;
+const APPEAR_DELAY_MS = 32;
 
 const findStartIndex = (measurements: RowMeasurement[], target: number) => {
     if (measurements.length === 0) return 0;
@@ -126,22 +132,68 @@ const ExpandableDetailRow = ({
     children,
 }: ExpandableDetailRowProps) => {
     const contentRef = useRef<HTMLDivElement | null>(null);
+    const animatedRef = useRef<HTMLDivElement | null>(null);
+    const rafRef = useRef<number | null>(null);
+    const timerRef = useRef<number | null>(null);
+    const [shouldRender, setShouldRender] = useState<boolean>(expanded);
+    const [height, setHeight] = useState<HeightState>(expanded ? 'auto' : 0);
+    const [visualOpen, setVisualOpen] = useState<boolean>(expanded);
 
-    useLayoutEffect(() => {
-        if (!expanded) {
+    const clearTimers = useCallback(() => {
+        if (rafRef.current) cancelAnimationFrame(rafRef.current);
+        rafRef.current = null;
+
+        if (timerRef.current) window.clearTimeout(timerRef.current);
+        timerRef.current = null;
+    }, []);
+
+    const measure = useCallback(() => {
+        const animatedEl = animatedRef.current;
+        if (!animatedEl) {
             onHeightChange(rowKey, 0);
             return;
         }
 
-        const el = contentRef.current;
-        if (!el) return;
+        onHeightChange(rowKey, Math.ceil(animatedEl.getBoundingClientRect().height));
+    }, [onHeightChange, rowKey]);
 
-        const measure = () => {
-            onHeightChange(rowKey, Math.ceil(el.getBoundingClientRect().height));
-        };
+    useLayoutEffect(() => {
+        clearTimers();
 
+        if (expanded) {
+            setShouldRender(true);
+            setHeight(0);
+            setVisualOpen(false);
+
+            rafRef.current = requestAnimationFrame(() => {
+                rafRef.current = requestAnimationFrame(() => {
+                    const contentEl = contentRef.current;
+                    const nextHeight = contentEl ? contentEl.scrollHeight : 0;
+
+                    setHeight(nextHeight);
+                    measure();
+
+                    timerRef.current = window.setTimeout(() => {
+                        setVisualOpen(true);
+                    }, APPEAR_DELAY_MS);
+                });
+            });
+            return;
+        }
+
+        const contentEl = contentRef.current;
+        const currentHeight = contentEl ? contentEl.getBoundingClientRect().height : 0;
+
+        setVisualOpen(false);
+        setHeight(currentHeight);
         measure();
 
+        rafRef.current = requestAnimationFrame(() => {
+            setHeight(0);
+        });
+    }, [clearTimers, expanded, measure]);
+
+    useLayoutEffect(() => {
         const ResizeObserverCtor = typeof window !== 'undefined' ? window.ResizeObserver : undefined;
         let observer: ResizeObserver | null = null;
 
@@ -149,16 +201,18 @@ const ExpandableDetailRow = ({
             observer = new ResizeObserverCtor(() => {
                 measure();
             });
-            observer.observe(el);
+            if (animatedRef.current) observer.observe(animatedRef.current);
+            if (contentRef.current) observer.observe(contentRef.current);
         }
 
         return () => {
+            clearTimers();
             observer?.disconnect();
             onHeightChange(rowKey, 0);
         };
-    }, [expanded, rowKey, onHeightChange]);
+    }, [clearTimers, measure, onHeightChange, rowKey]);
 
-    if (!expanded) return null;
+    if (!shouldRender) return null;
 
     return (
         <div
@@ -176,8 +230,32 @@ const ExpandableDetailRow = ({
                     width: '100%',
                 }}
             >
-                <div ref={contentRef} style={{ width: '100%' }}>
-                    {children}
+                <div
+                    ref={animatedRef}
+                    style={{
+                        overflow: 'hidden',
+                        height: height === 'auto' ? 'auto' : `${height}px`,
+                        transition: `height ${TRANSITION_MS}ms ease`,
+                        willChange: 'height',
+                    }}
+                    onTransitionEnd={(e) => {
+                        if (e.propertyName !== 'height') return;
+
+                        if (expanded) {
+                            setHeight('auto');
+                            onHeightChange(rowKey, Math.ceil(contentRef.current?.getBoundingClientRect().height ?? 0));
+                            return;
+                        }
+
+                        setShouldRender(false);
+                        onHeightChange(rowKey, 0);
+                    }}
+                >
+                    <div className={[styles.detailRoot, visualOpen ? styles.detailOpen : ''].join(' ')}>
+                        <div ref={contentRef} className={styles.detailInner}>
+                            {children}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -422,12 +500,13 @@ export const Body2 = <T,>({
         getShiftStyle,
         getPinnedStyle,
         setSelection,
-        toggleRowExpanded,
+        toggleRowExpanded: baseToggleRowExpanded,
         expandedRowKeys,
     } = useAirTableContext<T>();
 
     const { drag, rows, pinnedColumnKeys } = state;
     const { getRowStyle, detailRenderer, getRowCanExpand, getExpandedRows } = props;
+    const shouldLimitExpandedDetailRows = Boolean(detailRenderer) && !getExpandedRows;
     const enableVirtualization = props.enableVirtualization ?? false;
     const virtualRowHeight = props.virtualRowHeight ?? 44;
     const virtualOverscan = props.virtualOverscan ?? 6;
@@ -510,6 +589,44 @@ export const Body2 = <T,>({
             };
         });
     }, []);
+
+    useEffect(() => {
+        if (!shouldLimitExpandedDetailRows) return;
+        if (expandedRowKeys.size <= MAX_EXPANDED_DETAIL_ROWS) return;
+
+        const overflowCount = expandedRowKeys.size - MAX_EXPANDED_DETAIL_ROWS;
+        Array.from(expandedRowKeys)
+            .slice(0, overflowCount)
+            .forEach((rowKey) => {
+                baseToggleRowExpanded(rowKey);
+            });
+    }, [baseToggleRowExpanded, expandedRowKeys, shouldLimitExpandedDetailRows]);
+
+    // AirTable2는 detail row를 여러 개 열 수 있지만, virtualization 안정성을 위해 최대 3개까지만 유지한다.
+    const toggleRowExpanded = useCallback(
+        (rowKey: string) => {
+            if (!shouldLimitExpandedDetailRows) {
+                baseToggleRowExpanded(rowKey);
+                return;
+            }
+
+            const key = String(rowKey);
+            if (expandedRowKeys.has(key)) {
+                baseToggleRowExpanded(key);
+                return;
+            }
+
+            const expandedKeys = Array.from(expandedRowKeys);
+            const overflowCount = Math.max(0, expandedKeys.length - (MAX_EXPANDED_DETAIL_ROWS - 1));
+
+            expandedKeys.slice(0, overflowCount).forEach((openedKey) => {
+                baseToggleRowExpanded(openedKey);
+            });
+
+            baseToggleRowExpanded(key);
+        },
+        [baseToggleRowExpanded, expandedRowKeys, shouldLimitExpandedDetailRows]
+    );
 
     const rowMeasurements = useMemo(() => {
         if (!canVirtualize) {
