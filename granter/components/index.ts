@@ -91,6 +91,9 @@ export type { FlexProps } from './Flex/Flex';
 export { default as Grid } from './Grid/Grid';
 export type { GridProps } from './Grid/Grid';
 
+export { default as SurfacePanel } from './SurfacePanel/SurfacePanel';
+export type { SurfacePanelProps } from './SurfacePanel/SurfacePanel';
+
 export { default as SectionBlock } from './SectionBlock/SectionBlock';
 export type { SectionBlockProps } from './SectionBlock/SectionBlock';
 
