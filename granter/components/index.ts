@@ -189,6 +189,9 @@ export type {
 export { default as BasicModal } from './BasicModal/BasicModal';
 export type { BasicModalProps } from './BasicModal/BasicModal';
 
+export { default as PlanPricingCard } from './PlanPricingCard/PlanPricingCard';
+export type { PlanPricingCardProps } from './PlanPricingCard/PlanPricingCard';
+
 export { default as BasicRightDrawer } from './BasicRightDrawer/BasicRightDrawer';
 export type { BasicRightDrawerProps } from './BasicRightDrawer/BasicRightDrawer';
 

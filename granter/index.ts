@@ -4,6 +4,7 @@ export { default as Menu } from './components/SidebarMenu/SidebarMenu';
 export { default as SidebarMenu } from './components/SidebarMenu/SidebarMenu';
 export { default as CompanySidebar } from './components/CompanySidebar/CompanySidebar';
 export { default as BasicModal } from './components/BasicModal/BasicModal';
+export { default as PlanPricingCard } from './components/PlanPricingCard/PlanPricingCard';
 export { default as BasicRightDrawer } from './components/BasicRightDrawer/BasicRightDrawer';
 export { default as BasicContent } from './components/BasicContent/BasicContent';
 export { default as BasicConfirm } from './components/BasicConfirm/BasicConfirm';
@@ -69,6 +70,7 @@ export type {
     CompanySidebarItemProps,
 } from './components/CompanySidebar/CompanySidebar';
 export type { BasicModalProps } from './components/BasicModal/BasicModal';
+export type { PlanPricingCardProps } from './components/PlanPricingCard/PlanPricingCard';
 export type { BasicRightDrawerProps } from './components/BasicRightDrawer/BasicRightDrawer';
 export type { BasicConfirmProps } from './components/BasicConfirm/BasicConfirm';
 export type { MainOverlayProps } from './components/MainOverlay/MainOverlay';

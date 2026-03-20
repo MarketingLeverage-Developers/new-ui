@@ -1,0 +1,219 @@
+@use '../../styles/theme' as *;
+
+.PlanPricingCard {
+    position: relative;
+    width: 100%;
+    max-width: 412px;
+    min-height: 848px;
+    display: flex;
+    flex-direction: column;
+    padding: 60px 40px;
+    isolation: isolate;
+    
+    // Base surface with Granter characteristic background layering
+    background: 
+        radial-gradient(circle at top left, rgb(255 255 255 / 98%) 0%, rgb(255 255 255 / 0%) 34%),
+        linear-gradient(180deg, rgb(255 255 255 / 100%) 0%, rgb(248 250 252 / 96%) 100%);
+    background-color: var(--granter-white);
+    
+    border: 1px solid rgb(226 232 240 / 80%);
+    border-radius: 32px;
+    overflow: hidden;
+    
+    // Premium shadow from SurfacePanel
+    box-shadow: 
+        0 18px 36px rgb(15 23 42 / 5%),
+        inset 0 1px 0 rgb(255 255 255 / 96%);
+        
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+    &:hover {
+        transform: translateY(-4px);
+        box-shadow: 
+            0 24px 64px rgb(15 23 42 / 10%),
+            inset 0 1px 0 rgb(255 255 255 / 80%);
+    }
+
+    // Lighting effects via pseudo-elements
+    &::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: 
+            radial-gradient(circle at top right, rgb(219 234 254 / 35%) 0%, rgb(219 234 254 / 0%) 45%),
+            radial-gradient(circle at bottom left, rgb(241 245 249 / 40%) 0%, rgb(241 245 249 / 0%) 35%);
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    // Top border highlight
+    &::after {
+        content: '';
+        position: absolute;
+        inset: 0 0 auto 0;
+        height: 1px;
+        background: linear-gradient(90deg, transparent 0%, rgb(255 255 255 / 96%) 24%, transparent 76%);
+        pointer-events: none;
+        z-index: 2;
+    }
+
+    .bg {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+        pointer-events: none;
+        z-index: 0;
+        opacity: 0.6;
+        
+        // Pattern as subtle geometric hint
+        .pattern {
+            position: absolute;
+            top: -20%;
+            right: -25%;
+            width: 140%;
+            height: 140%;
+            background-image: 
+                radial-gradient(var(--granter-blue-100) 1.2px, transparent 1.2px);
+            background-size: 48px 48px;
+            mask-image: radial-gradient(circle at top right, black, transparent 75%);
+            transform: rotate(-12deg);
+        }
+    }
+
+    .content {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        flex: 1;
+    }
+
+    .plan_info {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        margin-top: 20px;
+        margin-bottom: 32px;
+
+        .title_text {
+            color: var(--granter-gray-500);
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            background: linear-gradient(to right, var(--granter-gray-500), var(--granter-gray-700));
+            -webkit-background-clip: text;
+            background-clip: text;
+            margin-bottom: 24px;
+        }
+
+        .price_text {
+            font-size: 64px;
+            font-weight: 800;
+            color: var(--granter-gray-900);
+            letter-spacing: -3px;
+            line-height: 1;
+            margin-bottom: 12px;
+            
+            // Subtle blue glow for the price in Granter style
+            text-shadow: 0 10px 25px rgb(59 130 246 / 15%);
+        }
+
+        .monthly_charge {
+            color: var(--granter-gray-500);
+            font-size: 16px;
+            font-weight: 400;
+        }
+    }
+
+    .line {
+        width: 100%;
+        height: 1px;
+        background: linear-gradient(90deg, 
+            transparent 0%, 
+            var(--granter-gray-200) 25%, 
+            var(--granter-gray-200) 75%, 
+            transparent 100%
+        );
+        margin: 48px 0;
+        opacity: 0.6;
+    }
+
+    .services {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+        margin-bottom: 48px;
+        align-items: center;
+
+        .service_item {
+            color: var(--granter-gray-700);
+            font-size: 17px;
+            font-weight: 500;
+            letter-spacing: -0.01em;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            
+            // Checkmark hint in font weight/line height
+            &::before {
+                content: '✓';
+                color: var(--granter-blue-500);
+                font-weight: 800;
+                font-size: 14px;
+            }
+        }
+    }
+
+    .actions {
+        margin-top: auto;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 32px;
+        padding-bottom: 10px;
+
+        .button {
+            width: 100%;
+            height: 64px;
+            border-radius: 16px;
+            font-weight: 700;
+            font-size: 17px;
+            letter-spacing: -0.01em;
+            
+            background-color: var(--granter-blue-500) !important;
+            border: none !important;
+            color: white !important;
+            
+            box-shadow: 0 12px 24px -6px rgb(59 130 246 / 40%);
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+
+            &:hover {
+                transform: translateY(-2px);
+                background-color: var(--granter-blue-600) !important;
+                box-shadow: 0 18px 32px -8px rgb(59 130 246 / 50%);
+            }
+            
+            &:active {
+                transform: translateY(1px);
+                box-shadow: 0 8px 16px -6px rgb(59 130 246 / 40%);
+            }
+        }
+
+        .footer_text {
+            color: var(--granter-gray-400);
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+            transition: color 0.2s ease;
+            
+            &:hover {
+                color: var(--granter-gray-600);
+            }
+        }
+    }
+}
