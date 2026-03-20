@@ -133,6 +133,7 @@ export type { PlainButtonProps } from './components/Button/PlainButton';
 export type { BoxLength, BoxProps } from './components/Box/Box';
 export type { FlexProps } from './components/Flex/Flex';
 export type { GridProps } from './components/Grid/Grid';
+export type { SurfacePanelProps } from './components/SurfacePanel/SurfacePanel';
 export type { SectionBlockProps } from './components/SectionBlock/SectionBlock';
 export type { SectionIntroProps } from './components/SectionIntro/SectionIntro';
 export type { SectionFormDrawerContentProps } from './components/SectionFormDrawerContent/SectionFormDrawerContent';

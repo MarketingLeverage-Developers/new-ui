@@ -20,6 +20,7 @@ export type MetricCardProps = {
     title?: React.ReactNode;
     rows?: MetricCardDetailRow[];
     total?: React.ReactNode;
+    className?: string;
 };
 
 const variantClassName: Record<MetricCardVariant, string> = {
@@ -36,11 +37,16 @@ const MetricCard = ({
     title,
     rows = [],
     total,
+    className,
 }: MetricCardProps) => {
     const useDetailLayout = variant === 'detail' && title !== undefined && total !== undefined;
 
     return (
-        <PlainButton className={classNames(styles.Base, variantClassName[variant])} onClick={onClick}>
+        <PlainButton
+            className={classNames(styles.Base, variantClassName[variant], className)}
+            onClick={onClick}
+            data-clickable={onClick ? 'true' : 'false'}
+        >
             {useDetailLayout ? (
                 <>
                     <Text tone="muted" size="lg" className={styles.Title}>

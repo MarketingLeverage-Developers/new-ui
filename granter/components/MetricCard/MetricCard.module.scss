@@ -8,11 +8,19 @@
     border-radius: 12px;
     background-color: var(--granter-white);
     text-align: left;
-    cursor: pointer;
-    transition: background-color 0.15s ease;
+    cursor: default;
+    transition:
+        background-color 0.15s ease,
+        border-color 0.15s ease,
+        box-shadow 0.18s ease,
+        transform 0.18s ease;
 }
 
-.Base:hover {
+.Base[data-clickable='true'] {
+    cursor: pointer;
+}
+
+.Base[data-clickable='true']:hover {
     background-color: var(--granter-gray-50);
 }
 
@@ -40,7 +48,7 @@
     text-align: center;
 }
 
-.Narrow:hover {
+.Narrow[data-clickable='true']:hover {
     background-color: var(--granter-white);
 }
 
@@ -49,7 +57,7 @@
     height: 160px;
 }
 
-.Detail:hover {
+.Detail[data-clickable='true']:hover {
     background-color: var(--granter-gray-100);
 }
 
