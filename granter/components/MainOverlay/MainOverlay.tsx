@@ -7,8 +7,24 @@ import ErrorFallback from '../../../ErrorFallback/ErrorFallback';
 import DeferredComponent from '@/components/feature/deferred/DeferredComponent';
 import styles from './MainOverlay.module.scss';
 
+export type MainOverlayState = {
+    isFetching?: boolean;
+    isEmpty?: boolean;
+    hasError?: boolean;
+    errorMessage?: string;
+    suspenseFallbackCenterNode?: ReactNode;
+    fetchingOverlayCenterNode?: ReactNode;
+};
+
+export type MainOverlayActions = {
+    onRetry?: () => void | Promise<unknown>;
+};
+
 export type MainOverlayProps = {
-    children: ReactNode;
+    children?: ReactNode;
+    state?: MainOverlayState;
+    actions?: MainOverlayActions;
+    // -- Legacy Props --
     isFetching?: boolean;
     isEmpty?: boolean;
     hasError?: boolean;
@@ -22,14 +38,23 @@ type OverlayMode = 'none' | 'initial' | 'blur';
 
 const MainOverlay: React.FC<MainOverlayProps> = ({
     children,
-    isFetching = false,
-    isEmpty = false,
-    hasError = false,
-    errorMessage,
-    suspenseFallbackCenterNode,
-    fetchingOverlayCenterNode,
-    onRetry,
+    state,
+    actions,
+    isFetching: _isFetching,
+    isEmpty: _isEmpty,
+    hasError: _hasError,
+    errorMessage: _errorMessage,
+    suspenseFallbackCenterNode: _suspenseFallbackCenterNode,
+    fetchingOverlayCenterNode: _fetchingOverlayCenterNode,
+    onRetry: _onRetry,
 }) => {
+    const isFetching = _isFetching ?? state?.isFetching ?? false;
+    const isEmpty = _isEmpty ?? state?.isEmpty ?? false;
+    const hasError = _hasError ?? state?.hasError ?? false;
+    const errorMessage = _errorMessage ?? state?.errorMessage;
+    const suspenseFallbackCenterNode = _suspenseFallbackCenterNode ?? state?.suspenseFallbackCenterNode;
+    const fetchingOverlayCenterNode = _fetchingOverlayCenterNode ?? state?.fetchingOverlayCenterNode;
+    const onRetry = _onRetry ?? actions?.onRetry;
     const hasStartedFirstFetchRef = useRef(false);
     const hasCompletedFirstFetchRef = useRef(false);
 
