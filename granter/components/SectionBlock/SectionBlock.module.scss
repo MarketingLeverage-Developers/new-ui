@@ -1,18 +1,18 @@
 .Root {
-    border: 1px solid var(--granter-gray-200);
-    border-radius: 14px;
-    background: var(--granter-white);
+    border: 1px solid rgb(148 163 184 / 14%);
+    border-radius: 16px;
+    background: rgb(255 255 255 / 98%);
     overflow: hidden;
 }
 
 .Header {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: space-between;
     gap: 16px;
-    padding: 18px 20px;
-    border-bottom: 1px solid var(--granter-gray-100);
-    background: var(--granter-gray-50);
+    padding: 14px 16px 10px;
+    border-bottom: 1px solid rgb(148 163 184 / 10%);
+    background: var(--granter-white);
 }
 
 .HeaderMain {
@@ -28,5 +28,5 @@
 }
 
 .Body {
-    padding: 20px;
+    padding: 14px 16px 16px;
 }

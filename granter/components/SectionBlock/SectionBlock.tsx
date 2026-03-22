@@ -23,27 +23,25 @@ const SectionBlock = ({
     bodyStyle,
     children,
     ...props
-}: SectionBlockProps) => {
-    return (
-        <div className={classNames(styles.Root, className)} style={style} {...props}>
-            <div className={classNames(styles.Header, headerClassName)}>
-                <div className={styles.HeaderMain}>
-                    <Text size="lg" weight="bold">
-                        {title}
+}: SectionBlockProps) => (
+    <div className={classNames(styles.Root, className)} style={style} {...props}>
+        <div className={classNames(styles.Header, headerClassName)}>
+            <div className={styles.HeaderMain}>
+                <Text size="sm" weight="bold">
+                    {title}
+                </Text>
+                {description ? (
+                    <Text size="xs" tone="muted">
+                        {description}
                     </Text>
-                    {description ? (
-                        <Text size="sm" tone="muted">
-                            {description}
-                        </Text>
-                    ) : null}
-                </div>
-                {headerSide ? <div className={styles.HeaderSide}>{headerSide}</div> : null}
+                ) : null}
             </div>
-            <div className={classNames(styles.Body, bodyClassName)} style={bodyStyle}>
-                {children}
-            </div>
+            {headerSide ? <div className={styles.HeaderSide}>{headerSide}</div> : null}
         </div>
-    );
-};
+        <div className={classNames(styles.Body, bodyClassName)} style={bodyStyle}>
+            {children}
+        </div>
+    </div>
+);
 
 export default SectionBlock;

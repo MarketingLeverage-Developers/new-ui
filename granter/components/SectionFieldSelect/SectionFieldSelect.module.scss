@@ -16,11 +16,11 @@
     gap: 12px;
     width: 100%;
     min-width: 0;
-    height: 40px;
-    padding: 0 14px;
+    height: 36px;
+    padding: 0 12px;
     border: 1px solid var(--granter-gray-200);
-    border-radius: 12px;
-    background-color: var(--granter-gray-50);
+    border-radius: 10px;
+    background-color: var(--granter-white);
     color: var(--granter-gray-900);
     cursor: pointer;
     transition:
@@ -31,14 +31,12 @@
 
 .Trigger:hover:not(:disabled) {
     border-color: var(--granter-gray-300);
-    background-color: var(--granter-white);
 }
 
 .Trigger:focus-visible {
     outline: none;
     border-color: var(--granter-sky-500);
     box-shadow: 0 0 0 4px rgb(14 165 233 / 12%);
-    background-color: var(--granter-white);
 }
 
 .Trigger:disabled {
@@ -51,9 +49,9 @@
     min-width: 0;
     overflow: hidden;
     color: var(--granter-gray-900);
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 500;
-    line-height: 20px;
+    line-height: 18px;
     text-align: left;
     text-overflow: ellipsis;
     white-space: nowrap;
