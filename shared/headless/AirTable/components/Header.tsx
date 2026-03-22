@@ -751,6 +751,10 @@ export const Header = <T,>({ className, headerCellClassName, resizeHandleClassNa
     const HeaderCellWrapper = enableAnimation ? motion.div : 'div';
     const hasGroupHeader = groupColumnRow.columns.length > 0;
     const groupHeaderHeight = hasGroupHeader ? 40 : 0;
+    const mirroredGroupHeaderKeySet = useMemo(
+        () => new Set(groupColumnRow.columns.map((column) => column.key)),
+        [groupColumnRow.columns]
+    );
 
     return (
         <>
@@ -777,6 +781,7 @@ export const Header = <T,>({ className, headerCellClassName, resizeHandleClassNa
                         {groupColumnRow.columns.map((col, index) => (
                             <div
                                 key={`g-${col.key}-${index}`}
+                                data-col-key={col.key}
                                 className={[headerCellClassName, 'air-table-group-header-cell'].filter(Boolean).join(' ')}
                                 style={{
                                     gridColumn: `span ${col.colSpan}`,
@@ -822,6 +827,7 @@ export const Header = <T,>({ className, headerCellClassName, resizeHandleClassNa
                         const col = columnRow.columns.find((c) => c.key === colKey);
                         if (!col) return null;
 
+                        const shouldHideLeafHeaderLabel = hasGroupHeader && mirroredGroupHeaderKeySet.has(colKey);
                         const isPinned = pinnedColumnKeys.includes(colKey);
                         const underlineShadow = resolveColumnUnderline(colKey);
                         const pinnedHeaderBg = resolvePinnedHeaderColor(props.pinnedHeaderBgColor, colKey);
@@ -883,7 +889,7 @@ export const Header = <T,>({ className, headerCellClassName, resizeHandleClassNa
                                         }}
                                         style={{ flex: 1, minWidth: 0 }}
                                     >
-                                        {col.render(colKey, data)}
+                                        {shouldHideLeafHeaderLabel ? null : col.render(colKey, data)}
                                     </div>
                                 </div>
 
