@@ -21,6 +21,7 @@ export type SectionFieldSelectProps<T extends string = string> = {
     placeholder?: React.ReactNode;
     className?: string;
     menuClassName?: string;
+    menuMaxHeight?: number | string;
     disabled?: boolean;
 };
 
@@ -59,6 +60,7 @@ type SectionFieldSelectViewProps<T extends string = string> = {
     placeholder: React.ReactNode;
     className?: string;
     menuClassName?: string;
+    menuMaxHeight: number | string;
     disabled?: boolean;
 };
 
@@ -67,6 +69,7 @@ const SectionFieldSelectView = <T extends string>({
     placeholder,
     className,
     menuClassName,
+    menuMaxHeight,
     disabled = false,
 }: SectionFieldSelectViewProps<T>) => {
     const { selectValue } = useSelect();
@@ -99,6 +102,7 @@ const SectionFieldSelectView = <T extends string>({
                     className={classNames(styles.Menu, menuClassName)}
                     placement="bottom-start"
                     matchTriggerWidth
+                    style={{ maxHeight: menuMaxHeight, overflowY: 'auto' }}
                 >
                     {options.map((option) => (
                         <SectionFieldSelectItem
@@ -121,6 +125,7 @@ const SectionFieldSelect = (<T extends string = string>({
     placeholder = '선택해주세요.',
     className,
     menuClassName,
+    menuMaxHeight = 240,
     disabled = false,
 }: SectionFieldSelectProps<T>) => (
     <Select
@@ -134,6 +139,7 @@ const SectionFieldSelect = (<T extends string = string>({
                 placeholder={placeholder}
                 className={className}
                 menuClassName={menuClassName}
+                menuMaxHeight={menuMaxHeight}
                 disabled={disabled}
             />
         </Dropdown>
