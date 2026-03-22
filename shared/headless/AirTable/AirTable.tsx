@@ -47,6 +47,8 @@ export interface ColumnType<T> {
     render: (item: T, index: number, meta: CellRenderMeta<T>) => React.ReactElement;
     header: (key: string, data: T[]) => React.ReactElement;
     width?: number | string;
+    autoFitContent?: boolean;
+    autoFitPadding?: number;
     defaultHidden?: boolean;
     filter?: React.ReactNode;
     sortValue?: SortValueGetter<T>;
@@ -62,6 +64,8 @@ export type Column<T> = {
     header: (key: string, data: T[]) => React.ReactElement;
     render: (item: T, index: number, meta: CellRenderMeta<T>) => React.ReactElement;
     width?: number | string;
+    autoFitContent?: boolean;
+    autoFitPadding?: number;
     defaultHidden?: boolean;
     children?: ColumnType<T>[];
     filter?: React.ReactNode;
@@ -422,6 +426,71 @@ const toNumberPx = (w: number | string | undefined, fallback: number, containerW
     return fallback;
 };
 
+const AUTO_FIT_BASE_PADDING_PX = 36;
+const AUTO_FIT_TEXT_FALLBACK_PX = 8;
+let textMeasureCanvas: HTMLCanvasElement | null = null;
+
+const extractTextFromNode = (node: React.ReactNode): string => {
+    if (node === null || node === undefined || typeof node === 'boolean') return '';
+    if (typeof node === 'string' || typeof node === 'number') return String(node);
+    if (Array.isArray(node)) return node.map(extractTextFromNode).join('');
+    if (React.isValidElement(node)) return extractTextFromNode(node.props?.children);
+    return '';
+};
+
+const getTextMeasureContext = () => {
+    if (typeof document === 'undefined') return null;
+    if (!textMeasureCanvas) {
+        textMeasureCanvas = document.createElement('canvas');
+    }
+    return textMeasureCanvas.getContext('2d');
+};
+
+const measureTextWidthPx = (text: string) => {
+    const normalized = text.replace(/\s+/g, ' ').trim();
+    if (!normalized) return 0;
+
+    const ctx = getTextMeasureContext();
+    if (!ctx) return normalized.length * AUTO_FIT_TEXT_FALLBACK_PX;
+
+    let fontFamily = 'sans-serif';
+    if (typeof window !== 'undefined') {
+        try {
+            fontFamily = window.getComputedStyle(document.body).fontFamily || fontFamily;
+        } catch {
+            // ignore
+        }
+    }
+
+    ctx.font = `500 14px ${fontFamily}`;
+    return Math.ceil(ctx.measureText(normalized).width);
+};
+
+const measureAutoFitColumnWidth = <T,>(column: ColumnType<T>, data: T[]) => {
+    const baseMeta: CellRenderMeta<T> = {
+        rowKey: '',
+        ri: 0,
+        level: 0,
+        toggleRowExpanded: () => undefined,
+        isRowExpanded: () => false,
+    };
+
+    let maxWidth = measureTextWidthPx(extractTextFromNode(column.header(column.key, data)));
+
+    data.forEach((item, index) => {
+        const text = extractTextFromNode(
+            column.render(item, index, {
+                ...baseMeta,
+                rowKey: `auto-fit-${column.key}-${index}`,
+                ri: index,
+            })
+        );
+        maxWidth = Math.max(maxWidth, measureTextWidthPx(text));
+    });
+
+    return maxWidth + AUTO_FIT_BASE_PADDING_PX + (column.autoFitPadding ?? 0);
+};
+
 const mergeOrderByLeafKeys = (prevOrder: string[], leafKeys: string[]) => {
     const prev = uniq(prevOrder);
     if (leafKeys.length === 0) return prev;
@@ -535,6 +604,8 @@ const useTable = <T,>({
                     return col.children.map((ch) => ({
                         ...ch,
                         key: String(ch.key),
+                        autoFitContent: ch.autoFitContent,
+                        autoFitPadding: ch.autoFitPadding,
                         defaultHidden: ch.defaultHidden,
                         headerUnderline: ch.headerUnderline,
                         disablePinning: ch.disablePinning,
@@ -557,6 +628,8 @@ const useTable = <T,>({
                         render,
                         header: col.header,
                         width: col.width,
+                        autoFitContent: col.autoFitContent,
+                        autoFitPadding: col.autoFitPadding,
                         defaultHidden: col.defaultHidden,
                         filter: col.filter,
                         sortValue: col.sortValue,
@@ -638,10 +711,12 @@ const useTable = <T,>({
         const map = new Map<string, number>();
         leafColumns.forEach((c) => {
             if (map.has(c.key)) return;
-            map.set(c.key, toNumberPx(c.width, defaultColWidth, innerWidth));
+            const configuredWidth = toNumberPx(c.width, defaultColWidth, innerWidth);
+            const autoFitWidth = c.autoFitContent ? measureAutoFitColumnWidth(c, data) : 0;
+            map.set(c.key, Math.max(configuredWidth, autoFitWidth));
         });
         return map;
-    }, [leafColumns, defaultColWidth, innerWidth]);
+    }, [leafColumns, defaultColWidth, innerWidth, data]);
 
     const [persisted, setPersisted] = useState<PersistedTableState | null>(() => loadPersistedTableState(storageKey));
 
@@ -970,7 +1045,11 @@ const useTable = <T,>({
 
             const base = baseLeafWidthByKey.get(col.key) ?? defaultColWidth;
             const stored = columnWidths[col.key];
-            const w = typeof stored === 'number' && stored > 0 ? stored : base;
+            const w = col.autoFitContent
+                ? Math.max(typeof stored === 'number' && stored > 0 ? stored : 0, base)
+                : typeof stored === 'number' && stored > 0
+                  ? stored
+                  : base;
 
             acc.push({
                 key: col.key,
