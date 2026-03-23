@@ -8,6 +8,12 @@ import Portal from '../../../../../../../shared/headless/Portal/Portal';
 import { downloadFileFromUrl } from '../../../../../../../shared/utils/download/download';
 
 type FileType = 'IMAGE' | 'ZIP' | 'VIDEO' | 'ETC';
+const MIN_PREVIEW_ZOOM = 1;
+const MAX_PREVIEW_ZOOM = 20;
+const PREVIEW_ZOOM_SENSITIVITY = 0.00045;
+
+const getNextPreviewZoom = (currentZoom: number, deltaY: number) =>
+    Math.min(MAX_PREVIEW_ZOOM, Math.max(MIN_PREVIEW_ZOOM, currentZoom * Math.exp(deltaY * -PREVIEW_ZOOM_SENSITIVITY)));
 
 type PreviewItem =
     | {
@@ -31,8 +37,9 @@ const isMp4Preview = (name?: string, url?: string) => /\.mp4(?:$|[?#])/i.test(na
 
 const ImagePreviewContent = ({ src, name, prefix }: { src: string; name: string; prefix?: string }) => {
     const { closeModal } = useModal();
-    const [zoom, setZoom] = React.useState(1);
+    const [zoom, setZoom] = React.useState(MIN_PREVIEW_ZOOM);
     const scrollRef = React.useRef<HTMLDivElement>(null);
+    const isZoomedIn = zoom > 1.001;
 
     React.useEffect(() => {
         const el = scrollRef.current;
@@ -40,8 +47,7 @@ const ImagePreviewContent = ({ src, name, prefix }: { src: string; name: string;
         const onWheel = (e: WheelEvent) => {
             if (e.ctrlKey) {
                 e.preventDefault();
-                const delta = e.deltaY * -0.001;
-                setZoom((prev) => Math.min(Math.max(prev + delta, 0.1), 5));
+                setZoom((prev) => getNextPreviewZoom(prev, e.deltaY));
             }
         };
         el.addEventListener('wheel', onWheel, { passive: false });
@@ -52,11 +58,18 @@ const ImagePreviewContent = ({ src, name, prefix }: { src: string; name: string;
         <div
             ref={scrollRef}
             className={styles.ImagePreviewViewport}
+            style={{
+                overflowX: isZoomedIn ? 'auto' : 'hidden',
+                overflowY: isZoomedIn ? 'auto' : 'hidden',
+            }}
             onClick={() => closeModal()}
         >
             <div
                 className={styles.ImagePreviewCanvas}
-                style={{ width: `${zoom * 100}%` }}
+                style={{
+                    width: `${zoom * 100}%`,
+                    height: `${zoom * 100}%`,
+                }}
                 onClick={(e) => e.stopPropagation()}
             >
                 <Common.Image
@@ -65,9 +78,10 @@ const ImagePreviewContent = ({ src, name, prefix }: { src: string; name: string;
                     prefix={prefix}
                     alt={name}
                     width="100%"
+                    height="100%"
+                    fit="contain"
                     block
                     style={{
-                        height: 'auto',
                         maxHeight: '100%',
                         maxWidth: '100%',
                     }}
