@@ -94,9 +94,9 @@ const VideoPreviewContent = ({ src, name }: { src: string; name: string }) => {
     const { closeModal } = useModal();
 
     return (
-        <div className={styles.ImagePreviewViewport} onClick={() => closeModal()}>
-            <div className={styles.ImagePreviewCanvas} style={{ width: '100%' }} onClick={(e) => e.stopPropagation()}>
-                <video className={styles.VideoModalPlayer} src={src} controls autoPlay playsInline aria-label={name} />
+        <div className={styles.VideoPreviewViewport} onClick={() => closeModal()}>
+            <div className={styles.VideoPreviewCanvas} onClick={(e) => e.stopPropagation()}>
+                <video className={styles.VideoModalPlayer} src={src} controls autoPlay playsInline muted aria-label={name} />
             </div>
         </div>
     );

@@ -265,6 +265,27 @@
     transition: width 0.1s ease-out;
 }
 
+.VideoPreviewViewport {
+    width: 100%;
+    height: 100%;
+    padding: 24px;
+    box-sizing: border-box;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.VideoPreviewCanvas {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: default;
+}
+
 .ImageModalContent.ImageModalContent {
     z-index: 9991;
     width: 100%;
@@ -289,9 +310,10 @@
 .VideoModalPlayer {
     display: block;
     width: 100%;
-    height: auto;
+    height: 100%;
     max-width: 100%;
     max-height: 100%;
+    object-fit: contain;
     border-radius: 8px;
     margin: 0 auto;
     background-color: var(--Black1);
@@ -300,6 +322,10 @@
 @media (max-width: 768px) {
     .ImageModalContent.ImageModalContent {
         max-width: calc(100vw - 32px);
+    }
+
+    .VideoPreviewViewport {
+        padding: 16px;
     }
 }
 
