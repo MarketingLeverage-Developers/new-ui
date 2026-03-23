@@ -502,7 +502,7 @@ export const Body = <T,>({
     }, [scrollRef]);
 
     const updateVirtualWindow = useCallback(() => {
-        const scrollEl = virtualScrollRef.current ?? resolveVirtualScrollEl();
+        const scrollEl = resolveVirtualScrollEl() ?? virtualScrollRef.current;
         const bodyEl = bodyRef.current;
         if (!scrollEl || !bodyEl) return;
 
