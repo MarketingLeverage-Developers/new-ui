@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { MIN_COL_WIDTH, useAirTableContext } from '../AirTable';
-import type { CellRenderMeta, SortConfig, SortDirection, SortValue } from '../AirTable';
+import type { CellRenderMeta, FilterState, SortConfig, SortDirection, SortValue } from '../AirTable';
 import { FaArrowDown, FaArrowUp } from 'react-icons/fa';
 import { VscFilter, VscFilterFilled } from 'react-icons/vsc';
 import { getThemeColor } from '../../../utils/css/getThemeColor';
@@ -42,6 +42,19 @@ const SortIcon = ({
     return null;
 };
 
+const hasActiveFilter = (value?: FilterState[string]) =>
+    (value?.included?.length ?? 0) > 0 || (value?.excluded?.length ?? 0) > 0;
+
+const getIncludedFilterSet = (options: { key: string }[], value?: FilterState[string]) => {
+    const included = new Set((value?.included ?? []).map(String));
+    if (included.size > 0) return included;
+
+    const excluded = new Set((value?.excluded ?? []).map(String));
+    if (excluded.size === 0) return new Set<string>();
+
+    return new Set(options.map((option) => option.key).filter((key) => !excluded.has(key)));
+};
+
 const DefaultColumnFilter = <T,>({
     colKey,
     data,
@@ -57,8 +70,8 @@ const DefaultColumnFilter = <T,>({
         { render: (item: T, index: number, meta: CellRenderMeta<T>) => React.ReactElement }
     >;
     sortConfigByKey: Map<string, SortConfig<T>>;
-    filterState: Record<string, { excluded: string[] }>;
-    setFilterState: (next: Record<string, { excluded: string[] }>) => void;
+    filterState: FilterState;
+    setFilterState: (next: FilterState) => void;
 }) => {
     const [keyword, setKeyword] = useState('');
     const config = sortConfigByKey.get(colKey);
@@ -110,22 +123,21 @@ const DefaultColumnFilter = <T,>({
         return options.filter((opt) => opt.label.toLowerCase().includes(q));
     }, [options, keyword]);
 
-    const excludedSet = useMemo(() => new Set(filterState[colKey]?.excluded ?? []), [filterState, colKey]);
-    const visibleCount = useMemo(
-        () => options.reduce((count, opt) => (excludedSet.has(opt.key) ? count : count + 1), 0),
-        [options, excludedSet]
-    );
+    const currentFilter = filterState[colKey];
+    const includedSet = useMemo(() => getIncludedFilterSet(options, currentFilter), [options, currentFilter]);
+    const selectedCount = includedSet.size;
+    const isFilterApplied = hasActiveFilter(currentFilter);
 
-    const toggleExclude = (key: string) => {
-        const nextExcluded = new Set(excludedSet);
-        if (nextExcluded.has(key)) nextExcluded.delete(key);
-        else nextExcluded.add(key);
+    const toggleInclude = (key: string) => {
+        const nextIncluded = new Set(includedSet);
+        if (nextIncluded.has(key)) nextIncluded.delete(key);
+        else nextIncluded.add(key);
 
         const nextState = { ...filterState };
-        if (nextExcluded.size === 0) {
+        if (nextIncluded.size === 0) {
             delete nextState[colKey];
         } else {
-            nextState[colKey] = { excluded: Array.from(nextExcluded) };
+            nextState[colKey] = { included: Array.from(nextIncluded) };
         }
         setFilterState(nextState);
     };
@@ -137,9 +149,9 @@ const DefaultColumnFilter = <T,>({
         setFilterState(nextState);
     };
 
-    const hideAll = () => {
+    const selectAll = () => {
         if (options.length === 0) return;
-        const nextState = { ...filterState, [colKey]: { excluded: options.map((opt) => opt.key) } };
+        const nextState = { ...filterState, [colKey]: { included: options.map((opt) => opt.key) } };
         setFilterState(nextState);
     };
 
@@ -174,15 +186,14 @@ const DefaultColumnFilter = <T,>({
                     </div>
                 ) : (
                     filteredOptions.map((opt) => {
-                        const excluded = excludedSet.has(opt.key);
-                        const checked = !excluded;
+                        const checked = includedSet.has(opt.key);
                         return (
                             <label
                                 key={opt.key || '__empty__'}
                                 style={{
                                     width: '100%',
                                     border: 'none',
-                                    background: excluded ? 'rgba(0,0,0,0.02)' : 'transparent',
+                                    background: checked ? 'rgba(59,130,246,0.08)' : 'transparent',
                                     borderRadius: 6,
                                     padding: '6px 8px',
                                     textAlign: 'left',
@@ -208,7 +219,7 @@ const DefaultColumnFilter = <T,>({
                                     <input
                                         type="checkbox"
                                         checked={checked}
-                                        onChange={() => toggleExclude(opt.key)}
+                                        onChange={() => toggleInclude(opt.key)}
                                         style={{
                                             width: 14,
                                             height: 14,
@@ -234,12 +245,12 @@ const DefaultColumnFilter = <T,>({
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <span style={{ fontSize: 11, color: getThemeColor('Gray2') }}>
-                    표시 {visibleCount} / 전체 {options.length}
+                    {isFilterApplied ? `선택 ${selectedCount} / 전체 ${options.length}` : '미선택 시 전체 표시'}
                 </span>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                     <button
                         type="button"
-                        onClick={hideAll}
+                        onClick={selectAll}
                         style={{
                             border: 'none',
                             background: 'transparent',
@@ -248,7 +259,7 @@ const DefaultColumnFilter = <T,>({
                             cursor: 'pointer',
                         }}
                     >
-                        전체 숨김
+                        전체 선택
                     </button>
                     <button
                         type="button"
@@ -261,7 +272,7 @@ const DefaultColumnFilter = <T,>({
                             cursor: 'pointer',
                         }}
                     >
-                        전체 표시
+                        초기화
                     </button>
                 </div>
             </div>
@@ -342,7 +353,7 @@ const formatFilterLabel = (value: SortValue): string => {
 
 const getFilterKey = (value: SortValue): string => {
     if (value === null || value === undefined) return '';
-    if (value instanceof Date) return value.toISOString();
+    if (value instanceof Date) return String(value.getTime());
     return String(value);
 };
 
@@ -801,6 +812,9 @@ export const Header = <T,>({ className, headerCellClassName, resizeHandleClassNa
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'center',
+                                        overflow: 'hidden',
+                                        whiteSpace: 'nowrap',
+                                        textOverflow: 'ellipsis',
                                     }}
                                 >
                                     {col.render(col.key, data)}
@@ -836,7 +850,7 @@ export const Header = <T,>({ className, headerCellClassName, resizeHandleClassNa
                         const isSortable = !!sortConfig;
                         const sortDirection = sortState?.key === colKey ? sortState.direction : null;
                         const hasFilterButton = !!col.filter || !!sortConfig?.sortValue;
-                        const isFilterActive = (filterState[colKey]?.excluded?.length ?? 0) > 0;
+                        const isFilterActive = hasActiveFilter(filterState[colKey]);
                         const actionPaddingRight = 12 + (hasFilterButton ? 28 : 0) + (isSortable ? 24 : 0);
                         const sortButtonRight = hasFilterButton ? 42 : 14;
                         const pinnedStyle: React.CSSProperties = isPinned
@@ -881,13 +895,21 @@ export const Header = <T,>({ className, headerCellClassName, resizeHandleClassNa
                                         alignItems: 'center',
                                         gap: 8,
                                         paddingRight: actionPaddingRight,
+                                        minWidth: 0,
+                                        overflow: 'hidden',
                                     }}
                                 >
                                     <div
                                         ref={(el) => {
                                             headerLabelRefMap.current[colKey] = el;
                                         }}
-                                        style={{ flex: 1, minWidth: 0 }}
+                                        style={{
+                                            flex: 1,
+                                            minWidth: 0,
+                                            overflow: 'hidden',
+                                            whiteSpace: 'nowrap',
+                                            textOverflow: 'ellipsis',
+                                        }}
                                     >
                                         {shouldHideLeafHeaderLabel ? null : col.render(colKey, data)}
                                     </div>
