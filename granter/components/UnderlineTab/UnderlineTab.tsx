@@ -12,6 +12,7 @@ export type UnderlineTabProps<T extends string = string> = {
     className?: string;
     onChange?: (nextKey: T) => void;
     scrollable?: boolean;
+    fullWidthUnderline?: boolean;
 };
 
 export type UnderlineTabItemProps<T extends string = string> = {
@@ -58,13 +59,18 @@ const UnderlineTab = (<T extends string>({
     className,
     onChange = noop,
     scrollable = false,
+    fullWidthUnderline = false,
 }: UnderlineTabProps<T>) => (
     <Select
         value={value}
         defaultValue={defaultValue}
         onChange={(nextValue) => onChange(nextValue as T)}
     >
-        <div className={classNames(styles.UnderlineTab, className)} data-scrollable={scrollable ? 'true' : 'false'}>
+        <div
+            className={classNames(styles.UnderlineTab, className)}
+            data-scrollable={scrollable ? 'true' : 'false'}
+            data-full-width-underline={fullWidthUnderline ? 'true' : 'false'}
+        >
             {children}
         </div>
     </Select>
