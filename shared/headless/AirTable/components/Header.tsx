@@ -509,7 +509,8 @@ export const Header = <T,>({ className, headerCellClassName, resizeHandleClassNa
         [state.allLeafColumns]
     );
 
-    const enableAnimation = props.enableAnimation ?? false;
+    // const enableAnimation = props.enableAnimation ?? false;
+    const enableAnimation = false;
     const resolveColumnUnderline = useCallback(
         (colKey: string): string | undefined => {
             const column = columnByKey.get(colKey);

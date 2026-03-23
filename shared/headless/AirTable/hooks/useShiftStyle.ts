@@ -13,22 +13,23 @@ export type UseShiftStyleResult = {
 
 export const useShiftStyle = ({
     offsetByKey,
-    draggingKey,
-    disableShiftAnimationRef,
+    draggingKey: _draggingKey,
+    disableShiftAnimationRef: _disableShiftAnimationRef,
 }: UseShiftStyleParams): UseShiftStyleResult => {
     const getShiftStyle = useCallback(
         (colKey: string): React.CSSProperties => {
             const dx = offsetByKey[colKey] ?? 0;
 
-            const transition = disableShiftAnimationRef.current
-                ? 'none'
-                : draggingKey
-                ? 'transform 280ms cubic-bezier(0.22, 1, 0.36, 1)'
-                : 'transform 240ms ease';
+            // const transition = disableShiftAnimationRef.current
+            //     ? 'none'
+            //     : draggingKey
+            //     ? 'transform 280ms cubic-bezier(0.22, 1, 0.36, 1)'
+            //     : 'transform 240ms ease';
+            const transition = 'none';
 
             return { transform: `translateX(${dx}px)`, transition, willChange: 'transform' };
         },
-        [offsetByKey, draggingKey, disableShiftAnimationRef]
+        [offsetByKey]
     );
 
     return { getShiftStyle };

@@ -87,6 +87,7 @@ type VirtualWindowState = {
 const TRANSITION_MS = 260;
 const APPEAR_DELAY_MS = 40;
 const INDENT_PX = 24;
+const AIRTABLE_ANIMATION_DISABLED = true;
 
 const ExpandableDetailRow = ({
     expanded,
@@ -113,6 +114,20 @@ const ExpandableDetailRow = ({
 
     useLayoutEffect(() => {
         clearTimers();
+
+        if (AIRTABLE_ANIMATION_DISABLED) {
+            if (expanded) {
+                setShouldRender(true);
+                setHeight('auto');
+                setVisualOpen(true);
+                return;
+            }
+
+            setVisualOpen(false);
+            setHeight(0);
+            setShouldRender(false);
+            return;
+        }
 
         if (expanded) {
             setShouldRender(true);
@@ -181,10 +196,12 @@ const ExpandableDetailRow = ({
                     style={{
                         overflow: 'hidden',
                         height: height === 'auto' ? 'auto' : `${height}px`,
-                        transition: `height ${TRANSITION_MS}ms ease`,
+                        // transition: `height ${TRANSITION_MS}ms ease`,
+                        transition: 'none',
                         willChange: 'height',
                     }}
                     onTransitionEnd={(e) => {
+                        if (AIRTABLE_ANIMATION_DISABLED) return;
                         if (e.propertyName !== 'height') return;
 
                         if (timerRef.current) window.clearTimeout(timerRef.current);
@@ -459,8 +476,9 @@ export const Body = <T,>({
     const virtualOverscan = props.virtualOverscan ?? 6;
     const canVirtualize = enableVirtualization && !detailRenderer && !getExpandedRows;
     const animationMode = getAnimationMode();
-    const shouldAnimate =
-        enableAnimation && !canVirtualize && (animationRowLimit <= 0 || rows.length <= animationRowLimit);
+    // const shouldAnimate =
+    //     enableAnimation && !canVirtualize && (animationRowLimit <= 0 || rows.length <= animationRowLimit);
+    const shouldAnimate = false;
     const useFullCellAnimation = shouldAnimate && animationMode === 'full';
 
     const bodyRef = useRef<HTMLDivElement | null>(null);

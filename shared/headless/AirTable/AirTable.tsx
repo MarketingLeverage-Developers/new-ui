@@ -1618,15 +1618,16 @@ const AirTableInner = <T,>({
         (colKey: string): React.CSSProperties => {
             const dx = offsetByKey[colKey] ?? 0;
 
-            const transition = disableShiftAnimationRef.current
-                ? 'none'
-                : drag.draggingKey
-                  ? 'transform 280ms cubic-bezier(0.22, 1, 0.36, 1)'
-                  : 'transform 240ms ease';
+            // const transition = disableShiftAnimationRef.current
+            //     ? 'none'
+            //       : drag.draggingKey
+            //       ? 'transform 280ms cubic-bezier(0.22, 1, 0.36, 1)'
+            //       : 'transform 240ms ease';
+            const transition = 'none';
 
             return { transform: `translateX(${dx}px)`, transition, willChange: 'transform' };
         },
-        [offsetByKey, drag.draggingKey]
+        [offsetByKey]
     );
 
     const { getRange, isCellSelected } = useSelectionRange(selection);
