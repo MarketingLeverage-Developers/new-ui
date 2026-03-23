@@ -3,6 +3,9 @@
     border-right: 1px solid var(--Gray6);
     // padding-right: 8px;
     grid-area: subSidebar;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
 
     position: sticky;
     height: 100vh;
@@ -21,6 +24,11 @@
     // &::-webkit-scrollbar-track {
     //     background: transparent;
     // }
+}
+
+.Content {
+    height: 100%;
+    min-height: 0;
 }
 
 .SubSidebar[data-collapsed='true'] {

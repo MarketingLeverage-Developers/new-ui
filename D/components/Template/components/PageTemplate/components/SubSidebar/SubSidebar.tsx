@@ -178,7 +178,9 @@ export const SubSidebar = ({ children }: SubSidebarProps) => {
             data-resizing={isResizing ? 'true' : 'false'}
             data-collapsed={hasVisibleContent ? 'false' : 'true'}
         >
-            <div ref={contentRef}>{children}</div>
+            <div ref={contentRef} className={styles.Content}>
+                {children}
+            </div>
             {hasVisibleContent ? (
                 <div
                     role="separator"
