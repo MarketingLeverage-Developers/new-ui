@@ -14,24 +14,36 @@
     overflow: hidden;
 }
 
-.Card::before {
-    content: '';
-    position: absolute;
-    inset: 0 auto 0 0;
-    width: 2px;
-    background: rgba(14, 165, 233, 0.45);
+// .Card::before {
+//     content: '';
+//     position: absolute;
+//     inset: 0 auto 0 0;
+//     width: 2px;
+//     background: rgba(14, 165, 233, 0.45);
+// }
+
+.Card[data-variant='dashboard'] {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    gap: 14px;
+    width: min(460px, 100%);
+    height: var(--snapshot-summary-card-height, 344px);
+    min-height: var(--snapshot-summary-card-height, 344px);
+    padding: 18px 18px 16px;
+    border-radius: 8px;
+    box-shadow: 0 18px 36px rgb(15 23 42 / 8%);
+    align-self: stretch;
+    justify-content: stretch;
+}
+
+.Card[data-variant='dashboard']::before {
+    width: 1px;
+    background: rgb(59 130 246 / 28%);
 }
 
 .FullWidth {
     width: 100%;
     align-self: stretch;
-}
-
-.Top {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding-left: 2px;
 }
 
 .Title {
@@ -51,6 +63,12 @@
     grid-template-columns: minmax(0, 1fr);
 }
 
+.Card[data-variant='dashboard'] .HeroBody {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    align-items: start;
+}
+
 .Headline {
     display: flex;
     flex-direction: column;
@@ -58,12 +76,22 @@
     min-width: 0;
 }
 
+.Card[data-variant='dashboard'] .Headline {
+    gap: 6px;
+}
+
 .PrimaryValue {
     color: var(--granter-gray-900);
-    font-size: 36px;
+    font-size: 20px;
+    font-weight: 600;
     line-height: 1.02;
     letter-spacing: -0.035em;
     font-variant-numeric: tabular-nums;
+}
+
+.Card[data-variant='dashboard'] .PrimaryValue {
+    font-size: 20px;
+    line-height: 0.96;
 }
 
 .PrimaryDescription {
@@ -81,6 +109,11 @@
     background: transparent;
 }
 
+.Card[data-variant='dashboard'] .SecondaryStat {
+    gap: 6px;
+    padding-left: 16px;
+}
+
 .SecondaryLabel {
     letter-spacing: 0.01em;
 }
@@ -93,6 +126,12 @@
     font-variant-numeric: tabular-nums;
 }
 
+.Card[data-variant='dashboard'] .SecondaryValue {
+    font-size: 20px;
+    line-height: 1.06;
+    overflow-wrap: anywhere;
+}
+
 .Sections {
     display: grid;
     grid-template-columns: repeat(2, minmax(220px, auto));
@@ -103,15 +142,34 @@
     border-top: 1px solid var(--granter-gray-200);
 }
 
+.Card[data-variant='dashboard'] .Sections {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    min-height: 0;
+    margin-top: 0;
+    padding-top: 14px;
+}
+
 .Section {
     display: flex;
     flex-direction: column;
     min-width: 0;
 }
 
+.Card[data-variant='dashboard'] .Section {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    min-height: 0;
+}
+
 .Section + .Section {
     border-left: 1px solid var(--granter-gray-200);
     padding-left: 16px;
+}
+
+.Card[data-variant='dashboard'] .Section + .Section {
+    border-left: 0;
+    padding-left: 0;
 }
 
 .SectionHeader {
@@ -120,11 +178,28 @@
     gap: 8px;
 }
 
+.Card[data-variant='dashboard'] .SectionHeader {
+    margin-bottom: 2px;
+}
+
+.Card[data-variant='dashboard'] .SectionHeader > * {
+    font-size: 13px !important;
+    line-height: 18px !important;
+}
+
 .SectionRows {
     display: flex;
     flex-direction: column;
     gap: 8px;
     margin-top: 12px;
+}
+
+.Card[data-variant='dashboard'] .SectionRows {
+    display: grid;
+    grid-template-rows: repeat(var(--snapshot-summary-card-row-count, 3), minmax(0, 1fr));
+    gap: 8px;
+    min-height: 0;
+    margin-top: 8px;
 }
 
 .SectionRow {
@@ -135,14 +210,81 @@
     color: var(--granter-gray-700);
 }
 
+.Card[data-variant='dashboard'] .SectionRow {
+    min-height: 0;
+    padding: 9px 11px;
+    border: 1px solid var(--granter-gray-200);
+    border-radius: 10px;
+    background: linear-gradient(180deg, rgb(255 255 255 / 100%) 0%, rgb(248 250 252 / 88%) 100%);
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 6px;
+    
+}
+
 .RowLabel {
     color: inherit;
+}
+
+.Card[data-variant='dashboard'] .RowLabel {
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 16px;
 }
 
 .RowValue {
     color: var(--granter-gray-900);
     text-align: right;
     font-variant-numeric: tabular-nums;
+}
+
+.Card[data-variant='dashboard'] .RowValue {
+    font-size: 14px;
+    line-height: 1.12;
+    text-align: left;
+    overflow-wrap: anywhere;
+}
+
+.Card[data-variant='dashboard'] .Section[data-section-index='0'] .SectionRow[data-tone='live'] {
+    border-color: rgb(59 130 246 / 20%);
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    color: var(--granter-white);
+}
+
+.Card[data-variant='dashboard'] .Section[data-section-index='0'] .SectionRow[data-tone='waiting'] {
+    border-color: rgb(249 115 22 / 18%);
+    background: linear-gradient(135deg, rgb(255 247 237 / 100%) 0%, rgb(255 237 213 / 100%) 100%);
+    color: #c2410c;
+}
+
+.Card[data-variant='dashboard'] .Section[data-section-index='0'] .SectionRow[data-tone='danger'] {
+    border-color: rgb(239 68 68 / 20%);
+    background: linear-gradient(135deg, #fb7185 0%, #f43f5e 100%);
+    color: var(--granter-white);
+}
+
+.Card[data-variant='dashboard'] .Section[data-section-index='1'] .SectionRow[data-tone='live'] {
+    border-color: rgb(59 130 246 / 16%);
+    background: linear-gradient(135deg, rgb(239 246 255 / 100%) 0%, rgb(219 234 254 / 100%) 100%);
+    color: #2563eb;
+}
+
+.Card[data-variant='dashboard'] .Section[data-section-index='1'] .SectionRow[data-tone='waiting'] {
+    border-color: rgb(249 115 22 / 16%);
+    background: linear-gradient(135deg, rgb(255 247 237 / 100%) 0%, rgb(255 237 213 / 100%) 100%);
+    color: #ea580c;
+}
+
+.Card[data-variant='dashboard'] .Section[data-section-index='1'] .SectionRow[data-tone='danger'] {
+    border-color: rgb(239 68 68 / 16%);
+    background: linear-gradient(135deg, rgb(255 241 242 / 100%) 0%, rgb(255 228 230 / 100%) 100%);
+    color: #ef4444;
+}
+
+.Card[data-variant='dashboard'] .Section[data-section-index='1'] .SectionRow[data-tone='default'] {
+    background: linear-gradient(180deg, rgb(255 255 255 / 100%) 0%, rgb(248 250 252 / 88%) 100%);
+    color: var(--granter-gray-700);
 }
 
 .SectionRow[data-tone='live'] .RowValue,
@@ -157,6 +299,20 @@
 .SectionRow[data-tone='danger'] .RowValue,
 .SectionRow[data-tone='down'] .RowValue {
     color: var(--granter-red-500);
+}
+
+.Card[data-variant='dashboard'] .SectionRow[data-tone='live'] .RowValue,
+.Card[data-variant='dashboard'] .SectionRow[data-tone='waiting'] .RowValue,
+.Card[data-variant='dashboard'] .SectionRow[data-tone='danger'] .RowValue,
+.Card[data-variant='dashboard'] .SectionRow[data-tone='default'] .RowValue {
+    color: currentColor;
+}
+
+.Card[data-variant='dashboard'] .SectionRow[data-tone='live'] .RowLabel,
+.Card[data-variant='dashboard'] .SectionRow[data-tone='waiting'] .RowLabel,
+.Card[data-variant='dashboard'] .SectionRow[data-tone='danger'] .RowLabel,
+.Card[data-variant='dashboard'] .SectionRow[data-tone='default'] .RowLabel {
+    color: currentColor;
 }
 
 @media (max-width: 960px) {
@@ -186,5 +342,25 @@
         padding-left: 0;
         border-top: 1px solid var(--granter-gray-200);
         border-left: 0;
+    }
+
+    .Card[data-variant='dashboard'] .HeroBody {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .Card[data-variant='dashboard'] .SecondaryStat {
+        padding-top: 14px;
+        padding-left: 0;
+        border-top: 1px solid var(--granter-gray-200);
+        border-left: 0;
+    }
+
+    .Card[data-variant='dashboard'] {
+        height: auto;
+        min-height: 0;
+    }
+
+    .Card[data-variant='dashboard'] .SectionRows {
+        display: flex;
     }
 }

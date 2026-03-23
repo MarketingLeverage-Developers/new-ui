@@ -43,22 +43,28 @@ const SnapshotSummaryCard = ({
 }: SnapshotSummaryCardProps) => {
     const hasSecondaryStat =
         secondaryLabel !== undefined || secondaryValue !== undefined || secondaryDescription !== undefined;
+    const dashboardRowCount = Math.max(1, ...sections.map((section) => section.rows.length));
+    const cardStyle =
+        variant === 'dashboard'
+            ? ({
+                  '--snapshot-summary-card-row-count': dashboardRowCount,
+                  '--snapshot-summary-card-height': dashboardRowCount >= 4 ? '384px' : '344px',
+              } as React.CSSProperties)
+            : undefined;
 
     return (
         <section
             className={classNames(styles.Card, fullWidth && styles.FullWidth, className)}
             data-variant={variant}
+            style={cardStyle}
         >
-            {title !== undefined ? (
-                <div className={styles.Top}>
-                    <Text as="span" size="xs" weight="semibold" className={styles.Title}>
-                        {title}
-                    </Text>
-                </div>
-            ) : null}
-
             <div className={classNames(styles.HeroBody, !hasSecondaryStat && styles.HeroBodySingle)}>
                 <div className={styles.Headline}>
+                    {title !== undefined ? (
+                        <Text as="span" size="xs" weight="semibold" className={styles.Title}>
+                            {title}
+                        </Text>
+                    ) : null}
                     <Text as="strong" weight="regular" className={styles.PrimaryValue}>
                         {primaryValue}
                     </Text>
@@ -98,11 +104,11 @@ const SnapshotSummaryCard = ({
                             className={styles.Section}
                             data-section-index={sectionIndex}
                         >
-                            <div className={styles.SectionHeader}>
+                            {/* <div className={styles.SectionHeader}>
                                 <Text as="h3" size="md" weight="semibold">
                                     {section.title}
                                 </Text>
-                            </div>
+                            </div> */}
 
                             <div className={styles.SectionRows}>
                                 {section.rows.map((row) => (
