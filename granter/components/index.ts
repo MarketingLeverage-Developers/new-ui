@@ -118,6 +118,16 @@ export type { SectionFieldTabProps, SectionFieldTabItemProps } from './SectionFi
 export { default as SectionFieldSelect } from './SectionFieldSelect/SectionFieldSelect';
 export type { SectionFieldSelectProps, SectionFieldSelectOption } from './SectionFieldSelect/SectionFieldSelect';
 
+export { default as KakaoTemplatePreviewCard } from './KakaoTemplatePreviewCard/KakaoTemplatePreviewCard';
+export type { KakaoTemplatePreviewCardProps } from './KakaoTemplatePreviewCard/KakaoTemplatePreviewCard';
+export { default as KakaoPreviewCard } from './KakaoTemplatePreviewCard/KakaoTemplatePreviewCard';
+export type {
+    KakaoPreviewCardBubbleBodyProps,
+    KakaoPreviewCardInfoIconProps,
+    KakaoPreviewCardProps,
+    KakaoPreviewCardSectionProps,
+} from './KakaoTemplatePreviewCard/KakaoTemplatePreviewCard';
+
 export { default as TimeSlotSelector } from './TimeSlotSelector/TimeSlotSelector';
 export type { TimeSlotSelectorProps, TimeSlotSelectorOption } from './TimeSlotSelector/TimeSlotSelector';
 
