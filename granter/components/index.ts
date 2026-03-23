@@ -108,6 +108,8 @@ export type { SectionFieldRowProps } from './SectionFieldRow/SectionFieldRow';
 
 export { default as SectionFieldInput } from './SectionFieldInput/SectionFieldInput';
 export type { SectionFieldInputProps } from './SectionFieldInput/SectionFieldInput';
+export { default as SectionFieldCurrencyInput } from './SectionFieldCurrencyInput/SectionFieldCurrencyInput';
+export type { SectionFieldCurrencyInputProps } from './SectionFieldCurrencyInput/SectionFieldCurrencyInput';
 
 export { default as SectionFieldTextArea } from './SectionFieldTextArea/SectionFieldTextArea';
 export type { SectionFieldTextAreaProps } from './SectionFieldTextArea/SectionFieldTextArea';

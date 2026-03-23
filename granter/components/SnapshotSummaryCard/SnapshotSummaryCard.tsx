@@ -26,6 +26,7 @@ export type SnapshotSummaryCardProps = {
     secondaryDescription?: React.ReactNode;
     sections?: SnapshotSummaryCardSection[];
     fullWidth?: boolean;
+    variant?: 'default' | 'dashboard';
 };
 
 const SnapshotSummaryCard = ({
@@ -38,12 +39,16 @@ const SnapshotSummaryCard = ({
     secondaryDescription,
     sections = [],
     fullWidth = false,
+    variant = 'default',
 }: SnapshotSummaryCardProps) => {
     const hasSecondaryStat =
         secondaryLabel !== undefined || secondaryValue !== undefined || secondaryDescription !== undefined;
 
     return (
-        <section className={classNames(styles.Card, fullWidth && styles.FullWidth, className)}>
+        <section
+            className={classNames(styles.Card, fullWidth && styles.FullWidth, className)}
+            data-variant={variant}
+        >
             {title !== undefined ? (
                 <div className={styles.Top}>
                     <Text as="span" size="xs" weight="semibold" className={styles.Title}>
@@ -87,8 +92,12 @@ const SnapshotSummaryCard = ({
 
             {sections.length > 0 ? (
                 <div className={styles.Sections}>
-                    {sections.map((section) => (
-                        <div key={String(section.title)} className={styles.Section}>
+                    {sections.map((section, sectionIndex) => (
+                        <div
+                            key={String(section.title)}
+                            className={styles.Section}
+                            data-section-index={sectionIndex}
+                        >
                             <div className={styles.SectionHeader}>
                                 <Text as="h3" size="md" weight="semibold">
                                     {section.title}

@@ -17,6 +17,7 @@ export { default as SectionIntro } from './components/SectionIntro/SectionIntro'
 export { default as SectionFormDrawerContent } from './components/SectionFormDrawerContent/SectionFormDrawerContent';
 export { default as SectionFieldRow } from './components/SectionFieldRow/SectionFieldRow';
 export { default as SectionFieldInput } from './components/SectionFieldInput/SectionFieldInput';
+export { default as SectionFieldCurrencyInput } from './components/SectionFieldCurrencyInput/SectionFieldCurrencyInput';
 export { default as SectionFieldTextArea } from './components/SectionFieldTextArea/SectionFieldTextArea';
 export { default as SectionFieldTab } from './components/SectionFieldTab/SectionFieldTab';
 export { default as SectionFieldSelect } from './components/SectionFieldSelect/SectionFieldSelect';
@@ -144,6 +145,7 @@ export type { SectionIntroProps } from './components/SectionIntro/SectionIntro';
 export type { SectionFormDrawerContentProps } from './components/SectionFormDrawerContent/SectionFormDrawerContent';
 export type { SectionFieldRowProps } from './components/SectionFieldRow/SectionFieldRow';
 export type { SectionFieldInputProps } from './components/SectionFieldInput/SectionFieldInput';
+export type { SectionFieldCurrencyInputProps } from './components/SectionFieldCurrencyInput/SectionFieldCurrencyInput';
 export type { SectionFieldTextAreaProps } from './components/SectionFieldTextArea/SectionFieldTextArea';
 export type { SectionFieldTabProps, SectionFieldTabItemProps } from './components/SectionFieldTab/SectionFieldTab';
 export type { SectionFieldSelectProps, SectionFieldSelectOption } from './components/SectionFieldSelect/SectionFieldSelect';
