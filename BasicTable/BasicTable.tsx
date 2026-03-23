@@ -1,6 +1,7 @@
 // src/shared/primitives/BasicTable/BasicTable.tsx
 
 import React, { useState, useCallback, useMemo } from 'react';
+import type { FilterState as ExternalFilterState } from '@/shared/headless/AirTable/AirTable';
 import AirTable from '../shared/headless/AirTable/AirTable';
 import styles from './BasicTable.module.scss';
 import RowToggle from './components/RowToggle/RowToggle';
@@ -27,8 +28,21 @@ export type TableFilterItem = {
 
 type TabKey = 'columns' | 'pinned' | 'filters';
 
-type BasicTableProps<T> = React.ComponentProps<typeof AirTable<T>> & {
-    airTableComponent?: typeof AirTable;
+export type AirTableComponentLike = ((props: any) => React.ReactElement | null) & {
+    Container: typeof AirTable.Container;
+    Header: React.ComponentType<any>;
+    Body: React.ComponentType<any>;
+    Ghost: React.ComponentType<any>;
+};
+
+type BasicTableProps<T> = Omit<
+    React.ComponentProps<typeof AirTable<T>>,
+    'filterState' | 'defaultFilterState' | 'onFilterChange'
+> & {
+    airTableComponent?: AirTableComponentLike;
+    filterState?: ExternalFilterState;
+    defaultFilterState?: ExternalFilterState;
+    onFilterChange?: (next: ExternalFilterState) => void;
     height?: number;
     showGhost?: boolean;
     showHeader?: boolean;
@@ -104,7 +118,7 @@ export const BasicTable = <T,>({
 
     return (
         <AirTableComponent
-            {...props}
+            {...(props as React.ComponentProps<typeof AirTable<T>>)}
             defaultExpandedRowKeys={defaultExpandedRowKeys}
             persistExpandedRowKeys={persistExpandedRowKeys}
             enableAnimation={enableAnimation}

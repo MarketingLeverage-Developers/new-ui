@@ -1,12 +1,12 @@
 // src/shared/primitives/ListTable/ListTable.tsx
 
 import React from 'react';
-import type AirTable from '../../../shared/headless/AirTable/AirTable';
-import type { Column, FilterState, SortState } from '../../../shared/headless/AirTable/AirTable';
-import { BasicTable, type TableFilterItem } from '../../../BasicTable/BasicTable';
+import type { Column, SortState } from '../../../shared/headless/AirTable/AirTable';
+import type { FilterState } from '@/shared/headless/AirTable/AirTable';
+import { BasicTable, type AirTableComponentLike, type TableFilterItem } from '../../../BasicTable/BasicTable';
 
 type ListTableProps<T> = {
-    airTableComponent?: typeof AirTable;
+    airTableComponent?: AirTableComponentLike;
     data: T[];
     columns: Column<T>[];
     rowKeyField?: string;
