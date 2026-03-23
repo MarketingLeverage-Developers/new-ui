@@ -101,8 +101,8 @@
     width: 100%;
     height: 100%;
     border: 0;
-    background-color: var(--granter-white);
-    color: var(--granter-gray-500);
+    background-color: var(--granter-sky-100);
+    color: var(--granter-sky-600);
     padding: 0;
     cursor: pointer;
 }
@@ -113,7 +113,7 @@
 }
 
 .DateLabel {
-    color: var(--granter-gray-500);
+    // color: var(--granter-gray-500);
     font-size: 16px;
     font-weight: 500;
     line-height: 24px;
