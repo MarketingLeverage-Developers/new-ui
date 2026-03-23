@@ -1,5 +1,5 @@
 import { type CSSProperties, type ReactNode } from 'react';
-import type { DepartmentCardChipStyle } from '../../../../../shared/types/DepartmentCardChipStyle';
+import type { DepartmentCardChipStyle } from '@/shared/types/DepartmentCardChipStyle';
 import styles from './DepartmentCardItem.module.scss';
 
 export type DepartmentCardItemProps = {
