@@ -12,6 +12,7 @@ export type SearchInputProps = {
     placeholder: string;
     ariaLabel?: string;
     widthPreset?: SearchInputWidthPreset;
+    fullWidth?: boolean;
 };
 
 const SearchInput = ({
@@ -20,6 +21,7 @@ const SearchInput = ({
     placeholder,
     ariaLabel = placeholder,
     widthPreset = 'auto',
+    fullWidth = false,
 }: SearchInputProps) => {
     const [draftValue, setDraftValue] = React.useState(value);
     const isComposingRef = React.useRef(false);
@@ -54,7 +56,11 @@ const SearchInput = ({
     };
 
     return (
-        <div className={styles.SearchInput} data-width-preset={widthPreset}>
+        <div
+            className={styles.SearchInput}
+            data-width-preset={widthPreset}
+            style={fullWidth ? { width: '100%' } : undefined}
+        >
             <FiSearch size={16} />
             <input
                 type="text"
