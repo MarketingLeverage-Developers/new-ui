@@ -20,6 +20,8 @@ export { default as SectionFieldInput } from './components/SectionFieldInput/Sec
 export { default as SectionFieldTextArea } from './components/SectionFieldTextArea/SectionFieldTextArea';
 export { default as SectionFieldTab } from './components/SectionFieldTab/SectionFieldTab';
 export { default as SectionFieldSelect } from './components/SectionFieldSelect/SectionFieldSelect';
+export { default as KakaoTemplatePreviewCard } from './components/KakaoTemplatePreviewCard/KakaoTemplatePreviewCard';
+export { default as KakaoPreviewCard } from './components/KakaoTemplatePreviewCard/KakaoTemplatePreviewCard';
 export { default as TimeSlotSelector } from './components/TimeSlotSelector/TimeSlotSelector';
 export { default as CompanySettingContent } from './components/CompanySettingContent/CompanySettingContent';
 export { default as CompanyAdMediaLinkContent } from './components/CompanyAdMediaLinkContent/CompanyAdMediaLinkContent';
@@ -145,6 +147,13 @@ export type { SectionFieldInputProps } from './components/SectionFieldInput/Sect
 export type { SectionFieldTextAreaProps } from './components/SectionFieldTextArea/SectionFieldTextArea';
 export type { SectionFieldTabProps, SectionFieldTabItemProps } from './components/SectionFieldTab/SectionFieldTab';
 export type { SectionFieldSelectProps, SectionFieldSelectOption } from './components/SectionFieldSelect/SectionFieldSelect';
+export type { KakaoTemplatePreviewCardProps } from './components/KakaoTemplatePreviewCard/KakaoTemplatePreviewCard';
+export type {
+    KakaoPreviewCardBubbleBodyProps,
+    KakaoPreviewCardInfoIconProps,
+    KakaoPreviewCardProps,
+    KakaoPreviewCardSectionProps,
+} from './components/KakaoTemplatePreviewCard/KakaoTemplatePreviewCard';
 export type { TimeSlotSelectorProps, TimeSlotSelectorOption } from './components/TimeSlotSelector/TimeSlotSelector';
 export type { DividerProps } from './components/Divider/Divider';
 export type { TooltipProps, TooltipAlign, TooltipSide } from './components/Tooltip/Tooltip';
