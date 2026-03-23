@@ -157,7 +157,7 @@
 .Shell :global(
         .air-table-header-cell:has([data-col-sort-btn='true'], [data-col-menu-btn='true']) > [data-col-header-content='true']
     ) {
-    padding-right: 58px !important;
+    padding-right: 0px !important;
 }
 
 .Shell :global([data-col-menu-btn='true']) {
