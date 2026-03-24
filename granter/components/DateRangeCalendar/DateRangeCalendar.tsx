@@ -48,8 +48,11 @@ const PRESETS: { key: PresetKey; label: string }[] = [
     { key: 'Q4', label: '4분기' },
 ];
 
+const WEEKDAY_LABELS = ['일', '월', '화', '수', '목', '금', '토'] as const;
 const pad2 = (value: number) => String(value).padStart(2, '0');
 const formatIso = (date?: Date) => (date ? `${date.getFullYear()}-${pad2(date.getMonth() + 1)}-${pad2(date.getDate())}` : '');
+const formatInputDate = (date?: Date) =>
+    date ? `${formatIso(date)} (${WEEKDAY_LABELS[date.getDay()]})` : '';
 const startOfMonth = (date: Date) => new Date(date.getFullYear(), date.getMonth(), 1);
 const endOfMonth = (date: Date) => new Date(date.getFullYear(), date.getMonth() + 1, 0);
 const isSameMonth = (a: Date, b: Date) => a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth();
@@ -64,7 +67,7 @@ const addDays = (date: Date, days: number) => {
 };
 const startOfDay = (date: Date) => new Date(date.getFullYear(), date.getMonth(), date.getDate());
 const parseIso = (value: string): Date | undefined => {
-    const matched = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value.trim());
+    const matched = /^(\d{4})-(\d{2})-(\d{2})(?:\s*\([일월화수목금토]\))?$/.exec(value.trim());
     if (!matched) return undefined;
 
     const year = Number(matched[1]);
@@ -165,8 +168,8 @@ const DateRangeCalendar = ({ range, onChange, onPresetSelect, className, ...prop
     React.useEffect(() => {
         setTempRange(range);
         setHoveredDay(undefined);
-        setFromInput(formatIso(range?.from));
-        setToInput(formatIso(range?.to));
+        setFromInput(formatInputDate(range?.from));
+        setToInput(formatInputDate(range?.to));
         setFromError(false);
         setToError(false);
     }, [range]);
@@ -202,8 +205,8 @@ const DateRangeCalendar = ({ range, onChange, onPresetSelect, className, ...prop
     const handleRangeSelect = (nextRange: DateRange | undefined, selectedDay?: Date) => {
         commitRange(nextRange);
         setHoveredDay(undefined);
-        setFromInput(formatIso(nextRange?.from));
-        setToInput(formatIso(nextRange?.to));
+        setFromInput(formatInputDate(nextRange?.from));
+        setToInput(formatInputDate(nextRange?.to));
         setFromError(false);
         setToError(false);
 
@@ -217,8 +220,8 @@ const DateRangeCalendar = ({ range, onChange, onPresetSelect, className, ...prop
         commitRange(nextRange);
         setHoveredDay(undefined);
         setCurrentMonth(nextRange.from ?? today);
-        setFromInput(formatIso(nextRange.from));
-        setToInput(formatIso(nextRange.to));
+        setFromInput(formatInputDate(nextRange.from));
+        setToInput(formatInputDate(nextRange.to));
         setFromError(false);
         setToError(false);
     };
@@ -385,9 +388,13 @@ const DateRangeCalendar = ({ range, onChange, onPresetSelect, className, ...prop
                                 onBlur={() => {
                                     const hasError = !fromInput ? false : !parseIso(fromInput);
                                     setFromError(hasError);
-                                    if (!hasError) applyInputsIfComplete(fromInput, toInput);
+                                    if (!hasError) {
+                                        const parsed = parseIso(fromInput);
+                                        setFromInput(parsed ? formatInputDate(parsed) : fromInput);
+                                        applyInputsIfComplete(fromInput, toInput);
+                                    }
                                 }}
-                                placeholder="YYYY-MM-DD"
+                                placeholder="YYYY-MM-DD (요일)"
                             />
                         </div>
                     </div>
@@ -410,9 +417,13 @@ const DateRangeCalendar = ({ range, onChange, onPresetSelect, className, ...prop
                                 onBlur={() => {
                                     const hasError = !toInput ? false : !parseIso(toInput);
                                     setToError(hasError);
-                                    if (!hasError) applyInputsIfComplete(fromInput, toInput);
+                                    if (!hasError) {
+                                        const parsed = parseIso(toInput);
+                                        setToInput(parsed ? formatInputDate(parsed) : toInput);
+                                        applyInputsIfComplete(fromInput, toInput);
+                                    }
                                 }}
-                                placeholder="YYYY-MM-DD"
+                                placeholder="YYYY-MM-DD (요일)"
                             />
                         </div>
                     </div>
@@ -571,8 +582,8 @@ const DateRangeCalendar = ({ range, onChange, onPresetSelect, className, ...prop
                                 const to = endOfMonth(month.date);
                                 commitRange({ from, to });
                                 setCurrentMonth(from);
-                                setFromInput(formatIso(from));
-                                setToInput(formatIso(to));
+                                setFromInput(formatInputDate(from));
+                                setToInput(formatInputDate(to));
                                 setFromError(false);
                                 setToError(false);
                             }}

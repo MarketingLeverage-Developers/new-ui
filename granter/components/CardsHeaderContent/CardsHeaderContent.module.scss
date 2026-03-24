@@ -20,6 +20,7 @@
 }
 
 .Center {
+    flex: 0 0 auto;
     justify-content: center;
 }
 
@@ -57,6 +58,7 @@
 
 .DateRangeControl {
     display: flex;
+    flex-shrink: 0;
     align-items: center;
     width: 300px;
     min-width: 300px;
@@ -103,8 +105,9 @@
     border: 0;
     background-color: var(--granter-sky-100);
     color: var(--granter-sky-600);
-    padding: 0;
+    padding: 0 12px;
     cursor: pointer;
+    overflow: hidden;
 }
 
 .DateLabelButton[data-open='true'] {
@@ -113,11 +116,14 @@
 }
 
 .DateLabel {
-    // color: var(--granter-gray-500);
+    display: block;
     font-size: 16px;
-    font-weight: 500;
+    font-weight: 400;
     line-height: 24px;
     letter-spacing: -0.01em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .DateLabelButton[data-open='true'] .DateLabel {

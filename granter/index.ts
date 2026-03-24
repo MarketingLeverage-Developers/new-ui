@@ -31,6 +31,7 @@ export { default as CompanyDailyReportSettingContent } from './components/Compan
 export { default as Header } from './components/CardsHeaderContent/CardsHeaderContent';
 export { default as HomeItemElementsContent } from './components/HomeItemElementsContent/HomeItemElementsContent';
 export { default as AmountListPanel } from './components/AmountListPanel/AmountListPanel';
+export { default as MetricSummaryStrip } from './components/MetricSummaryStrip/MetricSummaryStrip';
 export { default as FileUploader } from './components/FileUploader/FileUploader';
 export { default as RichTextEditor } from './components/RichTextEditor/RichTextEditor';
 export { default as Tooltip } from './components/Tooltip/Tooltip';
@@ -178,6 +179,8 @@ export type { ThemeModeToggleProps, ThemeModeToggleTheme } from './components/Th
 export type { UnderlineTabProps, UnderlineTabItemProps } from './components/UnderlineTab/UnderlineTab';
 export type { RoundedSegmentTabProps, RoundedSegmentTabItemProps } from './components/RoundedSegmentTab/RoundedSegmentTab';
 export type { TextProps, TextSize, TextTone, TextWeight } from './components/Text/Text';
+export type { MetricSummaryStripProps, MetricSummaryStripItem } from './components/MetricSummaryStrip/MetricSummaryStrip';
+export type { StatusChipProps, StatusChipTone } from './components/StatusChip/StatusChip';
 export type {
     SnapshotSummaryCardProps,
     SnapshotSummaryCardRow,

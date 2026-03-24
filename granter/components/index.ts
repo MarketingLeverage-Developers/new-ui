@@ -79,6 +79,12 @@ export type { MetricValueCardProps, MetricValueCardVariant, MetricValueTone } fr
 export { default as MetricStatusCard } from './MetricStatusCard/MetricStatusCard';
 export type { MetricStatusCardProps } from './MetricStatusCard/MetricStatusCard';
 
+export { default as MetricSummaryStrip } from './MetricSummaryStrip/MetricSummaryStrip';
+export type { MetricSummaryStripProps, MetricSummaryStripItem } from './MetricSummaryStrip/MetricSummaryStrip';
+
+export { default as StatusChip } from './StatusChip/StatusChip';
+export type { StatusChipProps, StatusChipTone } from './StatusChip/StatusChip';
+
 export { default as PlaceholderBlock } from './PlaceholderBlock/PlaceholderBlock';
 export type { PlaceholderBlockProps, PlaceholderBlockVariant } from './PlaceholderBlock/PlaceholderBlock';
 

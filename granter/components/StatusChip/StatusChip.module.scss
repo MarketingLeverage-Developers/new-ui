@@ -1,0 +1,38 @@
+.Chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 64px;
+    min-height: 32px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+    white-space: nowrap;
+}
+
+.Tone-neutral {
+    background-color: var(--granter-gray-100);
+    color: var(--granter-gray-600);
+}
+
+.Tone-success {
+    background-color: #dcf7cf;
+    color: #3b9d29;
+}
+
+.Tone-warning {
+    background-color: #fff0dc;
+    color: #f08b2b;
+}
+
+.Tone-danger {
+    background-color: #fee2e2;
+    color: #dc2626;
+}
+
+.Tone-info {
+    background-color: #dbeafe;
+    color: #2563eb;
+}

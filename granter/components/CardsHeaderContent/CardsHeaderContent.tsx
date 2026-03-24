@@ -92,7 +92,9 @@ const HeaderBreadcrumb = ({ children, className }: HeaderBreadcrumbProps) => (
     <div className={classNames(styles.Breadcrumb, className)}>{children}</div>
 );
 
-const DATE_RANGE_PATTERN = /(\d{4}-\d{2}-\d{2})\s*~\s*(\d{4}-\d{2}-\d{2})/;
+const WEEKDAY_LABELS = ['일', '월', '화', '수', '목', '금', '토'] as const;
+const DATE_RANGE_PATTERN =
+    /(\d{4}-\d{2}-\d{2})(?:\s*\([일월화수목금토]\))?\s*~\s*(\d{4}-\d{2}-\d{2})(?:\s*\([일월화수목금토]\))?/;
 
 const parseIsoDate = (value?: string): Date | undefined => {
     if (!value) return undefined;
@@ -118,6 +120,12 @@ const formatIsoDate = (date?: Date) => {
     const day = String(date.getDate()).padStart(2, '0');
 
     return `${year}-${month}-${day}`;
+};
+
+const formatIsoDateWithWeekday = (date?: Date) => {
+    const formatted = formatIsoDate(date);
+    if (!formatted || !date) return undefined;
+    return `${formatted} (${WEEKDAY_LABELS[date.getDay()]})`;
 };
 
 const parseDateRangeLabel = (label: React.ReactNode): DateRange | undefined => {
@@ -148,8 +156,8 @@ const toDateRangeValue = (value?: DateRange): HeaderDateRangeValue => ({
 });
 
 const formatDateRangeLabel = (value?: DateRange) => {
-    const from = formatIsoDate(value?.from);
-    const to = formatIsoDate(value?.to);
+    const from = formatIsoDateWithWeekday(value?.from);
+    const to = formatIsoDateWithWeekday(value?.to);
 
     if (!from && !to) return undefined;
     if (from && !to) return from;
