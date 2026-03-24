@@ -60,8 +60,8 @@
     display: flex;
     flex-shrink: 0;
     align-items: center;
-    width: 300px;
-    min-width: 300px;
+    width: fit-content;
+    min-width: max-content;
     height: 40px;
 }
 
@@ -77,6 +77,7 @@
 }
 
 .DateEdgeButton {
+    flex: 0 0 41px;
     width: 41px;
     cursor: pointer;
 }
@@ -92,7 +93,7 @@
 }
 
 .DateLabelTrigger {
-    flex: 1;
+    flex: 0 0 auto;
     border-radius: 0;
 }
 
@@ -100,14 +101,14 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 100%;
+    width: auto;
+    min-width: 0;
     height: 100%;
     border: 0;
     background-color: var(--granter-sky-100);
     color: var(--granter-sky-600);
     padding: 0 12px;
     cursor: pointer;
-    overflow: hidden;
 }
 
 .DateLabelButton[data-open='true'] {
@@ -122,8 +123,6 @@
     line-height: 24px;
     letter-spacing: -0.01em;
     white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
 }
 
 .DateLabelButton[data-open='true'] .DateLabel {
