@@ -27,11 +27,11 @@ const SectionBlock = ({
     <div className={classNames(styles.Root, className)} style={style} {...props}>
         <div className={classNames(styles.Header, headerClassName)}>
             <div className={styles.HeaderMain}>
-                <Text size="sm" weight="bold">
+                <Text size="lg" weight="medium" className={styles.Title}>
                     {title}
                 </Text>
                 {description ? (
-                    <Text size="xs" tone="muted">
+                    <Text size="md" tone="muted">
                         {description}
                     </Text>
                 ) : null}

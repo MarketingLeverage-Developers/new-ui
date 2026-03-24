@@ -1,8 +1,8 @@
 .Root {
-    border: 1px solid rgb(148 163 184 / 14%);
-    border-radius: 16px;
-    background: rgb(255 255 255 / 98%);
-    overflow: hidden;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    overflow: visible;
 }
 
 .Header {
@@ -10,9 +10,9 @@
     align-items: center;
     justify-content: space-between;
     gap: 16px;
-    padding: 14px 16px 10px;
-    border-bottom: 1px solid rgb(148 163 184 / 10%);
-    background: var(--granter-white);
+    padding: 0 0 12px;
+    border-bottom: 1px solid var(--granter-gray-150, #edf2f7);
+    background: transparent;
 }
 
 .HeaderMain {
@@ -23,10 +23,15 @@
     gap: 4px;
 }
 
+.Title {
+    font-size: 18px;
+    line-height: 26px;
+}
+
 .HeaderSide {
     flex-shrink: 0;
 }
 
 .Body {
-    padding: 14px 16px 16px;
+    padding: 2px 0 0;
 }

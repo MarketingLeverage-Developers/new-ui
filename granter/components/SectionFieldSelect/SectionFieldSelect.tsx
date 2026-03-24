@@ -117,15 +117,8 @@ const SectionFieldSelectView = <T extends string>({
     return (
         <div className={classNames(styles.Root, className)}>
             <Dropdown.Trigger className={styles.TriggerWrap} disabled={disabled}>
-                <button
-                    type="button"
-                    className={styles.Trigger}
-                    disabled={disabled}
-                >
-                    <span
-                        className={styles.Label}
-                        data-placeholder={selectedOption ? 'false' : 'true'}
-                    >
+                <button type="button" className={styles.Trigger} disabled={disabled}>
+                    <span className={styles.Label} data-placeholder={selectedOption ? 'false' : 'true'}>
                         {selectedOption?.label ?? placeholder}
                     </span>
 

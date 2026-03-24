@@ -123,10 +123,6 @@ const InlineCreateForm = ({
     onSubmit,
     onRemove,
 }: InlineCreateFormProps) => (
-    <SectionBlock
-        title={form.selectedMediaName ? `${form.selectedMediaName} 신규 연동` : '새 매체 연결'}
-        description="연동할 매체를 선택하고 계정 정보를 입력합니다."
-    >
         <Flex direction="column" gap={12}>
             <Flex direction="column">
                 <SectionFieldRow label="매체" labelWidth={EMBEDDED_FIELD_LABEL_WIDTH}>
@@ -181,7 +177,6 @@ const InlineCreateForm = ({
                 </BasicContent.Alert>
             ) : null}
         </Flex>
-    </SectionBlock>
 );
 
 const InlineUpdateForm = ({
@@ -304,9 +299,7 @@ export const CompanyAdMediaLinkSection = ({
                         }
                     >
                         {inlineCreateState.forms.length === 0 ? (
-                            <Text as="p" size="sm" tone="muted">
-                                연결할 매체가 있다면 우측 상단 버튼으로 새 항목을 추가하세요.
-                            </Text>
+                            <></>
                         ) : (
                             <Flex direction="column" gap={12}>
                                 {inlineCreateState.forms.map((formItem) => (
@@ -328,7 +321,7 @@ export const CompanyAdMediaLinkSection = ({
                         )}
                     </SectionBlock>
 
-                    <SectionBlock title="연동된 매체" description="이미 연결된 매체 계정과 캠페인 연결을 관리합니다.">
+                    <>
                         {state.isLoading || state.isFetching ? (
                             <Text as="p" size="sm" tone="muted">
                                 광고 매체 목록을 불러오는 중입니다.
@@ -388,7 +381,7 @@ export const CompanyAdMediaLinkSection = ({
                                 })}
                             </Flex>
                         )}
-                    </SectionBlock>
+                    </>
                 </>
             )}
         </Flex>

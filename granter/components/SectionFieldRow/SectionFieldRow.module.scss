@@ -3,7 +3,7 @@
     grid-template-columns: var(--granter-section-field-label-width, 160px) minmax(0, 1fr);
     gap: 16px;
     align-items: center;
-    padding: 12px 0;
+    padding: 14px 0;
 }
 
 .Root[data-align='start'] {
@@ -11,24 +11,33 @@
 }
 
 .Root[data-divider='true'] {
-    border-bottom: 1px solid var(--granter-gray-100);
+    border-bottom: 1px solid #edf2f7;
 }
 
 .Label {
     min-width: 0;
-    color: var(--granter-gray-500);
-    font-size: 13px;
-    line-height: 20px;
+    color: #111827;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 18px;
 }
 
 .Content {
     min-width: 0;
+    width: 100%;
 }
 
 .Value {
     color: var(--granter-gray-900);
-    font-size: 14px;
-    line-height: 20px;
-    font-weight: 600;
+    font-size: 16px;
+    line-height: 24px;
+    font-weight: 500;
     word-break: break-word;
+}
+
+@media (max-width: 960px) {
+    .Root {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
 }

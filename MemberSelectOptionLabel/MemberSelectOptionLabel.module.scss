@@ -1,0 +1,22 @@
+.Root {
+    display: inline-flex;
+    width: 100%;
+    min-width: 0;
+    align-items: center;
+    gap: 10px;
+}
+
+.Avatar {
+    flex-shrink: 0;
+}
+
+.Name {
+    min-width: 0;
+    overflow: hidden;
+    color: var(--granter-gray-900);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
