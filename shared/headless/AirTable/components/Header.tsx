@@ -588,11 +588,17 @@ export const Header = <T,>({ className, headerCellClassName, resizeHandleClassNa
 
         const rect = e.currentTarget.getBoundingClientRect();
 
-        setFilterPopup({
-            open: true,
-            colKey,
-            x: rect.left - 200,
-            y: rect.bottom + 8,
+        setFilterPopup((prev) => {
+            if (prev.open && prev.colKey === colKey) {
+                return { ...prev, open: false };
+            }
+
+            return {
+                open: true,
+                colKey,
+                x: rect.left - 200,
+                y: rect.bottom + 8,
+            };
         });
     }, []);
 
