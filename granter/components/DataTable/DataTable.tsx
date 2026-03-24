@@ -2,6 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 import type { Column, FilterState, SortState } from '../../../shared/headless/AirTable/AirTable';
 import AirTable from '../../../shared/headless/AirTable/AirTable';
+import { useSuppressPostResizeHeaderClick } from '../../../shared/hooks/client/useSuppressPostResizeHeaderClick';
 import Text from '../Text/Text';
 import styles from './DataTable.module.scss';
 
@@ -109,73 +110,81 @@ const DataTable = <T,>({
     activeCellClassName,
     ghostClassName,
     emptyStateClassName,
-}: DataTableProps<T>) => (
-    <div className={classNames(styles.Shell, className)}>
-        <AirTable<T>
-            data={data}
-            columns={columns}
-            rowKeyField={rowKeyField}
-            defaultColWidth={defaultColWidth}
-            storageKey={storageKey}
-            onPersistedStateChange={onPersistedStateChange}
-            persistedStateSyncVersion={persistedStateSyncVersion}
-            showColumnVisibilityControl={showColumnVisibilityControl}
-            defaultSortState={defaultSortState}
-            sortState={sortState}
-            onSortChange={onSortChange}
-            sortMode={sortMode}
-            filterState={filterState}
-            onFilterChange={onFilterChange}
-            filterMode={filterMode}
-            filterOptionsData={filterOptionsData}
-            fillContainerWidth={fillContainerWidth}
-            enableVirtualization={enableVirtualization}
-            virtualRowHeight={virtualRowHeight}
-            virtualOverscan={virtualOverscan}
-            enableAnimation={enableAnimation}
-            animationRowLimit={animationRowLimit}
-            detailRenderer={detailRenderer}
-            getRowCanExpand={getRowCanExpand}
-            getExpandedRows={getExpandedRows}
-            getRowLevel={getRowLevel}
-            defaultExpandedRowKeys={defaultExpandedRowKeys}
-            persistExpandedRowKeys={persistExpandedRowKeys}
-            pinnedColumnKeys={pinnedColumnKeys}
-            pinnedHeaderBgColor={pinnedHeaderBgColor}
-            pinnedHeaderTextColor={pinnedHeaderTextColor}
-            getRowStyle={getRowStyle}
+}: DataTableProps<T>) => {
+    const resizeClickGuard = useSuppressPostResizeHeaderClick();
+
+    return (
+        <div
+            className={classNames(styles.Shell, className)}
+            onMouseDownCapture={resizeClickGuard.onMouseDownCapture}
+            onClickCapture={resizeClickGuard.onClickCapture}
         >
-            <AirTable.Container className={styles.Container} height={height} onScrollElReady={onScrollElReady}>
-                <AirTable.Header
-                    className={classNames(styles.Header, headerClassName)}
-                    headerCellClassName={classNames(styles.HeaderCell, headerCellClassName)}
-                />
-
-                {data.length > 0 ? (
-                    <AirTable.Body
-                        className={classNames(styles.Body, bodyClassName)}
-                        rowClassName={classNames(styles.Row, rowClassName)}
-                        rowSelectedClassName={classNames(styles.RowSelected, rowSelectedClassName)}
-                        cellClassName={classNames(styles.Cell, cellClassName)}
-                        selectedCellClassName={classNames(styles.CellSelected, selectedCellClassName)}
-                        activeCellClassName={classNames(styles.CellActive, activeCellClassName)}
+            <AirTable<T>
+                data={data}
+                columns={columns}
+                rowKeyField={rowKeyField}
+                defaultColWidth={defaultColWidth}
+                storageKey={storageKey}
+                onPersistedStateChange={onPersistedStateChange}
+                persistedStateSyncVersion={persistedStateSyncVersion}
+                showColumnVisibilityControl={showColumnVisibilityControl}
+                defaultSortState={defaultSortState}
+                sortState={sortState}
+                onSortChange={onSortChange}
+                sortMode={sortMode}
+                filterState={filterState}
+                onFilterChange={onFilterChange}
+                filterMode={filterMode}
+                filterOptionsData={filterOptionsData}
+                fillContainerWidth={fillContainerWidth}
+                enableVirtualization={enableVirtualization}
+                virtualRowHeight={virtualRowHeight}
+                virtualOverscan={virtualOverscan}
+                enableAnimation={enableAnimation}
+                animationRowLimit={animationRowLimit}
+                detailRenderer={detailRenderer}
+                getRowCanExpand={getRowCanExpand}
+                getExpandedRows={getExpandedRows}
+                getRowLevel={getRowLevel}
+                defaultExpandedRowKeys={defaultExpandedRowKeys}
+                persistExpandedRowKeys={persistExpandedRowKeys}
+                pinnedColumnKeys={pinnedColumnKeys}
+                pinnedHeaderBgColor={pinnedHeaderBgColor}
+                pinnedHeaderTextColor={pinnedHeaderTextColor}
+                getRowStyle={getRowStyle}
+            >
+                <AirTable.Container className={styles.Container} height={height} onScrollElReady={onScrollElReady}>
+                    <AirTable.Header
+                        className={classNames(styles.Header, headerClassName)}
+                        headerCellClassName={classNames(styles.HeaderCell, headerCellClassName)}
                     />
-                ) : (
-                    <div className={classNames(styles.EmptyState, emptyStateClassName)}>
-                        {typeof emptyText === 'string' ? (
-                            <Text size="md" tone="muted">
-                                {emptyText}
-                            </Text>
-                        ) : (
-                            emptyText
-                        )}
-                    </div>
-                )}
 
-                <AirTable.Ghost className={classNames(styles.Ghost, ghostClassName)} />
-            </AirTable.Container>
-        </AirTable>
-    </div>
-);
+                    {data.length > 0 ? (
+                        <AirTable.Body
+                            className={classNames(styles.Body, bodyClassName)}
+                            rowClassName={classNames(styles.Row, rowClassName)}
+                            rowSelectedClassName={classNames(styles.RowSelected, rowSelectedClassName)}
+                            cellClassName={classNames(styles.Cell, cellClassName)}
+                            selectedCellClassName={classNames(styles.CellSelected, selectedCellClassName)}
+                            activeCellClassName={classNames(styles.CellActive, activeCellClassName)}
+                        />
+                    ) : (
+                        <div className={classNames(styles.EmptyState, emptyStateClassName)}>
+                            {typeof emptyText === 'string' ? (
+                                <Text size="md" tone="muted">
+                                    {emptyText}
+                                </Text>
+                            ) : (
+                                emptyText
+                            )}
+                        </div>
+                    )}
+
+                    <AirTable.Ghost className={classNames(styles.Ghost, ghostClassName)} />
+                </AirTable.Container>
+            </AirTable>
+        </div>
+    );
+};
 
 export default DataTable;
