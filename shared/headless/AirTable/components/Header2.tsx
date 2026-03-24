@@ -24,6 +24,38 @@ const isHeaderActionTarget = (target: EventTarget | null) => {
     return !!el.closest('[data-col-menu-btn],[data-col-sort-btn],[data-col-resize-handle]');
 };
 
+const resolveConfiguredColumnWidth = ({
+    width,
+    defaultColWidth,
+    containerWidth,
+}: {
+    width: number | string | undefined;
+    defaultColWidth: number;
+    containerWidth: number;
+}) => {
+    if (typeof width === 'number' && Number.isFinite(width)) {
+        return width;
+    }
+
+    if (typeof width === 'string') {
+        const normalized = width.trim();
+
+        if (normalized.endsWith('%')) {
+            const percent = parseFloat(normalized.slice(0, -1));
+            if (!Number.isNaN(percent) && containerWidth > 0) {
+                return (containerWidth * percent) / 100;
+            }
+        }
+
+        const parsed = parseFloat(normalized);
+        if (!Number.isNaN(parsed)) {
+            return parsed;
+        }
+    }
+
+    return defaultColWidth;
+};
+
 const SortIcon = ({
     direction,
     activeColor,
@@ -474,6 +506,7 @@ export const Header2 = <T,>({ className, headerCellClassName, resizeHandleClassN
         gridTemplateColumns,
         widthByKey,
         baseXByKey,
+        tableAreaRef,
         resizeRef,
         getXInGrid,
         getYInGrid,
@@ -550,26 +583,6 @@ export const Header2 = <T,>({ className, headerCellClassName, resizeHandleClassN
         x: number;
         y: number;
     }>({ open: false, colKey: null, x: 0, y: 0 });
-
-    const headerLabelRefMap = useRef<Record<string, HTMLDivElement | null>>({});
-    const [minWidthByKey, setMinWidthByKey] = useState<Record<string, number>>({});
-
-    useEffect(() => {
-        const next: Record<string, number> = {};
-
-        baseOrder.forEach((key) => {
-            const el = headerLabelRefMap.current[key];
-            if (!el) return;
-
-            const labelWidth = el.scrollWidth;
-            const extraPadding = 44;
-            const nextMin = Math.ceil(labelWidth + extraPadding);
-
-            next[key] = Math.max(MIN_COL_WIDTH, nextMin);
-        });
-
-        setMinWidthByKey(next);
-    }, [baseOrder]);
 
     const openFilter = useCallback((colKey: string, e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
@@ -667,10 +680,16 @@ export const Header2 = <T,>({ className, headerCellClassName, resizeHandleClassN
             e.preventDefault();
             e.stopPropagation();
 
-            const minW = minWidthByKey[colKey] ?? MIN_COL_WIDTH;
-            state.resizeColumn(colKey, minW);
+            const column = columnByKey.get(colKey);
+            const resetWidth = resolveConfiguredColumnWidth({
+                width: column?.width,
+                defaultColWidth,
+                containerWidth: tableAreaRef.current?.clientWidth ?? 0,
+            });
+
+            state.resizeColumn(colKey, Math.max(MIN_COL_WIDTH, resetWidth));
         },
-        [minWidthByKey, state]
+        [columnByKey, defaultColWidth, state, tableAreaRef]
     );
 
     const handleHeaderMouseDown = (colKey: string) => (e: React.MouseEvent<HTMLDivElement>) => {
@@ -890,9 +909,6 @@ export const Header2 = <T,>({ className, headerCellClassName, resizeHandleClassN
                                     }}
                                 >
                                     <div
-                                        ref={(el) => {
-                                            headerLabelRefMap.current[colKey] = el;
-                                        }}
                                         style={{
                                             flex: 1,
                                             minWidth: 0,
