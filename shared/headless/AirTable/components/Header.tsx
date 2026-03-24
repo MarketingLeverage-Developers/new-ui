@@ -24,6 +24,88 @@ const isHeaderActionTarget = (target: EventTarget | null) => {
     return !!el.closest('[data-col-menu-btn],[data-col-sort-btn],[data-col-resize-handle]');
 };
 
+const AIRTABLE_BODY_CELL_ATTR = 'data-airtable-body-cell';
+
+const escapeSelectorValue = (value: string) => {
+    if (typeof CSS !== 'undefined' && typeof CSS.escape === 'function') {
+        return CSS.escape(value);
+    }
+
+    return value.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+};
+
+const prepareCloneForMeasurement = (root: HTMLElement) => {
+    const elements = [root, ...Array.from(root.querySelectorAll<HTMLElement>('*'))];
+
+    elements.forEach((element, index) => {
+        element.removeAttribute('id');
+        element.style.transform = 'none';
+        element.style.maxWidth = 'none';
+
+        if (index === 0) {
+            element.style.position = 'static';
+            element.style.inset = 'auto';
+            element.style.left = 'auto';
+            element.style.right = 'auto';
+            element.style.top = 'auto';
+            element.style.bottom = 'auto';
+            element.style.width = 'max-content';
+            element.style.minWidth = '0';
+            element.style.flex = '0 0 auto';
+            return;
+        }
+
+        if (element.style.width === '100%' || element.style.width === '100.0%') {
+            element.style.width = 'max-content';
+        }
+
+        if (element.style.flex || element.style.flexGrow || element.style.flexShrink || element.style.flexBasis) {
+            element.style.flex = '0 0 auto';
+        }
+
+        if (element.style.minWidth) {
+            element.style.minWidth = '0';
+        }
+    });
+};
+
+const measureRenderedBodyColumnWidth = (tableAreaEl: HTMLDivElement | null, colKey: string) => {
+    if (!tableAreaEl || typeof document === 'undefined') return 0;
+
+    const selector = `[${AIRTABLE_BODY_CELL_ATTR}="true"][data-col-key="${escapeSelectorValue(colKey)}"]`;
+    const cells = Array.from(tableAreaEl.querySelectorAll<HTMLElement>(selector));
+    if (cells.length === 0) return 0;
+
+    const host = document.createElement('div');
+    host.style.position = 'fixed';
+    host.style.left = '-99999px';
+    host.style.top = '0';
+    host.style.visibility = 'hidden';
+    host.style.pointerEvents = 'none';
+    host.style.width = 'max-content';
+    host.style.height = 'auto';
+    host.style.overflow = 'visible';
+    host.style.zIndex = '-1';
+
+    document.body.appendChild(host);
+
+    try {
+        let maxWidth = 0;
+
+        cells.forEach((cell) => {
+            const clone = cell.cloneNode(true) as HTMLElement;
+            prepareCloneForMeasurement(clone);
+            host.appendChild(clone);
+            maxWidth = Math.max(maxWidth, Math.ceil(clone.getBoundingClientRect().width));
+            host.removeChild(clone);
+        });
+
+        return maxWidth;
+    } finally {
+        document.body.removeChild(host);
+    }
+};
+
 const SortIcon = ({
     direction,
     activeColor,
@@ -492,6 +574,7 @@ export const Header = <T,>({ className, headerCellClassName, resizeHandleClassNa
         setGhost,
         ghost,
         scrollRef,
+        tableAreaRef,
         pinnedColumnKeys,
         setPinnedColumnKeys,
         sortState,
@@ -588,11 +671,17 @@ export const Header = <T,>({ className, headerCellClassName, resizeHandleClassNa
 
         const rect = e.currentTarget.getBoundingClientRect();
 
-        setFilterPopup({
-            open: true,
-            colKey,
-            x: rect.left - 200,
-            y: rect.bottom + 8,
+        setFilterPopup((prev) => {
+            if (prev.open && prev.colKey === colKey) {
+                return { ...prev, open: false };
+            }
+
+            return {
+                open: true,
+                colKey,
+                x: rect.left - 200,
+                y: rect.bottom + 8,
+            };
         });
     }, []);
 
@@ -678,10 +767,12 @@ export const Header = <T,>({ className, headerCellClassName, resizeHandleClassNa
             e.preventDefault();
             e.stopPropagation();
 
-            const minW = minWidthByKey[colKey] ?? MIN_COL_WIDTH;
-            state.resizeColumn(colKey, minW);
+            const contentWidth = measureRenderedBodyColumnWidth(tableAreaRef.current, colKey);
+            const fallbackWidth = minWidthByKey[colKey] ?? MIN_COL_WIDTH;
+
+            state.resizeColumn(colKey, Math.max(MIN_COL_WIDTH, contentWidth || fallbackWidth));
         },
-        [minWidthByKey, state]
+        [minWidthByKey, state, tableAreaRef]
     );
 
     const handleHeaderMouseDown = (colKey: string) => (e: React.MouseEvent<HTMLDivElement>) => {
