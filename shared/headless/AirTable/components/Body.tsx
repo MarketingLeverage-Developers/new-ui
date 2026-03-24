@@ -84,6 +84,27 @@ type VirtualWindowState = {
     paddingBottom: number;
 };
 
+const CELL_INTERACTIVE_SELECTOR = [
+    'input',
+    'textarea',
+    'select',
+    'button',
+    'a[href]',
+    'label',
+    '[contenteditable="true"]',
+    '[contenteditable=""]',
+    '[data-cell-interactive="true"]',
+    '[data-airtable-interactive="true"]',
+    '[data-row-toggle="true"]',
+].join(', ');
+
+const isInteractiveCellTarget = (target: EventTarget | null) => {
+    const el = target as HTMLElement | null;
+    if (!el) return false;
+    if (el.isContentEditable) return true;
+    return Boolean(el.closest(CELL_INTERACTIVE_SELECTOR));
+};
+
 const TRANSITION_MS = 260;
 const APPEAR_DELAY_MS = 40;
 const INDENT_PX = 24;
@@ -331,10 +352,11 @@ const BodyRowInner = <T,>({
                             onMouseDown={(e) => {
                                 if (draggingKey) return;
                                 if (e.button !== 0) return;
-                                e.preventDefault();
 
                                 const target = e.target as HTMLElement;
-                                if (target.closest('[data-row-toggle="true"]')) return;
+                                if (isInteractiveCellTarget(target)) return;
+
+                                e.preventDefault();
 
                                 beginSelect(actualRi, ci);
                             }}
@@ -344,6 +366,9 @@ const BodyRowInner = <T,>({
                             }}
                             onContextMenu={(e) => {
                                 if (draggingKey) return;
+
+                                const target = e.target as HTMLElement;
+                                if (isInteractiveCellTarget(target)) return;
 
                                 e.preventDefault();
                                 e.stopPropagation();
