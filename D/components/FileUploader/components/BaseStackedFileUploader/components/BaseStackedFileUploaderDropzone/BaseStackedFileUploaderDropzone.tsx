@@ -17,13 +17,18 @@ export type BaseStackedFileUploaderDropzoneProps = Omit<HTMLAttributes<HTMLDivEl
 const BaseStackedFileUploaderDropzone: React.FC<BaseStackedFileUploaderDropzoneProps> = (props) => {
     const { guideText, buttonText = '파일 선택', className, ...rest } = props;
 
-    const { type, disabled, inputId, inputRef, accept, multiple, addFiles, openFileDialog } = useFileUploader();
+    const { type, disabled, inputId, inputRef, accept, multiple, addFiles, openFileDialog, maxCount } =
+        useFileUploader();
 
     const [isDragging, setIsDragging] = useState(false);
 
     const resolvedGuideText =
         guideText ??
-        (type === 'image' ? '5개 이하의 이미지를 끌어오거나 (jpg, png, mp4)' : '500MB 이하의 파일을 끌어오거나 (zip)');
+        (type === 'image'
+            ? `${maxCount}개 이하의 이미지를 끌어오거나 (jpg, png, mp4)`
+            : maxCount === 1
+              ? '500MB 이하의 파일 1개를 끌어오거나 (zip)'
+              : '500MB 이하의 파일을 끌어오거나 (zip)');
 
     const handleInputChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
         const list = e.target.files;

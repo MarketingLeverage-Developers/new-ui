@@ -196,7 +196,8 @@ const FileUploaderRoot: React.FC<FileUploaderProps> = (props) => {
 
     const resolvedMaxCount = useMemo(() => {
         if (variant === 'base-alter') return 1;
-        return maxCount ?? (type === 'image' ? 5 : 5);
+        if (maxCount !== undefined) return maxCount;
+        return type === 'image' ? 5 : 5;
     }, [maxCount, type, variant]);
 
     const resolvedMaxFileSizeMB = useMemo(() => maxFileSizeMB ?? (type === 'file' ? 500 : 150), [maxFileSizeMB, type]);
@@ -251,6 +252,12 @@ const FileUploaderRoot: React.FC<FileUploaderProps> = (props) => {
         const filtered = picked.filter((f) => !isOverSize(f));
         if (filtered.length === 0) return;
 
+        const currentCount = serverItems.length;
+        const remainingCount = Math.max((maxCount ?? 0) - currentCount, 0);
+        const uploadable = maxCount !== undefined ? filtered.slice(0, remainingCount) : filtered;
+
+        if (uploadable.length === 0) return;
+
         if (uploader) {
             try {
                 setIsUploading(true);
@@ -258,14 +265,17 @@ const FileUploaderRoot: React.FC<FileUploaderProps> = (props) => {
                 if (type === 'image') {
                     const uploaded = await (uploader as FileUploaderUploader<'image'>)({
                         type: 'image',
-                        files: filtered,
+                        files: uploadable,
                     });
                     const next = mergeAndClamp(serverItems as ServerImage[], uploaded as ServerImage[]);
                     commit(next);
                     return;
                 }
 
-                const uploaded = await (uploader as FileUploaderUploader<'file'>)({ type: 'file', files: filtered });
+                const uploaded = await (uploader as FileUploaderUploader<'file'>)({
+                    type: 'file',
+                    files: uploadable,
+                });
                 const next = mergeAndClamp(serverItems as ServerFile[], uploaded as ServerFile[]);
                 commit(next);
                 return;
@@ -276,14 +286,14 @@ const FileUploaderRoot: React.FC<FileUploaderProps> = (props) => {
 
         if (type === 'image') {
             const current = (serverItems as ServerImage[]) ?? [];
-            const mapped = filtered.map(makeServerImageFromLocalFile);
+            const mapped = uploadable.map(makeServerImageFromLocalFile);
             const next = mergeAndClamp(current, mapped);
             commit(next);
             return;
         }
 
         const current = (serverItems as ServerFile[]) ?? [];
-        const mapped = filtered.map(makeServerFileFromLocalFile);
+        const mapped = uploadable.map(makeServerFileFromLocalFile);
         const next = mergeAndClamp(current, mapped);
         commit(next);
     };
