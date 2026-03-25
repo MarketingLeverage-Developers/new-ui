@@ -1,0 +1,93 @@
+.Root {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.Summary {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 16px;
+    border-radius: 14px;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    transition: background-color 0.16s ease;
+}
+
+.Summary[data-interactive='true'] {
+    cursor: pointer;
+}
+
+.Summary[data-interactive='true']:hover {
+    background: var(--granter-gray-50);
+}
+
+.Summary[data-interactive='true']:focus-visible {
+    background: var(--granter-gray-50);
+    outline: none;
+}
+
+.SummaryMain {
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    gap: 12px;
+}
+
+.IconWrap {
+    display: inline-flex;
+    width: 40px;
+    height: 40px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    flex-shrink: 0;
+}
+
+.IconWrap[data-tone='neutral'] {
+    background: var(--granter-gray-200);
+    color: var(--granter-gray-700);
+}
+
+.IconWrap[data-tone='success'] {
+    background: #75df74;
+    color: #f8fbff;
+}
+
+.Copy {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.Title {
+    color: var(--granter-gray-800);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.Value {
+    color: var(--granter-gray-900);
+    font-size: 16px;
+    line-height: 22px;
+    font-variant-numeric: tabular-nums;
+}
+
+.Accessory {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--granter-gray-400);
+    flex-shrink: 0;
+}

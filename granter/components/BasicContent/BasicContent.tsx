@@ -26,16 +26,25 @@ export type BasicContentCloseButtonProps = Omit<React.ButtonHTMLAttributes<HTMLB
 export type BasicContentBodyProps = {
     children: React.ReactNode;
     className?: string;
+    style?: React.CSSProperties;
 };
 
 export type BasicContentHeroProps = {
     children: React.ReactNode;
     className?: string;
+    style?: React.CSSProperties;
 };
 
 export type BasicContentHeroMetaProps = {
     children: React.ReactNode;
     className?: string;
+    style?: React.CSSProperties;
+};
+
+export type BasicContentHeroFigureProps = {
+    children: React.ReactNode;
+    className?: string;
+    style?: React.CSSProperties;
 };
 
 export type BasicContentHeroIconProps = {
@@ -44,9 +53,28 @@ export type BasicContentHeroIconProps = {
     className?: string;
 };
 
+export type BasicContentHeroBodyProps = {
+    children: React.ReactNode;
+    className?: string;
+    style?: React.CSSProperties;
+};
+
+export type BasicContentHeroTitleRowProps = {
+    children: React.ReactNode;
+    className?: string;
+    style?: React.CSSProperties;
+};
+
 export type BasicContentHeroTitleProps = {
     children: React.ReactNode;
     className?: string;
+    style?: React.CSSProperties;
+};
+
+export type BasicContentHeroValueProps = {
+    children: React.ReactNode;
+    className?: string;
+    style?: React.CSSProperties;
 };
 
 export type BasicContentHeroSuffixProps = {
@@ -185,24 +213,56 @@ const BasicContentCloseButton = ({
     </button>
 );
 
-const BasicContentBody = ({ children, className }: BasicContentBodyProps) => (
-    <div className={classNames(styles.Body, className)}>{children}</div>
+const BasicContentBody = ({ children, className, style }: BasicContentBodyProps) => (
+    <div className={classNames(styles.Body, className)} style={style}>
+        {children}
+    </div>
 );
 
-const BasicContentHero = ({ children, className }: BasicContentHeroProps) => (
-    <div className={classNames(styles.Hero, className)}>{children}</div>
+const BasicContentHero = ({ children, className, style }: BasicContentHeroProps) => (
+    <div className={classNames(styles.Hero, className)} style={style}>
+        {children}
+    </div>
 );
 
-const BasicContentHeroMeta = ({ children, className }: BasicContentHeroMetaProps) => (
-    <span className={classNames(styles.HeroMeta, className)}>{children}</span>
+const BasicContentHeroMeta = ({ children, className, style }: BasicContentHeroMetaProps) => (
+    <div className={classNames(styles.HeroMeta, className)} style={style}>
+        {children}
+    </div>
+);
+
+const BasicContentHeroFigure = ({ children, className, style }: BasicContentHeroFigureProps) => (
+    <div className={classNames(styles.HeroFigure, className)} style={style}>
+        {children}
+    </div>
 );
 
 const BasicContentHeroIcon = ({ src, alt = '', className }: BasicContentHeroIconProps) => (
     <img src={src} alt={alt} className={classNames(styles.HeroIcon, className)} />
 );
 
-const BasicContentHeroTitle = ({ children, className }: BasicContentHeroTitleProps) => (
-    <h3 className={classNames(styles.HeroTitle, className)}>{children}</h3>
+const BasicContentHeroBody = ({ children, className, style }: BasicContentHeroBodyProps) => (
+    <div className={classNames(styles.HeroBody, className)} style={style}>
+        {children}
+    </div>
+);
+
+const BasicContentHeroTitleRow = ({ children, className, style }: BasicContentHeroTitleRowProps) => (
+    <div className={classNames(styles.HeroTitleRow, className)} style={style}>
+        {children}
+    </div>
+);
+
+const BasicContentHeroTitle = ({ children, className, style }: BasicContentHeroTitleProps) => (
+    <h3 className={classNames(styles.HeroTitle, className)} style={style}>
+        {children}
+    </h3>
+);
+
+const BasicContentHeroValue = ({ children, className, style }: BasicContentHeroValueProps) => (
+    <strong className={classNames(styles.HeroValue, className)} style={style}>
+        {children}
+    </strong>
 );
 
 const BasicContentHeroSuffix = ({ children, className }: BasicContentHeroSuffixProps) => (
@@ -398,8 +458,12 @@ type BasicContentComponent = ((props: BasicContentProps) => React.ReactElement) 
     Body: typeof BasicContentBody;
     Hero: typeof BasicContentHero;
     HeroMeta: typeof BasicContentHeroMeta;
+    HeroFigure: typeof BasicContentHeroFigure;
     HeroIcon: typeof BasicContentHeroIcon;
+    HeroBody: typeof BasicContentHeroBody;
+    HeroTitleRow: typeof BasicContentHeroTitleRow;
     HeroTitle: typeof BasicContentHeroTitle;
+    HeroValue: typeof BasicContentHeroValue;
     HeroSuffix: typeof BasicContentHeroSuffix;
     Alert: typeof BasicContentAlert;
     AlertMain: typeof BasicContentAlertMain;
@@ -432,8 +496,12 @@ BasicContent.CloseButton = BasicContentCloseButton;
 BasicContent.Body = BasicContentBody;
 BasicContent.Hero = BasicContentHero;
 BasicContent.HeroMeta = BasicContentHeroMeta;
+BasicContent.HeroFigure = BasicContentHeroFigure;
 BasicContent.HeroIcon = BasicContentHeroIcon;
+BasicContent.HeroBody = BasicContentHeroBody;
+BasicContent.HeroTitleRow = BasicContentHeroTitleRow;
 BasicContent.HeroTitle = BasicContentHeroTitle;
+BasicContent.HeroValue = BasicContentHeroValue;
 BasicContent.HeroSuffix = BasicContentHeroSuffix;
 BasicContent.Alert = BasicContentAlert;
 BasicContent.AlertMain = BasicContentAlertMain;

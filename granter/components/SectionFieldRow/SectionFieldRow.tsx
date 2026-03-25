@@ -12,6 +12,8 @@ export type SectionFieldRowProps = Omit<React.HTMLAttributes<HTMLDivElement>, 'c
     label: React.ReactNode;
     value?: React.ReactNode;
     children?: React.ReactNode;
+    required?: boolean;
+    error?: React.ReactNode;
     labelWidth?: number | string;
     align?: Align;
     divider?: boolean;
@@ -29,6 +31,8 @@ const SectionFieldRow = ({
     label,
     value,
     children,
+    required,
+    error,
     labelWidth,
     align = 'center',
     divider = true,
@@ -52,9 +56,21 @@ const SectionFieldRow = ({
             data-divider={divider ? 'true' : 'false'}
             {...props}
         >
-            <div className={classNames(styles.Label, labelClassName)}>{label}</div>
+            <div className={classNames(styles.Label, labelClassName)}>
+                <span className={styles.LabelInner}>
+                    <span className={styles.LabelText}>{label}</span>
+                    {required ? <span className={styles.RequiredMark}>*</span> : null}
+                </span>
+            </div>
             <div className={classNames(styles.Content, contentClassName)}>
-                {children ?? (value !== undefined ? <div className={classNames(styles.Value, valueClassName)}>{value}</div> : null)}
+                {children ? (
+                    <div className={styles.FieldStack}>
+                        {children}
+                        {error ? <div className={styles.Error}>{error}</div> : null}
+                    </div>
+                ) : value !== undefined ? (
+                    <div className={classNames(styles.Value, valueClassName)}>{value}</div>
+                ) : null}
             </div>
         </div>
     );

@@ -6,6 +6,7 @@ export type ButtonVariant =
     | 'black'
     | 'white'
     | 'gray'
+    | 'soft'
     | 'light'
     | 'outline'
     | 'icon'

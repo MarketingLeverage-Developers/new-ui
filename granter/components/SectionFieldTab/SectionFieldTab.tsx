@@ -87,8 +87,8 @@ const SectionFieldTab = (<T extends string = string>({
                 role="tablist"
                 className={classNames(styles.Root, className)}
                 style={cssVariables}
-                data-full={full ? 'true' : 'false'}
-                data-wrap={wrap ? 'true' : 'false'}
+                // data-full={full ? 'true' : 'false'}
+                // data-wrap={wrap ? 'true' : 'false'}
             >
                 {children}
             </div>

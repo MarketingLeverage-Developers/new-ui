@@ -1,9 +1,9 @@
 .Root {
     display: grid;
     grid-template-columns: var(--granter-section-field-label-width, 160px) minmax(0, 1fr);
-    gap: 16px;
+    // gap: 16px;
     align-items: center;
-    padding: 14px 0;
+    padding: 20px 16px;
 }
 
 .Root[data-align='start'] {
@@ -16,10 +16,27 @@
 
 .Label {
     min-width: 0;
-    color: #111827;
+    color: var(--granter-gray-500);
     font-size: 16px;
     font-weight: 400;
     line-height: 18px;
+}
+
+.LabelInner {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    min-width: 0;
+}
+
+.LabelText {
+    min-width: 0;
+}
+
+.RequiredMark {
+    color: var(--granter-red-500);
+    font-weight: 700;
+    line-height: 1;
 }
 
 .Content {
@@ -27,12 +44,25 @@
     width: 100%;
 }
 
+.FieldStack {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    gap: 6px;
+}
+
 .Value {
     color: var(--granter-gray-900);
     font-size: 16px;
     line-height: 24px;
-    font-weight: 500;
+    font-weight: 400;
     word-break: break-word;
+}
+
+.Error {
+    color: var(--granter-red-500);
+    font-size: 12px;
+    line-height: 1.4;
 }
 
 @media (max-width: 960px) {

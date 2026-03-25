@@ -1,15 +1,15 @@
 .Input {
     width: 100%;
     min-width: 0;
-    height: 46px;
+    height: 40px;
     padding: 0 14px;
-    border: 1px solid var(--granter-gray-200);
+    border: 1px solid var(--granter-gray-300);
     border-radius: 10px;
     background-color: var(--granter-white);
     color: var(--granter-gray-900);
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 500;
-    line-height: 24px;
+    line-height: 20px;
     outline: none;
     transition:
         border-color 0.15s ease,
@@ -23,7 +23,7 @@
 }
 
 .Input:hover:not(:disabled) {
-    border-color: var(--granter-gray-300);
+    border-color: var(--granter-gray-400);
 }
 
 .Input:focus {

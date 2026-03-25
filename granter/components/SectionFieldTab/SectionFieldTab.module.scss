@@ -3,11 +3,17 @@
     align-items: center;
     gap: 4px;
     width: 100%;
-    min-height: 46px;
+    min-height: 40px;
     padding: 3px;
-    border: 1px solid var(--granter-gray-200);
     border-radius: 10px;
-    background-color: var(--granter-gray-50);
+    background-color: var(--granter-gray-100);
+}
+
+.Root[data-wrap='false'] {
+    box-sizing: border-box;
+    height: 40px;
+    padding: 2px;
+    border: 1px solid var(--granter-gray-300);
 }
 
 .Root[data-full='false'] {
@@ -19,6 +25,7 @@
     grid-template-columns: repeat(auto-fit, minmax(var(--granter-section-field-tab-min-item-width, 112px), 1fr));
     align-items: stretch;
     gap: 6px;
+    border: 1px solid var(--granter-gray-300);
 }
 
 .Item {
@@ -27,15 +34,15 @@
     justify-content: center;
     flex: 1 1 0;
     min-width: 0;
-    min-height: 38px;
+    min-height: 34px;
     padding: 0 12px;
-    border: 0;
+    border: 1px solid transparent;
     border-radius: 8px;
     background-color: transparent;
     color: var(--granter-gray-500);
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 500;
-    line-height: 24px;
+    line-height: 20px;
     cursor: pointer;
     transition:
         background-color 0.16s ease,
@@ -45,6 +52,10 @@
 
 .Root[data-full='false'] .Item {
     flex: 0 0 auto;
+}
+
+.Root[data-wrap='false'] .Item {
+    min-height: 34px;
 }
 
 .Root[data-wrap='true'] .Item {
@@ -61,6 +72,10 @@
     background-color: var(--granter-white);
     box-shadow: 0 1px 2px rgb(17 24 39 / 8%);
     color: var(--granter-gray-900);
+}
+
+.Root[data-wrap='false'] .Item[data-active='true'] {
+    border-color: var(--granter-gray-200);
 }
 
 .Item:hover:not(:disabled):not([data-active='true']) {

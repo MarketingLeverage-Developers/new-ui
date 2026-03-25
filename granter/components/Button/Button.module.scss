@@ -101,6 +101,16 @@
     background-color: var(--granter-gray-300);
 }
 
+.Variant-soft {
+    border-radius: 10px;
+    background-color: #f2f4f7;
+    color: var(--granter-gray-800, var(--Gray1));
+}
+
+.Variant-soft:hover:not(:disabled) {
+    background-color: #e9edf3;
+}
+
 .Variant-light {
     border: 1px solid var(--granter-gray-300);
     background-color: var(--granter-gray-100);

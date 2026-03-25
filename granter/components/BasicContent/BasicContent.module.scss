@@ -50,7 +50,7 @@
 .Body {
     flex: 1;
     min-height: 0;
-    padding: 18px 28px 16px;
+    padding: 18px 24px 16px;
     overflow-y: auto;
 }
 
@@ -69,6 +69,19 @@
     min-width: 0;
 }
 
+.HeroFigure {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    height: 64px;
+    border-radius: 999px;
+    background: var(--granter-gray-100);
+    color: var(--granter-gray-700);
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
 .HeroIcon {
     width: 40px;
     height: 40px;
@@ -77,17 +90,39 @@
     flex-shrink: 0;
 }
 
+.HeroBody {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.HeroTitleRow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    flex-wrap: wrap;
+}
+
 .HeroTitle {
     margin: 0;
     color: var(--granter-gray-700);
-    font-size: 20px;
-    font-weight: 700;
+    font-size: 18px;
+    font-weight: 400;
     line-height: 30px;
-    letter-spacing: -0.02em;
+   
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+.HeroValue {
+    color: var(--granter-gray-900);
+    font-size: 30px;
+    font-weight: 700;
+}
+   
 
 .HeroSuffix {
     display: inline-flex;
