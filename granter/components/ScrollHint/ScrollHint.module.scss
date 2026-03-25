@@ -1,0 +1,52 @@
+.Root {
+    pointer-events: none;
+    position: absolute;
+    left: 50%;
+    bottom: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 12px;
+    border-radius: 999px;
+    background: rgb(17 24 39 / 78%);
+    color: #fff;
+    box-shadow: 0 10px 24px rgb(15 23 42 / 18%);
+    backdrop-filter: blur(10px);
+    transform: translateX(-50%);
+}
+
+.Text {
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 16px;
+    white-space: nowrap;
+}
+
+.Icon {
+    flex-shrink: 0;
+    animation: scroll-hint-bounce 1.2s ease-in-out infinite;
+}
+
+@media (max-width: 680px) {
+    .Root {
+        bottom: 8px;
+        padding: 6px 10px;
+    }
+
+    .Text {
+        font-size: 11px;
+    }
+}
+
+@keyframes scroll-hint-bounce {
+    0%,
+    100% {
+        transform: translateY(0);
+        opacity: 0.84;
+    }
+
+    50% {
+        transform: translateY(3px);
+        opacity: 1;
+    }
+}

@@ -21,6 +21,11 @@ export { default as SectionFieldCurrencyInput } from './components/SectionFieldC
 export { default as SectionFieldTextArea } from './components/SectionFieldTextArea/SectionFieldTextArea';
 export { default as SectionFieldTab } from './components/SectionFieldTab/SectionFieldTab';
 export { default as SectionFieldSelect } from './components/SectionFieldSelect/SectionFieldSelect';
+export {
+    default as CommaSeparatedValueField,
+} from './components/CommaSeparatedValueField/CommaSeparatedValueField';
+export { parseCommaSeparatedValues, joinCommaSeparatedValues } from './components/CommaSeparatedValueField/utils';
+export { default as ScrollHint } from './components/ScrollHint/ScrollHint';
 export { default as KakaoTemplatePreviewCard } from './components/KakaoTemplatePreviewCard/KakaoTemplatePreviewCard';
 export { default as KakaoPreviewCard } from './components/KakaoTemplatePreviewCard/KakaoTemplatePreviewCard';
 export { default as TimeSlotSelector } from './components/TimeSlotSelector/TimeSlotSelector';
@@ -150,6 +155,8 @@ export type { SectionFieldCurrencyInputProps } from './components/SectionFieldCu
 export type { SectionFieldTextAreaProps } from './components/SectionFieldTextArea/SectionFieldTextArea';
 export type { SectionFieldTabProps, SectionFieldTabItemProps } from './components/SectionFieldTab/SectionFieldTab';
 export type { SectionFieldSelectProps, SectionFieldSelectOption } from './components/SectionFieldSelect/SectionFieldSelect';
+export type { CommaSeparatedValueFieldProps } from './components/CommaSeparatedValueField/CommaSeparatedValueField';
+export type { ScrollHintProps } from './components/ScrollHint/ScrollHint';
 export type { KakaoTemplatePreviewCardProps } from './components/KakaoTemplatePreviewCard/KakaoTemplatePreviewCard';
 export type {
     KakaoPreviewCardBubbleBodyProps,

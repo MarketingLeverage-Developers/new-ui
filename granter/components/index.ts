@@ -125,6 +125,14 @@ export type { SectionFieldTabProps, SectionFieldTabItemProps } from './SectionFi
 
 export { default as SectionFieldSelect } from './SectionFieldSelect/SectionFieldSelect';
 export type { SectionFieldSelectProps, SectionFieldSelectOption } from './SectionFieldSelect/SectionFieldSelect';
+export {
+    default as CommaSeparatedValueField,
+} from './CommaSeparatedValueField/CommaSeparatedValueField';
+export type { CommaSeparatedValueFieldProps } from './CommaSeparatedValueField/CommaSeparatedValueField';
+export { parseCommaSeparatedValues, joinCommaSeparatedValues } from './CommaSeparatedValueField/utils';
+
+export { default as ScrollHint } from './ScrollHint/ScrollHint';
+export type { ScrollHintProps } from './ScrollHint/ScrollHint';
 
 export { default as KakaoTemplatePreviewCard } from './KakaoTemplatePreviewCard/KakaoTemplatePreviewCard';
 export type { KakaoTemplatePreviewCardProps } from './KakaoTemplatePreviewCard/KakaoTemplatePreviewCard';
