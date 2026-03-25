@@ -75,16 +75,16 @@
 }
 
 @mixin dark-vars {
-    /* Grayscale (Dark) */
-    --White1: #{$Black1};
-    --Black1: #{$White1};
-    --Gray1: #{$Gray7};
-    --Gray2: #{$Gray6};
-    --Gray3: #{$Gray5};
-    --Gray4: #{$Gray4};
-    --Gray5: #{$Gray3};
-    --Gray6: #{$Gray2};
-    --Gray7: #{$Gray1};
+    /* Grayscale (Dark) - neutral charcoal palette */
+    --White1: #232322;
+    --Black1: #f1ece6;
+    --Gray1: #e4ddd5;
+    --Gray2: #c8beb5;
+    --Gray3: #948a82;
+    --Gray4: #6d6560;
+    --Gray5: #4c4641;
+    --Gray6: #383430;
+    --Gray7: #2a2a29;
 
     /* Brand / Accent — 동일 유지 */
     --Blue1: #{$Blue1};
@@ -114,7 +114,7 @@
     --Gradient2: #{$Gradient2};
 
     /* Backdrop (Dark Mode) */
-    --BackdropColor: rgba(255, 255, 255, 0.3);
+    --BackdropColor: rgba(0, 0, 0, 0.56);
     --BackdropBlur: 8px;
     --BackdropWebkitBlur: 8px;
 
