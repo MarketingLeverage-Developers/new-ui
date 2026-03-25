@@ -56,7 +56,8 @@
 .Cell {
     display: flex;
     align-items: center;
-    min-height: 69px;
+    // min-height: 69px;
+    min-height: 52px;
     padding: 0px 8px;
     border-right: 0;
     color: var(--granter-gray-900);
