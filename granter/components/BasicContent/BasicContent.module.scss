@@ -11,9 +11,9 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    min-height: 68px;
-    padding: 0 28px;
-    border-bottom: 1px solid var(--granter-gray-200);
+    
+    padding: 16px 24px;
+    // border-bottom: 1px solid var(--granter-gray-200);
     background-color: var(--granter-white);
 }
 
@@ -24,8 +24,8 @@
 .Title {
     margin: 0;
     color: var(--granter-gray-900);
-    font-size: 21px;
-    font-weight: 700;
+    font-size: 18px;
+    font-weight: 600;
     line-height: 30px;
     letter-spacing: -0.02em;
 }
