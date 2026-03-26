@@ -1,0 +1,53 @@
+.Root {
+    width: 100%;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    background-color: var(--granter-white);
+    padding: 14px 16px;
+}
+
+.Root[data-disabled='true'] {
+    opacity: 0.6;
+}
+
+.Main {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.Copy {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.Title {
+    color: var(--granter-gray-900);
+    font-size: 15px;
+    line-height: 20px;
+}
+
+.Description {
+    margin: 0;
+    color: var(--granter-gray-500);
+    font-size: 12px;
+    line-height: 18px;
+    word-break: keep-all;
+}
+
+.Switch.Switch[data-checked='true'] {
+    background-color: #4a90e2;
+}
+
+@media (max-width: 960px) {
+    .Root {
+        padding: 12px 14px;
+    }
+
+    .Main {
+        gap: 12px;
+    }
+}
