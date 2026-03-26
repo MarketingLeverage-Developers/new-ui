@@ -147,6 +147,11 @@ export type { SectionFieldRowTabProps, SectionFieldRowTabItemProps } from './Sec
 
 export { default as SectionFieldSelect } from './SectionFieldSelect/SectionFieldSelect';
 export type { SectionFieldSelectProps, SectionFieldSelectOption } from './SectionFieldSelect/SectionFieldSelect';
+export { default as SectionFieldMemberSelect } from './SectionFieldMemberSelect/SectionFieldMemberSelect';
+export type {
+    SectionFieldMemberSelectProps,
+    SectionFieldMemberSelectOption,
+} from './SectionFieldMemberSelect/SectionFieldMemberSelect';
 export { default as SectionFieldMultiValueInput } from './SectionFieldMultiValueInput/SectionFieldMultiValueInput';
 export type { SectionFieldMultiValueInputProps } from './SectionFieldMultiValueInput/SectionFieldMultiValueInput';
 export { parseCommaSeparatedValues, joinCommaSeparatedValues } from './SectionFieldMultiValueInput/utils';

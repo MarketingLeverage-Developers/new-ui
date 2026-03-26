@@ -27,6 +27,7 @@ export { default as SectionFieldTextArea } from './components/SectionFieldTextAr
 export { default as SectionFieldTab } from './components/SectionFieldTab/SectionFieldTab';
 export { default as SectionFieldRowTab } from './components/SectionFieldRowTab/SectionFieldRowTab';
 export { default as SectionFieldSelect } from './components/SectionFieldSelect/SectionFieldSelect';
+export { default as SectionFieldMemberSelect } from './components/SectionFieldMemberSelect/SectionFieldMemberSelect';
 export { default as ButtonTabGroup } from './components/ButtonTabGroup/ButtonTabGroup';
 export { default as SectionFieldMultiValueInput } from './components/SectionFieldMultiValueInput/SectionFieldMultiValueInput';
 export { parseCommaSeparatedValues, joinCommaSeparatedValues } from './components/SectionFieldMultiValueInput/utils';
@@ -191,6 +192,10 @@ export type {
     SectionFieldSelectProps,
     SectionFieldSelectOption,
 } from './components/SectionFieldSelect/SectionFieldSelect';
+export type {
+    SectionFieldMemberSelectProps,
+    SectionFieldMemberSelectOption,
+} from './components/SectionFieldMemberSelect/SectionFieldMemberSelect';
 export type { ButtonTabGroupProps, ButtonTabGroupItem } from './components/ButtonTabGroup/ButtonTabGroup';
 export type { SectionFieldMultiValueInputProps } from './components/SectionFieldMultiValueInput/SectionFieldMultiValueInput';
 export type { ScrollHintProps } from './components/ScrollHint/ScrollHint';
