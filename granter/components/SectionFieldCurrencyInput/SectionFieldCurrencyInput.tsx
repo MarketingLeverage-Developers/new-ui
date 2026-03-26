@@ -1,12 +1,13 @@
 import React from 'react';
-import SectionFieldInput, { type SectionFieldInputProps } from '../SectionFieldInput/SectionFieldInput';
+import SectionFieldSuffixInput, { type SectionFieldSuffixInputProps } from '../SectionFieldSuffixInput/SectionFieldSuffixInput';
 
 export type SectionFieldCurrencyInputProps = Omit<
-    SectionFieldInputProps,
-    'defaultValue' | 'inputMode' | 'onChange' | 'type' | 'value'
+    SectionFieldSuffixInputProps,
+    'defaultValue' | 'inputMode' | 'onChange' | 'type' | 'value' | 'suffix'
 > & {
     value?: number | null;
     onValueChange?: (value: number | undefined) => void;
+    suffix?: React.ReactNode;
 };
 
 const toDisplayValue = (value?: number | null) => {
@@ -20,12 +21,14 @@ const toNumericValue = (rawValue: string) => {
 };
 
 const SectionFieldCurrencyInput = React.forwardRef<HTMLInputElement, SectionFieldCurrencyInputProps>(
-    ({ value, onValueChange, ...props }, ref) => (
-        <SectionFieldInput
+    ({ value, onValueChange, suffix = '원', textAlign = 'right', ...props }, ref) => (
+        <SectionFieldSuffixInput
             ref={ref}
             {...props}
+            suffix={suffix}
             type="text"
             inputMode="numeric"
+            textAlign={textAlign}
             value={toDisplayValue(value)}
             onChange={(event) => onValueChange?.(toNumericValue(event.target.value))}
         />
