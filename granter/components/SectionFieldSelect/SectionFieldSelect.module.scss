@@ -4,6 +4,46 @@
     min-width: 0;
 }
 
+.Root[data-size='sm'] .Trigger {
+    height: 34px;
+    padding: 0 12px;
+    border-radius: 9px;
+}
+
+.Root[data-size='sm'] .Label {
+    font-size: 13px;
+    line-height: 18px;
+}
+
+.Root[data-variant='ghost'] .Trigger {
+    border: 0;
+    background-color: transparent;
+    box-shadow: none;
+}
+
+.Root[data-variant='ghost'] .Trigger:hover:not(:disabled) {
+    border-color: transparent;
+    background-color: var(--granter-gray-50);
+}
+
+.Root[data-variant='ghost'] .Trigger:focus-visible {
+    border-color: transparent;
+    background-color: var(--granter-gray-50);
+    box-shadow: none;
+}
+
+.Root[data-variant='ghost'] .Trigger:disabled {
+    background-color: transparent;
+}
+
+.Root[data-variant='ghost'] .Label {
+    color: var(--granter-gray-700);
+}
+
+.Root[data-variant='ghost'] .Label[data-placeholder='true'] {
+    color: var(--granter-gray-500);
+}
+
 .TriggerWrap {
     display: flex;
     width: 100%;
@@ -64,7 +104,6 @@
     color: var(--granter-gray-400);
     font-weight: 400;
 }
-
 
 .Icon {
     display: inline-flex;

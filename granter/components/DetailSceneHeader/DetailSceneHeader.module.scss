@@ -7,17 +7,14 @@
 .Summary {
     display: flex;
     width: 100%;
+    min-width: 0;
     align-items: center;
-    justify-content: space-between;
     gap: 12px;
     padding: 14px 16px;
     border-radius: 14px;
-    border: 0;
     background: transparent;
     color: inherit;
-    font: inherit;
     text-align: left;
-    transition: background-color 0.16s ease;
 }
 
 .Summary[data-interactive='true'] {
@@ -29,13 +26,14 @@
 }
 
 .Summary[data-interactive='true']:focus-visible {
-    background: var(--granter-gray-50);
     outline: none;
+    background: var(--granter-gray-50);
 }
 
 .SummaryMain {
     display: flex;
     min-width: 0;
+    flex: 1 1 auto;
     align-items: center;
     gap: 12px;
 }
@@ -90,4 +88,62 @@
     justify-content: center;
     color: var(--granter-gray-400);
     flex-shrink: 0;
+}
+
+.MiddleDivider {
+    width: 1px;
+    height: 28px;
+    flex-shrink: 0;
+    background: #edf2f7;
+}
+
+.MiddleContent {
+    display: flex;
+    width: 220px;
+    min-width: 180px;
+    max-width: 220px;
+    flex-shrink: 0;
+    align-items: center;
+}
+
+.AccessoryButton {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: 0;
+    border-radius: 999px;
+    background: transparent;
+    cursor: pointer;
+    transition:
+        background-color 0.16s ease,
+        color 0.16s ease;
+}
+
+.AccessoryButton:hover {
+    background: var(--granter-gray-50);
+    color: var(--granter-gray-500);
+}
+
+.AccessoryButton:focus-visible {
+    outline: none;
+    background: var(--granter-gray-50);
+    color: var(--granter-gray-500);
+}
+
+@media (max-width: 960px) {
+    .Summary {
+        flex-wrap: wrap;
+        row-gap: 10px;
+    }
+
+    .MiddleDivider {
+        display: none;
+    }
+
+    .MiddleContent {
+        order: 3;
+        width: 100%;
+        min-width: 0;
+        max-width: none;
+    }
 }

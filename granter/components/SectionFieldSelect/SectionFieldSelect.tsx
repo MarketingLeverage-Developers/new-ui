@@ -24,6 +24,8 @@ export type SectionFieldSelectProps<T extends string = string> = {
     menuClassName?: string;
     menuMaxHeight?: number | string;
     disabled?: boolean;
+    size?: 'md' | 'sm';
+    variant?: 'default' | 'ghost';
     searchable?: boolean;
     searchPlaceholder?: string;
     searchEmptyText?: React.ReactNode;
@@ -48,10 +50,7 @@ type SectionFieldSelectItemProps<T extends string = string> = {
     disabled?: boolean;
 };
 
-const SectionFieldSelectItem = <T extends string>({
-    option,
-    disabled = false,
-}: SectionFieldSelectItemProps<T>) => {
+const SectionFieldSelectItem = <T extends string>({ option, disabled = false }: SectionFieldSelectItemProps<T>) => {
     const { isActive, changeSelectValue } = useSelect();
     const { close } = useDropdown();
     const isDisabled = Boolean(disabled || option.disabled);
@@ -80,6 +79,8 @@ type SectionFieldSelectViewProps<T extends string = string> = {
     menuClassName?: string;
     menuMaxHeight: number | string;
     disabled?: boolean;
+    size?: 'md' | 'sm';
+    variant?: 'default' | 'ghost';
     searchable?: boolean;
     searchPlaceholder: string;
     searchEmptyText: React.ReactNode;
@@ -92,6 +93,8 @@ const SectionFieldSelectView = <T extends string>({
     menuClassName,
     menuMaxHeight,
     disabled = false,
+    size = 'md',
+    variant = 'default',
     searchable = false,
     searchPlaceholder,
     searchEmptyText,
@@ -105,7 +108,9 @@ const SectionFieldSelectView = <T extends string>({
         () =>
             !searchable || normalizedSearchQuery.length === 0
                 ? options
-                : options.filter((option) => normalizeText(getOptionSearchText(option)).includes(normalizedSearchQuery)),
+                : options.filter((option) =>
+                      normalizeText(getOptionSearchText(option)).includes(normalizedSearchQuery)
+                  ),
         [normalizedSearchQuery, options, searchable]
     );
 
@@ -115,7 +120,7 @@ const SectionFieldSelectView = <T extends string>({
     }, [isOpen]);
 
     return (
-        <div className={classNames(styles.Root, className)}>
+        <div className={classNames(styles.Root, className)} data-size={size} data-variant={variant}>
             <Dropdown.Trigger className={styles.TriggerWrap} disabled={disabled}>
                 <button type="button" className={styles.Trigger} disabled={disabled}>
                     <span className={styles.Label} data-placeholder={selectedOption ? 'false' : 'true'}>
@@ -151,16 +156,10 @@ const SectionFieldSelectView = <T extends string>({
                     <div className={styles.OptionsViewport}>
                         {filteredOptions.length > 0 ? (
                             filteredOptions.map((option) => (
-                                <SectionFieldSelectItem
-                                    key={option.value}
-                                    option={option}
-                                    disabled={disabled}
-                                />
+                                <SectionFieldSelectItem key={option.value} option={option} disabled={disabled} />
                             ))
                         ) : (
-                            <div className={styles.Empty}>
-                                {searchEmptyText}
-                            </div>
+                            <div className={styles.Empty}>{searchEmptyText}</div>
                         )}
                     </div>
                 </Dropdown.Content>
@@ -179,15 +178,13 @@ const SectionFieldSelect = (<T extends string = string>({
     menuClassName,
     menuMaxHeight = 240,
     disabled = false,
+    size = 'md',
+    variant = 'default',
     searchable = false,
     searchPlaceholder = '검색어를 입력해주세요.',
     searchEmptyText = '검색 결과가 없습니다.',
 }: SectionFieldSelectProps<T>) => (
-    <Select
-        value={value}
-        defaultValue={defaultValue}
-        onChange={(nextValue) => onChange(nextValue as T)}
-    >
+    <Select value={value} defaultValue={defaultValue} onChange={(nextValue) => onChange(nextValue as T)}>
         <Dropdown>
             <SectionFieldSelectView
                 options={options}
@@ -196,6 +193,8 @@ const SectionFieldSelect = (<T extends string = string>({
                 menuClassName={menuClassName}
                 menuMaxHeight={menuMaxHeight}
                 disabled={disabled}
+                size={size}
+                variant={variant}
                 searchable={searchable}
                 searchPlaceholder={searchPlaceholder}
                 searchEmptyText={searchEmptyText}

@@ -1,0 +1,308 @@
+.Root {
+    display: flex;
+    width: 100%;
+    min-width: 0;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.Form {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 8px;
+    align-items: center;
+}
+
+.FormCompact {
+    display: flex;
+    gap: 0;
+    width: 100%;
+    min-width: 0;
+    height: 40px;
+    border: 1px solid var(--granter-gray-300);
+    border-radius: 10px;
+    background-color: var(--granter-white);
+    overflow: hidden;
+    transition:
+        border-color 0.15s ease,
+        box-shadow 0.15s ease,
+        background-color 0.15s ease;
+}
+
+.FormCompact:hover:not([data-disabled='true']) {
+    border-color: var(--granter-gray-400);
+}
+
+.FormCompact:focus-within {
+    border-color: var(--granter-sky-500);
+    box-shadow: 0 0 0 4px rgb(14 165 233 / 12%);
+}
+
+.FormCompact[data-disabled='true'] {
+    background-color: var(--granter-gray-100);
+}
+
+.InputCompact {
+    flex: 1 1 auto;
+    width: 100%;
+    min-width: 0;
+    height: 100%;
+    padding: 0 14px;
+    border: 0;
+    border-radius: 0;
+    background-color: transparent;
+    box-shadow: none;
+    color: var(--granter-gray-900);
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 20px;
+}
+
+.InputCompact:hover:not(:disabled),
+.InputCompact:focus {
+    border-color: transparent;
+    box-shadow: none;
+}
+
+.InputCompact:disabled {
+    color: var(--granter-gray-500);
+    cursor: not-allowed;
+}
+
+.CompactAddButton {
+    display: inline-flex;
+    width: 40px;
+    flex-shrink: 0;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    border-left: 1px solid var(--granter-gray-300);
+    background-color: transparent;
+    color: var(--granter-gray-500);
+    cursor: pointer;
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease,
+        opacity 0.2s ease;
+}
+
+.CompactAddButton:hover:not(:disabled) {
+    background-color: var(--granter-gray-50);
+    color: var(--granter-gray-700);
+}
+
+.CompactAddButton:disabled {
+    color: var(--granter-gray-300);
+    cursor: not-allowed;
+}
+
+.CompactSummaryTriggerWrap {
+    display: flex;
+    flex-shrink: 0;
+}
+
+.CompactSummaryTrigger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    min-width: 40px;
+    height: 100%;
+    padding: 0;
+    border: 0;
+    border-left: 1px solid var(--granter-gray-300);
+    background-color: transparent;
+    color: var(--granter-gray-700);
+    cursor: pointer;
+    transition:
+        background-color 0.15s ease,
+        color 0.15s ease;
+}
+
+.CompactSummaryTrigger:hover:not(:disabled) {
+    background-color: var(--granter-gray-50);
+}
+
+.CompactSummaryTrigger:disabled {
+    color: var(--granter-gray-400);
+    cursor: not-allowed;
+}
+
+.CompactSummaryIcon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--granter-gray-400);
+    transition:
+        transform 0.2s ease,
+        color 0.15s ease;
+}
+
+.CompactSummaryIcon[data-open='true'] {
+    transform: rotate(180deg);
+    color: var(--granter-gray-500);
+}
+
+.List {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.ListCompact {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 8px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 2px;
+    scrollbar-width: thin;
+}
+
+.Item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 12px;
+    border: 1px solid var(--granter-gray-200);
+    border-radius: 12px;
+    background: linear-gradient(180deg, var(--granter-white) 0%, var(--granter-gray-50) 100%);
+}
+
+.ItemCompact {
+    display: inline-flex;
+    flex: 0 0 auto;
+    max-width: 100%;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+    padding: 0 12px;
+    min-height: 40px;
+    border-color: var(--granter-gray-200);
+    border-radius: 10px;
+    background: var(--granter-white);
+}
+
+.ItemText {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ItemCompact .ItemText {
+    max-width: 320px;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 20px;
+}
+
+.CompactRemoveButton {
+    display: inline-flex;
+    width: 20px;
+    height: 20px;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    background: transparent;
+    color: var(--granter-gray-400);
+    cursor: pointer;
+    transition:
+        color 0.2s ease,
+        opacity 0.2s ease;
+}
+
+.CompactRemoveButton:hover:not(:disabled) {
+    color: var(--granter-gray-600);
+}
+
+.CompactRemoveButton:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.CompactMenu {
+    display: flex;
+    min-width: 0;
+    max-width: none;
+    max-height: 280px;
+    flex-direction: column;
+    gap: 6px;
+    overflow: hidden;
+    padding: 4px;
+    border: 1px solid var(--granter-gray-300);
+    border-radius: 10px;
+    background-color: var(--granter-white);
+    box-shadow:
+        0 8px 20px rgb(17 24 39 / 12%),
+        0 1px 2px rgb(17 24 39 / 4%);
+}
+
+.CompactMenuEmpty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 8px 10px;
+}
+
+.CompactMenuList {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    gap: 4px;
+    overflow-y: auto;
+}
+
+.CompactMenuItem {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    min-height: 34px;
+    padding: 6px 10px;
+    border: 0;
+    border-radius: 8px;
+    background-color: transparent;
+    transition: background-color 0.15s ease;
+}
+
+.CompactMenuItem:hover {
+    background-color: var(--granter-gray-50);
+}
+
+.CompactMenuItemText {
+    color: var(--granter-gray-700);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+}
+
+@media (max-width: 640px) {
+    .Form {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .FormCompact {
+        width: 100%;
+    }
+
+    .ItemCompact {
+        width: auto;
+    }
+
+    .ItemCompact .ItemText {
+        max-width: 240px;
+    }
+
+    .CompactSummaryTrigger {
+        width: 40px;
+        min-width: 40px;
+    }
+
+    .CompactMenu {
+        max-width: none;
+    }
+}

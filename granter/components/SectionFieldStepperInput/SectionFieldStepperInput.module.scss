@@ -1,0 +1,98 @@
+.Root {
+    width: var(--granter-section-field-stepper-width, 100%);
+    min-width: var(--granter-section-field-stepper-min-width, 0);
+    max-width: var(--granter-section-field-stepper-max-width, none);
+}
+
+.Control {
+    display: flex;
+    align-items: stretch;
+    width: 100%;
+    min-width: 0;
+    height: 40px;
+    border: 1px solid var(--granter-gray-300);
+    border-radius: 10px;
+    background-color: var(--granter-white);
+    overflow: hidden;
+    transition:
+        border-color 0.15s ease,
+        box-shadow 0.15s ease,
+        background-color 0.15s ease;
+}
+
+.Control:hover:not([data-disabled='true']) {
+    border-color: var(--granter-gray-400);
+}
+
+.Control:focus-within {
+    border-color: var(--granter-sky-500);
+    box-shadow: 0 0 0 4px rgb(14 165 233 / 12%);
+}
+
+.Control[data-disabled='true'] {
+    background-color: var(--granter-gray-100);
+}
+
+.Button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    flex-shrink: 0;
+    border: 0;
+    background-color: transparent;
+    color: var(--granter-gray-500);
+    cursor: pointer;
+    transition:
+        background-color 0.15s ease,
+        color 0.15s ease;
+}
+
+.Button:hover:not(:disabled) {
+    background-color: var(--granter-gray-50);
+    color: var(--granter-gray-700);
+}
+
+.Button:disabled {
+    color: var(--granter-gray-300);
+    cursor: not-allowed;
+}
+
+.Divider {
+    width: 1px;
+    flex-shrink: 0;
+    background-color: var(--granter-gray-300);
+}
+
+.Input {
+    flex: 1 1 auto;
+    width: 100%;
+    min-width: 0;
+    padding: 0 14px;
+    border: 0;
+    background-color: transparent;
+    color: var(--granter-gray-900);
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 20px;
+    text-align: center;
+    outline: none;
+}
+
+.Input::placeholder {
+    color: var(--granter-gray-400);
+    font-weight: 400;
+}
+
+.Input:disabled {
+    color: var(--granter-gray-500);
+    cursor: not-allowed;
+}
+
+@media (max-width: 720px) {
+    .Root[data-full-width-on-mobile='true'] {
+        width: 100%;
+        min-width: 0;
+        max-width: none;
+    }
+}

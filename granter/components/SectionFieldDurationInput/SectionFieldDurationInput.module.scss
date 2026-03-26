@@ -1,0 +1,182 @@
+.Root {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    width: var(--granter-section-field-duration-width, 100%);
+    min-width: var(--granter-section-field-duration-min-width, 0);
+    max-width: var(--granter-section-field-duration-max-width, none);
+}
+
+.Control {
+    display: flex;
+    align-items: stretch;
+    width: min(100%, 340px);
+    min-width: 0;
+    height: 40px;
+    border: 1px solid var(--granter-gray-300);
+    border-radius: 10px;
+    background-color: var(--granter-white);
+    overflow: hidden;
+    transition:
+        border-color 0.15s ease,
+        box-shadow 0.15s ease,
+        background-color 0.15s ease;
+}
+
+.Control:hover:not([data-disabled='true']) {
+    border-color: var(--granter-gray-400);
+}
+
+.Control:focus-within {
+    border-color: var(--granter-sky-500);
+    box-shadow: 0 0 0 4px rgb(14 165 233 / 12%);
+}
+
+.Control[data-disabled='true'] {
+    background-color: var(--granter-gray-100);
+}
+
+.Input {
+    flex: 1 1 auto;
+    width: 100%;
+    min-width: 0;
+    height: 100%;
+    padding: 0 14px;
+    border: 0;
+    background-color: transparent;
+    color: var(--granter-gray-900);
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 20px;
+    outline: none;
+}
+
+.Input::placeholder {
+    color: var(--granter-gray-400);
+    font-weight: 400;
+}
+
+.Input:disabled {
+    color: var(--granter-gray-500);
+    cursor: not-allowed;
+}
+
+.Divider {
+    width: 1px;
+    background-color: var(--granter-gray-300);
+    flex-shrink: 0;
+}
+
+.UnitTriggerWrap {
+    display: flex;
+    flex-shrink: 0;
+}
+
+.UnitTrigger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    min-width: var(--granter-section-field-duration-unit-min-width, 84px);
+    height: 100%;
+    padding: 0 var(--granter-section-field-duration-unit-padding-x, 12px);
+    border: 0;
+    background-color: transparent;
+    color: var(--granter-gray-700);
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.UnitTrigger:hover:not(:disabled) {
+    background-color: var(--granter-gray-50);
+}
+
+.UnitTrigger:disabled {
+    color: var(--granter-gray-500);
+    cursor: not-allowed;
+}
+
+.UnitLabel {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+}
+
+.UnitIcon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--granter-gray-400);
+    transition:
+        transform 0.2s ease,
+        color 0.15s ease;
+}
+
+.UnitIcon[data-open='true'] {
+    transform: rotate(180deg);
+    color: var(--granter-gray-500);
+}
+
+.Menu {
+    display: flex;
+    min-width: 88px;
+    flex-direction: column;
+    gap: 4px;
+    padding: 4px;
+    border: 1px solid var(--granter-gray-300);
+    border-radius: 10px;
+    background-color: var(--granter-white);
+    box-shadow:
+        0 8px 20px rgb(17 24 39 / 12%),
+        0 1px 2px rgb(17 24 39 / 4%);
+}
+
+.Option {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-height: 34px;
+    padding: 6px 10px;
+    border: 0;
+    border-radius: 8px;
+    background-color: transparent;
+    color: var(--granter-gray-700);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+    text-align: left;
+    cursor: pointer;
+}
+
+.Option:hover:not(:disabled) {
+    background-color: var(--granter-gray-50);
+}
+
+.Option[data-active='true'] {
+    background-color: var(--granter-slate-100);
+    color: var(--granter-gray-900);
+}
+
+.Option:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.Summary {
+    display: inline-flex;
+    align-items: center;
+    min-width: 0;
+}
+
+@media (max-width: 720px) {
+    .Root[data-full-width-on-mobile='true'] {
+        width: 100%;
+        min-width: 0;
+        max-width: none;
+    }
+
+    .Control {
+        width: 100%;
+    }
+}
