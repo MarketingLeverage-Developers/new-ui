@@ -1,0 +1,74 @@
+.Root {
+    width: 100%;
+    min-width: 0;
+}
+
+.Control {
+    position: relative;
+    width: 100%;
+    min-width: 0;
+    height: 40px;
+    border: 1px solid var(--granter-gray-300);
+    border-radius: 10px;
+    background-color: var(--granter-white);
+    overflow: hidden;
+    transition:
+        border-color 0.15s ease,
+        box-shadow 0.15s ease,
+        background-color 0.15s ease;
+}
+
+.Control:hover:not([data-disabled='true']) {
+    border-color: var(--granter-gray-400);
+}
+
+.Control:focus-within {
+    border-color: var(--granter-sky-500);
+    box-shadow: 0 0 0 4px rgb(14 165 233 / 12%);
+}
+
+.Control[data-disabled='true'] {
+    background-color: var(--granter-gray-100);
+}
+
+.Input {
+    width: 100%;
+    min-width: 0;
+    height: 100%;
+    padding: 0 calc(var(--granter-section-field-suffix-input-suffix-min-width, 18px) + 28px) 0 14px;
+    border: 0;
+    background-color: transparent;
+    color: var(--granter-gray-900);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+    text-align: var(--granter-section-field-suffix-input-text-align, left);
+    outline: none;
+}
+
+.Input::placeholder {
+    color: var(--granter-gray-400);
+    font-weight: 400;
+}
+
+.Input:disabled {
+    color: var(--granter-gray-500);
+    cursor: not-allowed;
+}
+
+.Suffix {
+    position: absolute;
+    top: 50%;
+    right: 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
+    min-width: var(--granter-section-field-suffix-input-suffix-min-width, 18px);
+    color: var(--granter-gray-500);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+    white-space: nowrap;
+    transform: translateY(-50%);
+    pointer-events: none;
+}
