@@ -60,6 +60,13 @@ export type {
     AmountListPanelItemTone,
     AmountListPanelTab,
 } from './AmountListPanel/AmountListPanel';
+export { default as DashboardSelectorPanel } from './DashboardSelectorPanel/DashboardSelectorPanel';
+export type {
+    DashboardSelectorPanelProps,
+    DashboardSelectorPanelItem,
+    DashboardSelectorPanelSortMode,
+    DashboardSelectorPanelValueType,
+} from './DashboardSelectorPanel/DashboardSelectorPanel';
 
 export { default as AlertText } from './AlertText/AlertText';
 export type { AlertTextProps } from './AlertText/AlertText';
