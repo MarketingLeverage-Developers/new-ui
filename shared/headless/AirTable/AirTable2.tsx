@@ -1302,7 +1302,7 @@ const AirTableInner = <T,>({
     virtualOverscan,
     persistExpandedRowKeys = false,
 
-    fillContainerWidth = true, // ✅ 기본은 켜두고(원하면 false로 바꿔도 됨)
+    fillContainerWidth = false, // ✅ AirTable2는 기본적으로 남는 폭을 컬럼에 분배하지 않음
     sortState: sortStateProp,
     defaultSortState = null,
     onSortChange,
