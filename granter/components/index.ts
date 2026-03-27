@@ -182,6 +182,20 @@ export type { DividerProps } from './Divider/Divider';
 export { default as BasicBarChart } from './BasicBarChart/BasicBarChart';
 export type { BasicBarChartProps, BasicBarChartDatum, BasicBarChartSeries } from './BasicBarChart/BasicBarChart';
 
+export { default as AnalyticsChart } from './AnalyticsChart/AnalyticsChart';
+export type {
+    AnalyticsChartBarMode,
+    AnalyticsChartDatum,
+    AnalyticsChartGroupedStackData,
+    AnalyticsChartGroupedStackSeries,
+    AnalyticsChartLineData,
+    AnalyticsChartLineSeries,
+    AnalyticsChartPeriodItem,
+    AnalyticsChartPreset,
+    AnalyticsChartProps,
+    AnalyticsChartType,
+} from './AnalyticsChart/AnalyticsChart';
+
 export { default as BasicDonutChart } from './BasicDonutChart/BasicDonutChart';
 export type { BasicDonutChartProps, BasicDonutChartDatum } from './BasicDonutChart/BasicDonutChart';
 

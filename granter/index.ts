@@ -11,6 +11,7 @@ export { default as BasicConfirm } from './components/BasicConfirm/BasicConfirm'
 export { default as MainOverlay } from './components/MainOverlay/MainOverlay';
 export { default as BasicBarChart } from './components/BasicBarChart/BasicBarChart';
 export { default as BasicDonutChart } from './components/BasicDonutChart/BasicDonutChart';
+export { default as AnalyticsChart } from './components/AnalyticsChart/AnalyticsChart';
 export { default as SectionBlock } from './components/SectionBlock/SectionBlock';
 export { default as SidebarDrawerLayout } from './components/SidebarDrawerLayout/SidebarDrawerLayout';
 export { default as SectionIntro } from './components/SectionIntro/SectionIntro';
@@ -99,6 +100,18 @@ export type {
     BasicBarChartDatum,
     BasicBarChartSeries,
 } from './components/BasicBarChart/BasicBarChart';
+export type {
+    AnalyticsChartBarMode,
+    AnalyticsChartDatum,
+    AnalyticsChartGroupedStackData,
+    AnalyticsChartGroupedStackSeries,
+    AnalyticsChartLineData,
+    AnalyticsChartLineSeries,
+    AnalyticsChartPeriodItem,
+    AnalyticsChartPreset,
+    AnalyticsChartProps,
+    AnalyticsChartType,
+} from './components/AnalyticsChart/AnalyticsChart';
 export type { BasicDonutChartProps, BasicDonutChartDatum } from './components/BasicDonutChart/BasicDonutChart';
 export type { CompanySettingContentProps } from './components/CompanySettingContent/CompanySettingContent';
 export type { CompanyAdMediaLinkContentProps } from './components/CompanyAdMediaLinkContent/CompanyAdMediaLinkContent';
