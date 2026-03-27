@@ -154,8 +154,8 @@ const STATUS_COLORS = {
 } as const;
 
 const STATUS_RATIO_SERIES = [
-    { key: 'liveAmount', label: '라이브중', color: STATUS_COLORS.live },
     { key: 'pendingAmount', label: '운영대기중', color: STATUS_COLORS.waiting },
+    { key: 'liveAmount', label: '라이브중', color: STATUS_COLORS.live },
     { key: 'stopByClientAmount', label: '중단-광고주요청', color: STATUS_COLORS.stopByClient },
     { key: 'stopByPerformanceAmount', label: '중단-성과저하', color: STATUS_COLORS.stopByPerformance },
 ] as const;
