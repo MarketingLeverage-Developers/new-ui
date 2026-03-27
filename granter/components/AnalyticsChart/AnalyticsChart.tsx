@@ -309,6 +309,17 @@ const toTightCountDomainValue = (value: number) => {
     return toNiceDomainValue(value);
 };
 
+const toTightAmountDomainValue = (value: number) => {
+    if (!Number.isFinite(value) || value <= 0) return 1;
+
+    const magnitude = 10 ** Math.floor(Math.log10(value));
+    const normalized = value / magnitude;
+    const steps = [1, 1.2, 1.5, 1.8, 2, 2.5, 3, 4, 5, 6, 7.5, 8, 9, 10];
+    const nextStep = steps.find((step) => normalized <= step) ?? 10;
+
+    return nextStep * magnitude;
+};
+
 const getDivergingBarDomain = (
     data: LineChartDatum[],
     barMode: BarMode
@@ -356,7 +367,8 @@ const getPositiveBarDomain = (
     data: LineChartDatum[],
     seriesKeys: string[],
     barMode: BarMode,
-    stacked = false
+    stacked = false,
+    tight = false
 ): [number, number] | undefined => {
     if (barMode !== 'amount') {
         return undefined;
@@ -372,7 +384,10 @@ const getPositiveBarDomain = (
         return Math.max(acc, nextValue);
     }, 0);
 
-    const padded = Math.max(1, toNiceDomainValue(maxValue * 1.08));
+    const padded = Math.max(
+        1,
+        tight ? toTightAmountDomainValue(maxValue * 1.04) : toNiceDomainValue(maxValue * 1.08)
+    );
     return [0, padded];
 };
 
@@ -928,10 +943,11 @@ const AnalyticsChart = ({
                     barData,
                     barSeries.map((item) => item.key),
                     barMode,
-                    isAmountShareBar
+                    isAmountShareBar,
+                    isDashboardMetricPreset
                 )
                 : undefined,
-        [barData, barMode, barSeries, isAmountShareBar]
+        [barData, barMode, barSeries, isAmountShareBar, isDashboardMetricPreset]
     );
     const metricBarDomain = divergingStatusDomain ?? positiveAmountDomain;
     const divergingStatusXAxisPadding = useMemo(
