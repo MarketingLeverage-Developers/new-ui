@@ -299,6 +299,8 @@ const toNiceDomainValue = (value: number) => {
 const toTightCountDomainValue = (value: number) => {
     if (!Number.isFinite(value) || value <= 0) return 1;
 
+    if (value <= 5) return Math.ceil(value);
+    if (value <= 10) return Math.ceil(value / 2) * 2;
     if (value <= 50) return Math.ceil(value / 5) * 5;
     if (value <= 100) return Math.ceil(value / 10) * 10;
     if (value <= 300) return Math.ceil(value / 25) * 25;
@@ -355,7 +357,7 @@ const getDivergingBarDomain = (
     }
 
     if (barMode === 'inboundStatusCount') {
-        const padded = Math.max(10, toTightCountDomainValue(maxAbsStack * 1.08));
+        const padded = Math.max(1, toTightCountDomainValue(maxAbsStack * 1.08));
         return [-padded, padded];
     }
 
