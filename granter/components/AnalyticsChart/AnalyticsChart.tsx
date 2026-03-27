@@ -15,6 +15,7 @@ import {
     XAxis,
     YAxis,
 } from 'recharts';
+import styles from './AnalyticsChart.module.scss';
 
 export type AnalyticsChartBarMode = 'amount' | 'statusRatio' | 'statusAmount' | 'inboundStatusCount';
 export type AnalyticsChartType = 'BAR' | 'LINE' | 'PIE';
@@ -1005,8 +1006,9 @@ const AnalyticsChart = ({
                     </Text>
                 </Flex>
             ) : (
-                <>
-                    <div ref={chartAreaRef} style={chartAreaStyle}>
+                <div className={styles.ContentMotion}>
+                    <div key={`chart-${chartRenderKey}`} className={styles.ChartMotion}>
+                        <div ref={chartAreaRef} style={chartAreaStyle}>
                         <ResponsiveContainer width="100%" height="100%" debounce={80}>
                             {chartType === 'LINE' ? (
                                 <LineChart
@@ -1266,19 +1268,22 @@ const AnalyticsChart = ({
                                 </BarChart>
                             )}
                         </ResponsiveContainer>
+                        </div>
                     </div>
 
                     {showLegend ? (
-                        <div style={legendStyle}>
-                            {(chartType === 'LINE' || isGroupedAmountBar ? lineSeriesMeta : barSeries).map((item) => (
-                                <div key={item.key} style={legendItemStyle}>
-                                    <span style={legendDotStyle(item.color)} />
-                                    <span>{item.label}</span>
-                                </div>
-                            ))}
+                        <div key={`legend-${chartRenderKey}`} className={styles.LegendMotion}>
+                            <div style={legendStyle}>
+                                {(chartType === 'LINE' || isGroupedAmountBar ? lineSeriesMeta : barSeries).map((item) => (
+                                    <div key={item.key} style={legendItemStyle}>
+                                        <span style={legendDotStyle(item.color)} />
+                                        <span>{item.label}</span>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                     ) : null}
-                </>
+                </div>
             )}
         </div>
     );
