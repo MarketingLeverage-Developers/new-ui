@@ -718,22 +718,27 @@ const GroupedStackAvatarLabel = ({
 
     const waitingValue = Number(datum[`${groupedInfo.stackId}__waiting`] ?? 0);
     const liveValue = Number(datum[`${groupedInfo.stackId}__live`] ?? 0);
-    const shouldRender =
-        groupedInfo.statusKey === 'waiting'
-            ? waitingValue > 0
-            : waitingValue <= 0 && liveValue > 0;
+    const stopByClientValue = Math.abs(Number(datum[`${groupedInfo.stackId}__stopByClient`] ?? 0));
+    const stopByPerformanceValue = Math.abs(Number(datum[`${groupedInfo.stackId}__stopByPerformance`] ?? 0));
+    const positiveAnchorStatus = liveValue > 0 ? 'live' : waitingValue > 0 ? 'waiting' : null;
+    const negativeAnchorStatus =
+        stopByClientValue > 0 ? 'stopByClient' : stopByPerformanceValue > 0 ? 'stopByPerformance' : null;
+    const anchorStatus = positiveAnchorStatus ?? negativeAnchorStatus;
 
-    if (!shouldRender) return null;
+    if (!anchorStatus || groupedInfo.statusKey !== anchorStatus) {
+        return null;
+    }
 
     const safeX = typeof x === 'number' ? x : 0;
     const safeY = typeof y === 'number' ? y : 0;
     const safeWidth = typeof width === 'number' ? width : 0;
     const avatarSize = 30;
+    const avatarY = Math.max(safeY - avatarSize - 8, 4);
 
     return (
         <foreignObject
             x={safeX + safeWidth / 2 - avatarSize / 2}
-            y={Math.max(safeY - avatarSize - 8, 0)}
+            y={avatarY}
             width={avatarSize}
             height={avatarSize}
         >
@@ -897,7 +902,7 @@ const AnalyticsChart = ({
         () =>
             isDashboardMetricPreset
                 ? {
-                    top: shouldShowGroupedStackAvatars ? 48 : 0,
+                    top: shouldShowGroupedStackAvatars ? 64 : 0,
                     right: Math.max(barYAxisWidth - 40, 0),
                     left: 0,
                     bottom: 0,
