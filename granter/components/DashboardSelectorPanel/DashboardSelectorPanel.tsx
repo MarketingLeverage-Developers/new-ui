@@ -1,6 +1,10 @@
 import React from 'react';
 import MemberProfileAvatar from '@/components/common/MemberProfileAvatar/MemberProfileAvatar';
-import AmountListPanel from '../AmountListPanel/AmountListPanel';
+import LightButton from '../Button/LightButton';
+import PlainButton from '../Button/PlainButton';
+import Text from '../Text/Text';
+import Tooltip from '../Tooltip/Tooltip';
+import styles from './DashboardSelectorPanel.module.scss';
 
 export type DashboardSelectorPanelItem = {
     id?: string;
@@ -8,6 +12,12 @@ export type DashboardSelectorPanelItem = {
     value: number;
     profileSrc?: string;
     tooltipContent?: React.ReactNode;
+    displayValue?: React.ReactNode;
+    valueTone?: 'default' | 'up' | 'down' | 'subtle';
+    amountLines?: Array<{
+        value: React.ReactNode;
+        tone?: 'default' | 'up' | 'down' | 'subtle';
+    }>;
 };
 
 export type DashboardSelectorPanelSortMode = 'name' | 'valueDesc';
@@ -72,13 +82,13 @@ const DashboardSelectorPanel = ({
     const sortedItems = React.useMemo(
         () =>
             [...items].sort((a, b) => {
-            if (sortMode === 'valueDesc') {
-                return b.value - a.value || a.name.localeCompare(b.name, 'ko-KR');
-            }
+                if (sortMode === 'valueDesc') {
+                    return b.value - a.value || a.name.localeCompare(b.name, 'ko-KR');
+                }
 
-            return a.name.localeCompare(b.name, 'ko-KR', {
-                sensitivity: 'base',
-            });
+                return a.name.localeCompare(b.name, 'ko-KR', {
+                    sensitivity: 'base',
+                });
             }),
         [items, sortMode]
     );
@@ -102,9 +112,11 @@ const DashboardSelectorPanel = ({
                 return {
                     key,
                     label: item.name,
-                    amount: formatMetricValue(valueType, item.value),
+                    amount: item.displayValue ?? formatMetricValue(valueType, item.value),
+                    amountLines: item.amountLines,
                     amountTone:
-                        valueType === 'count'
+                        item.valueTone ??
+                        (valueType === 'count'
                             ? item.value === 0
                                 ? 'subtle'
                                 : 'default'
@@ -112,10 +124,16 @@ const DashboardSelectorPanel = ({
                               ? 'up'
                               : item.value < 0
                                 ? 'default'
-                                : 'subtle',
-                    icon: <MemberProfileAvatar name={item.name} src={item.profileSrc} size={28} fontSize={11} />,
+                                : 'subtle'),
+                    icon: (
+                        <MemberProfileAvatar
+                            name={item.name}
+                            src={item.profileSrc}
+                            size={32}
+                            fontSize={11}
+                        />
+                    ),
                     tooltipContent: item.tooltipContent ?? item.name,
-                    tooltipSide: 'left' as const,
                     disabled: !hasId || (hasReachedSelectionLimit && !isSelected),
                 };
             }),
@@ -133,30 +151,122 @@ const DashboardSelectorPanel = ({
         selectableKeys.length > 0 && selectableKeys.every((key) => selectedKeySet.has(key));
     const selectAllKeys =
         maxSelectionCount == null ? selectableKeys : selectableKeys.slice(0, maxSelectionCount);
-    const actionLabel = isAllSelected
-        ? '선택 해제'
-        : maxSelectionCount != null && selectableKeys.length > maxSelectionCount
-          ? `상위 ${maxSelectionCount}개 선택`
-          : '전체 선택';
+    const actionLabel =
+        isAllSelected
+            ? '선택 해제'
+            : maxSelectionCount != null && selectableKeys.length > maxSelectionCount
+              ? `상위 ${maxSelectionCount}개 선택`
+              : '전체 선택';
+    const bodyStyle = typeof maxHeight !== 'undefined' ? { maxHeight } : undefined;
 
     return (
-        <AmountListPanel
-            title={title}
-            subtitle={maxSelectionCount == null ? undefined : `최대 ${maxSelectionCount}개 선택`}
-            items={panelItems}
-            selectedKeys={limitedSelectedIds}
-            onSelect={(key) => {
-                if (!selectedKeySet.has(key) && hasReachedSelectionLimit) {
-                    return;
-                }
+        <section className={styles.Panel}>
+            <header className={styles.Header}>
+                <div className={styles.TitleWrap}>
+                    <Text as="h3" className={styles.Title} weight="semibold">
+                        {title}
+                    </Text>
+                    {maxSelectionCount != null ? (
+                        <Text as="span" className={styles.Subtitle} tone="muted">
+                            {`최대 ${maxSelectionCount}개 선택`}
+                        </Text>
+                    ) : null}
+                </div>
 
-                onSelect(key);
-            }}
-            actionLabel={actionLabel}
-            onActionClick={() => onSelectAll(isAllSelected ? [] : selectAllKeys)}
-            emptyText={emptyText}
-            maxHeight={maxHeight}
-        />
+                <LightButton size="sm" className={styles.ActionButton} onClick={() => onSelectAll(isAllSelected ? [] : selectAllKeys)}>
+                    {actionLabel}
+                </LightButton>
+            </header>
+
+            <div className={styles.Body} style={bodyStyle}>
+                {panelItems.length > 0 ? (
+                    <div className={styles.List}>
+                        {panelItems.map((item) => {
+                            const isSelected = selectedKeySet.has(item.key);
+                            const isClickable = !item.disabled;
+
+                            const content = (
+                                <>
+                                    <span className={styles.ItemLeft}>
+                                        <span className={styles.IconWrap}>{item.icon}</span>
+                                        <span className={styles.LabelWrap}>
+                                            <Text as="span" className={styles.Label} tone={item.disabled ? 'subtle' : 'default'}>
+                                                {item.label}
+                                            </Text>
+                                        </span>
+                                    </span>
+                                    {item.amountLines && item.amountLines.length > 0 ? (
+                                        <span className={styles.AmountLines}>
+                                            {item.amountLines.map((line, index) => (
+                                                <Text
+                                                    key={`${item.key}-${index}`}
+                                                    as="span"
+                                                    className={styles.AmountLine}
+                                                    tone="inherit"
+                                                    weight="regular"
+                                                    data-tone={line.tone ?? 'default'}
+                                                >
+                                                    {line.value}
+                                                </Text>
+                                            ))}
+                                        </span>
+                                    ) : (
+                                        <Text
+                                            as="span"
+                                            className={styles.Amount}
+                                            tone="inherit"
+                                            weight="regular"
+                                            data-tone={item.amountTone ?? 'default'}
+                                        >
+                                            {item.amount}
+                                        </Text>
+                                    )}
+                                </>
+                            );
+
+                            const row = isClickable ? (
+                                <PlainButton
+                                    className={styles.Item}
+                                    data-selected={isSelected ? 'true' : 'false'}
+                                    data-clickable="true"
+                                    onClick={() => {
+                                        if (!selectedKeySet.has(item.key) && hasReachedSelectionLimit) {
+                                            return;
+                                        }
+
+                                        onSelect(item.key);
+                                    }}
+                                >
+                                    {content}
+                                </PlainButton>
+                            ) : (
+                                <div
+                                    className={styles.Item}
+                                    data-selected={isSelected ? 'true' : 'false'}
+                                    data-clickable="false"
+                                >
+                                    {content}
+                                </div>
+                            );
+
+                            if (item.tooltipContent) {
+                                return (
+                                    <Tooltip key={item.key} content={item.tooltipContent} side="left" align="center">
+                                        {row}
+                                    </Tooltip>
+                                );
+                            }
+
+                            return React.cloneElement(row, { key: item.key });
+                        })}
+                    </div>
+                ) : (
+                    <Text as="p" className={styles.Empty} tone="subtle">
+                        {emptyText}
+                    </Text>
+                )}
+            </div>
+        </section>
     );
 };
 
