@@ -61,10 +61,12 @@ const AirTable2Inner = <T,>(props: AirTable2Props<T>) => {
     }, [remountKey]);
 
     if (readyKey !== remountKey) return null;
-    if (props.children) return <AirTable key={remountKey} {...(props as React.ComponentProps<typeof AirTable<T>>)} />;
+    if (props.children) {
+        return <AirTable key={remountKey} {...(props as React.ComponentProps<typeof AirTable<T>>)} gridMetaVariant="spread" />;
+    }
 
     return (
-        <AirTable key={remountKey} {...(props as React.ComponentProps<typeof AirTable<T>>)}>
+        <AirTable key={remountKey} {...(props as React.ComponentProps<typeof AirTable<T>>)} gridMetaVariant="spread">
             <AirTable2Scaffold showColumnVisibilityControl={props.showColumnVisibilityControl} />
         </AirTable>
     );
