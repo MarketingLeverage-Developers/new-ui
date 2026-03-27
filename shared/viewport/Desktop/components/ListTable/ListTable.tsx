@@ -2,9 +2,10 @@
 
 import React from 'react';
 import type { Column, FilterState, SortState } from '../../../../headless/AirTable/AirTable';
-import { BasicTable, type TableFilterItem } from '../../../../../BasicTable/BasicTable';
+import { BasicTable, type AirTableComponentLike, type TableFilterItem } from '../../../../../BasicTable/BasicTable';
 
 type ListTableProps<T> = {
+    airTableComponent?: AirTableComponentLike;
     data: T[];
     columns: Column<T>[];
     rowKeyField?: string;
@@ -49,6 +50,7 @@ type ListTableProps<T> = {
 };
 
 export const ListTable = <T,>({
+    airTableComponent,
     data,
     columns,
     rowKeyField,
@@ -87,6 +89,7 @@ export const ListTable = <T,>({
     onScrollElReady,
 }: ListTableProps<T>) => (
     <BasicTable
+        airTableComponent={airTableComponent}
         data={data}
         columns={columns}
         rowKeyField={rowKeyField as any}

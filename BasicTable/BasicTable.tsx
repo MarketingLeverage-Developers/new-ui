@@ -9,14 +9,17 @@ import PlusToggle from './components/PlusToggle/PlusToggle';
 import classNames from 'classnames';
 
 import { ColumnVisibilityControlsPanel } from './components/ColumnVisibilityControlsPanel/ColumnVisibilityControlsPanel';
+import { ColumnVisibilityControlsPanel2 } from './components/ColumnVisibilityControlsPanel/ColumnVisibilityControlsPanel2';
 import { Content } from './components/Content/Content';
 import { TableSettingRail } from './components/TableSettingRail/TableSettingRail';
 import { PinnedColumnControlsPanel } from './components/PinnedColumnControlsPanel/PinnedColumnControlsPanel';
+import { PinnedColumnControlsPanel2 } from './components/PinnedColumnControlsPanel/PinnedColumnControlsPanel2';
 import TableSettingTrigger from './components/TableSettingTrigger/TableSettingTrigger';
 import { FilterControlsPanel } from './components/FilterControlsPanel/FilterControlsPanel';
 
 import Flex from '../Flex/Flex';
 import ExpandAllRowsButton from './components/ExpandAllRowButton/ExpandAllRowButton';
+import ExpandAllRowsButton2 from './components/ExpandAllRowButton/ExpandAllRowsButton2';
 import Text from '../Text/Text';
 import { getThemeColor } from '../shared/utils/css/getThemeColor';
 import { FaFileAlt } from 'react-icons/fa';
@@ -33,6 +36,7 @@ export type AirTableComponentLike = ((props: any) => React.ReactElement | null) 
     Header: React.ComponentType<any>;
     Body: React.ComponentType<any>;
     Ghost: React.ComponentType<any>;
+    useOwnBasicTablePanels?: boolean;
 };
 
 type BasicTableProps<T> = Omit<
@@ -115,6 +119,7 @@ export const BasicTable = <T,>({
     }, [settingsOpen, settingsVisible]);
 
     const data = props.data;
+    const useOwnBasicTablePanels = Boolean(AirTableComponent.useOwnBasicTablePanels);
 
     return (
         <AirTableComponent
@@ -142,7 +147,8 @@ export const BasicTable = <T,>({
 
                     <Flex justify="end" gap={8}>
                         {actions}
-                        {showExpandAllRowsButton && <ExpandAllRowsButton />}
+                        {showExpandAllRowsButton &&
+                            (useOwnBasicTablePanels ? <ExpandAllRowsButton2 /> : <ExpandAllRowsButton />)}
                         <TableSettingTrigger open={settingsVisible} onToggle={handleToggleSettingsVisible} />
                     </Flex>
                 </Flex>
@@ -241,8 +247,18 @@ export const BasicTable = <T,>({
                                         overflowX: 'hidden',
                                     }}
                                 >
-                                    {settingsTab === 'columns' && <ColumnVisibilityControlsPanel<T> />}
-                                    {settingsTab === 'pinned' && <PinnedColumnControlsPanel<T> />}
+                                    {settingsTab === 'columns' &&
+                                        (useOwnBasicTablePanels ? (
+                                            <ColumnVisibilityControlsPanel2<T> />
+                                        ) : (
+                                            <ColumnVisibilityControlsPanel<T> />
+                                        ))}
+                                    {settingsTab === 'pinned' &&
+                                        (useOwnBasicTablePanels ? (
+                                            <PinnedColumnControlsPanel2<T> />
+                                        ) : (
+                                            <PinnedColumnControlsPanel<T> />
+                                        ))}
                                     {settingsTab === 'filters' && <FilterControlsPanel items={filterItems} />}
                                 </div>
                             )}

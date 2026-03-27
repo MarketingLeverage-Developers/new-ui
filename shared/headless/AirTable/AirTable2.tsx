@@ -1822,6 +1822,7 @@ const AirTable2 = AirTableInner as typeof AirTableInner & {
     RowToggle: typeof RowToggle;
     ColumnSelectBoxPortal: typeof ColumnSelectBoxPortal;
     CellContextMenuPortal: typeof CellContextMenuPortal;
+    useOwnBasicTablePanels: boolean;
 };
 
 AirTable2.Container = Container;
@@ -1831,5 +1832,6 @@ AirTable2.Ghost = Ghost;
 AirTable2.RowToggle = RowToggle;
 AirTable2.ColumnSelectBoxPortal = ColumnSelectBoxPortal;
 AirTable2.CellContextMenuPortal = CellContextMenuPortal;
+AirTable2.useOwnBasicTablePanels = true;
 
 export default AirTable2;

@@ -1,9 +1,10 @@
 // src/shared/viewport/Mobile/components/ListTable/ListTable.tsx (예시 경로)
 import React from 'react';
-import { BasicTable } from '../../../../../BasicTable/BasicTable'; // ✅ BasicTable import
+import { BasicTable, type AirTableComponentLike } from '../../../../../BasicTable/BasicTable'; // ✅ BasicTable import
 import type { Column, FilterState, SortState } from '../../../../headless/AirTable/AirTable';
 
 type ListTableProps<T> = {
+    airTableComponent?: AirTableComponentLike;
     data: T[];
     columns: Column<T>[];
     rowKeyField?: string;
@@ -40,6 +41,7 @@ type ListTableProps<T> = {
 };
 
 export const ListTable = <T,>({
+    airTableComponent,
     data,
     columns,
     rowKeyField,
@@ -72,6 +74,7 @@ export const ListTable = <T,>({
         {/* ✅ BasicTable로 교체하여 간결화 */}
         {/* <Flex.Item flex={1} style={{ minHeight: 0 }}> */}
         <BasicTable
+            airTableComponent={airTableComponent}
             data={data}
             columns={columns}
             rowKeyField={rowKeyField as any}
