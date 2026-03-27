@@ -1,6 +1,6 @@
 import React, { memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import type { CellRenderMeta, SelectionState } from '../AirTable';
-import { useAirTableContext } from '../AirTable';
+import type { CellRenderMeta, SelectionState } from '../AirTable2';
+import { useAirTableContext } from '../AirTable2';
 import { getThemeColor } from '../../../utils/css/getThemeColor';
 import styles from './Body.module.scss';
 

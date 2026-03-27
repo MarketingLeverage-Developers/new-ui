@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { MIN_COL_WIDTH, useAirTableContext } from '../AirTable';
-import type { CellRenderMeta, FilterState, SortConfig, SortDirection, SortValue } from '../AirTable';
+import { MIN_COL_WIDTH, useAirTableContext } from '../AirTable2';
+import type { CellRenderMeta, FilterState, SortConfig, SortDirection, SortValue } from '../AirTable2';
 import { FaArrowDown, FaArrowUp } from 'react-icons/fa';
 import { VscFilter, VscFilterFilled } from 'react-icons/vsc';
 import { getThemeColor } from '../../../utils/css/getThemeColor';
