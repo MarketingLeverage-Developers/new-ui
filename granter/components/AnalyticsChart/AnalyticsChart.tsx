@@ -128,6 +128,7 @@ type AmountShareTooltipContentProps = {
 type AxisTickProps = {
     x?: number;
     y?: number;
+    index?: number;
     payload?: {
         value?: number | string;
     };
@@ -283,6 +284,16 @@ const getDashboardBarSize = (
 
     const totalInnerGap = barGap * Math.max(groupCount - 1, 0);
     return Math.round(Math.max(20, (usableCategoryWidth - totalInnerGap) / groupCount));
+};
+
+const getDashboardXAxisLabelStride = (periodCount: number, plotWidth: number) => {
+    if (periodCount <= 1) return 1;
+
+    const categoryWidth = getDashboardCategoryWidth(periodCount, plotWidth);
+    const targetLabelWidth = 64;
+
+    if (categoryWidth >= targetLabelWidth) return 1;
+    return Math.max(2, Math.ceil(targetLabelWidth / Math.max(categoryWidth, 1)));
 };
 
 const toNiceDomainValue = (value: number) => {
@@ -666,7 +677,10 @@ const DivergingXAxisTick = ({
     x,
     y,
     payload,
-}: AxisTickProps) => {
+    showLabel = true,
+}: AxisTickProps & {
+    showLabel?: boolean;
+}) => {
     const safeX = typeof x === 'number' ? x : 0;
     const safeY = typeof y === 'number' ? y : 0;
     const label = String(payload?.value ?? '');
@@ -674,15 +688,17 @@ const DivergingXAxisTick = ({
     return (
         <g transform={`translate(${safeX}, ${safeY})`}>
             <rect x={-0.5} y={4} width={1} height={8} rx={0.5} fill="#CBD5E1" />
-            <text
-                x={0}
-                y={24}
-                textAnchor="middle"
-                fill="#6B7280"
-                fontSize={12}
-            >
-                {label}
-            </text>
+            {showLabel ? (
+                <text
+                    x={0}
+                    y={24}
+                    textAnchor="middle"
+                    fill="#6B7280"
+                    fontSize={12}
+                >
+                    {label}
+                </text>
+            ) : null}
         </g>
     );
 };
@@ -940,6 +956,21 @@ const AnalyticsChart = ({
                 : undefined,
         [barData.length, barPlotWidth, dashboardBarGroupCount, isDashboardMetricPreset]
     );
+    const dashboardBarXAxisLabelStride = useMemo(
+        () =>
+            isDashboardMetricPreset ? getDashboardXAxisLabelStride(barData.length, barPlotWidth) : 1,
+        [barData.length, barPlotWidth, isDashboardMetricPreset]
+    );
+    const dashboardLineXAxisLabelStride = useMemo(
+        () =>
+            isDashboardMetricPreset
+                ? getDashboardXAxisLabelStride(
+                    lineChartData.length,
+                    Math.max(chartAreaWidth - 12, MIN_BAR_PLOT_WIDTH)
+                )
+                : 1,
+        [chartAreaWidth, isDashboardMetricPreset, lineChartData.length]
+    );
     const divergingStatusDomain = useMemo(
         () => (isDivergingDataBar ? getDivergingBarDomain(barData, barMode) : undefined),
         [barData, barMode, isDivergingDataBar]
@@ -1021,6 +1052,7 @@ const AnalyticsChart = ({
                                     )}
                                     <XAxis
                                         dataKey="periodLabel"
+                                        interval={isDashboardMetricPreset ? 0 : undefined}
                                         tickLine={false}
                                         axisLine={isDashboardMetricPreset ? false : { stroke: '#E5E7EB' }}
                                         fontSize={12}
@@ -1028,7 +1060,16 @@ const AnalyticsChart = ({
                                         padding={divergingStatusXAxisPadding}
                                         tick={
                                             isDashboardMetricPreset
-                                                ? (props) => <DivergingXAxisTick {...props} />
+                                                ? (props) => {
+                                                    const tickIndex = typeof props.index === 'number' ? props.index : 0;
+                                                    const lastIndex = Math.max(lineChartData.length - 1, 0);
+                                                    const showLabel =
+                                                        tickIndex === 0 ||
+                                                        tickIndex === lastIndex ||
+                                                        tickIndex % dashboardLineXAxisLabelStride === 0;
+
+                                                    return <DivergingXAxisTick {...props} showLabel={showLabel} />;
+                                                }
                                                 : undefined
                                         }
                                     />
@@ -1151,6 +1192,7 @@ const AnalyticsChart = ({
                                     )}
                                     <XAxis
                                         dataKey="periodLabel"
+                                        interval={isDashboardMetricPreset ? 0 : undefined}
                                         tickLine={false}
                                         axisLine={isDashboardMetricPreset ? false : { stroke: '#E5E7EB' }}
                                         fontSize={12}
@@ -1158,7 +1200,16 @@ const AnalyticsChart = ({
                                         height={isDashboardMetricPreset ? 40 : undefined}
                                         tick={
                                             isDashboardMetricPreset
-                                                ? (props) => <DivergingXAxisTick {...props} />
+                                                ? (props) => {
+                                                    const tickIndex = typeof props.index === 'number' ? props.index : 0;
+                                                    const lastIndex = Math.max(barData.length - 1, 0);
+                                                    const showLabel =
+                                                        tickIndex === 0 ||
+                                                        tickIndex === lastIndex ||
+                                                        tickIndex % dashboardBarXAxisLabelStride === 0;
+
+                                                    return <DivergingXAxisTick {...props} showLabel={showLabel} />;
+                                                }
                                                 : undefined
                                         }
                                     />
