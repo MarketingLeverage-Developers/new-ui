@@ -723,7 +723,12 @@ const GroupedStackAvatarLabel = ({
     const groupedInfo = parseGroupedSeriesKey(dataKey);
     if (!groupedInfo) return null;
 
-    if (groupedInfo.statusKey !== 'live' && groupedInfo.statusKey !== 'waiting') {
+    if (
+        groupedInfo.statusKey !== 'live' &&
+        groupedInfo.statusKey !== 'waiting' &&
+        groupedInfo.statusKey !== 'stopByClient' &&
+        groupedInfo.statusKey !== 'stopByPerformance'
+    ) {
         return null;
     }
 
