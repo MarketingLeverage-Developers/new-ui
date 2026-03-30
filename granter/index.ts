@@ -32,6 +32,7 @@ export { default as SectionFieldOptionToggleCard } from './components/SectionFie
 export { default as SectionFieldSelect } from './components/SectionFieldSelect/SectionFieldSelect';
 export { default as SectionFieldMemberSelect } from './components/SectionFieldMemberSelect/SectionFieldMemberSelect';
 export { default as ButtonTabGroup } from './components/ButtonTabGroup/ButtonTabGroup';
+export { default as BookmarkTabs } from './components/BookmarkTabs/BookmarkTabs';
 export { default as SectionFieldMultiValueInput } from './components/SectionFieldMultiValueInput/SectionFieldMultiValueInput';
 export { parseCommaSeparatedValues, joinCommaSeparatedValues } from './components/SectionFieldMultiValueInput/utils';
 export { default as ScrollHint } from './components/ScrollHint/ScrollHint';
@@ -235,6 +236,7 @@ export type { TooltipProps, TooltipAlign, TooltipSide } from './components/Toolt
 export type { HelpTooltipProps } from './components/HelpTooltip/HelpTooltip';
 export type { CheckboxTextToggleProps } from './components/CheckboxTextToggle/CheckboxTextToggle';
 export type { SearchToggleInputProps } from './components/SearchToggleInput/SearchToggleInput';
+export type { BookmarkTabsProps, BookmarkTabsItem } from './components/BookmarkTabs/BookmarkTabs';
 export type { SearchInputProps, SearchInputWidthPreset } from './components/SearchInput/SearchInput';
 export type { RoundedTextInputProps } from './components/RoundedTextInput/RoundedTextInput';
 export type {

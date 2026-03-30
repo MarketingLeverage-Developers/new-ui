@@ -1,0 +1,133 @@
+.Root {
+    display: flex;
+    width: 100%;
+    min-width: 0;
+    overflow-x: auto;
+    overflow-y: visible;
+    scrollbar-width: none;
+    position: relative;
+    z-index: 2;
+    padding: 0;
+    background: transparent;
+}
+
+.Root::-webkit-scrollbar {
+    display: none;
+}
+
+.Root[data-attached='true'] {
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.Rail {
+    position: relative;
+    display: inline-flex;
+    align-items: flex-end;
+    gap: 0;
+    min-width: max-content;
+    padding: 0;
+    isolation: isolate;
+    background: transparent;
+}
+
+.Item {
+    --bookmark-tab-bg: var(--bookmark-tab-item-bg, linear-gradient(180deg, #f6f7f9 0%, #eceff3 100%));
+    --bookmark-tab-hover-bg: var(--bookmark-tab-item-hover-bg, linear-gradient(180deg, #fafbfc 0%, #f1f3f6 100%));
+    --bookmark-tab-active-bg: var(--bookmark-tab-item-active-bg, var(--granter-gray-50));
+    --bookmark-tab-text-color: var(--bookmark-tab-item-text-color, var(--granter-gray-500));
+    --bookmark-tab-active-text-color: var(--bookmark-tab-item-active-text-color, var(--granter-gray-500));
+    --bookmark-tab-highlight: rgba(255, 255, 255, 0.55);
+    --bookmark-tab-shadow: rgba(15, 23, 42, 0.06);
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 112px;
+    height: 38px;
+    padding: 0 28px 0 18px;
+    border: 0;
+    appearance: none;
+    -webkit-appearance: none;
+    background: transparent;
+    color: var(--bookmark-tab-text-color);
+    cursor: pointer;
+    transition:
+        color 0.18s ease,
+        z-index 0.18s ease;
+}
+
+.Item + .Item {
+    margin-left: -10px;
+}
+
+.Surface {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    filter: drop-shadow(0 2px 4px var(--bookmark-tab-shadow));
+}
+
+.Surface::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    clip-path: polygon(0 0, calc(100% - 22px) 0, calc(100% - 17px) 5px, 100% 100%, 0 100%);
+    border-radius: 4px 8px 0 0;
+    background: var(--bookmark-tab-bg);
+    transition: background 0.18s ease;
+}
+
+.Item:hover:not(:disabled):not([data-active='true']) {
+    --bookmark-tab-bg: var(--bookmark-tab-hover-bg);
+    --bookmark-tab-highlight: rgba(255, 255, 255, 0.7);
+    --bookmark-tab-shadow: rgba(15, 23, 42, 0.08);
+}
+
+.Item[data-active='true'] {
+    --bookmark-tab-bg: var(--bookmark-tab-active-bg);
+    --bookmark-tab-highlight: rgba(255, 255, 255, 0.92);
+    --bookmark-tab-shadow: rgba(15, 23, 42, 0.04);
+    color: var(--bookmark-tab-active-text-color);
+}
+
+.Item:focus-visible {
+    outline: 2px solid rgba(59, 130, 246, 0.38);
+    outline-offset: 2px;
+}
+
+.Item:disabled {
+    opacity: 0.46;
+    cursor: not-allowed;
+}
+
+.Label {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    max-width: 100%;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 20px;
+    letter-spacing: -0.01em;
+}
+
+.Label > :global(svg) {
+    flex: 0 0 auto;
+    width: 14px;
+    height: 14px;
+}
+
+.Label > span {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

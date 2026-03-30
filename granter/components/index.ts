@@ -35,6 +35,9 @@ export type { ButtonSelectProps, ButtonSelectOption, ButtonSelectItemProps } fro
 export { default as ButtonTabGroup } from './ButtonTabGroup/ButtonTabGroup';
 export type { ButtonTabGroupProps, ButtonTabGroupItem } from './ButtonTabGroup/ButtonTabGroup';
 
+export { default as BookmarkTabs } from './BookmarkTabs/BookmarkTabs';
+export type { BookmarkTabsProps, BookmarkTabsItem } from './BookmarkTabs/BookmarkTabs';
+
 export { default as ButtonDropdown } from './ButtonDropdown/ButtonDropdown';
 export type {
     ButtonDropdownProps,
