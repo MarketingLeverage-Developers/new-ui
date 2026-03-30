@@ -8,10 +8,13 @@ export type StatusChipProps = {
     children: React.ReactNode;
     tone?: StatusChipTone;
     className?: string;
+    style?: React.CSSProperties;
 };
 
-const StatusChip = ({ children, tone = 'neutral', className }: StatusChipProps) => (
-    <span className={classNames(styles.Chip, styles[`Tone-${tone}`], className)}>{children}</span>
+const StatusChip = ({ children, tone = 'neutral', className, style }: StatusChipProps) => (
+    <span className={classNames(styles.Chip, styles[`Tone-${tone}`], className)} style={style}>
+        {children}
+    </span>
 );
 
 export default StatusChip;
