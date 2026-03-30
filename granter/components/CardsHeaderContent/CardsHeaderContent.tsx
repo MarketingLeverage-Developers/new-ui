@@ -128,6 +128,30 @@ const formatIsoDateWithWeekday = (date?: Date) => {
     return `${formatted} (${WEEKDAY_LABELS[date.getDay()]})`;
 };
 
+const startOfDay = (date: Date) => new Date(date.getFullYear(), date.getMonth(), date.getDate());
+
+const startOfMonth = (date: Date) => new Date(date.getFullYear(), date.getMonth(), 1);
+
+const endOfMonth = (date: Date) => new Date(date.getFullYear(), date.getMonth() + 1, 0);
+
+const addMonthsClamped = (date: Date, diff: number) => {
+    const shifted = new Date(date.getFullYear(), date.getMonth() + diff, 1);
+    const lastDay = new Date(shifted.getFullYear(), shifted.getMonth() + 1, 0).getDate();
+
+    return new Date(shifted.getFullYear(), shifted.getMonth(), Math.min(date.getDate(), lastDay));
+};
+
+const isAfterMonth = (a: Date, b: Date) =>
+    a.getFullYear() > b.getFullYear() || (a.getFullYear() === b.getFullYear() && a.getMonth() > b.getMonth());
+
+const isSameDay = (a: Date, b: Date) =>
+    a.getFullYear() === b.getFullYear() &&
+    a.getMonth() === b.getMonth() &&
+    a.getDate() === b.getDate();
+
+const isSameMonth = (a: Date, b: Date) =>
+    a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth();
+
 const parseDateRangeLabel = (label: React.ReactNode): DateRange | undefined => {
     if (typeof label !== 'string') return undefined;
 
@@ -154,6 +178,46 @@ const toDateRangeValue = (value?: DateRange): HeaderDateRangeValue => ({
     from: formatIsoDate(value?.from),
     to: formatIsoDate(value?.to),
 });
+
+const shiftRangeByMonth = (
+    value: DateRange | undefined,
+    diff: number,
+    mode: 'date' | 'month',
+    today: Date
+): DateRange | undefined => {
+    const baseFrom = value?.from ?? value?.to;
+    const baseTo = value?.to ?? value?.from;
+
+    if (!baseFrom || !baseTo) return undefined;
+
+    const shiftedFrom = addMonthsClamped(baseFrom, diff);
+    const shiftedTo = addMonthsClamped(baseTo, diff);
+
+    if (mode === 'month') {
+        return {
+            from: startOfMonth(shiftedFrom),
+            to: endOfMonth(shiftedTo),
+        };
+    }
+
+    const isSingleMonthRange = isSameMonth(baseFrom, baseTo);
+    const isWholeMonthRange =
+        isSingleMonthRange && baseFrom.getDate() === 1 && isSameDay(baseTo, endOfMonth(baseTo));
+    const isCurrentMonthToDateRange =
+        isSingleMonthRange && baseFrom.getDate() === 1 && isSameMonth(baseFrom, today) && isSameDay(baseTo, today);
+
+    if (isWholeMonthRange || isCurrentMonthToDateRange) {
+        return {
+            from: startOfMonth(shiftedFrom),
+            to: isSameMonth(shiftedTo, today) ? startOfDay(today) : endOfMonth(shiftedTo),
+        };
+    }
+
+    return {
+        from: shiftedFrom,
+        to: shiftedTo,
+    };
+};
 
 const formatDateRangeLabel = (value?: DateRange) => {
     const from = formatIsoDateWithWeekday(value?.from);
@@ -224,8 +288,6 @@ const HeaderDateRangeTrigger = ({
 const HeaderDateRangeControl = ({
     dateLabel,
     mode = 'date',
-    onPrevDate = noop,
-    onNextDate = noop,
     onDateLabelClick,
     value,
     defaultValue,
@@ -241,6 +303,7 @@ const HeaderDateRangeControl = ({
     const [innerRange, setInnerRange] = React.useState<DateRange | undefined>(initialRange);
     const controlledRange = toDateRange(value);
     const selectedRange = controlledRange ?? innerRange ?? buildFallbackRange(mode);
+    const today = React.useMemo(() => new Date(), []);
 
     React.useEffect(() => {
         if (value || defaultValue) return;
@@ -254,21 +317,48 @@ const HeaderDateRangeControl = ({
     const displayLabel =
         (mode === 'month' ? formatMonthRangeLabel(selectedRange) : formatDateRangeLabel(selectedRange)) ?? dateLabel;
 
-    const handleRangeChange = (nextRange: DateRange | undefined) => {
-        if (!value) setInnerRange(nextRange);
-        onValueChange?.(toDateRangeValue(nextRange));
-    };
+    const handleRangeChange = React.useCallback(
+        (nextRange: DateRange | undefined) => {
+            if (!value) setInnerRange(nextRange);
+            onValueChange?.(toDateRangeValue(nextRange));
+        },
+        [onValueChange, value]
+    );
+
+    const moveRange = React.useCallback(
+        (diff: number) => {
+            const nextRange = shiftRangeByMonth(selectedRange, diff, mode, today);
+            if (!nextRange) return;
+
+            handleRangeChange(nextRange);
+        },
+        [handleRangeChange, mode, selectedRange, today]
+    );
+
+    const nextRange = React.useMemo(() => shiftRangeByMonth(selectedRange, 1, mode, today), [mode, selectedRange, today]);
+    const isNextDisabled = React.useMemo(() => {
+        if (!nextRange?.to) return true;
+
+        if (mode === 'month') return isAfterMonth(nextRange.to, today);
+        return startOfDay(nextRange.to).getTime() > startOfDay(today).getTime();
+    }, [mode, nextRange, today]);
 
     return (
         <Dropdown>
             <div className={classNames(styles.DateRangeControl, className)}>
-                <button type="button" className={styles.DateEdgeButton} aria-label="이전 기간" onClick={onPrevDate}>
+                <button type="button" className={styles.DateEdgeButton} aria-label="이전 기간" onClick={() => moveRange(-1)}>
                     <IoIosArrowBack size={14} />
                 </button>
 
                 <HeaderDateRangeTrigger label={displayLabel} onClick={onDateLabelClick} />
 
-                <button type="button" className={styles.DateEdgeButton} aria-label="다음 기간" onClick={onNextDate}>
+                <button
+                    type="button"
+                    className={styles.DateEdgeButton}
+                    aria-label="다음 기간"
+                    onClick={() => moveRange(1)}
+                    disabled={isNextDisabled}
+                >
                     <IoIosArrowForward size={14} />
                 </button>
             </div>

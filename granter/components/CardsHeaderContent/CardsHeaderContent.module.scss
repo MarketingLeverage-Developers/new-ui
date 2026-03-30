@@ -82,6 +82,12 @@
     cursor: pointer;
 }
 
+.DateEdgeButton:disabled {
+    cursor: default;
+    color: var(--granter-gray-300);
+    background-color: var(--granter-gray-50);
+}
+
 .DateEdgeButton:first-child {
     border-right: 0;
     border-radius: 8px 0 0 8px;
