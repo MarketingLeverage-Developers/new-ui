@@ -1,4 +1,5 @@
 import React from 'react';
+import { FiX } from 'react-icons/fi';
 import FileUploader, { type FileUploaderProps } from '../FileUploader/FileUploader';
 import { useImageUploader } from '@/shared/headless/ImageUploader/ImageUploader';
 import styles from './SectionFieldRowFileUpload.module.scss';
@@ -29,7 +30,7 @@ const TriggerContent = ({
     helperText,
     removable,
 }: TriggerContentProps) => {
-    const { imageUploaderValue, openFileDialog, clear, dragging } = useImageUploader();
+    const { imageUploaderValue, openFileDialog, clear, dragging, removeById } = useImageUploader();
     const fileCount = imageUploaderValue.length;
     const firstFile = imageUploaderValue[0];
     const buttonLabel = fileCount > 0 ? replaceButtonText : buttonText;
@@ -39,6 +40,42 @@ const TriggerContent = ({
             : fileCount === 1
               ? firstFile?.name || firstFile?.url || emptyText
               : `${fileCount.toLocaleString('ko-KR')}개 파일 업로드됨`;
+    const hasSinglePreview = fileCount === 1 && Boolean(firstFile?.url);
+
+    if (hasSinglePreview && firstFile) {
+        return (
+            <div className={styles.Root}>
+                <div className={styles.PreviewWrapper}>
+                    <button
+                        type="button"
+                        className={styles.PreviewButton}
+                        data-dragging={dragging ? 'true' : 'false'}
+                        onClick={openFileDialog}
+                        title={helperText ? `${titleText}\n${helperText}` : titleText}
+                    >
+                        <img src={firstFile.url} alt={firstFile.name || '업로드 이미지'} />
+                    </button>
+                    {removable ? (
+                        <button
+                            type="button"
+                            className={styles.PreviewRemoveButton}
+                            aria-label="이미지 제거"
+                            onClick={(event) => {
+                                event.stopPropagation();
+                                if (firstFile.id) {
+                                    removeById(firstFile.id);
+                                    return;
+                                }
+                                clear();
+                            }}
+                        >
+                            <FiX />
+                        </button>
+                    ) : null}
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className={styles.Root}>
