@@ -15,6 +15,11 @@ import {
     XAxis,
     YAxis,
 } from 'recharts';
+import {
+    ANALYTICS_CHART_LINE_COLORS,
+    ANALYTICS_CHART_PALETTE,
+    ANALYTICS_CHART_STATUS_COLORS,
+} from './AnalyticsChart.constants';
 import styles from './AnalyticsChart.module.scss';
 
 export type AnalyticsChartBarMode = 'amount' | 'statusRatio' | 'statusAmount' | 'inboundStatusCount';
@@ -144,32 +149,21 @@ type BarLabelProps = {
     payload?: LineChartDatum;
 };
 
-const AMOUNT_SERIES = [{ key: 'totalAmount', label: '소진액', color: '#3B82F6' }] as const;
-
-const STATUS_COLORS = {
-    live: '#EF4444',
-    waiting: '#F59E0B',
-    stopped: '#3B82F6',
-    stopByClient: '#3B82F6',
-    stopByPerformance: '#8B5CF6',
-    contracted: '#22A06B',
-} as const;
+const AMOUNT_SERIES = [{ key: 'totalAmount', label: '소진액', color: ANALYTICS_CHART_PALETTE.positive }] as const;
 
 const STATUS_RATIO_SERIES = [
-    { key: 'pendingAmount', label: '운영대기중', color: STATUS_COLORS.waiting },
-    { key: 'liveAmount', label: '라이브중', color: STATUS_COLORS.live },
-    { key: 'stopByClientAmount', label: '중단-광고주요청', color: STATUS_COLORS.stopByClient },
-    { key: 'stopByPerformanceAmount', label: '중단-성과저하', color: STATUS_COLORS.stopByPerformance },
+    { key: 'pendingAmount', label: '운영대기중', color: ANALYTICS_CHART_STATUS_COLORS.waiting },
+    { key: 'liveAmount', label: '라이브중', color: ANALYTICS_CHART_STATUS_COLORS.live },
+    { key: 'stopByClientAmount', label: '중단-광고주요청', color: ANALYTICS_CHART_STATUS_COLORS.stopByClient },
+    { key: 'stopByPerformanceAmount', label: '중단-성과저하', color: ANALYTICS_CHART_STATUS_COLORS.stopByPerformance },
 ] as const;
 
 const INBOUND_STATUS_SERIES = [
-    { key: 'liveAmount', label: '관리', color: STATUS_COLORS.live },
-    { key: 'pendingAmount', label: '가망', color: STATUS_COLORS.waiting },
-    { key: 'stoppedAmount', label: '실패', color: STATUS_COLORS.stopped },
-    { key: 'totalAmount', label: '계약', color: STATUS_COLORS.contracted },
+    { key: 'liveAmount', label: '관리', color: ANALYTICS_CHART_STATUS_COLORS.live },
+    { key: 'pendingAmount', label: '가망', color: ANALYTICS_CHART_STATUS_COLORS.waiting },
+    { key: 'stoppedAmount', label: '실패', color: ANALYTICS_CHART_STATUS_COLORS.stopped },
+    { key: 'totalAmount', label: '계약', color: ANALYTICS_CHART_STATUS_COLORS.contracted },
 ] as const;
-
-const LINE_COLORS = ['#3A7BFF', '#10B981', '#F97316', '#A855F7', '#EF4444', '#0EA5E9', '#EAB308', '#22C55E'];
 
 const containerStyle: React.CSSProperties = {
     width: '100%',
@@ -234,56 +228,45 @@ const formatCurrency = (value: number) => `${value.toLocaleString('ko-KR')}원`;
 const formatPercent = (value: number) => `${value.toFixed(1)}%`;
 const formatCount = (value: number) => `${value.toLocaleString('ko-KR')}건`;
 
-const clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max);
 const DEFAULT_BAR_PLOT_WIDTH = 940;
 const MIN_BAR_PLOT_WIDTH = 320;
-const DEFAULT_GROUP_BAR_GAP = 4;
+type DashboardBarLayout = {
+    categoryGap: number;
+    barGap: number;
+};
 
 const getDashboardCategoryWidth = (periodCount: number, plotWidth: number) => {
     if (periodCount <= 0) return Math.max(plotWidth, DEFAULT_BAR_PLOT_WIDTH);
     return Math.max(plotWidth, DEFAULT_BAR_PLOT_WIDTH) / periodCount;
 };
 
-const getDashboardBarCategoryGap = (
+// Keep all dashboard bar layout decisions in one place.
+const getDashboardBarLayout = (
     periodCount: number,
     plotWidth: number,
     groupCount: number
-) => {
-    if (periodCount <= 1) return 0;
-
-    const categoryWidth = getDashboardCategoryWidth(periodCount, plotWidth);
-    const baseRatio = groupCount > 1 ? 0.09 : 0.075;
-    const periodRatio = periodCount >= 7 ? 0.02 : periodCount >= 4 ? 0.01 : 0;
-    const gapPx = categoryWidth * (baseRatio + periodRatio);
-
-    return Math.round(clamp(gapPx, groupCount > 1 ? 20 : 16, groupCount > 1 ? 56 : 48));
-};
-
-const getDashboardBarGap = (periodCount: number, plotWidth: number, groupCount: number) => {
-    if (groupCount <= 1) return 0;
-
-    const categoryWidth = getDashboardCategoryWidth(periodCount, plotWidth);
-    return Math.round(clamp(categoryWidth * 0.015, DEFAULT_GROUP_BAR_GAP, 10));
-};
-
-const getDashboardBarSize = (
-    periodCount: number,
-    groupCount: number,
-    plotWidth: number
-) => {
-    if (periodCount <= 0 || groupCount <= 0) return undefined;
-
-    const categoryWidth = getDashboardCategoryWidth(periodCount, plotWidth);
-    const categoryGap = getDashboardBarCategoryGap(periodCount, plotWidth, groupCount);
-    const barGap = getDashboardBarGap(periodCount, plotWidth, groupCount);
-    const usableCategoryWidth = Math.max(categoryWidth - categoryGap, 24);
-
-    if (groupCount <= 1) {
-        return Math.round(Math.max(24, usableCategoryWidth));
+): DashboardBarLayout => {
+    if (periodCount <= 0 || groupCount <= 0) {
+        return { categoryGap: 0, barGap: 0 };
     }
 
-    const totalInnerGap = barGap * Math.max(groupCount - 1, 0);
-    return Math.round(Math.max(20, (usableCategoryWidth - totalInnerGap) / groupCount));
+    if (periodCount === 1) {
+        return { categoryGap: 0, barGap: groupCount > 1 ? 6 : 0 };
+    }
+
+    const isNarrow = plotWidth < 760;
+
+    if (groupCount > 1) {
+        return {
+            categoryGap: isNarrow ? 12 : 18,
+            barGap: isNarrow ? 4 : 6,
+        };
+    }
+
+    return {
+        categoryGap: isNarrow ? 14 : 24,
+        barGap: 0,
+    };
 };
 
 const getDashboardXAxisLabelStride = (periodCount: number, plotWidth: number) => {
@@ -827,7 +810,7 @@ const AnalyticsChart = ({
             (lineData?.series ?? []).map((item, index) => ({
                 key: item.id,
                 label: item.name,
-                color: LINE_COLORS[index % LINE_COLORS.length],
+                color: ANALYTICS_CHART_LINE_COLORS[index % ANALYTICS_CHART_LINE_COLORS.length],
                 profileSrc: (item.profileImageUrl ?? item.profileSrc ?? '').trim() || undefined,
             })),
         [lineData?.series]
@@ -940,27 +923,15 @@ const AnalyticsChart = ({
 
         return Math.max(chartAreaWidth - barYAxisWidth - leftMargin - rightMargin, MIN_BAR_PLOT_WIDTH);
     }, [barChartMargin.left, barChartMargin.right, barYAxisWidth, chartAreaWidth]);
-    const dashboardBarSize = useMemo(
+    const dashboardBarLayout = useMemo(
         () =>
             isDashboardMetricPreset
-                ? getDashboardBarSize(barData.length, dashboardBarGroupCount, barPlotWidth)
-                : undefined,
+                ? getDashboardBarLayout(barData.length, barPlotWidth, dashboardBarGroupCount)
+                : { categoryGap: 30, barGap: 0 },
         [barData.length, barPlotWidth, dashboardBarGroupCount, isDashboardMetricPreset]
     );
-    const dashboardBarCategoryGap = useMemo(
-        () =>
-            isDashboardMetricPreset
-                ? getDashboardBarCategoryGap(barData.length, barPlotWidth, dashboardBarGroupCount)
-                : 30,
-        [barData.length, barPlotWidth, dashboardBarGroupCount, isDashboardMetricPreset]
-    );
-    const dashboardBarGap = useMemo(
-        () =>
-            isDashboardMetricPreset
-                ? getDashboardBarGap(barData.length, barPlotWidth, dashboardBarGroupCount)
-                : undefined,
-        [barData.length, barPlotWidth, dashboardBarGroupCount, isDashboardMetricPreset]
-    );
+    const dashboardBarCategoryGap = dashboardBarLayout.categoryGap;
+    const dashboardBarGap = dashboardBarGroupCount > 1 ? dashboardBarLayout.barGap : undefined;
     const dashboardBarXAxisLabelStride = useMemo(
         () =>
             isDashboardMetricPreset ? getDashboardXAxisLabelStride(barData.length, barPlotWidth) : 1,
@@ -1298,7 +1269,7 @@ const AnalyticsChart = ({
                                             fill={seriesItem.color}
                                             barSize={
                                                 isDashboardMetricPreset
-                                                    ? dashboardBarSize
+                                                    ? undefined
                                                     : barMode === 'amount'
                                                         ? 42
                                                         : undefined
