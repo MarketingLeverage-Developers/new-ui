@@ -16,6 +16,7 @@ import {
     YAxis,
 } from 'recharts';
 import {
+    ANALYTICS_CHART_DASHBOARD_STATUS_COLORS,
     ANALYTICS_CHART_LINE_COLORS,
     ANALYTICS_CHART_PALETTE,
     ANALYTICS_CHART_STATUS_COLORS,
@@ -152,10 +153,18 @@ type BarLabelProps = {
 const AMOUNT_SERIES = [{ key: 'totalAmount', label: '소진액', color: ANALYTICS_CHART_PALETTE.positive }] as const;
 
 const STATUS_RATIO_SERIES = [
-    { key: 'pendingAmount', label: '운영대기중', color: ANALYTICS_CHART_STATUS_COLORS.waiting },
-    { key: 'liveAmount', label: '라이브중', color: ANALYTICS_CHART_STATUS_COLORS.live },
-    { key: 'stopByClientAmount', label: '중단-광고주요청', color: ANALYTICS_CHART_STATUS_COLORS.stopByClient },
-    { key: 'stopByPerformanceAmount', label: '중단-성과저하', color: ANALYTICS_CHART_STATUS_COLORS.stopByPerformance },
+    { key: 'pendingAmount', label: '운영대기중', color: ANALYTICS_CHART_DASHBOARD_STATUS_COLORS.waiting },
+    { key: 'liveAmount', label: '라이브중', color: ANALYTICS_CHART_DASHBOARD_STATUS_COLORS.live },
+    {
+        key: 'stopByClientAmount',
+        label: '중단-광고주요청',
+        color: ANALYTICS_CHART_DASHBOARD_STATUS_COLORS.stopByClient,
+    },
+    {
+        key: 'stopByPerformanceAmount',
+        label: '중단-성과저하',
+        color: ANALYTICS_CHART_DASHBOARD_STATUS_COLORS.stopByPerformance,
+    },
 ] as const;
 
 const INBOUND_STATUS_SERIES = [
