@@ -51,6 +51,7 @@ export { default as DashboardSelectorPanel } from './components/DashboardSelecto
 export { default as MetricSummaryStrip } from './components/MetricSummaryStrip/MetricSummaryStrip';
 export { default as AvatarStackButton } from './components/AvatarStackButton/AvatarStackButton';
 export { default as HomepageSettingButtonGroup } from './components/HomepageSettingButtonGroup/HomepageSettingButtonGroup';
+export { default as HomepageSelectionTabGroup } from './components/HomepageSelectionTabGroup/HomepageSelectionTabGroup';
 export { default as StatusBadge } from './components/StatusBadge/StatusBadge';
 export { default as DetailSceneHeader } from './components/DetailSceneHeader/DetailSceneHeader';
 export { default as FileUploader } from './components/FileUploader/FileUploader';
@@ -134,6 +135,11 @@ export type {
     HomepageSettingButtonGroupProps,
     HomepageSettingButtonGroupTone,
 } from './components/HomepageSettingButtonGroup/HomepageSettingButtonGroup';
+export type {
+    HomepageSelectionTabGroupItem,
+    HomepageSelectionTabGroupProps,
+    HomepageSelectionTabGroupTone,
+} from './components/HomepageSelectionTabGroup/HomepageSelectionTabGroup';
 export type {
     BasicContentProps,
     BasicContentHeaderProps,

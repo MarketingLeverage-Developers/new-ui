@@ -329,3 +329,9 @@ export type {
     HomepageSettingButtonGroupProps,
     HomepageSettingButtonGroupTone,
 } from './HomepageSettingButtonGroup/HomepageSettingButtonGroup';
+export { default as HomepageSelectionTabGroup } from './HomepageSelectionTabGroup/HomepageSelectionTabGroup';
+export type {
+    HomepageSelectionTabGroupItem,
+    HomepageSelectionTabGroupProps,
+    HomepageSelectionTabGroupTone,
+} from './HomepageSelectionTabGroup/HomepageSelectionTabGroup';
