@@ -58,14 +58,42 @@ const endOfMonth = (date: Date) => new Date(date.getFullYear(), date.getMonth() 
 const isSameMonth = (a: Date, b: Date) => a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth();
 const isSameDay = (a: Date, b: Date) =>
     a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
-const isAfterMonth = (a: Date, b: Date) =>
-    a.getFullYear() > b.getFullYear() || (a.getFullYear() === b.getFullYear() && a.getMonth() > b.getMonth());
+const isAfterDay = (a: Date, b: Date) => startOfDay(a).getTime() > startOfDay(b).getTime();
 const addDays = (date: Date, days: number) => {
     const next = new Date(date);
     next.setDate(next.getDate() + days);
     return next;
 };
 const startOfDay = (date: Date) => new Date(date.getFullYear(), date.getMonth(), date.getDate());
+const getRangeBounds = (value: DateRange | undefined) => {
+    const from = value?.from ?? value?.to;
+    const to = value?.to ?? value?.from;
+
+    if (!from || !to) return undefined;
+
+    const normalizedFrom = startOfDay(from);
+    const normalizedTo = startOfDay(to);
+    return normalizedFrom <= normalizedTo
+        ? { from: normalizedFrom, to: normalizedTo }
+        : { from: normalizedTo, to: normalizedFrom };
+};
+const getSelectedDayCount = (value: DateRange | undefined) => {
+    const bounds = getRangeBounds(value);
+    if (!bounds) return undefined;
+
+    const dayMillis = 24 * 60 * 60 * 1000;
+    return Math.max(1, Math.round((bounds.to.getTime() - bounds.from.getTime()) / dayMillis) + 1);
+};
+const shiftRangeBySelection = (value: DateRange | undefined, diff: number): DateRange | undefined => {
+    const bounds = getRangeBounds(value);
+    if (!bounds) return undefined;
+
+    const dayOffset = (getSelectedDayCount(value) ?? 1) * diff;
+    return {
+        from: addDays(bounds.from, dayOffset),
+        to: addDays(bounds.to, dayOffset),
+    };
+};
 const parseIso = (value: string): Date | undefined => {
     const matched = /^(\d{4})-(\d{2})-(\d{2})(?:\s*\([일월화수목금토]\))?$/.exec(value.trim());
     if (!matched) return undefined;
@@ -106,7 +134,11 @@ const DateRangeCalendar = ({ range, onChange, onPresetSelect, className, ...prop
         };
         const subMonths = (date: Date, months: number) => {
             const next = new Date(date);
+            const day = next.getDate();
+            next.setDate(1);
             next.setMonth(next.getMonth() - months);
+            const lastDay = new Date(next.getFullYear(), next.getMonth() + 1, 0).getDate();
+            next.setDate(Math.min(day, lastDay));
             return next;
         };
         const subYears = (date: Date, years: number) => {
@@ -168,11 +200,12 @@ const DateRangeCalendar = ({ range, onChange, onPresetSelect, className, ...prop
     React.useEffect(() => {
         setTempRange(range);
         setHoveredDay(undefined);
+        setCurrentMonth(range?.from ?? range?.to ?? today);
         setFromInput(formatInputDate(range?.from));
         setToInput(formatInputDate(range?.to));
         setFromError(false);
         setToError(false);
-    }, [range]);
+    }, [range, today]);
 
     React.useEffect(() => {
         const onPointerDown = (event: PointerEvent) => {
@@ -227,23 +260,33 @@ const DateRangeCalendar = ({ range, onChange, onPresetSelect, className, ...prop
     };
 
     const handlePrevMonth = () => {
-        setCurrentMonth((prev) => {
-            const next = new Date(prev);
-            next.setMonth(next.getMonth() - 1);
-            return next;
-        });
+        const nextRange = shiftRangeBySelection(tempRange ?? range, -1);
+        if (!nextRange) return;
+
+        commitRange(nextRange);
+        setHoveredDay(undefined);
+        setCurrentMonth(nextRange.from ?? today);
+        setFromInput(formatInputDate(nextRange.from));
+        setToInput(formatInputDate(nextRange.to));
+        setFromError(false);
+        setToError(false);
     };
 
     const handleNextMonth = () => {
-        setCurrentMonth((prev) => {
-            const next = new Date(prev);
-            next.setMonth(next.getMonth() + 1);
-            if (isAfterMonth(next, today)) return prev;
-            return next;
-        });
+        const nextRange = shiftRangeBySelection(tempRange ?? range, 1);
+        if (!nextRange?.to || isAfterDay(nextRange.to, today)) return;
+
+        commitRange(nextRange);
+        setHoveredDay(undefined);
+        setCurrentMonth(nextRange.from ?? today);
+        setFromInput(formatInputDate(nextRange.from));
+        setToInput(formatInputDate(nextRange.to));
+        setFromError(false);
+        setToError(false);
     };
 
-    const isNextDisabled = isSameMonth(currentMonth, today);
+    const nextRange = React.useMemo(() => shiftRangeBySelection(tempRange ?? range, 1), [range, tempRange]);
+    const isNextDisabled = !nextRange?.to || isAfterDay(nextRange.to, today);
 
     const activePreset = React.useMemo(() => {
         const isSameDay = (a?: Date, b?: Date) =>
@@ -430,7 +473,7 @@ const DateRangeCalendar = ({ range, onChange, onPresetSelect, className, ...prop
                 </div>
 
                 <div className={styles.CalendarHeader}>
-                    <button type="button" className={styles.NavButton} onClick={handlePrevMonth} aria-label="이전 달">
+                    <button type="button" className={styles.NavButton} onClick={handlePrevMonth} aria-label="이전 기간">
                         <IoCaretBackSharp className={styles.NavIcon} />
                     </button>
 
@@ -512,7 +555,7 @@ const DateRangeCalendar = ({ range, onChange, onPresetSelect, className, ...prop
                         className={styles.NavButton}
                         onClick={handleNextMonth}
                         disabled={isNextDisabled}
-                        aria-label="다음 달"
+                        aria-label="다음 기간"
                     >
                         <IoCaretForwardSharp className={styles.NavIcon} />
                     </button>

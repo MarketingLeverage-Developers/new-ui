@@ -129,6 +129,11 @@ const formatIsoDateWithWeekday = (date?: Date) => {
 };
 
 const startOfDay = (date: Date) => new Date(date.getFullYear(), date.getMonth(), date.getDate());
+const addDays = (date: Date, diff: number) => {
+    const next = new Date(date);
+    next.setDate(next.getDate() + diff);
+    return next;
+};
 
 const startOfMonth = (date: Date) => new Date(date.getFullYear(), date.getMonth(), 1);
 
@@ -143,14 +148,6 @@ const addMonthsClamped = (date: Date, diff: number) => {
 
 const isAfterMonth = (a: Date, b: Date) =>
     a.getFullYear() > b.getFullYear() || (a.getFullYear() === b.getFullYear() && a.getMonth() > b.getMonth());
-
-const isSameDay = (a: Date, b: Date) =>
-    a.getFullYear() === b.getFullYear() &&
-    a.getMonth() === b.getMonth() &&
-    a.getDate() === b.getDate();
-
-const isSameMonth = (a: Date, b: Date) =>
-    a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth();
 
 const parseDateRangeLabel = (label: React.ReactNode): DateRange | undefined => {
     if (typeof label !== 'string') return undefined;
@@ -179,43 +176,55 @@ const toDateRangeValue = (value?: DateRange): HeaderDateRangeValue => ({
     to: formatIsoDate(value?.to),
 });
 
-const shiftRangeByMonth = (
-    value: DateRange | undefined,
-    diff: number,
-    mode: 'date' | 'month',
-    today: Date
-): DateRange | undefined => {
-    const baseFrom = value?.from ?? value?.to;
-    const baseTo = value?.to ?? value?.from;
+const getRangeBounds = (value: DateRange | undefined) => {
+    const from = value?.from ?? value?.to;
+    const to = value?.to ?? value?.from;
 
-    if (!baseFrom || !baseTo) return undefined;
+    if (!from || !to) return undefined;
 
-    const shiftedFrom = addMonthsClamped(baseFrom, diff);
-    const shiftedTo = addMonthsClamped(baseTo, diff);
+    const normalizedFrom = startOfDay(from);
+    const normalizedTo = startOfDay(to);
+    return normalizedFrom <= normalizedTo
+        ? { from: normalizedFrom, to: normalizedTo }
+        : { from: normalizedTo, to: normalizedFrom };
+};
+
+const getSelectedDayCount = (value: DateRange | undefined) => {
+    const bounds = getRangeBounds(value);
+    if (!bounds) return undefined;
+
+    const dayMillis = 24 * 60 * 60 * 1000;
+    return Math.max(1, Math.round((bounds.to.getTime() - bounds.from.getTime()) / dayMillis) + 1);
+};
+
+const getSelectedMonthCount = (value: DateRange | undefined) => {
+    const bounds = getRangeBounds(value);
+    if (!bounds) return undefined;
+
+    const fromMonthIndex = bounds.from.getFullYear() * 12 + bounds.from.getMonth();
+    const toMonthIndex = bounds.to.getFullYear() * 12 + bounds.to.getMonth();
+    return Math.abs(toMonthIndex - fromMonthIndex) + 1;
+};
+
+const shiftRangeBySelection = (value: DateRange | undefined, diff: number, mode: 'date' | 'month'): DateRange | undefined => {
+    const bounds = getRangeBounds(value);
+    if (!bounds) return undefined;
 
     if (mode === 'month') {
+        const monthOffset = (getSelectedMonthCount(value) ?? 1) * diff;
+        const shiftedFrom = addMonthsClamped(bounds.from, monthOffset);
+        const shiftedTo = addMonthsClamped(bounds.to, monthOffset);
+
         return {
             from: startOfMonth(shiftedFrom),
             to: endOfMonth(shiftedTo),
         };
     }
 
-    const isSingleMonthRange = isSameMonth(baseFrom, baseTo);
-    const isWholeMonthRange =
-        isSingleMonthRange && baseFrom.getDate() === 1 && isSameDay(baseTo, endOfMonth(baseTo));
-    const isCurrentMonthToDateRange =
-        isSingleMonthRange && baseFrom.getDate() === 1 && isSameMonth(baseFrom, today) && isSameDay(baseTo, today);
-
-    if (isWholeMonthRange || isCurrentMonthToDateRange) {
-        return {
-            from: startOfMonth(shiftedFrom),
-            to: isSameMonth(shiftedTo, today) ? startOfDay(today) : endOfMonth(shiftedTo),
-        };
-    }
-
+    const dayOffset = (getSelectedDayCount(value) ?? 1) * diff;
     return {
-        from: shiftedFrom,
-        to: shiftedTo,
+        from: addDays(bounds.from, dayOffset),
+        to: addDays(bounds.to, dayOffset),
     };
 };
 
@@ -288,6 +297,8 @@ const HeaderDateRangeTrigger = ({
 const HeaderDateRangeControl = ({
     dateLabel,
     mode = 'date',
+    onPrevDate = noop,
+    onNextDate = noop,
     onDateLabelClick,
     value,
     defaultValue,
@@ -304,6 +315,8 @@ const HeaderDateRangeControl = ({
     const controlledRange = toDateRange(value);
     const selectedRange = controlledRange ?? innerRange ?? buildFallbackRange(mode);
     const today = React.useMemo(() => new Date(), []);
+    const hasExternalPrevNavigation = onPrevDate !== noop;
+    const hasExternalNextNavigation = onNextDate !== noop;
 
     React.useEffect(() => {
         if (value || defaultValue) return;
@@ -327,15 +340,15 @@ const HeaderDateRangeControl = ({
 
     const moveRange = React.useCallback(
         (diff: number) => {
-            const nextRange = shiftRangeByMonth(selectedRange, diff, mode, today);
+            const nextRange = shiftRangeBySelection(selectedRange, diff, mode);
             if (!nextRange) return;
 
             handleRangeChange(nextRange);
         },
-        [handleRangeChange, mode, selectedRange, today]
+        [handleRangeChange, mode, selectedRange]
     );
 
-    const nextRange = React.useMemo(() => shiftRangeByMonth(selectedRange, 1, mode, today), [mode, selectedRange, today]);
+    const nextRange = React.useMemo(() => shiftRangeBySelection(selectedRange, 1, mode), [mode, selectedRange]);
     const isNextDisabled = React.useMemo(() => {
         if (!nextRange?.to) return true;
 
@@ -346,7 +359,12 @@ const HeaderDateRangeControl = ({
     return (
         <Dropdown>
             <div className={classNames(styles.DateRangeControl, className)}>
-                <button type="button" className={styles.DateEdgeButton} aria-label="이전 기간" onClick={() => moveRange(-1)}>
+                <button
+                    type="button"
+                    className={styles.DateEdgeButton}
+                    aria-label="이전 기간"
+                    onClick={hasExternalPrevNavigation ? onPrevDate : () => moveRange(-1)}
+                >
                     <IoIosArrowBack size={14} />
                 </button>
 
@@ -356,7 +374,7 @@ const HeaderDateRangeControl = ({
                     type="button"
                     className={styles.DateEdgeButton}
                     aria-label="다음 기간"
-                    onClick={() => moveRange(1)}
+                    onClick={hasExternalNextNavigation ? onNextDate : () => moveRange(1)}
                     disabled={isNextDisabled}
                 >
                     <IoIosArrowForward size={14} />

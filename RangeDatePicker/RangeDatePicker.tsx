@@ -183,7 +183,11 @@ const RangeDatePicker = ({ range, onChange, onPresetSelect, ...props }: RangeDat
 
         const subMonths = (d: Date, n: number) => {
             const x = new Date(d);
+            const day = x.getDate();
+            x.setDate(1);
             x.setMonth(x.getMonth() - n);
+            const lastDay = new Date(x.getFullYear(), x.getMonth() + 1, 0).getDate();
+            x.setDate(Math.min(day, lastDay));
             return x;
         };
 
