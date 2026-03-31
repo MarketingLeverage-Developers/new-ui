@@ -1,0 +1,26 @@
+.Badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    max-width: 100%;
+    color: var(--status-badge-color, currentColor);
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 16px;
+    white-space: nowrap;
+}
+
+.Dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background-color: var(--status-badge-dot-color, var(--status-badge-color, currentColor));
+    flex-shrink: 0;
+}
+
+.Label {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

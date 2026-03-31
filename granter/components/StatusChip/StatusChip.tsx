@@ -2,7 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 import styles from './StatusChip.module.scss';
 
-export type StatusChipTone = 'neutral' | 'success' | 'warning' | 'danger' | 'info';
+export type StatusChipTone = 'neutral' | 'success' | 'warning' | 'danger' | 'info' | 'violet';
 
 export type StatusChipProps = {
     children: React.ReactNode;

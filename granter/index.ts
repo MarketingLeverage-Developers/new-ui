@@ -49,6 +49,7 @@ export { default as HomeItemElementsContent } from './components/HomeItemElement
 export { default as AmountListPanel } from './components/AmountListPanel/AmountListPanel';
 export { default as DashboardSelectorPanel } from './components/DashboardSelectorPanel/DashboardSelectorPanel';
 export { default as MetricSummaryStrip } from './components/MetricSummaryStrip/MetricSummaryStrip';
+export { default as StatusBadge } from './components/StatusBadge/StatusBadge';
 export { default as DetailSceneHeader } from './components/DetailSceneHeader/DetailSceneHeader';
 export { default as FileUploader } from './components/FileUploader/FileUploader';
 export { default as RichTextEditor } from './components/RichTextEditor/RichTextEditor';
@@ -258,6 +259,7 @@ export type {
     MetricSummaryStripProps,
     MetricSummaryStripItem,
 } from './components/MetricSummaryStrip/MetricSummaryStrip';
+export type { StatusBadgeProps } from './components/StatusBadge/StatusBadge';
 export type { DetailSceneHeaderProps, DetailSceneHeaderTone } from './components/DetailSceneHeader/DetailSceneHeader';
 export type { StatusChipProps, StatusChipTone } from './components/StatusChip/StatusChip';
 export type {

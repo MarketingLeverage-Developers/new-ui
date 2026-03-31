@@ -99,6 +99,8 @@ export type { MetricSummaryStripProps, MetricSummaryStripItem } from './MetricSu
 
 export { default as StatusChip } from './StatusChip/StatusChip';
 export type { StatusChipProps, StatusChipTone } from './StatusChip/StatusChip';
+export { default as StatusBadge } from './StatusBadge/StatusBadge';
+export type { StatusBadgeProps } from './StatusBadge/StatusBadge';
 export { default as DetailSceneHeader } from './DetailSceneHeader/DetailSceneHeader';
 export type { DetailSceneHeaderProps, DetailSceneHeaderTone } from './DetailSceneHeader/DetailSceneHeader';
 
