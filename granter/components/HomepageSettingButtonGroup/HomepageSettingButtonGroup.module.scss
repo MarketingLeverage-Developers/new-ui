@@ -1,0 +1,102 @@
+.Root {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    flex-wrap: wrap;
+}
+
+.AddButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border: 1px dashed var(--granter-gray-300);
+    border-radius: 999px;
+    background-color: var(--granter-white);
+    color: var(--granter-gray-400);
+    cursor: pointer;
+    transition:
+        border-color 0.15s ease,
+        color 0.15s ease,
+        background-color 0.15s ease;
+}
+
+.AddButton:hover {
+    border-color: var(--granter-gray-400);
+    color: var(--granter-gray-500);
+}
+
+.AddButton:focus-visible,
+.Item:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 4px rgb(14 165 233 / 12%);
+}
+
+.Item {
+    --homepage-setting-item-bg: #eef5ff;
+    --homepage-setting-item-color: #4f78a8;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 36px;
+    max-width: 100%;
+    padding: 0 14px 0 11px;
+    border: 2px solid rgba(255, 255, 255, 0.96);
+    border-radius: 999px;
+    background-color: var(--homepage-setting-item-bg);
+    color: var(--homepage-setting-item-color);
+    box-shadow: 0 2px 8px rgb(15 23 42 / 8%);
+    cursor: pointer;
+    transition:
+        box-shadow 0.15s ease,
+        border-color 0.15s ease;
+}
+
+.Item:hover {
+    box-shadow: 0 8px 18px rgb(15 23 42 / 10%);
+}
+
+.Item[data-tone='green'] {
+    --homepage-setting-item-bg: #eef8f2;
+    --homepage-setting-item-color: #5a9c6e;
+}
+
+.Item[data-tone='orange'] {
+    --homepage-setting-item-bg: #fff4e8;
+    --homepage-setting-item-color: #d18437;
+}
+
+.Item[data-tone='purple'] {
+    --homepage-setting-item-bg: #f4efff;
+    --homepage-setting-item-color: #7d64c1;
+}
+
+.Item[data-tone='teal'] {
+    --homepage-setting-item-bg: #edf8f7;
+    --homepage-setting-item-color: #4f8b85;
+}
+
+.Item[data-tone='gray'] {
+    --homepage-setting-item-bg: #f3f4f6;
+    --homepage-setting-item-color: #6b7280;
+}
+
+.Icon {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.Label {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    text-transform: none;
+}

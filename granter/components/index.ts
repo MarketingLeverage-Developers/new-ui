@@ -320,3 +320,12 @@ export type { CompanyInquiryAccessContentProps } from './CompanyInquiryAccessCon
 
 export { default as CompanyDailyReportSettingContent } from './CompanyDailyReportSettingContent/CompanyDailyReportSettingContent';
 export type { CompanyDailyReportSettingContentProps } from './CompanyDailyReportSettingContent/CompanyDailyReportSettingContent';
+
+export { default as AvatarStackButton } from './AvatarStackButton/AvatarStackButton';
+export type { AvatarStackButtonProps, AvatarStackButtonItem } from './AvatarStackButton/AvatarStackButton';
+export { default as HomepageSettingButtonGroup } from './HomepageSettingButtonGroup/HomepageSettingButtonGroup';
+export type {
+    HomepageSettingButtonGroupItem,
+    HomepageSettingButtonGroupProps,
+    HomepageSettingButtonGroupTone,
+} from './HomepageSettingButtonGroup/HomepageSettingButtonGroup';

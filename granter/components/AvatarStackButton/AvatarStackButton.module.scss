@@ -1,0 +1,81 @@
+.Button {
+    display: inline-flex;
+    align-items: center;
+    min-width: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    transition: filter 0.15s ease;
+}
+
+.Button:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+}
+
+.Button:focus-visible {
+    outline: none;
+}
+
+.Button:focus-visible .Stack,
+.Button:hover:not(:disabled) .Stack {
+    filter: drop-shadow(0 0 0.2rem rgb(14 165 233 / 16%));
+}
+
+.Stack {
+    display: inline-flex;
+    align-items: center;
+    padding-right: 4px;
+    transition: filter 0.15s ease;
+}
+
+.AddBadge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border: 1px dashed var(--granter-gray-300);
+    border-radius: 999px;
+    background-color: var(--granter-white);
+    color: var(--granter-gray-400);
+    transition:
+        border-color 0.15s ease,
+        color 0.15s ease,
+        background-color 0.15s ease;
+}
+
+.Button:hover:not(:disabled) .AddBadge {
+    border-color: var(--granter-gray-400);
+    color: var(--granter-gray-500);
+}
+
+.AvatarCluster {
+    display: inline-flex;
+    align-items: center;
+}
+
+.Avatar {
+    margin-left: -10px;
+    border: 2px solid var(--granter-white);
+    box-shadow: 0 2px 10px rgb(17 24 39 / 12%);
+}
+
+.Overflow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 30px;
+    height: 30px;
+    margin-left: -8px;
+    padding: 0 8px;
+    border: 2px solid var(--granter-white);
+    border-radius: 999px;
+    background-color: var(--granter-gray-900);
+    color: var(--granter-white);
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 16px;
+    box-shadow: 0 2px 10px rgb(17 24 39 / 12%);
+}

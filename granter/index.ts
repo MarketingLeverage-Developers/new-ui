@@ -49,6 +49,8 @@ export { default as HomeItemElementsContent } from './components/HomeItemElement
 export { default as AmountListPanel } from './components/AmountListPanel/AmountListPanel';
 export { default as DashboardSelectorPanel } from './components/DashboardSelectorPanel/DashboardSelectorPanel';
 export { default as MetricSummaryStrip } from './components/MetricSummaryStrip/MetricSummaryStrip';
+export { default as AvatarStackButton } from './components/AvatarStackButton/AvatarStackButton';
+export { default as HomepageSettingButtonGroup } from './components/HomepageSettingButtonGroup/HomepageSettingButtonGroup';
 export { default as StatusBadge } from './components/StatusBadge/StatusBadge';
 export { default as DetailSceneHeader } from './components/DetailSceneHeader/DetailSceneHeader';
 export { default as FileUploader } from './components/FileUploader/FileUploader';
@@ -126,6 +128,12 @@ export type { CompanySettingContentProps } from './components/CompanySettingCont
 export type { CompanyAdMediaLinkContentProps } from './components/CompanyAdMediaLinkContent/CompanyAdMediaLinkContent';
 export type { CompanyInquiryAccessContentProps } from './components/CompanyInquiryAccessContent/CompanyInquiryAccessContent';
 export type { CompanyDailyReportSettingContentProps } from './components/CompanyDailyReportSettingContent/CompanyDailyReportSettingContent';
+export type { AvatarStackButtonProps, AvatarStackButtonItem } from './components/AvatarStackButton/AvatarStackButton';
+export type {
+    HomepageSettingButtonGroupItem,
+    HomepageSettingButtonGroupProps,
+    HomepageSettingButtonGroupTone,
+} from './components/HomepageSettingButtonGroup/HomepageSettingButtonGroup';
 export type {
     BasicContentProps,
     BasicContentHeaderProps,
