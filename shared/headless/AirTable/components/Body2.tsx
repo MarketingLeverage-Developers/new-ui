@@ -4,6 +4,8 @@ import { useAirTableContext } from '../AirTable2';
 import { getThemeColor } from '../../../utils/css/getThemeColor';
 import styles from './Body.module.scss';
 
+const AIR_TABLE2_OPEN_CONTEXT_MENU_EVENT = 'AIR_TABLE2_OPEN_CONTEXT_MENU';
+
 type ExpandableDetailRowProps = {
     expanded: boolean;
     rowKey: string;
@@ -397,7 +399,7 @@ const BodyRowInner = <T,>({
                                 }
 
                                 window.dispatchEvent(
-                                    new CustomEvent('AIR_TABLE_OPEN_CONTEXT_MENU', {
+                                    new CustomEvent(AIR_TABLE2_OPEN_CONTEXT_MENU_EVENT, {
                                         detail: {
                                             x: e.clientX,
                                             y: e.clientY,

@@ -2,6 +2,9 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { getThemeColor } from '../../../utils/css/getThemeColor';
 import { useAirTableContext } from '../AirTable2';
+import { buildSelectionTsv2, copyTextToClipboard2 } from '../hooks/useCopySelection2';
+
+const AIR_TABLE2_OPEN_CONTEXT_MENU_EVENT = 'AIR_TABLE2_OPEN_CONTEXT_MENU';
 
 type ContextMenuDetail = {
     x: number;
@@ -17,30 +20,88 @@ type MenuState = ContextMenuDetail & {
 };
 
 const itemStyle: React.CSSProperties = {
+    display: 'flex',
+    alignItems: 'center',
     width: '100%',
-    border: 'none',
-    outline: 'none',
     background: 'transparent',
     padding: '10px 10px',
     textAlign: 'left',
     borderRadius: 8,
     cursor: 'pointer',
     fontSize: 13,
+    boxSizing: 'border-box',
+    userSelect: 'none',
 };
 
-const dividerStyle: React.CSSProperties = {
-    height: 1,
-    background: 'rgba(0,0,0,0.08)',
-    margin: '6px 0',
+const MenuActionButton = ({
+    children,
+    onClick,
+}: {
+    children: React.ReactNode;
+    onClick: () => void;
+}) => {
+    const [isActive, setIsActive] = useState(false);
+
+    return (
+        <div
+            role="button"
+            tabIndex={0}
+            style={{
+                ...itemStyle,
+                WebkitTapHighlightColor: 'transparent',
+                color: isActive ? getThemeColor('Primary1') : getThemeColor('Black1'),
+                boxShadow: 'none',
+                transition: 'background-color 120ms ease, color 120ms ease',
+            }}
+            onMouseEnter={() => setIsActive(true)}
+            onMouseLeave={() => setIsActive(false)}
+            onFocus={() => setIsActive(true)}
+            onBlur={() => setIsActive(false)}
+            onClick={onClick}
+            onKeyDown={(e) => {
+                if (e.key !== 'Enter' && e.key !== ' ') return;
+                e.preventDefault();
+                onClick();
+            }}
+        >
+            {children}
+        </div>
+    );
 };
 
 export const CellContextMenuPortal2 = <T,>() => {
-    const { state, setPinnedColumnKeys, pinnedColumnKeys } = useAirTableContext<T>();
+    const { state, baseOrder, getRange } = useAirTableContext<T>();
 
     const [menu, setMenu] = useState<MenuState | null>(null);
     const ref = useRef<HTMLDivElement | null>(null);
 
     const close = useCallback(() => setMenu(null), []);
+
+    const handleCopySelection = useCallback(
+        async (includeHeaders: boolean) => {
+            const range = getRange();
+            if (!range) {
+                close();
+                return;
+            }
+
+            if (state.drag.draggingKey) {
+                close();
+                return;
+            }
+
+            const tsv = buildSelectionTsv2({
+                stateRows: state.rows,
+                baseOrder,
+                range,
+                includeHeaders,
+            });
+
+            await copyTextToClipboard2(tsv);
+            close();
+        },
+        [baseOrder, close, getRange, state.drag.draggingKey, state.rows]
+    );
 
     useEffect(() => {
         console.log('✅ CellContextMenuPortal mounted');
@@ -63,8 +124,8 @@ export const CellContextMenuPortal2 = <T,>() => {
             });
         };
 
-        window.addEventListener('AIR_TABLE_OPEN_CONTEXT_MENU', handler);
-        return () => window.removeEventListener('AIR_TABLE_OPEN_CONTEXT_MENU', handler);
+        window.addEventListener(AIR_TABLE2_OPEN_CONTEXT_MENU_EVENT, handler);
+        return () => window.removeEventListener(AIR_TABLE2_OPEN_CONTEXT_MENU_EVENT, handler);
     }, []);
 
     useEffect(() => {
@@ -93,9 +154,6 @@ export const CellContextMenuPortal2 = <T,>() => {
     if (!menu?.open) return null;
     if (typeof document === 'undefined') return null;
 
-    const colKey = menu.colKey;
-    const isPinned = pinnedColumnKeys.includes(colKey);
-
     // ✅ 화면 밖으로 안 나가게 clamp
     const MENU_W = 220;
     const MENU_H = 160;
@@ -121,19 +179,24 @@ export const CellContextMenuPortal2 = <T,>() => {
                     userSelect: 'none',
                 }}
             >
-                {/* ✅ 복사 */}
-                <button
-                    type="button"
-                    style={itemStyle}
-                    onClick={() => {
-                        document.execCommand('copy');
-                        close();
+                <div
+                    style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: 2,
+                        width: '100%',
+                        borderRadius: 8,
+                        overflow: 'hidden',
                     }}
                 >
-                    복사
-                </button>
+                    <MenuActionButton onClick={() => void handleCopySelection(false)}>
+                        복사
+                    </MenuActionButton>
 
-                {/* <div style={dividerStyle} /> */}
+                    <MenuActionButton onClick={() => void handleCopySelection(true)}>
+                        헤더 포함 복사
+                    </MenuActionButton>
+                </div>
             </div>
         </>,
 

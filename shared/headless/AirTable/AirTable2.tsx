@@ -16,7 +16,7 @@ import { useAutoScroll } from './hooks/useAutoScroll';
 import { useColumnResize2 as useColumnResize } from './hooks/useColumnResize2';
 import { useColumnDrag } from './hooks/useColumnDrag';
 import { useSelectionMouseUpEnd2 as useSelectionMouseUpEnd } from './hooks/useSelectionMouseUpEnd2';
-import { useCopySelection } from './hooks/useCopySelection';
+import { useCopySelection2 as useCopySelection } from './hooks/useCopySelection2';
 import { usePinnedStyle } from './hooks/usePinnedStyle';
 import { useGridMeta2 } from './hooks/useGridMeta2';
 import { useGridPointer } from './hooks/useGridPointer';
@@ -1206,6 +1206,7 @@ const useTable = <T,>({
    ========================= */
 
 type AirTableContextValue<T> = {
+    tableId: string;
     props: AirTableProps<T>;
     wrapperRef: React.MutableRefObject<HTMLDivElement | null>;
     scrollRef: React.MutableRefObject<HTMLDivElement | null>;
@@ -1316,6 +1317,7 @@ const AirTableInner = <T,>({
     const wrapperRef = useRef<HTMLDivElement | null>(null);
     const scrollRef = useRef<HTMLDivElement | null>(null);
     const tableAreaRef = useRef<HTMLDivElement | null>(null);
+    const tableIdRef = useRef(`airtable2-${Math.random().toString(36).slice(2)}`);
 
     const sortConfigByKey = useMemo(() => collectSortConfig(columns), [columns]);
 
@@ -1693,6 +1695,7 @@ const AirTableInner = <T,>({
     });
 
     const value = {
+        tableId: tableIdRef.current,
         props: {
             data: sortedData,
             columns,

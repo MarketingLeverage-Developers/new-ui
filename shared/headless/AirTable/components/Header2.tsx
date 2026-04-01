@@ -891,6 +891,7 @@ export const Header2 = <T,>({ className, headerCellClassName, resizeHandleClassN
                                     }}
                                 >
                                     <div
+                                        id={`__header_${colKey}`}
                                         style={{
                                             flex: 1,
                                             minWidth: 0,
