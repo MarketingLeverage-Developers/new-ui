@@ -51,6 +51,7 @@ export interface ColumnType<T> {
     autoFitPadding?: number;
     defaultHidden?: boolean;
     filter?: React.ReactNode;
+    disableFiltering?: boolean;
     sortValue?: SortValueGetter<T>;
     sorter?: Sorter<T>;
     headerUnderline?: HeaderUnderlineConfig;
@@ -69,6 +70,7 @@ export type Column<T> = {
     defaultHidden?: boolean;
     children?: ColumnType<T>[];
     filter?: React.ReactNode;
+    disableFiltering?: boolean;
     sortValue?: SortValueGetter<T>;
     sorter?: Sorter<T>;
     headerUnderline?: HeaderUnderlineConfig;

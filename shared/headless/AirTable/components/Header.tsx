@@ -941,7 +941,7 @@ export const Header = <T,>({ className, headerCellClassName, resizeHandleClassNa
                         const sortConfig = sortConfigByKey.get(colKey);
                         const isSortable = !!sortConfig;
                         const sortDirection = sortState?.key === colKey ? sortState.direction : null;
-                        const hasFilterButton = !!col.filter || !!sortConfig?.sortValue;
+                        const hasFilterButton = !columnByKey.get(colKey)?.disableFiltering && (!!col.filter || !!sortConfig?.sortValue);
                         const isFilterActive = hasActiveFilter(filterState[colKey]);
                         const actionPaddingRight = 12 + (hasFilterButton ? 28 : 0) + (isSortable ? 24 : 0);
                         const sortButtonRight = hasFilterButton ? 42 : 14;
