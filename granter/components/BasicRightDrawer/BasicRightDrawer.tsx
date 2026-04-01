@@ -30,29 +30,35 @@ const BasicRightDrawer = ({
     closeOnEsc = true,
     contentClassName,
     backdropClassName,
-}: BasicRightDrawerProps) => (
-    <Modal
-        value={open}
-        onChange={(nextOpen) => {
-            if (!nextOpen) onChange();
-        }}
-        enterAction={enterAction}
-        lockBodyScroll={lockBodyScroll}
-        closeOnEsc={closeOnEsc}
-    >
-        <Portal>
-            <Modal.Backdrop className={backdropClassName} />
-            <Modal.Content
-                width={width}
-                height="100vh"
-                maxHeight={maxHeight}
-                className={classNames(styles.RightDrawerContent, contentClassName)}
-                data-open={open ? 'true' : 'false'}
-            >
-                {open || keepMounted ? content : null}
-            </Modal.Content>
-        </Portal>
-    </Modal>
-);
+}: BasicRightDrawerProps) => {
+    if (!open && !keepMounted) {
+        return null;
+    }
+
+    return (
+        <Modal
+            value={open}
+            onChange={(nextOpen) => {
+                if (!nextOpen) onChange();
+            }}
+            enterAction={enterAction}
+            lockBodyScroll={lockBodyScroll}
+            closeOnEsc={closeOnEsc}
+        >
+            <Portal>
+                <Modal.Backdrop className={backdropClassName} />
+                <Modal.Content
+                    width={width}
+                    height="100vh"
+                    maxHeight={maxHeight}
+                    className={classNames(styles.RightDrawerContent, contentClassName)}
+                    data-open={open ? 'true' : 'false'}
+                >
+                    {content}
+                </Modal.Content>
+            </Portal>
+        </Modal>
+    );
+};
 
 export default BasicRightDrawer;

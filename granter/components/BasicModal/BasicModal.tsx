@@ -32,28 +32,34 @@ const BasicModal = ({
     closeOnEsc = true,
     contentClassName,
     backdropClassName,
-}: BasicModalProps) => (
-    <Modal
-        value={open}
-        onChange={(nextOpen) => {
-            if (!nextOpen) onChange();
-        }}
-        enterAction={enterAction}
-        lockBodyScroll={lockBodyScroll}
-        closeOnEsc={closeOnEsc}
-    >
-        <Portal>
-            <Modal.Backdrop className={backdropClassName} />
-            <Modal.Content
-                width={width}
-                height={height}
-                maxHeight={maxHeight}
-                className={classNames(styles.BasicModalContent, contentClassName)}
-            >
-                {open || keepMounted ? content : null}
-            </Modal.Content>
-        </Portal>
-    </Modal>
-);
+}: BasicModalProps) => {
+    if (!open && !keepMounted) {
+        return null;
+    }
+
+    return (
+        <Modal
+            value={open}
+            onChange={(nextOpen) => {
+                if (!nextOpen) onChange();
+            }}
+            enterAction={enterAction}
+            lockBodyScroll={lockBodyScroll}
+            closeOnEsc={closeOnEsc}
+        >
+            <Portal>
+                <Modal.Backdrop className={backdropClassName} />
+                <Modal.Content
+                    width={width}
+                    height={height}
+                    maxHeight={maxHeight}
+                    className={classNames(styles.BasicModalContent, contentClassName)}
+                >
+                    {content}
+                </Modal.Content>
+            </Portal>
+        </Modal>
+    );
+};
 
 export default BasicModal;
