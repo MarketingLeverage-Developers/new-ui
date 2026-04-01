@@ -1,0 +1,13 @@
+const COMPANY_ADVERTISING_STATUS_VALUES = ['LIVE', 'WAITING', 'STOP_BY_CLIENT', 'STOP_BY_PERFORMANCE'] as const;
+
+const COMPANY_ADVERTISING_STATUS_LABELS: Record<(typeof COMPANY_ADVERTISING_STATUS_VALUES)[number], string> = {
+    LIVE: '라이브중',
+    WAITING: '운영대기중',
+    STOP_BY_CLIENT: '중단 - 광고주 요청',
+    STOP_BY_PERFORMANCE: '중단 - 성과 저하',
+};
+
+export const COMPANY_ADVERTISING_STATUS_OPTIONS = COMPANY_ADVERTISING_STATUS_VALUES.map((value) => ({
+    value,
+    label: COMPANY_ADVERTISING_STATUS_LABELS[value],
+}));

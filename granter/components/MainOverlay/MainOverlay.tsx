@@ -4,7 +4,7 @@ import StaticOverlay from '../../../StaticOverlay/StaticOverlay';
 import LogoLottie from '../../../LogoLottie/LogoLottie';
 import BlurOverlay from '../../../BlurOverlay/BlurOverlay';
 import ErrorFallback from '../../../ErrorFallback/ErrorFallback';
-import DeferredComponent from '@/components/feature/deferred/DeferredComponent';
+import DeferredComponent from '../DeferredComponent/DeferredComponent';
 import styles from './MainOverlay.module.scss';
 
 export type MainOverlayState = {

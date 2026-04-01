@@ -13,10 +13,7 @@ import {
 import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
 import { SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import bellIcon from '@/shared/assets/images/bellIcon.png';
-import unBellIcon from '@/shared/assets/images/unBellIcon.png';
-import kakaoIcon from '@/shared/assets/images/kakaoIcon.svg';
-import smsIcon from '@/shared/assets/images/smsIcon.svg';
+import { bellIcon, kakaoIcon, smsIcon, unBellIcon } from '../../assets';
 import styles from './CompanySidebar.module.scss';
 
 export type CompanySidebarProps = {

@@ -9,16 +9,7 @@ import type {
     CompanySettingAdMediaInlineCreateFormItem,
     CompanySettingInlineFieldKey,
 } from '@/hooks/feature/useAdMediaSetting';
-import naverLogo from '@/shared/assets/images/naver-social-icon.svg';
-import googleLogo from '@/shared/assets/images/google-social-icon.svg';
-import metaLogo from '@/shared/assets/images/meta-social-icon.svg';
-import kakaoLogo from '@/shared/assets/images/kakao-social-login.svg';
-import danngnLogo from '@/shared/assets/images/danngn-icon.svg';
-import logo from '@/shared/assets/images/logo.svg';
-import defaultProfile from '@/shared/assets/images/default-profile.png';
 import type { MediaListItem } from '@/types/ad-media-link/adMediaLinkMediaTypes';
-import { COMPANY_ADVERTISING_STATUS_OPTIONS } from '@/types/company-management/companyAdvertisingStatusTypes';
-import { formatPhoneNumber } from '@/utils/inquiry-sequence/InquirySequenceUtils';
 import BasicConfirm from '../BasicConfirm/BasicConfirm';
 import BasicModal from '../BasicModal/BasicModal';
 import BasicContent from '../BasicContent/BasicContent';
@@ -38,6 +29,9 @@ import SectionFieldTab from '../SectionFieldTab/SectionFieldTab';
 import Text from '../Text/Text';
 import TimeSlotSelector from '../TimeSlotSelector/TimeSlotSelector';
 import UnderlineTab from '../UnderlineTab/UnderlineTab';
+import { defaultProfile, getMediaLogoSrc } from '../../assets';
+import { COMPANY_ADVERTISING_STATUS_OPTIONS } from '../../constants/companyAdvertisingStatus';
+import { formatPhoneNumber } from '../../utils/formatPhoneNumber';
 import styles from './CompanySettingContent.module.scss';
 
 export type CompanySettingContentProps = {
@@ -98,15 +92,6 @@ const INLINE_NOTICE_BY_MEDIA: Record<string, string> = {
     카카오: '비즈니스 채널 및 모먼트 관리자 권한 확인',
     메타: '앱 엑세스 토큰 및 파트너 권한 할당 확인',
     당근: '광고계정 권한 및 월 소진액 입력값을 확인해 주세요.',
-};
-
-const getMediaLogoSrc = (name: string) => {
-    if (name === '네이버') return naverLogo;
-    if (name === '구글') return googleLogo;
-    if (name === '메타') return metaLogo;
-    if (name === '카카오') return kakaoLogo;
-    if (name === '당근') return danngnLogo;
-    return logo;
 };
 
 const getRequiredLabel = (label: string, required?: boolean) => (required ? `${label} *` : label);

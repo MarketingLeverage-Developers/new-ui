@@ -4,25 +4,20 @@ import { FiChevronDown } from 'react-icons/fi';
 import AdMediaLinkUpdateModal from '@/components/feature/ad-media-link/AdMediaLinkUpdateModal';
 import AdMediaLinkDeleteModal from '@/components/feature/ad-media-link/AdMediaLinkDeleteModal';
 import AdMediaCampaignModal from '@/components/feature/campaign/AdMediaCampaignModal';
-import { useToast } from '@/shared/headless/ToastProvider/ToastProvider';
-import { useZodForm } from '@/shared/hooks/client/useZodForm';
 import { useAdMediaLinkCreateMutation } from '@/hooks/common/useAdMediaLinkCreateMutation';
 import { adMediaLinkCreateSchema } from '@/validations/ad-media-link/adMediaLinkCreateValidation';
 import type { AdMediaLinkCreateReq } from '@/types/ad-media-link/adMediaLinkCreateTypes';
 import type { MediaListItem } from '@/types/ad-media-link/adMediaLinkMediaTypes';
-import { MEDIA_FIELD_SPECS } from '@/components/feature/ad-media-link/AdMediaLinkCreatContent';
 import type {
     CompanyAdMediaLinkSettingActions,
     CompanyAdMediaLinkSettingState,
 } from '@/hooks/feature/useCompanyAdMediaLinkSetting';
-import naverLogo from '@/shared/assets/images/naver-social-icon.svg';
-import googleLogo from '@/shared/assets/images/google-social-icon.svg';
-import metaLogo from '@/shared/assets/images/meta-social-icon.svg';
-import kakaoLogo from '@/shared/assets/images/kakao-social-login.svg';
-import danngnLogo from '@/shared/assets/images/danngn-icon.svg';
-import logo from '@/shared/assets/images/logo.svg';
 import RoundedTextInput from '../RoundedTextInput/RoundedTextInput';
 import ButtonDropdown from '../ButtonDropdown/ButtonDropdown';
+import { getMediaLogoSrc } from '../../assets';
+import { MEDIA_FIELD_SPECS } from '../../constants/mediaFieldSpecs';
+import { useToast } from '../../../shared/headless/ToastProvider/ToastProvider';
+import { useZodForm } from '../../../shared/hooks/client/useZodForm';
 import styles from './CompanyAdMediaLinkContent.module.scss';
 
 export type CompanyAdMediaLinkContentProps = {
@@ -62,15 +57,6 @@ const formatCommaNumber = (digits: string) => {
     if (!digits) return '';
     const normalized = digits.replace(/^0+(?=\d)/, '');
     return normalized.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-};
-
-const getMediaLogoSrc = (name: string) => {
-    if (name === '네이버') return naverLogo;
-    if (name === '구글') return googleLogo;
-    if (name === '메타') return metaLogo;
-    if (name === '카카오') return kakaoLogo;
-    if (name === '당근') return danngnLogo;
-    return logo;
 };
 
 const HomepageSelect = ({ value, options, onChange }: HomepageSelectProps) => (
