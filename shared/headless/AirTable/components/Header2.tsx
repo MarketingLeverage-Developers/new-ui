@@ -18,12 +18,6 @@ const stopOnly = (e: React.SyntheticEvent) => {
     e.stopPropagation();
 };
 
-const isHeaderActionTarget = (target: EventTarget | null) => {
-    const el = target as HTMLElement | null;
-    if (!el) return false;
-    return !!el.closest('[data-col-menu-btn],[data-col-sort-btn],[data-col-resize-handle]');
-};
-
 const resolveConfiguredColumnWidth = ({
     width,
     defaultColWidth,
@@ -719,17 +713,6 @@ export const Header2 = <T,>({ className, headerCellClassName, resizeHandleClassN
         });
     };
 
-    const handleHeaderClick = useCallback(
-        (colKey: string) => (e: React.MouseEvent<HTMLDivElement>) => {
-            if (resizeRef.current) return;
-            if (state.drag.draggingKey) return;
-            if (isHeaderActionTarget(e.target)) return;
-            if (!sortConfigByKey.has(colKey)) return;
-            handleSortToggle(colKey);
-        },
-        [handleSortToggle, resizeRef, sortConfigByKey, state.drag.draggingKey]
-    );
-
     const activeFilterContent = useMemo(() => {
         if (!filterPopup.open || !filterPopup.colKey) return null;
         const col = columnRow.columns.find((c) => c.key === filterPopup.colKey);
@@ -887,14 +870,13 @@ export const Header2 = <T,>({ className, headerCellClassName, resizeHandleClassN
                                 className={[headerCellClassName, 'air-table-header-cell'].filter(Boolean).join(' ')}
                                 style={{
                                     position: 'relative',
-                                    cursor: isDraggingMoved ? 'grabbing' : 'pointer',
+                                    cursor: isDraggingMoved ? 'grabbing' : 'grab',
                                     userSelect: 'none',
                                     ...(isDragging ? getShiftStyle(colKey) : {}),
                                     ...pinnedStyle,
                                     ...(combinedBoxShadow ? { boxShadow: combinedBoxShadow } : {}),
                                 }}
                                 onMouseDown={handleHeaderMouseDown(colKey)}
-                                onClick={handleHeaderClick(colKey)}
                                 onContextMenu={handleContextMenu(colKey)}
                             >
                                 <div
@@ -933,11 +915,10 @@ export const Header2 = <T,>({ className, headerCellClassName, resizeHandleClassN
                                         }}
                                         style={{
                                             position: 'absolute',
-                                            top: '50%',
-                                            transform: 'translateY(-50%)',
+                                            top: 0,
                                             right: sortButtonRight,
-                                            width: 16,
-                                            height: 16,
+                                            width: 20,
+                                            height: '100%',
                                             borderRadius: 0,
                                             border: 'none',
                                             background: 'transparent',
