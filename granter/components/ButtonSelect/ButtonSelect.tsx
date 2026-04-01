@@ -160,7 +160,11 @@ const ButtonSelectView = ({
             </div>
 
             {hasMenuItems ? (
-                <Dropdown.Content className={classNames(styles.Menu, menuClassName)} placement="bottom-end">
+                <Dropdown.Content
+                    className={classNames(styles.Menu, menuClassName)}
+                    placement="bottom-end"
+                    keepMounted={false}
+                >
                     {children}
                 </Dropdown.Content>
             ) : null}

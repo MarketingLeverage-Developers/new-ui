@@ -249,7 +249,11 @@ const SectionFieldDurationInput = React.forwardRef<HTMLInputElement, SectionFiel
                                 </button>
                             </Dropdown.Trigger>
 
-                            <Dropdown.Content className={classNames(styles.Menu, menuClassName)} placement="bottom-end">
+                            <Dropdown.Content
+                                className={classNames(styles.Menu, menuClassName)}
+                                placement="bottom-end"
+                                keepMounted={false}
+                            >
                                 {options.map((option) => (
                                     <UnitOptionItem key={option.value} option={option} disabled={disabled} />
                                 ))}

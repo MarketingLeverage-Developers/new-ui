@@ -372,6 +372,7 @@ const SectionFieldMemberSelectBase = <T extends string>({
                 <Dropdown.Content
                     className={classNames(styles.Menu, menuClassName)}
                     placement="bottom-start"
+                    keepMounted={false}
                     style={{ maxHeight: menuMaxHeight }}
                 >
                     {searchable ? (

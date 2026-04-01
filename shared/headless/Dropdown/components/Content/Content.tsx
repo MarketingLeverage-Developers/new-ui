@@ -21,6 +21,7 @@ type ContentProps = React.HTMLAttributes<HTMLDivElement> & {
     offset?: number;
     matchTriggerWidth?: boolean;
     collisionPadding?: number;
+    keepMounted?: boolean;
 };
 
 const getPortalRoot = () => {
@@ -146,6 +147,7 @@ const Content: React.FC<ContentProps> = ({
     offset = 4,
     matchTriggerWidth,
     collisionPadding = 8,
+    keepMounted = true,
     className,
     style: styleProp,
     ...rest
@@ -271,6 +273,7 @@ const Content: React.FC<ContentProps> = ({
     }, [isOpen, lastFocusedEl, anchorRef]);
 
     if (!portalRoot) return null;
+    if (!keepMounted && !isOpen) return null;
 
     const cn = [styles.Content, isOpen ? styles.Open : styles.Closed, className].filter(Boolean).join(' ');
 

@@ -187,8 +187,17 @@ const MenuDropdownTrigger = ({ children, className, ...props }: MenuDropdownTrig
     </HeadlessDropdown.Trigger>
 );
 
-const MenuDropdownContent = ({ children, className, ...props }: MenuDropdownContentProps) => (
-    <HeadlessDropdown.Content className={classNames(styles.Dropdown, className)} {...props}>
+const MenuDropdownContent = ({
+    children,
+    className,
+    keepMounted = false,
+    ...props
+}: MenuDropdownContentProps) => (
+    <HeadlessDropdown.Content
+        className={classNames(styles.Dropdown, className)}
+        keepMounted={keepMounted}
+        {...props}
+    >
         {children}
     </HeadlessDropdown.Content>
 );

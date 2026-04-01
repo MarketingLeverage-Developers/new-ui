@@ -93,8 +93,8 @@ const Trigger = ({
     );
 };
 
-const Content = ({ children, ...props }: ButtonDropdownContentProps) => (
-    <HeadlessDropdown.Content className={styles.Menu} {...props}>
+const Content = ({ children, keepMounted = false, ...props }: ButtonDropdownContentProps) => (
+    <HeadlessDropdown.Content className={styles.Menu} keepMounted={keepMounted} {...props}>
         {children}
     </HeadlessDropdown.Content>
 );

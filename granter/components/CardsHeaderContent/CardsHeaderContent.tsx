@@ -381,7 +381,12 @@ const HeaderDateRangeControl = ({
                 </button>
             </div>
 
-            <Dropdown.Content className={styles.DateDropdownContent} placement="bottom-center" offset={8}>
+            <Dropdown.Content
+                className={styles.DateDropdownContent}
+                placement="bottom-center"
+                offset={8}
+                keepMounted={false}
+            >
                 <div className={styles.DateRangePanel}>
                     {mode === 'month' ? (
                         <MonthRangeCalendar range={selectedRange} onChange={handleRangeChange} />

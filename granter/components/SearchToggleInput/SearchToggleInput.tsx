@@ -34,7 +34,7 @@ const SearchInputContent = ({ placeholder, value, onChange, onSearch }: SearchIn
     };
 
     return (
-        <Dropdown.Content className={styles.Content} placement="bottom-end">
+        <Dropdown.Content className={styles.Content} placement="bottom-end" keepMounted={false}>
             <div className={styles.SearchField}>
                 <FiSearch size={16} />
                 <input

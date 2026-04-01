@@ -138,6 +138,7 @@ const SectionFieldSelectView = <T extends string>({
                     className={classNames(styles.Menu, menuClassName)}
                     placement="bottom-start"
                     matchTriggerWidth
+                    keepMounted={false}
                     style={{ maxHeight: menuMaxHeight }}
                 >
                     {searchable ? (

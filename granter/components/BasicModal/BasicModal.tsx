@@ -8,6 +8,7 @@ export type BasicModalProps = {
     open: boolean;
     onChange: () => void;
     content: React.ReactNode;
+    keepMounted?: boolean;
     width?: string | number;
     height?: string | number;
     maxHeight?: string | number;
@@ -22,6 +23,7 @@ const BasicModal = ({
     open,
     onChange,
     content,
+    keepMounted = false,
     width = 400,
     height = 'auto',
     maxHeight = '80%',
@@ -48,7 +50,7 @@ const BasicModal = ({
                 maxHeight={maxHeight}
                 className={classNames(styles.BasicModalContent, contentClassName)}
             >
-                {content}
+                {open || keepMounted ? content : null}
             </Modal.Content>
         </Portal>
     </Modal>

@@ -119,6 +119,7 @@ const CompactDropdownField = ({
                 className={styles.CompactMenu}
                 placement="bottom-start"
                 matchTriggerWidth
+                keepMounted={false}
                 style={{ maxHeight: 280 }}
             >
                 {selectedValues.length === 0 ? (

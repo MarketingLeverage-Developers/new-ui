@@ -150,7 +150,11 @@ const DropdownMenu = <T extends string>({
     const { close } = useDropdown();
 
     return (
-        <Dropdown.Content className={classNames(styles.DropdownMenu, menuClassName)} placement={placement}>
+        <Dropdown.Content
+            className={classNames(styles.DropdownMenu, menuClassName)}
+            placement={placement}
+            keepMounted={false}
+        >
             {options.map((option) => (
                 <button
                     key={option.value}

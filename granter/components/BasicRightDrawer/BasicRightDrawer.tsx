@@ -8,6 +8,7 @@ export type BasicRightDrawerProps = {
     open: boolean;
     onChange: () => void;
     content: React.ReactNode;
+    keepMounted?: boolean;
     width?: string | number;
     maxHeight?: string | number;
     enterAction?: () => void;
@@ -21,6 +22,7 @@ const BasicRightDrawer = ({
     open,
     onChange,
     content,
+    keepMounted = false,
     width = 580,
     maxHeight = '100%',
     enterAction,
@@ -47,7 +49,7 @@ const BasicRightDrawer = ({
                 className={classNames(styles.RightDrawerContent, contentClassName)}
                 data-open={open ? 'true' : 'false'}
             >
-                {content}
+                {open || keepMounted ? content : null}
             </Modal.Content>
         </Portal>
     </Modal>
