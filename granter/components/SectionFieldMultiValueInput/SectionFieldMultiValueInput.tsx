@@ -18,7 +18,7 @@ export type SectionFieldMultiValueInputProps = {
     addButtonText?: string;
     removeButtonText?: string;
     disabled?: boolean;
-    variant?: 'default' | 'compact' | 'compact-dropdown';
+    variant?: 'default' | 'compact' | 'compact-dropdown' | 'compact-stack';
 };
 
 const CompactDropdownChevron = () => {
@@ -170,8 +170,9 @@ const SectionFieldMultiValueInput = ({
     const [pendingValue, setPendingValue] = useState('');
     const selectedValues = useMemo(() => parseCommaSeparatedValues(value), [value]);
     const isCompact = variant === 'compact';
+    const isCompactStack = variant === 'compact-stack';
     const isCompactDropdown = variant === 'compact-dropdown';
-    const isCompactControl = isCompact || isCompactDropdown;
+    const isCompactControl = isCompact || isCompactDropdown || isCompactStack;
 
     const addPendingValues = useCallback(() => {
         const nextCandidates = parseCommaSeparatedValues(pendingValue);
@@ -261,13 +262,26 @@ const SectionFieldMultiValueInput = ({
                     {emptyText}
                 </Text>
             ) : (
-                <div className={classNames(styles.List, isCompact && styles.ListCompact)}>
+                <div
+                    className={classNames(
+                        styles.List,
+                        isCompact && styles.ListCompact,
+                        isCompactStack && styles.ListCompactStack
+                    )}
+                >
                     {selectedValues.map((item) => (
-                        <div key={item} className={classNames(styles.Item, isCompact && styles.ItemCompact)}>
+                        <div
+                            key={item}
+                            className={classNames(
+                                styles.Item,
+                                isCompact && styles.ItemCompact,
+                                isCompactStack && styles.ItemCompactStack
+                            )}
+                        >
                             <Text size="sm" weight="medium" className={styles.ItemText}>
                                 {item}
                             </Text>
-                            {isCompact ? (
+                            {isCompactControl ? (
                                 <button
                                     type="button"
                                     className={styles.CompactRemoveButton}
