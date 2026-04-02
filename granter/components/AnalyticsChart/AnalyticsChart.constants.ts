@@ -9,6 +9,7 @@ export const ANALYTICS_CHART_PALETTE = {
     orange: '#F59E0B',
     violet: '#8B5CF6',
     slate: '#64748B',
+    charcoal: '#1F2937',
 } as const;
 
 export const ANALYTICS_CHART_STATUS_COLORS = {
@@ -17,6 +18,7 @@ export const ANALYTICS_CHART_STATUS_COLORS = {
     stopped: ANALYTICS_CHART_PALETTE.negative,
     stopByClient: ANALYTICS_CHART_PALETTE.negative,
     stopByPerformance: ANALYTICS_CHART_PALETTE.violet,
+    end: ANALYTICS_CHART_PALETTE.charcoal,
     contracted: ANALYTICS_CHART_PALETTE.green,
 } as const;
 
@@ -26,6 +28,7 @@ export const ANALYTICS_CHART_DASHBOARD_STATUS_COLORS = {
     stopped: ANALYTICS_CHART_PALETTE.positive,
     stopByClient: ANALYTICS_CHART_PALETTE.positive,
     stopByPerformance: ANALYTICS_CHART_PALETTE.violet,
+    end: ANALYTICS_CHART_PALETTE.charcoal,
     contracted: ANALYTICS_CHART_PALETTE.green,
 } as const;
 

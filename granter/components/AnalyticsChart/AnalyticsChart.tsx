@@ -26,6 +26,7 @@ import styles from './AnalyticsChart.module.scss';
 export type AnalyticsChartBarMode = 'amount' | 'statusRatio' | 'statusAmount' | 'inboundStatusCount';
 export type AnalyticsChartType = 'BAR' | 'LINE' | 'PIE';
 export type AnalyticsChartPreset = 'default' | 'dashboardMetric';
+export type AnalyticsChartStatusSeriesMode = 'reason' | 'category';
 
 export type AnalyticsChartPeriodItem = {
     periodLabel: string;
@@ -33,6 +34,7 @@ export type AnalyticsChartPeriodItem = {
     liveAmount: number;
     pendingAmount: number;
     stoppedAmount: number;
+    endAmount?: number;
     stopByClientAmount?: number;
     stopByPerformanceAmount?: number;
 };
@@ -76,6 +78,7 @@ export type AnalyticsChartProps = {
     chartType?: AnalyticsChartType;
     barMode?: AnalyticsChartBarMode;
     preset?: AnalyticsChartPreset;
+    statusSeriesMode?: AnalyticsChartStatusSeriesMode;
     goalMarkerBySeriesId?: Record<string, number>;
     isLoading?: boolean;
     title?: string;
@@ -152,7 +155,7 @@ type BarLabelProps = {
 
 const AMOUNT_SERIES = [{ key: 'totalAmount', label: '소진액', color: ANALYTICS_CHART_PALETTE.positive }] as const;
 
-const STATUS_RATIO_SERIES = [
+const STATUS_REASON_SERIES = [
     { key: 'pendingAmount', label: '운영대기중', color: ANALYTICS_CHART_DASHBOARD_STATUS_COLORS.waiting },
     { key: 'liveAmount', label: '라이브중', color: ANALYTICS_CHART_DASHBOARD_STATUS_COLORS.live },
     {
@@ -165,6 +168,13 @@ const STATUS_RATIO_SERIES = [
         label: '중단-성과저하',
         color: ANALYTICS_CHART_DASHBOARD_STATUS_COLORS.stopByPerformance,
     },
+] as const;
+
+const STATUS_CATEGORY_SERIES = [
+    { key: 'pendingAmount', label: '운영대기중', color: ANALYTICS_CHART_DASHBOARD_STATUS_COLORS.waiting },
+    { key: 'liveAmount', label: '라이브중', color: ANALYTICS_CHART_DASHBOARD_STATUS_COLORS.live },
+    { key: 'stoppedAmount', label: '광고중단', color: ANALYTICS_CHART_DASHBOARD_STATUS_COLORS.stopped },
+    { key: 'endAmount', label: '피이관', color: ANALYTICS_CHART_DASHBOARD_STATUS_COLORS.end },
 ] as const;
 
 const INBOUND_STATUS_SERIES = [
@@ -328,7 +338,8 @@ const toTightAmountDomainValue = (value: number) => {
 
 const getDivergingBarDomain = (
     data: LineChartDatum[],
-    barMode: BarMode
+    barMode: BarMode,
+    statusSeriesMode: AnalyticsChartStatusSeriesMode
 ): [number, number] | undefined => {
     if (barMode !== 'statusRatio' && barMode !== 'statusAmount' && barMode !== 'inboundStatusCount') {
         return undefined;
@@ -347,8 +358,14 @@ const getDivergingBarDomain = (
 
         const live = Number(item.liveAmount ?? 0);
         const pending = Number(item.pendingAmount ?? 0);
-        const stopByClient = Math.abs(Number(item.stopByClientAmount ?? 0));
-        const stopByPerformance = Math.abs(Number(item.stopByPerformanceAmount ?? 0));
+        const stopByClient =
+            statusSeriesMode === 'category'
+                ? Math.abs(Number(item.stoppedAmount ?? 0))
+                : Math.abs(Number(item.stopByClientAmount ?? 0));
+        const stopByPerformance =
+            statusSeriesMode === 'category'
+                ? Math.abs(Number(item.endAmount ?? 0))
+                : Math.abs(Number(item.stopByPerformanceAmount ?? 0));
         const positiveTotal = live + pending;
         const negativeTotal = stopByClient + stopByPerformance;
 
@@ -397,8 +414,10 @@ const getPositiveBarDomain = (
     return [0, padded];
 };
 
-const getBarSeries = (barMode: BarMode) => {
-    if (barMode === 'statusRatio' || barMode === 'statusAmount') return [...STATUS_RATIO_SERIES];
+const getBarSeries = (barMode: BarMode, statusSeriesMode: AnalyticsChartStatusSeriesMode) => {
+    if (barMode === 'statusRatio' || barMode === 'statusAmount') {
+        return statusSeriesMode === 'category' ? [...STATUS_CATEGORY_SERIES] : [...STATUS_REASON_SERIES];
+    }
     if (barMode === 'inboundStatusCount') return [...INBOUND_STATUS_SERIES];
     return [...AMOUNT_SERIES];
 };
@@ -718,6 +737,8 @@ const GroupedStackAvatarLabel = ({
     if (
         groupedInfo.statusKey !== 'live' &&
         groupedInfo.statusKey !== 'waiting' &&
+        groupedInfo.statusKey !== 'adStop' &&
+        groupedInfo.statusKey !== 'end' &&
         groupedInfo.statusKey !== 'stopByClient' &&
         groupedInfo.statusKey !== 'stopByPerformance'
     ) {
@@ -732,11 +753,21 @@ const GroupedStackAvatarLabel = ({
 
     const waitingValue = Number(datum[`${groupedInfo.stackId}__waiting`] ?? 0);
     const liveValue = Number(datum[`${groupedInfo.stackId}__live`] ?? 0);
+    const adStopValue = Math.abs(Number(datum[`${groupedInfo.stackId}__adStop`] ?? 0));
+    const endValue = Math.abs(Number(datum[`${groupedInfo.stackId}__end`] ?? 0));
     const stopByClientValue = Math.abs(Number(datum[`${groupedInfo.stackId}__stopByClient`] ?? 0));
     const stopByPerformanceValue = Math.abs(Number(datum[`${groupedInfo.stackId}__stopByPerformance`] ?? 0));
     const positiveAnchorStatus = liveValue > 0 ? 'live' : waitingValue > 0 ? 'waiting' : null;
     const negativeAnchorStatus =
-        stopByClientValue > 0 ? 'stopByClient' : stopByPerformanceValue > 0 ? 'stopByPerformance' : null;
+        adStopValue > 0
+            ? 'adStop'
+            : endValue > 0
+              ? 'end'
+              : stopByClientValue > 0
+                ? 'stopByClient'
+                : stopByPerformanceValue > 0
+                  ? 'stopByPerformance'
+                  : null;
     const anchorStatus = positiveAnchorStatus ?? negativeAnchorStatus;
 
     if (!anchorStatus || groupedInfo.statusKey !== anchorStatus) {
@@ -783,6 +814,7 @@ const AnalyticsChart = ({
     chartType = 'BAR',
     barMode = 'amount',
     preset,
+    statusSeriesMode = 'reason',
     goalMarkerBySeriesId,
     isLoading = false,
     title = '운영 내역',
@@ -870,6 +902,7 @@ const AnalyticsChart = ({
                     liveAmount: item.liveAmount,
                     pendingAmount: item.pendingAmount,
                     stoppedAmount: item.stoppedAmount,
+                    endAmount: item.endAmount ?? 0,
                     stopByClientAmount: item.stopByClientAmount ?? 0,
                     stopByPerformanceAmount: item.stopByPerformanceAmount ?? 0,
                 })),
@@ -877,8 +910,13 @@ const AnalyticsChart = ({
     );
 
     const barSeries = useMemo(
-        () => (isGroupedAmountBar ? lineSeriesMeta : isGroupedStackBar ? groupedStackData?.series ?? [] : getBarSeries(barMode)),
-        [barMode, groupedStackData?.series, isGroupedAmountBar, isGroupedStackBar, lineSeriesMeta]
+        () =>
+            isGroupedAmountBar
+                ? lineSeriesMeta
+                : isGroupedStackBar
+                  ? groupedStackData?.series ?? []
+                  : getBarSeries(barMode, statusSeriesMode),
+        [barMode, groupedStackData?.series, isGroupedAmountBar, isGroupedStackBar, lineSeriesMeta, statusSeriesMode]
     );
     const groupedStackSeriesMetaByKey = useMemo(
         () =>
@@ -957,8 +995,8 @@ const AnalyticsChart = ({
         [chartAreaWidth, isDashboardMetricPreset, lineChartData.length]
     );
     const divergingStatusDomain = useMemo(
-        () => (isDivergingDataBar ? getDivergingBarDomain(barData, barMode) : undefined),
-        [barData, barMode, isDivergingDataBar]
+        () => (isDivergingDataBar ? getDivergingBarDomain(barData, barMode, statusSeriesMode) : undefined),
+        [barData, barMode, isDivergingDataBar, statusSeriesMode]
     );
     const positiveAmountDomain = useMemo(
         () =>
