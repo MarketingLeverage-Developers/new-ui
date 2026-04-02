@@ -3,6 +3,13 @@ import Flex from '../Flex/Flex';
 import Text from '../Text/Text';
 import { memo, useEffect, useMemo, useRef, useState } from 'react';
 import {
+    HiOutlineCheckCircle,
+    HiOutlineClock,
+    HiOutlineExclamationTriangle,
+    HiOutlinePauseCircle,
+    HiOutlinePlayCircle,
+} from 'react-icons/hi2';
+import {
     Bar,
     BarChart,
     CartesianGrid,
@@ -241,11 +248,148 @@ const legendDotStyle = (color: string): React.CSSProperties => ({
     flexShrink: 0,
 });
 
+const statusIconStyle: React.CSSProperties = {
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 16,
+    height: 16,
+    flexShrink: 0,
+};
+
 const formatCompactAmount = (value: number) => Math.round(value).toLocaleString('ko-KR');
 
 const formatCurrency = (value: number) => `${value.toLocaleString('ko-KR')}원`;
 const formatPercent = (value: number) => `${value.toFixed(1)}%`;
 const formatCount = (value: number) => `${value.toLocaleString('ko-KR')}건`;
+
+const normalizeChartAmount = (value: unknown, direction: 'positive' | 'negative') => {
+    const numeric = Number(value ?? 0);
+    if (!Number.isFinite(numeric)) return 0;
+
+    const absolute = Math.abs(numeric);
+    return direction === 'negative' ? -absolute : absolute;
+};
+
+const toTooltipStatusIconKey = (
+    value?: string | number
+): 'live' | 'waiting' | 'adStop' | 'end' | 'contracted' | null => {
+    const normalized = String(value ?? '').trim();
+
+    switch (normalized) {
+        case 'live':
+        case 'liveAmount':
+        case '라이브':
+        case '라이브중':
+            return 'live';
+        case 'waiting':
+        case 'pendingAmount':
+        case '대기':
+        case '운영대기':
+        case '운영대기중':
+            return 'waiting';
+        case 'adStop':
+        case 'stoppedAmount':
+        case 'stopByClient':
+        case 'stopByPerformance':
+        case 'stopByClientAmount':
+        case 'stopByPerformanceAmount':
+        case '중단':
+        case '광고중단':
+        case '중단 - 광고주 요청':
+        case '중단 - 성과 저하':
+        case '중단-광고주요청':
+        case '중단-성과저하':
+            return 'adStop';
+        case 'end':
+        case 'endAmount':
+        case '피이관':
+        case '피이관 - 광고주 요청':
+        case '피이관 - 성과 저하':
+        case '피이관-광고주요청':
+        case '피이관-성과저하':
+            return 'end';
+        case 'total':
+        case 'totalAmount':
+        case 'contracted':
+        case '계약':
+            return 'contracted';
+        default:
+            return null;
+    }
+};
+
+const getTooltipStatusOrder = (value?: string | number) => {
+    const statusKey = toTooltipStatusIconKey(value);
+
+    if (statusKey === 'live') return 0;
+    if (statusKey === 'waiting') return 1;
+    if (statusKey === 'adStop') return 2;
+    if (statusKey === 'end') return 3;
+    if (statusKey === 'contracted') return 4;
+
+    return Number.MAX_SAFE_INTEGER;
+};
+
+const compareTooltipSeriesOrder = (
+    left: { key?: string | number; label?: string },
+    right: { key?: string | number; label?: string }
+) => {
+    const leftOrder = Math.min(getTooltipStatusOrder(left.key), getTooltipStatusOrder(left.label));
+    const rightOrder = Math.min(getTooltipStatusOrder(right.key), getTooltipStatusOrder(right.label));
+
+    if (leftOrder !== rightOrder) {
+        return leftOrder - rightOrder;
+    }
+
+    return 0;
+};
+
+const renderTooltipMarker = (keyOrLabel: string | number | undefined, color: string, fallbackLabel?: string) => {
+    const statusKey = toTooltipStatusIconKey(keyOrLabel) ?? toTooltipStatusIconKey(fallbackLabel);
+
+    if (statusKey === 'live') {
+        return (
+            <span style={statusIconStyle}>
+                <HiOutlinePlayCircle size={16} color={color} />
+            </span>
+        );
+    }
+
+    if (statusKey === 'waiting') {
+        return (
+            <span style={statusIconStyle}>
+                <HiOutlineClock size={16} color={color} />
+            </span>
+        );
+    }
+
+    if (statusKey === 'adStop') {
+        return (
+            <span style={statusIconStyle}>
+                <HiOutlinePauseCircle size={16} color={color} />
+            </span>
+        );
+    }
+
+    if (statusKey === 'end') {
+        return (
+            <span style={statusIconStyle}>
+                <HiOutlineExclamationTriangle size={16} color={color} />
+            </span>
+        );
+    }
+
+    if (statusKey === 'contracted') {
+        return (
+            <span style={statusIconStyle}>
+                <HiOutlineCheckCircle size={16} color={color} />
+            </span>
+        );
+    }
+
+    return <span style={legendDotStyle(color)} />;
+};
 
 const DEFAULT_BAR_PLOT_WIDTH = 940;
 const MIN_BAR_PLOT_WIDTH = 320;
@@ -448,6 +592,48 @@ const parseGroupedSeriesKey = (value?: string | number) => {
     };
 };
 
+const normalizeStatusDatum = (datum: LineChartDatum): LineChartDatum => ({
+    ...datum,
+    liveAmount: normalizeChartAmount(datum.liveAmount, 'positive'),
+    pendingAmount: normalizeChartAmount(datum.pendingAmount, 'positive'),
+    stoppedAmount: normalizeChartAmount(datum.stoppedAmount, 'negative'),
+    endAmount: normalizeChartAmount(datum.endAmount, 'negative'),
+    stopByClientAmount: normalizeChartAmount(datum.stopByClientAmount, 'negative'),
+    stopByPerformanceAmount: normalizeChartAmount(datum.stopByPerformanceAmount, 'negative'),
+});
+
+const normalizeGroupedStatusDatum = (datum: LineChartDatum): LineChartDatum =>
+    Object.entries(datum).reduce<LineChartDatum>((acc, [key, value]) => {
+        if (key === 'periodLabel') {
+            acc[key] = value;
+            return acc;
+        }
+
+        const groupedInfo = parseGroupedSeriesKey(key);
+        if (!groupedInfo) {
+            acc[key] = value;
+            return acc;
+        }
+
+        if (groupedInfo.statusKey === 'live' || groupedInfo.statusKey === 'waiting') {
+            acc[key] = normalizeChartAmount(value, 'positive');
+            return acc;
+        }
+
+        if (
+            groupedInfo.statusKey === 'adStop' ||
+            groupedInfo.statusKey === 'end' ||
+            groupedInfo.statusKey === 'stopByClient' ||
+            groupedInfo.statusKey === 'stopByPerformance'
+        ) {
+            acc[key] = normalizeChartAmount(value, 'negative');
+            return acc;
+        }
+
+        acc[key] = value;
+        return acc;
+    }, {} as LineChartDatum);
+
 const LineTooltipContent = ({
     active,
     payload,
@@ -516,7 +702,12 @@ const BarTooltipContent = ({
     const sortedItems = seriesMeta
         .map((item) => ({ ...item, value: valueByKey.get(item.key) ?? 0 }))
         .filter((item) => Math.abs(item.value) > 0)
-        .sort((a, b) => Math.abs(b.value) - Math.abs(a.value) || a.label.localeCompare(b.label, 'ko-KR'));
+        .sort(
+            (a, b) =>
+                compareTooltipSeriesOrder(a, b) ||
+                Math.abs(b.value) - Math.abs(a.value) ||
+                a.label.localeCompare(b.label, 'ko-KR')
+        );
 
     return (
         <div style={tooltipStyle}>
@@ -528,7 +719,7 @@ const BarTooltipContent = ({
             <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                 {sortedItems.map((item) => (
                     <div key={item.key} style={tooltipItemStyle}>
-                        <span style={legendDotStyle(item.color)} />
+                        {renderTooltipMarker(item.key, item.color, item.label)}
                         <Text size="sm" style={{ minWidth: 0, wordBreak: 'break-word' }}>
                             {item.label}
                         </Text>
@@ -570,7 +761,15 @@ const GroupedStackTooltipContent = ({
             value: Number(activeDatum[item.key] ?? 0),
         }))
         .filter((item) => Number.isFinite(item.value) && Math.abs(item.value) > 0)
-        .sort((a, b) => Math.abs(b.value) - Math.abs(a.value) || a.statusLabel.localeCompare(b.statusLabel, 'ko-KR'));
+        .sort(
+            (a, b) =>
+                compareTooltipSeriesOrder(
+                    { key: parseGroupedSeriesKey(a.key)?.statusKey, label: a.statusLabel },
+                    { key: parseGroupedSeriesKey(b.key)?.statusKey, label: b.statusLabel }
+                ) ||
+                Math.abs(b.value) - Math.abs(a.value) ||
+                a.statusLabel.localeCompare(b.statusLabel, 'ko-KR')
+        );
 
     if (marketerSeriesItems.length === 0) return null;
 
@@ -591,7 +790,7 @@ const GroupedStackTooltipContent = ({
             <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                 {marketerSeriesItems.map((item) => (
                     <div key={item.key} style={tooltipItemStyle}>
-                        <span style={legendDotStyle(item.color)} />
+                        {renderTooltipMarker(parseGroupedSeriesKey(item.key)?.statusKey, item.color, item.statusLabel)}
                         <Text size="sm" style={{ minWidth: 0, wordBreak: 'break-word' }}>
                             {item.statusLabel}
                         </Text>
@@ -895,17 +1094,19 @@ const AnalyticsChart = ({
             isGroupedAmountBar
                 ? lineChartData
                 : isGroupedStackBar
-                    ? groupedStackData?.data ?? []
-                : periods.map((item) => ({
-                    periodLabel: item.periodLabel,
-                    totalAmount: item.totalAmount,
-                    liveAmount: item.liveAmount,
-                    pendingAmount: item.pendingAmount,
-                    stoppedAmount: item.stoppedAmount,
-                    endAmount: item.endAmount ?? 0,
-                    stopByClientAmount: item.stopByClientAmount ?? 0,
-                    stopByPerformanceAmount: item.stopByPerformanceAmount ?? 0,
-                })),
+                    ? (groupedStackData?.data ?? []).map(normalizeGroupedStatusDatum)
+                : periods.map((item) =>
+                    normalizeStatusDatum({
+                        periodLabel: item.periodLabel,
+                        totalAmount: item.totalAmount,
+                        liveAmount: item.liveAmount,
+                        pendingAmount: item.pendingAmount,
+                        stoppedAmount: item.stoppedAmount,
+                        endAmount: item.endAmount ?? 0,
+                        stopByClientAmount: item.stopByClientAmount ?? 0,
+                        stopByPerformanceAmount: item.stopByPerformanceAmount ?? 0,
+                    })
+                ),
         [groupedStackData?.data, isGroupedAmountBar, isGroupedStackBar, lineChartData, periods]
     );
 
@@ -1032,6 +1233,18 @@ const AnalyticsChart = ({
                 ].join(':'),
         [barData, barMode, barSeries, chartType, lineData?.periodLabels, lineSeriesMeta]
     );
+    const legendSeries = useMemo(() => {
+        const source = chartType === 'LINE' || isGroupedAmountBar ? lineSeriesMeta : barSeries;
+
+        if (
+            chartType !== 'BAR' ||
+            (barMode !== 'statusRatio' && barMode !== 'statusAmount' && !isGroupedStackBar)
+        ) {
+            return source;
+        }
+
+        return [...source].sort((a, b) => compareTooltipSeriesOrder(a, b) || a.label.localeCompare(b.label, 'ko-KR'));
+    }, [barMode, barSeries, chartType, isGroupedAmountBar, isGroupedStackBar, lineSeriesMeta]);
 
     const isEmpty =
         !isLoading &&
@@ -1348,7 +1561,7 @@ const AnalyticsChart = ({
                     {showLegend ? (
                         <div key={`legend-${chartRenderKey}`} className={styles.LegendMotion}>
                             <div style={legendStyle}>
-                                {(chartType === 'LINE' || isGroupedAmountBar ? lineSeriesMeta : barSeries).map((item) => (
+                                {legendSeries.map((item) => (
                                     <div key={item.key} style={legendItemStyle}>
                                         <span style={legendDotStyle(item.color)} />
                                         <span>{item.label}</span>

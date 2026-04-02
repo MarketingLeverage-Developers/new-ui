@@ -49,6 +49,7 @@ export { default as FileUploader } from './components/FileUploader/FileUploader'
 export { default as RichTextEditor } from './components/RichTextEditor/RichTextEditor';
 export { default as RoundedSegmentTab } from './components/RoundedSegmentTab/RoundedSegmentTab';
 export { default as RoundedTextInput } from './components/RoundedTextInput/RoundedTextInput';
+export { default as SearchInput } from './components/SearchInput/SearchInput';
 export { default as Text } from './components/Text/Text';
 export { default as Tooltip } from './components/Tooltip/Tooltip';
 
