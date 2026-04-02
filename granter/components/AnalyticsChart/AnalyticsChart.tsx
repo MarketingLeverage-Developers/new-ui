@@ -4,10 +4,13 @@ import Text from '../Text/Text';
 import { memo, useEffect, useMemo, useRef, useState } from 'react';
 import {
     HiOutlineCheckCircle,
+    HiOutlineClipboardDocumentList,
     HiOutlineClock,
     HiOutlineExclamationTriangle,
+    HiOutlineMagnifyingGlass,
     HiOutlinePauseCircle,
     HiOutlinePlayCircle,
+    HiOutlineXCircle,
 } from 'react-icons/hi2';
 import {
     Bar,
@@ -273,10 +276,16 @@ const normalizeChartAmount = (value: unknown, direction: 'positive' | 'negative'
 
 const toTooltipStatusIconKey = (
     value?: string | number
-): 'live' | 'waiting' | 'adStop' | 'end' | 'contracted' | null => {
+): 'live' | 'waiting' | 'adStop' | 'end' | 'managed' | 'prospect' | 'failed' | 'contracted' | null => {
     const normalized = String(value ?? '').trim();
 
     switch (normalized) {
+        case '관리':
+            return 'managed';
+        case '가망':
+            return 'prospect';
+        case '실패':
+            return 'failed';
         case 'live':
         case 'liveAmount':
         case '라이브':
@@ -322,11 +331,14 @@ const toTooltipStatusIconKey = (
 const getTooltipStatusOrder = (value?: string | number) => {
     const statusKey = toTooltipStatusIconKey(value);
 
+    if (statusKey === 'managed') return 0;
+    if (statusKey === 'prospect') return 1;
+    if (statusKey === 'failed') return 2;
+    if (statusKey === 'contracted') return 3;
     if (statusKey === 'live') return 0;
     if (statusKey === 'waiting') return 1;
     if (statusKey === 'adStop') return 2;
     if (statusKey === 'end') return 3;
-    if (statusKey === 'contracted') return 4;
 
     return Number.MAX_SAFE_INTEGER;
 };
@@ -352,6 +364,30 @@ const renderTooltipMarker = (keyOrLabel: string | number | undefined, color: str
         return (
             <span style={statusIconStyle}>
                 <HiOutlinePlayCircle size={16} color={color} />
+            </span>
+        );
+    }
+
+    if (statusKey === 'managed') {
+        return (
+            <span style={statusIconStyle}>
+                <HiOutlineClipboardDocumentList size={16} color={color} />
+            </span>
+        );
+    }
+
+    if (statusKey === 'prospect') {
+        return (
+            <span style={statusIconStyle}>
+                <HiOutlineMagnifyingGlass size={16} color={color} />
+            </span>
+        );
+    }
+
+    if (statusKey === 'failed') {
+        return (
+            <span style={statusIconStyle}>
+                <HiOutlineXCircle size={16} color={color} />
             </span>
         );
     }
