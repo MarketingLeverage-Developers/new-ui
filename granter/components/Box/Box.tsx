@@ -9,6 +9,16 @@ const toCssLength = (value?: BoxLength) => {
     return typeof value === 'number' ? `${value}px` : value;
 };
 
+const assignIfDefined = (
+    target: React.CSSProperties,
+    key: keyof React.CSSProperties,
+    value: React.CSSProperties[keyof React.CSSProperties]
+) => {
+    if (value !== undefined) {
+        target[key] = value;
+    }
+};
+
 export type BoxProps = Omit<React.HTMLAttributes<HTMLElement>, 'color'> & {
     as?: React.ElementType;
     flex?: React.CSSProperties['flex'];
@@ -82,35 +92,36 @@ const Box = ({
     ...props
 }: BoxProps) => {
     const resolvedStyle: React.CSSProperties = {
-        flex,
-        flexGrow,
-        flexShrink,
-        flexBasis: toCssLength(flexBasis),
-        width: toCssLength(width),
-        minWidth: toCssLength(minWidth),
-        maxWidth: toCssLength(maxWidth),
-        height: toCssLength(height),
-        minHeight: toCssLength(minHeight),
-        maxHeight: toCssLength(maxHeight),
-        padding: toCssLength(padding),
-        paddingTop: toCssLength(paddingTop ?? paddingY),
-        paddingRight: toCssLength(paddingRight ?? paddingX),
-        paddingBottom: toCssLength(paddingBottom ?? paddingY),
-        paddingLeft: toCssLength(paddingLeft ?? paddingX),
-        margin: toCssLength(margin),
-        marginTop: toCssLength(marginTop ?? marginY),
-        marginRight: toCssLength(marginRight ?? marginX),
-        marginBottom: toCssLength(marginBottom ?? marginY),
-        marginLeft: toCssLength(marginLeft ?? marginX),
-        background,
-        border,
-        borderColor,
-        borderStyle,
-        borderWidth: toCssLength(borderWidth),
-        borderRadius: toCssLength(borderRadius),
-        overflow,
         ...style,
     };
+
+    assignIfDefined(resolvedStyle, 'flex', flex);
+    assignIfDefined(resolvedStyle, 'flexGrow', flexGrow);
+    assignIfDefined(resolvedStyle, 'flexShrink', flexShrink);
+    assignIfDefined(resolvedStyle, 'flexBasis', toCssLength(flexBasis));
+    assignIfDefined(resolvedStyle, 'width', toCssLength(width));
+    assignIfDefined(resolvedStyle, 'minWidth', toCssLength(minWidth));
+    assignIfDefined(resolvedStyle, 'maxWidth', toCssLength(maxWidth));
+    assignIfDefined(resolvedStyle, 'height', toCssLength(height));
+    assignIfDefined(resolvedStyle, 'minHeight', toCssLength(minHeight));
+    assignIfDefined(resolvedStyle, 'maxHeight', toCssLength(maxHeight));
+    assignIfDefined(resolvedStyle, 'padding', toCssLength(padding));
+    assignIfDefined(resolvedStyle, 'paddingTop', toCssLength(paddingTop ?? paddingY));
+    assignIfDefined(resolvedStyle, 'paddingRight', toCssLength(paddingRight ?? paddingX));
+    assignIfDefined(resolvedStyle, 'paddingBottom', toCssLength(paddingBottom ?? paddingY));
+    assignIfDefined(resolvedStyle, 'paddingLeft', toCssLength(paddingLeft ?? paddingX));
+    assignIfDefined(resolvedStyle, 'margin', toCssLength(margin));
+    assignIfDefined(resolvedStyle, 'marginTop', toCssLength(marginTop ?? marginY));
+    assignIfDefined(resolvedStyle, 'marginRight', toCssLength(marginRight ?? marginX));
+    assignIfDefined(resolvedStyle, 'marginBottom', toCssLength(marginBottom ?? marginY));
+    assignIfDefined(resolvedStyle, 'marginLeft', toCssLength(marginLeft ?? marginX));
+    assignIfDefined(resolvedStyle, 'background', background);
+    assignIfDefined(resolvedStyle, 'border', border);
+    assignIfDefined(resolvedStyle, 'borderColor', borderColor);
+    assignIfDefined(resolvedStyle, 'borderStyle', borderStyle);
+    assignIfDefined(resolvedStyle, 'borderWidth', toCssLength(borderWidth));
+    assignIfDefined(resolvedStyle, 'borderRadius', toCssLength(borderRadius));
+    assignIfDefined(resolvedStyle, 'overflow', overflow);
 
     return <Component className={classNames(styles.Box, className)} style={resolvedStyle} {...props} />;
 };

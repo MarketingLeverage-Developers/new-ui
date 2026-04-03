@@ -38,6 +38,9 @@ export type { ButtonTabGroupProps, ButtonTabGroupItem } from './ButtonTabGroup/B
 export { default as BookmarkTabs } from './BookmarkTabs/BookmarkTabs';
 export type { BookmarkTabsProps, BookmarkTabsItem } from './BookmarkTabs/BookmarkTabs';
 
+export { default as MainTabLayout } from './MainTabLayout/MainTabLayout';
+export type { MainTabLayoutProps, MainTabLayoutItem } from './MainTabLayout/MainTabLayout';
+
 export { default as ButtonDropdown } from './ButtonDropdown/ButtonDropdown';
 export type {
     ButtonDropdownProps,
