@@ -29,6 +29,7 @@ export type LabeledPillTabsProps<T extends string = string> = Omit<
     itemClassName?: string;
     tabsClassName?: string;
     carousel?: boolean;
+    fill?: boolean;
 };
 
 const LabeledPillTabs = <T extends string = string>({
@@ -40,6 +41,7 @@ const LabeledPillTabs = <T extends string = string>({
     itemClassName,
     tabsClassName,
     carousel = false,
+    fill = false,
     ...props
 }: LabeledPillTabsProps<T>) => {
     const activeIndex = items.findIndex((item) => item.value === value);
@@ -70,9 +72,9 @@ const LabeledPillTabs = <T extends string = string>({
     );
 
     return (
-        <div className={classNames(styles.Root, className)} {...props}>
+        <div className={classNames(styles.Root, className)} data-fill={fill ? 'true' : 'false'} {...props}>
             {label ? <span className={styles.Label}>{label}</span> : null}
-            <div className={styles.Carousel}>
+            <div className={styles.Carousel} data-fill={fill ? 'true' : 'false'}>
                 {hasCarouselNavigation ? (
                     <button
                         type="button"
@@ -83,8 +85,17 @@ const LabeledPillTabs = <T extends string = string>({
                         <FiChevronLeft size={14} />
                     </button>
                 ) : null}
-                <div className={styles.Viewport} data-carousel={carousel ? 'true' : 'false'}>
-                    <div className={classNames(styles.Tabs, tabsClassName)} role="tablist" data-carousel={carousel ? 'true' : 'false'}>
+                <div
+                    className={styles.Viewport}
+                    data-carousel={carousel ? 'true' : 'false'}
+                    data-fill={fill ? 'true' : 'false'}
+                >
+                    <div
+                        className={classNames(styles.Tabs, tabsClassName)}
+                        role="tablist"
+                        data-carousel={carousel ? 'true' : 'false'}
+                        data-fill={fill ? 'true' : 'false'}
+                    >
                         {displayedItems.map((item, itemIndex) => {
                             const active = item.value === value;
                             const tone = item.tone ?? 'gray';
@@ -99,6 +110,7 @@ const LabeledPillTabs = <T extends string = string>({
                                         className={classNames(styles.Item, itemClassName)}
                                         data-active={active ? 'true' : 'false'}
                                         data-tone={tone}
+                                        data-fill={fill ? 'true' : 'false'}
                                         disabled={item.disabled}
                                         onClick={() => {
                                             if (item.disabled) return;

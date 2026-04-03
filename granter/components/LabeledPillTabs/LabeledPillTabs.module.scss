@@ -6,6 +6,10 @@
     max-width: 100%;
 }
 
+.Root[data-fill='true'] {
+    width: 100%;
+}
+
 .Label {
     flex: 0 0 auto;
     color: var(--granter-gray-500);
@@ -23,6 +27,10 @@
     max-width: 100%;
 }
 
+.Carousel[data-fill='true'] {
+    width: 100%;
+}
+
 .Viewport {
     position: relative;
     min-width: 0;
@@ -33,6 +41,11 @@
 .Viewport[data-carousel='true'] {
     width: fit-content;
     flex: 0 0 auto;
+}
+
+.Viewport[data-carousel='true'][data-fill='true'] {
+    width: auto;
+    flex: 1 1 auto;
 }
 
 .Tabs {
@@ -54,6 +67,10 @@
     overflow: visible;
 }
 
+.Tabs[data-carousel='true'][data-fill='true'] {
+    width: 100%;
+}
+
 .Item {
     --homepage-setting-item-bg: #eef5ff;
     --homepage-setting-item-color: #4f78a8;
@@ -64,6 +81,7 @@
     gap: 5px;
     flex: 0 0 auto;
     min-width: 0;
+    max-width: 100%;
     height: 32px;
     padding: 0 11px 0 9px;
     border: 1px solid rgba(255, 255, 255, 0.96);
@@ -95,6 +113,10 @@
 
 .ItemLabel {
     min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-align: center;
 }
 
 .Separator {
@@ -165,6 +187,11 @@
 .Item[data-active='true'] {
     border-color: var(--granter-gray-300);
     opacity: 1;
+}
+
+.Item[data-fill='true'] {
+    width: 100%;
+    justify-content: center;
 }
 
 .Item[data-tone='green'][data-active='true'] {
