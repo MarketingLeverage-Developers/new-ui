@@ -77,21 +77,23 @@ const DetailSceneHeader = ({
                 </>
             ) : null}
 
-            {onBack ? (
-                <button
-                    type="button"
-                    className={classNames(styles.Accessory, styles.AccessoryButton)}
-                    onClick={(event) => {
-                        event.stopPropagation();
-                        onBack();
-                    }}
-                    aria-label="상세보기 닫기"
-                >
-                    {accessory}
-                </button>
-            ) : (
-                <span className={styles.Accessory}>{accessory}</span>
-            )}
+            {accessory !== null
+                ? onBack
+                  ? (
+                        <button
+                            type="button"
+                            className={classNames(styles.Accessory, styles.AccessoryButton)}
+                            onClick={(event) => {
+                                event.stopPropagation();
+                                onBack();
+                            }}
+                            aria-label="상세보기 닫기"
+                        >
+                            {accessory}
+                        </button>
+                    )
+                  : <span className={styles.Accessory}>{accessory}</span>
+                : null}
         </div>
     </div>
 );
