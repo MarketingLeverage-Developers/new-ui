@@ -31,6 +31,7 @@ export { default as SectionFieldSelect } from './components/SectionFieldSelect/S
 export { default as SectionFieldMemberSelect } from './components/SectionFieldMemberSelect/SectionFieldMemberSelect';
 export { default as ButtonTabGroup } from './components/ButtonTabGroup/ButtonTabGroup';
 export { default as BookmarkTabs } from './components/BookmarkTabs/BookmarkTabs';
+export { default as HeaderTabs } from './components/HeaderTabs/HeaderTabs';
 export { default as MainTabLayout } from './components/MainTabLayout/MainTabLayout';
 export { default as Button } from './components/Button/Button';
 export { default as LightButton } from './components/Button/LightButton';
@@ -200,6 +201,7 @@ export type { HelpTooltipProps } from './components/HelpTooltip/HelpTooltip';
 export type { CheckboxTextToggleProps } from './components/CheckboxTextToggle/CheckboxTextToggle';
 export type { SearchToggleInputProps } from './components/SearchToggleInput/SearchToggleInput';
 export type { BookmarkTabsProps, BookmarkTabsItem } from './components/BookmarkTabs/BookmarkTabs';
+export type { HeaderTabsProps, HeaderTabsItem } from './components/HeaderTabs/HeaderTabs';
 export type { MainTabLayoutProps, MainTabLayoutItem } from './components/MainTabLayout/MainTabLayout';
 export type { SearchInputProps, SearchInputWidthPreset } from './components/SearchInput/SearchInput';
 export type { RoundedTextInputProps } from './components/RoundedTextInput/RoundedTextInput';
