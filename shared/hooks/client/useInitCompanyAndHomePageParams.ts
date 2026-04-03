@@ -7,7 +7,10 @@ type UseInitCompanyAndHomepageParamsArgs = {
     companyUuid: string;
     homepageUuid?: string;
 
-    updateParams: (values: { companyUuid?: string | null; homepageUuid?: string | null }) => void;
+    updateParams: (
+        values: { companyUuid?: string | null; homepageUuid?: string | null },
+        options?: { replace?: boolean }
+    ) => void;
 
     /**
      * 이 페이지에서 homepageUuid를 URL params로 "관리(초기화/동기화)"할지 여부
@@ -61,7 +64,7 @@ export const useInitCompanyAndHomepageParams = ({
         if (forceFirstSelection) {
             const first = companyList[0]?.uuid;
             if (first && first !== companyUuid) {
-                updateParams({ companyUuid: first });
+                updateParams({ companyUuid: first }, { replace: true });
             }
             return;
         }
@@ -74,7 +77,7 @@ export const useInitCompanyAndHomepageParams = ({
         const initial = (hasValidSaved ? saved! : companyList[0]?.uuid) ?? '';
 
         if (initial && initial !== companyUuid) {
-            updateParams({ companyUuid: initial });
+            updateParams({ companyUuid: initial }, { replace: true });
         }
     }, [enableCompany, companyList, companyUuid, forceFirstSelection, updateParams]);
 
@@ -90,7 +93,7 @@ export const useInitCompanyAndHomepageParams = ({
 
     // companyUuid가 유효하지 않거나 companyList가 없을 때는 homepage 계산도 의미 없어서 방어
     const selectedCompany = useMemo(() => companyList.find((c) => c.uuid === companyUuid), [companyList, companyUuid]);
-    const homepageList = selectedCompany?.homepages ?? [];
+    const homepageList = useMemo(() => selectedCompany?.homepages ?? [], [selectedCompany]);
 
     /**
      * 3) homepageUuid 초기화 (선택된 회사의 홈페이지만 기준)
@@ -102,7 +105,7 @@ export const useInitCompanyAndHomepageParams = ({
         // 홈페이가 아예 없으면 homepageUuid 비우기
         if (!homepageList.length) {
             if (homepageUuid) {
-                updateParams({ homepageUuid: null });
+                updateParams({ homepageUuid: null }, { replace: true });
             }
             return;
         }
@@ -111,7 +114,7 @@ export const useInitCompanyAndHomepageParams = ({
         if (forceFirstSelection) {
             const firstHomepageUuid = homepageList[0]?.uuid;
             if (firstHomepageUuid && firstHomepageUuid !== homepageUuid) {
-                updateParams({ homepageUuid: firstHomepageUuid });
+                updateParams({ homepageUuid: firstHomepageUuid }, { replace: true });
             }
             return;
         }
@@ -128,7 +131,7 @@ export const useInitCompanyAndHomepageParams = ({
         const initial = (hasValidSaved ? saved! : homepageList[0]?.uuid) ?? '';
 
         if (initial && initial !== homepageUuid) {
-            updateParams({ homepageUuid: initial });
+            updateParams({ homepageUuid: initial }, { replace: true });
         }
     }, [enableHomepage, homepageList, homepageUuid, updateParams, forceFirstSelection]);
 

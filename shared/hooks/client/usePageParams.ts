@@ -30,10 +30,14 @@ type UsePageParamsOptions = {
     resetOnReload?: boolean;
 };
 
+type UpdateParamsOptions = {
+    replace?: boolean;
+};
+
 type UsePageParamsResult<T extends ParamConfigs> = {
     params: ParsedParams<T>;
     searchParams: URLSearchParams;
-    updateParams: (values: Partial<Record<keyof T, unknown>>) => void;
+    updateParams: (values: Partial<Record<keyof T, unknown>>, options?: UpdateParamsOptions) => void;
 };
 
 const getNavigationType = (): 'navigate' | 'reload' | 'back_forward' | 'prerender' | 'unknown' => {
@@ -158,7 +162,7 @@ export const usePageParams = <T extends ParamConfigs>(
     }, [searchParams, configsStable]);
 
     // 파라미터 업데이트 함수
-    const updateParams = (values: Partial<Record<keyof T, unknown>>) => {
+    const updateParams = (values: Partial<Record<keyof T, unknown>>, options?: UpdateParamsOptions) => {
         setSearchParams((prev) => {
             const next = new URLSearchParams(prev);
 
@@ -174,7 +178,7 @@ export const usePageParams = <T extends ParamConfigs>(
             }
 
             return next;
-        });
+        }, options?.replace ? { replace: true } : undefined);
     };
 
     return {
