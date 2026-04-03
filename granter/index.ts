@@ -31,6 +31,7 @@ export { default as SectionFieldSelect } from './components/SectionFieldSelect/S
 export { default as SectionFieldMemberSelect } from './components/SectionFieldMemberSelect/SectionFieldMemberSelect';
 export { default as ButtonTabGroup } from './components/ButtonTabGroup/ButtonTabGroup';
 export { default as BookmarkTabs } from './components/BookmarkTabs/BookmarkTabs';
+export { default as HeaderBreadcrumb } from './components/HeaderBreadcrumb/HeaderBreadcrumb';
 export { default as HeaderTabs } from './components/HeaderTabs/HeaderTabs';
 export { default as LabeledPillTabs } from './components/LabeledPillTabs/LabeledPillTabs';
 export { default as MainTabLayout } from './components/MainTabLayout/MainTabLayout';
@@ -202,6 +203,7 @@ export type { HelpTooltipProps } from './components/HelpTooltip/HelpTooltip';
 export type { CheckboxTextToggleProps } from './components/CheckboxTextToggle/CheckboxTextToggle';
 export type { SearchToggleInputProps } from './components/SearchToggleInput/SearchToggleInput';
 export type { BookmarkTabsProps, BookmarkTabsItem } from './components/BookmarkTabs/BookmarkTabs';
+export type { HeaderBreadcrumbProps, HeaderBreadcrumbItem } from './components/HeaderBreadcrumb/HeaderBreadcrumb';
 export type { HeaderTabsProps, HeaderTabsItem } from './components/HeaderTabs/HeaderTabs';
 export type {
     LabeledPillTabsProps,

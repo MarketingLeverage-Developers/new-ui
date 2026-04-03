@@ -3,12 +3,12 @@
 .PageTemplate {
     @include theme.granter-light-theme;
 
-    --granter-sidebar-width: 200px;
+    --granter-sidebar-width: 256px;
     --granter-sidebar-collapsed-width: 56px;
     --granter-sub-sidebar-width: 280px;
     --granter-sub-sidebar-collapsed-width: 56px;
     --granter-aside-width: 400px;
-    --granter-sidebar-overlay-width: 200px;
+    --granter-sidebar-overlay-width: 256px;
     --granter-sub-sidebar-overlay-width: 280px;
     --granter-header-height: 64px;
 

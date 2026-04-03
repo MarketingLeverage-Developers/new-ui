@@ -38,6 +38,8 @@ export type { ButtonTabGroupProps, ButtonTabGroupItem } from './ButtonTabGroup/B
 export { default as BookmarkTabs } from './BookmarkTabs/BookmarkTabs';
 export type { BookmarkTabsProps, BookmarkTabsItem } from './BookmarkTabs/BookmarkTabs';
 
+export { default as HeaderBreadcrumb } from './HeaderBreadcrumb/HeaderBreadcrumb';
+export type { HeaderBreadcrumbProps, HeaderBreadcrumbItem } from './HeaderBreadcrumb/HeaderBreadcrumb';
 export { default as HeaderTabs } from './HeaderTabs/HeaderTabs';
 export type { HeaderTabsProps, HeaderTabsItem } from './HeaderTabs/HeaderTabs';
 export { default as LabeledPillTabs } from './LabeledPillTabs/LabeledPillTabs';

@@ -1,0 +1,73 @@
+.Root {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.Root::-webkit-scrollbar {
+    display: none;
+}
+
+.Item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    flex: 0 0 auto;
+    min-width: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--granter-gray-500);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.2;
+    white-space: nowrap;
+}
+
+button.Item {
+    cursor: pointer;
+    transition: color 0.16s ease;
+}
+
+button.Item:hover {
+    color: var(--granter-gray-700);
+}
+
+.Item[data-current='true'] {
+    color: var(--granter-gray-900);
+}
+
+.ItemIcon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: inherit;
+    flex-shrink: 0;
+}
+
+.ItemLabel {
+    min-width: 0;
+}
+
+.Separator {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--granter-gray-300);
+    flex: 0 0 auto;
+}
+
+@media (max-width: 1080px) {
+    .Root {
+        gap: 4px;
+    }
+
+    .Item {
+        font-size: 16px;
+    }
+}
