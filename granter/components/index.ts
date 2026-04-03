@@ -40,6 +40,12 @@ export type { BookmarkTabsProps, BookmarkTabsItem } from './BookmarkTabs/Bookmar
 
 export { default as HeaderTabs } from './HeaderTabs/HeaderTabs';
 export type { HeaderTabsProps, HeaderTabsItem } from './HeaderTabs/HeaderTabs';
+export { default as LabeledPillTabs } from './LabeledPillTabs/LabeledPillTabs';
+export type {
+    LabeledPillTabsProps,
+    LabeledPillTabsItem,
+    LabeledPillTabsTone,
+} from './LabeledPillTabs/LabeledPillTabs';
 
 export { default as MainTabLayout } from './MainTabLayout/MainTabLayout';
 export type { MainTabLayoutProps, MainTabLayoutItem } from './MainTabLayout/MainTabLayout';

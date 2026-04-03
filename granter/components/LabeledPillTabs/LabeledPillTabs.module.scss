@@ -1,0 +1,217 @@
+.Root {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    max-width: 100%;
+}
+
+.Label {
+    flex: 0 0 auto;
+    color: var(--granter-gray-500);
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 18px;
+    white-space: nowrap;
+}
+
+.Carousel {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+    max-width: 100%;
+}
+
+.Viewport {
+    position: relative;
+    min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
+}
+
+.Viewport[data-carousel='true'] {
+    width: fit-content;
+    flex: 0 0 auto;
+}
+
+.Tabs {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+    max-width: 100%;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.Tabs::-webkit-scrollbar {
+    display: none;
+}
+
+.Tabs[data-carousel='true'] {
+    overflow: visible;
+}
+
+.Item {
+    --homepage-setting-item-bg: #eef5ff;
+    --homepage-setting-item-color: #4f78a8;
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 5px;
+    flex: 0 0 auto;
+    min-width: 0;
+    height: 32px;
+    padding: 0 11px 0 9px;
+    border: 1px solid rgba(255, 255, 255, 0.96);
+    border-radius: 999px;
+    background-color: var(--homepage-setting-item-bg);
+    color: var(--homepage-setting-item-color);
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 16px;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+    scroll-snap-align: start;
+    cursor: pointer;
+    opacity: 0.56;
+    transition:
+        opacity 0.16s ease,
+        border-color 0.16s ease,
+        background-color 0.16s ease,
+        color 0.16s ease;
+}
+
+.Icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    color: inherit;
+}
+
+.ItemLabel {
+    min-width: 0;
+}
+
+.Separator {
+    width: 1px;
+    height: 16px;
+    flex: 0 0 auto;
+    background-color: var(--granter-gray-200);
+}
+
+.NavButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    flex: 0 0 auto;
+    border: 1px solid var(--granter-gray-200);
+    border-radius: 999px;
+    background-color: var(--granter-white);
+    color: var(--granter-gray-500);
+    cursor: pointer;
+    transition:
+        background-color 0.16s ease,
+        border-color 0.16s ease,
+        color 0.16s ease;
+}
+
+.NavButton:hover:not(:disabled) {
+    background-color: var(--granter-gray-50);
+    color: var(--granter-gray-700);
+}
+
+.NavButton:disabled {
+    opacity: 0.35;
+    cursor: default;
+}
+
+.Item:disabled {
+    opacity: 0.45;
+    cursor: default;
+}
+
+.Item[data-tone='green'] {
+    --homepage-setting-item-bg: #eef8f2;
+    --homepage-setting-item-color: #5a9c6e;
+}
+
+.Item[data-tone='orange'] {
+    --homepage-setting-item-bg: #fff4e8;
+    --homepage-setting-item-color: #d18437;
+}
+
+.Item[data-tone='purple'] {
+    --homepage-setting-item-bg: #f4efff;
+    --homepage-setting-item-color: #7d64c1;
+}
+
+.Item[data-tone='teal'] {
+    --homepage-setting-item-bg: #edf8f7;
+    --homepage-setting-item-color: #4f8b85;
+}
+
+.Item[data-tone='gray'] {
+    --homepage-setting-item-bg: #f3f4f6;
+    --homepage-setting-item-color: #6b7280;
+}
+
+.Item[data-active='true'] {
+    border-color: var(--granter-gray-300);
+    opacity: 1;
+}
+
+.Item[data-tone='green'][data-active='true'] {
+    background-color: #e7f5ec;
+}
+
+.Item[data-tone='orange'][data-active='true'] {
+    background-color: #ffefdf;
+}
+
+.Item[data-tone='purple'][data-active='true'] {
+    background-color: #eee7ff;
+}
+
+.Item[data-tone='teal'][data-active='true'] {
+    background-color: #e6f5f3;
+}
+
+.Item[data-tone='gray'][data-active='true'] {
+    background-color: #eceef1;
+}
+
+@media (max-width: 1080px) {
+    .Root {
+        gap: 8px;
+    }
+
+    .Carousel {
+        gap: 4px;
+    }
+
+    .Label {
+        font-size: 13px;
+    }
+
+    .Tabs {
+        gap: 6px;
+    }
+
+    .Item {
+        height: 30px;
+        padding: 0 10px 0 8px;
+        font-size: 12px;
+    }
+
+    .NavButton {
+        width: 22px;
+        height: 22px;
+    }
+}

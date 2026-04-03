@@ -32,6 +32,7 @@ export { default as SectionFieldMemberSelect } from './components/SectionFieldMe
 export { default as ButtonTabGroup } from './components/ButtonTabGroup/ButtonTabGroup';
 export { default as BookmarkTabs } from './components/BookmarkTabs/BookmarkTabs';
 export { default as HeaderTabs } from './components/HeaderTabs/HeaderTabs';
+export { default as LabeledPillTabs } from './components/LabeledPillTabs/LabeledPillTabs';
 export { default as MainTabLayout } from './components/MainTabLayout/MainTabLayout';
 export { default as Button } from './components/Button/Button';
 export { default as LightButton } from './components/Button/LightButton';
@@ -202,6 +203,11 @@ export type { CheckboxTextToggleProps } from './components/CheckboxTextToggle/Ch
 export type { SearchToggleInputProps } from './components/SearchToggleInput/SearchToggleInput';
 export type { BookmarkTabsProps, BookmarkTabsItem } from './components/BookmarkTabs/BookmarkTabs';
 export type { HeaderTabsProps, HeaderTabsItem } from './components/HeaderTabs/HeaderTabs';
+export type {
+    LabeledPillTabsProps,
+    LabeledPillTabsItem,
+    LabeledPillTabsTone,
+} from './components/LabeledPillTabs/LabeledPillTabs';
 export type { MainTabLayoutProps, MainTabLayoutItem } from './components/MainTabLayout/MainTabLayout';
 export type { SearchInputProps, SearchInputWidthPreset } from './components/SearchInput/SearchInput';
 export type { RoundedTextInputProps } from './components/RoundedTextInput/RoundedTextInput';
