@@ -11,7 +11,10 @@ export const useSelectionMouseUpEnd = ({
     useEffect(() => {
         const handleUp = () => {
             if (drag.draggingKey) return;
-            setSelection((prev) => ({ ...prev, isSelecting: false }));
+            setSelection((prev) => {
+                if (!prev.isSelecting) return prev;
+                return { ...prev, isSelecting: false };
+            });
         };
 
         window.addEventListener('mouseup', handleUp);
