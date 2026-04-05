@@ -1656,7 +1656,7 @@ const buildBarGeometry = ({
             }
         });
 
-        if (datum.isMissingData && !hasVisibleValue && !isGroupedAmountBar && !isGroupedStackBar) {
+        if (datum.isMissingData && !hasVisibleValue && !isGroupedStackBar) {
             const height = frame.height;
             const top = frame.top;
 
@@ -2594,10 +2594,21 @@ const AnalyticsChart = ({
     const isDashboardMetricPreset = resolvedPreset === 'dashboardMetric';
     const isAmountShareBar = isDashboardMetricPreset && isGroupedAmountBar;
 
+    const hasAnyGroupedAmountValue = useMemo(
+        () =>
+            lineChartData.some((datum) =>
+                lineSeriesMeta.some((seriesItem) => Math.abs(Number(datum[seriesItem.key] ?? 0)) > 0)
+            ),
+        [lineChartData, lineSeriesMeta]
+    );
+
     const barData = useMemo(
         () =>
             isGroupedAmountBar
-                ? lineChartData
+                ? lineChartData.map((datum) => ({
+                      ...datum,
+                      isMissingData: !hasAnyGroupedAmountValue,
+                  }))
                 : isGroupedStackBar
                 ? (groupedStackData?.data ?? []).map(normalizeGroupedStatusDatum)
                 : periods.map((item) =>
@@ -2613,7 +2624,7 @@ const AnalyticsChart = ({
                           stopByPerformanceAmount: item.stopByPerformanceAmount ?? 0,
                       })
                   ),
-        [groupedStackData?.data, isGroupedAmountBar, isGroupedStackBar, lineChartData, periods]
+        [groupedStackData?.data, hasAnyGroupedAmountValue, isGroupedAmountBar, isGroupedStackBar, lineChartData, periods]
     );
 
     const barSeries = useMemo(
@@ -2723,7 +2734,6 @@ const AnalyticsChart = ({
         !isLoading &&
         chartType === 'BAR' &&
         barData.length > 0 &&
-        !isGroupedAmountBar &&
         !isGroupedStackBar &&
         barData.every((item) => item.isMissingData);
 
@@ -2746,7 +2756,10 @@ const AnalyticsChart = ({
         !isLoading &&
         (chartType === 'LINE'
             ? lineSeriesMeta.length === 0 || lineChartData.length === 0
-            : barData.length === 0);
+            : barData.length === 0 ||
+              (barMode === 'amount' &&
+                  (lineData?.periodLabels?.length ?? 0) > 0 &&
+                  lineSeriesMeta.length === 0));
     return (
         <div style={containerStyle}>
             {showTitle ? (
