@@ -1,4 +1,6 @@
 import MemberProfileAvatar from '@/components/common/MemberProfileAvatar/MemberProfileAvatar';
+import { getFallbackProfileSrc } from '@/shared/utils/profile/getFallbackProfileSrc';
+import { getFallbackUserProfileSrc } from '@/shared/utils/profile/getFallbackUserProfileSrc';
 import Flex from '../Flex/Flex';
 import Text from '../Text/Text';
 import { memo, useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
@@ -26,6 +28,7 @@ export type AnalyticsChartBarMode = 'amount' | 'statusRatio' | 'statusAmount' | 
 export type AnalyticsChartType = 'BAR' | 'LINE' | 'PIE';
 export type AnalyticsChartPreset = 'default' | 'dashboardMetric';
 export type AnalyticsChartStatusSeriesMode = 'reason' | 'category';
+export type AnalyticsChartAvatarKind = 'company' | 'user';
 
 export type AnalyticsChartPeriodItem = {
     periodLabel: string;
@@ -46,6 +49,8 @@ export type AnalyticsChartLineSeries = {
     values: number[];
     profileImageUrl?: string;
     profileSrc?: string;
+    avatarKind?: AnalyticsChartAvatarKind;
+    avatarSeed?: string;
 };
 
 export type AnalyticsChartLineData = {
@@ -85,6 +90,7 @@ export type AnalyticsChartProps = {
     title?: string;
     showTitle?: boolean;
     showLegend?: boolean;
+    showSeriesAvatars?: boolean;
 };
 
 type BarMode = AnalyticsChartBarMode;
@@ -94,6 +100,8 @@ type LineSeriesMeta = {
     label: string;
     color: string;
     profileSrc?: string;
+    avatarKind?: AnalyticsChartAvatarKind;
+    avatarSeed?: string;
 };
 
 type LineChartDatum = AnalyticsChartDatum;
@@ -192,6 +200,8 @@ type AvatarAnchor = {
     key: string;
     label: string;
     profileSrc?: string;
+    avatarSeed?: string;
+    avatarKind?: AnalyticsChartAvatarKind;
     left: number;
     top: number;
 };
@@ -200,6 +210,8 @@ type LinePointOverlay = {
     key: string;
     label: string;
     profileSrc?: string;
+    avatarKind?: AnalyticsChartAvatarKind;
+    avatarSeed?: string;
     left: number;
     top: number;
     value: number;
@@ -306,6 +318,11 @@ const tooltipItemStyle: React.CSSProperties = {
     alignItems: 'center',
     gap: 8,
 };
+const chartAvatarStyle: React.CSSProperties = {
+    border: '1px solid var(--granter-gray-200)',
+    boxSizing: 'border-box',
+    backgroundColor: 'var(--granter-gray-50)',
+};
 
 const legendDotStyle = (color: string): React.CSSProperties => ({
     display: 'inline-flex',
@@ -328,6 +345,26 @@ const statusIconStyle: React.CSSProperties = {
 const formatCompactAmount = (value: number) => Math.round(value).toLocaleString('ko-KR');
 const formatCurrency = (value: number) => `${value.toLocaleString('ko-KR')}원`;
 const formatPercent = (value: number) => `${value.toFixed(1)}%`;
+const pickProfileSrc = (...candidates: Array<string | null | undefined>) => {
+    for (const candidate of candidates) {
+        const normalized = String(candidate ?? '').trim();
+
+        if (normalized.length > 0) {
+            return normalized;
+        }
+    }
+
+    return '';
+};
+const resolveAvatarSrc = (
+    profileSrc?: string | null,
+    seed?: string | null,
+    avatarKind: AnalyticsChartAvatarKind = 'user'
+) =>
+    pickProfileSrc(
+        profileSrc,
+        avatarKind === 'company' ? getFallbackProfileSrc(seed) : getFallbackUserProfileSrc(seed)
+    );
 const formatCount = (value: number) => `${value.toLocaleString('ko-KR')}건`;
 
 const clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max);
@@ -1037,6 +1074,8 @@ const areAvatarAnchorsEqual = (a: AvatarAnchor[], b: AvatarAnchor[]) => {
             left.key !== right.key ||
             left.label !== right.label ||
             left.profileSrc !== right.profileSrc ||
+            left.avatarSeed !== right.avatarSeed ||
+            left.avatarKind !== right.avatarKind ||
             left.left !== right.left ||
             left.top !== right.top
         ) {
@@ -1234,7 +1273,17 @@ const LineTooltipContent = ({
             <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                 {sortedItems.map((item) => (
                     <div key={item.key} style={tooltipItemStyle}>
-                        <MemberProfileAvatar name={item.label} src={item.profileSrc} size={20} fontSize={11} />
+                        <MemberProfileAvatar
+                            name={item.label}
+                            src={resolveAvatarSrc(
+                                item.profileSrc,
+                                item.avatarSeed ?? item.key,
+                                item.avatarKind ?? 'user'
+                            )}
+                            size={20}
+                            fontSize={11}
+                            style={chartAvatarStyle}
+                        />
                         <Text size="sm" style={{ minWidth: 0, wordBreak: 'break-word' }}>
                             {item.label}
                         </Text>
@@ -1426,7 +1475,17 @@ const AmountShareTooltipContent = ({
             <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                 {items.map((item) => (
                     <div key={item.key} style={tooltipItemStyle}>
-                        <MemberProfileAvatar name={item.label} src={item.profileSrc} size={20} fontSize={11} />
+                        <MemberProfileAvatar
+                            name={item.label}
+                            src={resolveAvatarSrc(
+                                item.profileSrc,
+                                item.avatarSeed ?? item.key,
+                                item.avatarKind ?? 'user'
+                            )}
+                            size={20}
+                            fontSize={11}
+                            style={chartAvatarStyle}
+                        />
                         <Text size="sm" style={{ minWidth: 0, wordBreak: 'break-word' }}>
                             {`${item.label} · ${Math.round(item.ratio)}%`}
                         </Text>
@@ -1536,7 +1595,17 @@ const buildBarGeometry = ({
 }: {
     chart: uPlot;
     data: LineChartDatum[];
-    seriesMeta: Array<{ key: string; color: string; stackId?: string; label: string; avatarSrc?: string }>;
+    seriesMeta: Array<{
+        key: string;
+        color: string;
+        stackId?: string;
+        label: string;
+        profileSrc?: string;
+        avatarSrc?: string;
+        avatarName?: string;
+        avatarKind?: AnalyticsChartAvatarKind;
+        avatarSeed?: string;
+    }>;
     isGroupedAmountBar: boolean;
     isGroupedStackBar: boolean;
     dashboardCategoryGap: number;
@@ -1597,7 +1666,7 @@ const buildBarGeometry = ({
 
             let positiveAcc = 0;
             let negativeAcc = 0;
-            let anchorRect: DrawnBarRect | null = null;
+            let stackTop: number | null = null;
 
             stackSeries.forEach((seriesItem) => {
                 const rawValue = Number(datum[seriesItem.key] ?? 0);
@@ -1626,31 +1695,25 @@ const buildBarGeometry = ({
 
                 rects.push(nextRect);
                 hasVisibleValue = true;
-
-                const groupedInfo = parseGroupedSeriesKey(seriesItem.key);
-                const shouldUseAsAnchor = groupedInfo
-                    ? groupedInfo.statusKey === 'live' ||
-                      groupedInfo.statusKey === 'waiting' ||
-                      groupedInfo.statusKey === 'adStop' ||
-                      groupedInfo.statusKey === 'end' ||
-                      groupedInfo.statusKey === 'stopByClient' ||
-                      groupedInfo.statusKey === 'stopByPerformance'
-                    : false;
-
-                if (!anchorRect && shouldUseAsAnchor && nextRect.height > 0) {
-                    anchorRect = nextRect;
-                }
+                stackTop = stackTop === null ? nextRect.top : Math.min(stackTop, nextRect.top);
             });
 
-            if (anchorRect) {
+            if (stackTop !== null) {
                 const avatarSeries = stackSeries.find((item) => (item.stackId ?? item.key) === stackId);
                 if (avatarSeries) {
+                    const avatarLabel = avatarSeries.label.split(' · ')[0] ?? avatarSeries.label;
                     avatars.push({
                         key: `${stackId}-${idx}`,
-                        label: avatarSeries.label.split(' · ')[0] ?? avatarSeries.label,
-                        profileSrc: avatarSeries.avatarSrc,
-                        left: anchorRect.left + anchorRect.width / 2,
-                        top: Math.max(anchorRect.top - GROUPED_STACK_AVATAR_SIZE - 8, 4),
+                        label: avatarLabel,
+                        profileSrc: avatarSeries.avatarSrc ?? avatarSeries.profileSrc,
+                        avatarSeed:
+                            avatarSeries.avatarSeed ??
+                            avatarSeries.stackId ??
+                            avatarSeries.avatarName ??
+                            avatarLabel,
+                        avatarKind: avatarSeries.avatarKind,
+                        left: groupLeft + groupWidth / 2,
+                        top: Math.max(stackTop - GROUPED_STACK_AVATAR_SIZE - 8, 4),
                     });
                 }
             }
@@ -1879,6 +1942,8 @@ const UplotLineTooltipOverlay = memo(({
                     key: seriesItem.key,
                     label: seriesItem.label,
                     profileSrc: seriesItem.profileSrc,
+                    avatarKind: seriesItem.avatarKind,
+                    avatarSeed: seriesItem.avatarSeed,
                     left: x,
                     top: y,
                     value,
@@ -1924,9 +1989,14 @@ const UplotLineTooltipOverlay = memo(({
                     >
                         <MemberProfileAvatar
                             name={activeLinePoint.label}
-                            src={activeLinePoint.profileSrc}
+                            src={resolveAvatarSrc(
+                                activeLinePoint.profileSrc,
+                                activeLinePoint.avatarSeed ?? activeLinePoint.key,
+                                activeLinePoint.avatarKind ?? 'user'
+                            )}
                             size={LINE_AVATAR_SIZE}
                             fontSize={11}
+                            style={chartAvatarStyle}
                         />
                     </div>
                 </>
@@ -1962,6 +2032,7 @@ const UplotBarChart = ({
     isGroupedAmountBar,
     isGroupedStackBar,
     isAmountShareBar,
+    shouldShowGroupedAmountAvatars,
     shouldShowGroupedStackAvatars,
     isDashboardMetricPreset,
     barMode,
@@ -1978,11 +2049,22 @@ const UplotBarChart = ({
     size: ChartAreaSize;
     labels: string[];
     barData: LineChartDatum[];
-    barSeries: Array<{ key: string; label: string; color: string; stackId?: string; avatarSrc?: string }>;
+    barSeries: Array<{
+        key: string;
+        label: string;
+        color: string;
+        stackId?: string;
+        profileSrc?: string;
+        avatarSrc?: string;
+        avatarName?: string;
+        avatarKind?: AnalyticsChartAvatarKind;
+        avatarSeed?: string;
+    }>;
     lineSeriesMeta: LineSeriesMeta[];
     isGroupedAmountBar: boolean;
     isGroupedStackBar: boolean;
     isAmountShareBar: boolean;
+    shouldShowGroupedAmountAvatars: boolean;
     shouldShowGroupedStackAvatars: boolean;
     isDashboardMetricPreset: boolean;
     barMode: BarMode;
@@ -2115,7 +2197,10 @@ const UplotBarChart = ({
                                 barMode: barModeRef.current,
                             });
 
-                            if (!areDrawnBarRectsEqual(barRectsRef.current, rects)) {
+                            if (
+                                !areDrawnBarRectsEqual(barRectsRef.current, rects) ||
+                                !areAvatarAnchorsEqual(avatarAnchors, avatars)
+                            ) {
                                 syncBarGeometry(rects, avatars);
                             }
 
@@ -2290,6 +2375,7 @@ const UplotBarChart = ({
             dashboardPresetRef,
             isGroupedAmountBar,
             isGroupedStackBar,
+            avatarAnchors,
             syncBarGeometry,
         ]
     );
@@ -2299,7 +2385,10 @@ const UplotBarChart = ({
         height: Math.max(size.height, 1),
         padding: isDashboardMetricPreset
             ? [
-                  Math.max(shouldShowGroupedStackAvatars ? 64 : 0, MIN_VERTICAL_CHART_PADDING),
+                  Math.max(
+                      shouldShowGroupedStackAvatars || shouldShowGroupedAmountAvatars ? 64 : 0,
+                      MIN_VERTICAL_CHART_PADDING
+                  ),
                   Math.max(barYAxisWidth - 40, 0),
                   MIN_VERTICAL_CHART_PADDING,
                   0,
@@ -2310,7 +2399,7 @@ const UplotBarChart = ({
         scales: {
             x: {
                 time: false,
-                    range: () => (labelsRef.current.length > 0 ? [-0.5, labelsRef.current.length - 0.5] : [0, 1]),
+                range: () => (labelsRef.current.length > 0 ? [-0.5, labelsRef.current.length - 0.5] : [0, 1]),
             },
             y: {
                 auto: false,
@@ -2341,6 +2430,7 @@ const UplotBarChart = ({
         labelsRef,
         metricBarDomainRef,
         plugins,
+        shouldShowGroupedAmountAvatars,
         shouldShowGroupedStackAvatars,
         size.height,
         size.width,
@@ -2360,7 +2450,7 @@ const UplotBarChart = ({
                 resetScales
             />
             <div className={styles.OverlayLayer}>
-                {shouldShowGroupedStackAvatars
+                {shouldShowGroupedStackAvatars || shouldShowGroupedAmountAvatars
                     ? avatarAnchors.map((item) => (
                         <div
                             key={item.key}
@@ -2373,9 +2463,14 @@ const UplotBarChart = ({
                         >
                             <MemberProfileAvatar
                                 name={item.label}
-                                src={item.profileSrc}
+                                src={resolveAvatarSrc(
+                                    item.profileSrc,
+                                    item.avatarSeed ?? item.label,
+                                    item.avatarKind ?? 'user'
+                                )}
                                 size={GROUPED_STACK_AVATAR_SIZE}
                                 fontSize={11}
+                                style={chartAvatarStyle}
                             />
                         </div>
                     ))
@@ -2420,7 +2515,7 @@ const UplotBarTooltipOverlay = memo(({
     size: ChartAreaSize;
     labels: string[];
     barData: LineChartDatum[];
-    barSeries: Array<{ key: string; label: string; color: string; stackId?: string; avatarSrc?: string }>;
+    barSeries: Array<{ key: string; label: string; color: string; stackId?: string; avatarSrc?: string; avatarName?: string }>;
     lineSeriesMeta: LineSeriesMeta[];
     groupedStackSeries: AnalyticsChartGroupedStackSeries[];
     isGroupedAmountBar: boolean;
@@ -2548,6 +2643,7 @@ const AnalyticsChart = ({
     title = '운영 내역',
     showTitle = true,
     showLegend = true,
+    showSeriesAvatars = false,
 }: AnalyticsChartProps) => {
     const [chartAreaElement, setChartAreaElement] = useState<HTMLDivElement | null>(null);
     const chartAreaSize = useElementSize(chartAreaElement);
@@ -2559,6 +2655,8 @@ const AnalyticsChart = ({
                 label: item.name,
                 color: ANALYTICS_CHART_LINE_COLORS[index % ANALYTICS_CHART_LINE_COLORS.length],
                 profileSrc: (item.profileImageUrl ?? item.profileSrc ?? '').trim() || undefined,
+                avatarKind: item.avatarKind,
+                avatarSeed: item.avatarSeed ?? item.id,
             })),
         [lineData?.series]
     );
@@ -2650,6 +2748,12 @@ const AnalyticsChart = ({
 
     const shouldShowGroupedStackAvatars =
         isDashboardMetricPreset && isGroupedStackBar && groupedStackCount > 0 && groupedStackCount <= 5;
+    const shouldShowGroupedAmountAvatars =
+        showSeriesAvatars &&
+        isDashboardMetricPreset &&
+        isGroupedAmountBar &&
+        barSeries.length > 0 &&
+        barSeries.length <= 5;
 
     const barTickFormatter = useMemo(() => getBarTickFormatter(barMode), [barMode]);
     const barTooltipValueFormatter = useMemo(() => getTooltipValueFormatter(barMode), [barMode]);
@@ -2669,13 +2773,16 @@ const AnalyticsChart = ({
         () =>
             isDashboardMetricPreset
                 ? [
-                      Math.max(shouldShowGroupedStackAvatars ? 64 : 0, MIN_VERTICAL_CHART_PADDING),
+                      Math.max(
+                          shouldShowGroupedStackAvatars || shouldShowGroupedAmountAvatars ? 64 : 0,
+                          MIN_VERTICAL_CHART_PADDING
+                      ),
                       Math.max(barYAxisWidth - 40, 0),
                       MIN_VERTICAL_CHART_PADDING,
                       0,
                   ]
                 : [8, 12, MIN_VERTICAL_CHART_PADDING, 0],
-        [barYAxisWidth, isDashboardMetricPreset, shouldShowGroupedStackAvatars]
+        [barYAxisWidth, isDashboardMetricPreset, shouldShowGroupedAmountAvatars, shouldShowGroupedStackAvatars]
     );
 
     const barPlotWidth = useMemo(() => {
@@ -2801,12 +2908,14 @@ const AnalyticsChart = ({
                                     barData={barData}
                                     barSeries={barSeries.map((item) => ({
                                         ...item,
+                                        avatarName: 'avatarName' in item ? item.avatarName : undefined,
                                         avatarSrc: 'avatarSrc' in item ? item.avatarSrc : undefined,
                                     }))}
                                     lineSeriesMeta={lineSeriesMeta}
                                     isGroupedAmountBar={isGroupedAmountBar}
                                     isGroupedStackBar={isGroupedStackBar}
                                     isAmountShareBar={isAmountShareBar}
+                                    shouldShowGroupedAmountAvatars={shouldShowGroupedAmountAvatars}
                                     shouldShowGroupedStackAvatars={shouldShowGroupedStackAvatars}
                                     isDashboardMetricPreset={isDashboardMetricPreset}
                                     barMode={barMode}
