@@ -1,4 +1,5 @@
 import MemberProfileAvatar from '@/components/common/MemberProfileAvatar/MemberProfileAvatar';
+import { getFallbackUserProfileSrc } from '@/shared/utils/profile/getFallbackUserProfileSrc';
 import React, { useEffect, useMemo, useState } from 'react';
 import { HiCheck, HiOutlinePlus, HiXMark } from 'react-icons/hi2';
 import classNames from 'classnames';
@@ -20,6 +21,16 @@ export type SectionFieldMemberSelectOption<T extends string = string> = {
     profileImageUrl?: string | null;
     disabled?: boolean;
     searchText?: string;
+};
+
+const resolveUserAvatarSrc = <T extends string>(option: SectionFieldMemberSelectOption<T>) => {
+    const profileImageUrl = option.profileImageUrl?.trim();
+
+    if (profileImageUrl && profileImageUrl.length > 0) {
+        return profileImageUrl;
+    }
+
+    return getFallbackUserProfileSrc(option.value || option.label);
 };
 
 type SectionFieldMemberSelectCommonProps<T extends string = string> = {
@@ -124,7 +135,7 @@ const TriggerContent = <T extends string>({
                         key={option.value}
                         className={styles.SelectedAvatar}
                         name={option.label}
-                        src={option.profileImageUrl}
+                        src={resolveUserAvatarSrc(option)}
                         size={40}
                         fontSize={13}
                     />
@@ -163,7 +174,7 @@ const SectionFieldMemberSelectItem = <T extends string>({
                 onSelect(option.value);
             }}
         >
-            <MemberProfileAvatar name={option.label} src={option.profileImageUrl} size={26} fontSize={11} />
+            <MemberProfileAvatar name={option.label} src={resolveUserAvatarSrc(option)} size={26} fontSize={11} />
             <span className={styles.OptionLabel}>{option.label}</span>
             {multiple ? (
                 <span className={styles.OptionCheck} data-active={active ? 'true' : 'false'} aria-hidden="true">
@@ -249,7 +260,7 @@ const SectionFieldMemberSelectMenu = <T extends string>({
                         >
                             <MemberProfileAvatar
                                 name={option.label}
-                                src={option.profileImageUrl}
+                                src={resolveUserAvatarSrc(option)}
                                 size={22}
                                 fontSize={10}
                             />
