@@ -153,6 +153,12 @@ export { default as SheetModal } from './SheetModal/SheetModal';
 export type { SheetModalProps } from './SheetModal/SheetModal';
 export { default as CompactPageShell } from './CompactPageShell/CompactPageShell';
 export type { CompactPageShellProps } from './CompactPageShell/CompactPageShell';
+export { default as InsightPanel } from './InsightPanel/InsightPanel';
+export type { InsightPanelProps } from './InsightPanel/InsightPanel';
+export { default as SummaryStatList } from './SummaryStatList/SummaryStatList';
+export type { SummaryStatListProps, SummaryStatListItem } from './SummaryStatList/SummaryStatList';
+export { default as RankedMetricList } from './RankedMetricList/RankedMetricList';
+export type { RankedMetricListProps, RankedMetricListItem } from './RankedMetricList/RankedMetricList';
 
 export { default as SectionIntro } from './SectionIntro/SectionIntro';
 export type { SectionIntroProps } from './SectionIntro/SectionIntro';

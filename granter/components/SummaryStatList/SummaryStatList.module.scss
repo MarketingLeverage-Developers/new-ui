@@ -1,0 +1,78 @@
+.List {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    width: 100%;
+}
+
+.Item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    width: 100%;
+    min-width: 0;
+    padding: 12px 0;
+}
+
+.Item + .Item {
+    border-top: 1px solid var(--granter-gray-100);
+}
+
+.Left {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+    flex: 1;
+}
+
+.IconWrap {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 12px;
+    flex-shrink: 0;
+    overflow: hidden;
+    background: linear-gradient(180deg, var(--granter-gray-50) 0%, var(--granter-white) 100%);
+    border: 1px solid var(--granter-gray-200);
+}
+
+.IconWrap img {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+}
+
+.Copy {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.Label {
+    color: var(--granter-gray-500);
+    font-size: 13px;
+    line-height: 18px;
+}
+
+.Value {
+    flex-shrink: 0;
+    margin-left: 12px;
+    color: var(--granter-gray-900);
+    font-size: 24px;
+    line-height: 30px;
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+}
+
+.Value[data-tone='up'] {
+    color: var(--granter-sky-600);
+}
+
+.Value[data-tone='down'] {
+    color: var(--granter-red-500);
+}

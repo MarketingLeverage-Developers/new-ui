@@ -1,0 +1,95 @@
+.List {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+}
+
+.Item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    width: 100%;
+    min-width: 0;
+    padding: 10px 12px;
+    border-radius: 12px;
+    background: var(--granter-gray-50);
+    border: 1px solid color-mix(in srgb, var(--granter-gray-200) 80%, transparent);
+}
+
+.Left {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+    flex: 1;
+}
+
+.IconWrap {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 999px;
+    overflow: hidden;
+    flex-shrink: 0;
+    background: var(--granter-white);
+    border: 1px solid var(--granter-gray-200);
+}
+
+.IconWrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.LabelWrap {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+}
+
+.Label {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--granter-gray-800);
+    font-size: 13px;
+    line-height: 18px;
+}
+
+.Meta {
+    flex-shrink: 0;
+    color: var(--granter-gray-400);
+    font-size: 12px;
+    line-height: 16px;
+}
+
+.Value {
+    margin-left: 10px;
+    white-space: nowrap;
+    color: var(--granter-gray-900);
+    font-size: 13px;
+    line-height: 18px;
+    font-variant-numeric: tabular-nums;
+}
+
+.Value[data-tone='up'] {
+    color: var(--granter-sky-600);
+}
+
+.Value[data-tone='down'] {
+    color: var(--granter-red-500);
+}
+
+.Empty {
+    margin: 0;
+    padding: 6px 2px 2px;
+    color: var(--granter-gray-500);
+    font-size: 13px;
+    line-height: 18px;
+}
