@@ -11,6 +11,8 @@ export { default as BasicBarChart } from './components/BasicBarChart/BasicBarCha
 export { default as BasicDonutChart } from './components/BasicDonutChart/BasicDonutChart';
 export { default as AnalyticsChart } from './components/AnalyticsChart/AnalyticsChart';
 export { default as SectionBlock } from './components/SectionBlock/SectionBlock';
+export { default as SheetModal } from './components/SheetModal/SheetModal';
+export { default as CompactPageShell } from './components/CompactPageShell/CompactPageShell';
 export { default as SidebarDrawerLayout } from './components/SidebarDrawerLayout/SidebarDrawerLayout';
 export { default as SectionIntro } from './components/SectionIntro/SectionIntro';
 export { default as SectionFormDrawerContent } from './components/SectionFormDrawerContent/SectionFormDrawerContent';
@@ -165,6 +167,8 @@ export type { FlexProps } from './components/Flex/Flex';
 export type { GridProps } from './components/Grid/Grid';
 export type { SurfacePanelProps } from './components/SurfacePanel/SurfacePanel';
 export type { SectionBlockProps } from './components/SectionBlock/SectionBlock';
+export type { SheetModalProps } from './components/SheetModal/SheetModal';
+export type { CompactPageShellProps } from './components/CompactPageShell/CompactPageShell';
 export type { SectionIntroProps } from './components/SectionIntro/SectionIntro';
 export type { SectionFormDrawerContentProps } from './components/SectionFormDrawerContent/SectionFormDrawerContent';
 export type { SectionFieldRowProps } from './components/SectionFieldRow/SectionFieldRow';

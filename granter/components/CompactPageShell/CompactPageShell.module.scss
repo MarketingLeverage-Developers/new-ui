@@ -1,0 +1,72 @@
+.Root {
+    display: flex;
+    flex-direction: column;
+    min-height: 100dvh;
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 1) 0%, rgba(248, 250, 252, 0.98) 28%, rgba(241, 245, 249, 0.92) 100%);
+}
+
+.Header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 14px 16px 12px;
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(248, 250, 252, 0.9) 100%);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid rgba(226, 232, 240, 0.9);
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04);
+}
+
+.HeaderRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    min-width: 0;
+}
+
+.HeaderLeft,
+.HeaderRight {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+}
+
+.Filters {
+    min-width: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    padding-bottom: 2px;
+}
+
+.Filters::-webkit-scrollbar {
+    display: none;
+}
+
+.Main {
+    flex: 1;
+    min-height: 0;
+    overflow: auto;
+}
+
+.MainInner {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    min-height: 100%;
+    padding: 20px 16px 28px;
+}
+
+.Footer {
+    position: sticky;
+    bottom: 0;
+    z-index: 20;
+    background: var(--granter-white);
+    border-top: 1px solid var(--granter-gray-200);
+}

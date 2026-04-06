@@ -42,6 +42,36 @@ export { default as HeaderBreadcrumb } from './HeaderBreadcrumb/HeaderBreadcrumb
 export type { HeaderBreadcrumbProps, HeaderBreadcrumbItem } from './HeaderBreadcrumb/HeaderBreadcrumb';
 export { default as HeaderTabs } from './HeaderTabs/HeaderTabs';
 export type { HeaderTabsProps, HeaderTabsItem } from './HeaderTabs/HeaderTabs';
+export { default as Menu } from './SidebarMenu/SidebarMenu';
+export { default as SidebarMenu } from './SidebarMenu/SidebarMenu';
+export type {
+    MenuProps,
+    MenuHeaderProps,
+    MenuNavigationProps,
+    MenuSectionProps,
+    MenuGroupProps,
+    MenuItemIcon,
+    MenuItemProps,
+    MenuFooterProps,
+    MenuDropdownProps,
+    MenuDropdownTriggerProps,
+    MenuDropdownContentProps,
+    MenuDropdownItemProps,
+    MenuMetaButtonProps,
+    SidebarMenuProps,
+    SidebarMenuHeaderProps,
+    SidebarMenuNavigationProps,
+    SidebarMenuSectionProps,
+    SidebarMenuGroupProps,
+    SidebarMenuItemIcon,
+    SidebarMenuItemProps,
+    SidebarMenuFooterProps,
+    SidebarMenuDropdownProps,
+    SidebarMenuDropdownTriggerProps,
+    SidebarMenuDropdownContentProps,
+    SidebarMenuDropdownItemProps,
+    SidebarMenuMetaButtonProps,
+} from './SidebarMenu/SidebarMenu';
 export { default as LabeledPillTabs } from './LabeledPillTabs/LabeledPillTabs';
 export type {
     LabeledPillTabsProps,
@@ -117,6 +147,10 @@ export type { SurfacePanelProps } from './SurfacePanel/SurfacePanel';
 
 export { default as SectionBlock } from './SectionBlock/SectionBlock';
 export type { SectionBlockProps } from './SectionBlock/SectionBlock';
+export { default as SheetModal } from './SheetModal/SheetModal';
+export type { SheetModalProps } from './SheetModal/SheetModal';
+export { default as CompactPageShell } from './CompactPageShell/CompactPageShell';
+export type { CompactPageShellProps } from './CompactPageShell/CompactPageShell';
 
 export { default as SectionIntro } from './SectionIntro/SectionIntro';
 export type { SectionIntroProps } from './SectionIntro/SectionIntro';
