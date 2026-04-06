@@ -35,6 +35,7 @@ export { default as ButtonTabGroup } from './components/ButtonTabGroup/ButtonTab
 export { default as BookmarkTabs } from './components/BookmarkTabs/BookmarkTabs';
 export { default as HeaderBreadcrumb } from './components/HeaderBreadcrumb/HeaderBreadcrumb';
 export { default as HeaderTabs } from './components/HeaderTabs/HeaderTabs';
+export { default as HeaderDateTrigger } from './components/HeaderDateTrigger/HeaderDateTrigger';
 export { default as LabeledPillTabs } from './components/LabeledPillTabs/LabeledPillTabs';
 export { default as MainTabLayout } from './components/MainTabLayout/MainTabLayout';
 export { default as Button } from './components/Button/Button';
@@ -209,6 +210,7 @@ export type { SearchToggleInputProps } from './components/SearchToggleInput/Sear
 export type { BookmarkTabsProps, BookmarkTabsItem } from './components/BookmarkTabs/BookmarkTabs';
 export type { HeaderBreadcrumbProps, HeaderBreadcrumbItem } from './components/HeaderBreadcrumb/HeaderBreadcrumb';
 export type { HeaderTabsProps, HeaderTabsItem } from './components/HeaderTabs/HeaderTabs';
+export type { HeaderDateTriggerProps } from './components/HeaderDateTrigger/HeaderDateTrigger';
 export type {
     LabeledPillTabsProps,
     LabeledPillTabsItem,
@@ -217,6 +219,11 @@ export type {
 export type { MainTabLayoutProps, MainTabLayoutItem } from './components/MainTabLayout/MainTabLayout';
 export type { SearchInputProps, SearchInputWidthPreset } from './components/SearchInput/SearchInput';
 export type { RoundedTextInputProps } from './components/RoundedTextInput/RoundedTextInput';
+export { default as DateRangePickerPanel } from './components/DateRangePickerPanel/DateRangePickerPanel';
+export type {
+    DateRangePickerPanelProps,
+    DateRangePickerPanelPreset,
+} from './components/DateRangePickerPanel/DateRangePickerPanel';
 export type {
     FileUploaderProps,
     FileUploaderDropzoneProps,

@@ -3,9 +3,12 @@ import type { ReactNode } from 'react';
 import styles from './CompactPageShell.module.scss';
 
 export type CompactPageShellProps = {
+    theme?: 'light' | 'dark' | 'system';
     headerTopLeft?: ReactNode;
+    headerTopCenter?: ReactNode;
     headerTopRight?: ReactNode;
     headerMainLeft?: ReactNode;
+    headerMainCenter?: ReactNode;
     headerMainRight?: ReactNode;
     headerFilters?: ReactNode;
     main: ReactNode;
@@ -19,9 +22,12 @@ export type CompactPageShellProps = {
 };
 
 const CompactPageShell = ({
+    theme = 'light',
     headerTopLeft,
+    headerTopCenter,
     headerTopRight,
     headerMainLeft,
+    headerMainCenter,
     headerMainRight,
     headerFilters,
     main,
@@ -33,20 +39,22 @@ const CompactPageShell = ({
     errorMessage,
     onRetry,
 }: CompactPageShellProps) => (
-    <>
-        <div className={styles.Root}>
+        <>
+        <div className={styles.Root} data-theme={theme} data-has-footer={footer ? 'true' : 'false'}>
             <header className={styles.Header}>
-                {headerTopLeft || headerTopRight ? (
-                    <div className={styles.HeaderRow}>
-                        <div className={styles.HeaderLeft}>{headerTopLeft}</div>
-                        <div className={styles.HeaderRight}>{headerTopRight}</div>
+                {headerTopLeft || headerTopCenter || headerTopRight ? (
+                    <div className={styles.HeaderTopRow}>
+                        <div className={styles.HeaderTopLeft}>{headerTopLeft}</div>
+                        <div className={styles.HeaderTopCenter}>{headerTopCenter}</div>
+                        <div className={styles.HeaderTopRight}>{headerTopRight}</div>
                     </div>
                 ) : null}
 
-                {headerMainLeft || headerMainRight ? (
-                    <div className={styles.HeaderRow}>
-                        <div className={styles.HeaderLeft}>{headerMainLeft}</div>
-                        <div className={styles.HeaderRight}>{headerMainRight}</div>
+                {headerMainLeft || headerMainCenter || headerMainRight ? (
+                    <div className={styles.HeaderMainRow}>
+                        <div className={styles.HeaderMainLeft}>{headerMainLeft}</div>
+                        <div className={styles.HeaderMainCenter}>{headerMainCenter}</div>
+                        <div className={styles.HeaderMainRight}>{headerMainRight}</div>
                     </div>
                 ) : null}
 
@@ -59,7 +67,11 @@ const CompactPageShell = ({
                 </MainOverlay>
             </main>
 
-            {footer ? <footer className={styles.Footer}>{footer}</footer> : null}
+            {footer ? (
+                <footer className={styles.Footer}>
+                    <div className={styles.FooterInner}>{footer}</div>
+                </footer>
+            ) : null}
         </div>
 
         {overlays}

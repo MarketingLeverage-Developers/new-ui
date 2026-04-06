@@ -1,9 +1,28 @@
+@use '../../styles/theme' as theme;
+
 .Root {
+    @include theme.granter-light-theme;
+
+    --compact-footer-height: 0px;
+
     display: flex;
     flex-direction: column;
     min-height: 100dvh;
-    background:
-        linear-gradient(180deg, rgba(255, 255, 255, 1) 0%, rgba(248, 250, 252, 0.98) 28%, rgba(241, 245, 249, 0.92) 100%);
+    background-color: var(--granter-white);
+}
+
+.Root[data-has-footer='true'] {
+    --compact-footer-height: calc(96px + env(safe-area-inset-bottom));
+}
+
+.Root[data-theme='dark'] {
+    @include theme.granter-dark-theme;
+}
+
+@media (prefers-color-scheme: dark) {
+    .Root[data-theme='system'] {
+        @include theme.granter-dark-theme;
+    }
 }
 
 .Header {
@@ -12,19 +31,26 @@
     z-index: 20;
     display: flex;
     flex-direction: column;
-    gap: 14px;
-    padding: 14px 16px 12px;
-    background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(248, 250, 252, 0.9) 100%);
-    backdrop-filter: blur(14px);
-    border-bottom: 1px solid rgba(226, 232, 240, 0.9);
-    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04);
+    gap: 12px;
+    padding: 12px 16px;
+    background-color: var(--granter-white);
+    border-bottom: 1px solid var(--granter-gray-200);
+    box-shadow: var(--ShadowSm);
 }
 
 .HeaderRow {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 12px;
+    min-width: 0;
+}
+
+.HeaderTopRow,
+.HeaderMainRow {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    align-items: center;
     gap: 12px;
     min-width: 0;
 }
@@ -37,12 +63,38 @@
     min-width: 0;
 }
 
+.HeaderTopLeft,
+.HeaderTopCenter,
+.HeaderTopRight,
+.HeaderMainLeft,
+.HeaderMainCenter,
+.HeaderMainRight {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+}
+
+.HeaderTopLeft,
+.HeaderMainLeft {
+    justify-content: flex-start;
+}
+
+.HeaderTopCenter,
+.HeaderMainCenter {
+    justify-content: center;
+}
+
+.HeaderTopRight,
+.HeaderMainRight {
+    justify-content: flex-end;
+}
+
 .Filters {
     min-width: 0;
     overflow-x: auto;
     overflow-y: hidden;
     scrollbar-width: none;
-    padding-bottom: 2px;
 }
 
 .Filters::-webkit-scrollbar {
@@ -58,15 +110,25 @@
 .MainInner {
     display: flex;
     flex-direction: column;
-    gap: 18px;
+    gap: 16px;
     min-height: 100%;
-    padding: 20px 16px 28px;
+    padding: 16px 16px calc(16px + var(--compact-footer-height));
 }
 
 .Footer {
-    position: sticky;
+    position: fixed;
+    left: 0;
+    right: 0;
     bottom: 0;
-    z-index: 20;
-    background: var(--granter-white);
-    border-top: 1px solid var(--granter-gray-200);
+    z-index: 40;
+    display: flex;
+    justify-content: center;
+    padding: 0 14px 14px;
+    pointer-events: none;
+}
+
+.FooterInner {
+    width: 100%;
+    max-width: 720px;
+    pointer-events: auto;
 }
