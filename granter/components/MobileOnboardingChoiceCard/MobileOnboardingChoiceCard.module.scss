@@ -17,9 +17,9 @@
     justify-content: space-between;
     gap: 14px;
     padding: 14px 14px 12px;
-    border: 1px solid rgb(226 232 240 / 100%);
+    border: 1px solid var(--granter-gray-200);
     border-radius: 12px;
-    background: rgb(255 255 255 / 100%);
+    background: var(--granter-white);
     transition:
         border-color 0.16s ease,
         background-color 0.16s ease;
@@ -33,7 +33,7 @@
 }
 
 .Eyebrow {
-    color: rgb(17 24 39 / 100%);
+    color: var(--granter-gray-900);
     font-size: 15px;
     font-weight: 700;
     line-height: 22px;
@@ -41,7 +41,7 @@
 }
 
 .Title {
-    color: rgb(17 24 39 / 100%);
+    color: var(--granter-gray-900);
     font-size: 15px;
     line-height: 22px;
     letter-spacing: -0.03em;
@@ -50,7 +50,7 @@
 
 .Description {
     margin-top: 1px;
-    color: rgb(107 114 128 / 100%);
+    color: var(--granter-gray-500);
     font-size: 12px;
     line-height: 18px;
     letter-spacing: -0.02em;
@@ -70,10 +70,10 @@
     min-height: 42px;
     align-items: center;
     justify-content: center;
-    border: 1px solid rgb(226 232 240 / 100%);
+    border: 1px solid var(--granter-gray-200);
     border-radius: 12px;
-    background: rgb(248 250 252 / 100%);
-    color: rgb(51 65 85 / 100%);
+    background: var(--granter-gray-50);
+    color: var(--granter-gray-700);
     font-size: 14px;
     font-weight: 700;
     line-height: 20px;
@@ -86,12 +86,12 @@
 
 .Root:hover .Visual,
 .Root:focus-visible .Visual {
-    border-color: rgb(203 213 225 / 100%);
+    border-color: var(--granter-gray-300);
 }
 
 .Root:hover .Action,
 .Root:focus-visible .Action {
-    border-color: rgb(203 213 225 / 100%);
+    border-color: var(--granter-gray-300);
 }
 
 .Root:focus-visible {
@@ -106,29 +106,29 @@
 .Root[data-tone='warm'] .Action,
 .Root[data-tone='neutral'] .Graphic,
 .Root[data-tone='neutral'] .Action {
-    color: rgb(71 85 105 / 100%);
+    color: var(--granter-gray-700);
 }
 
 .Root[data-selected='true'] .Visual {
-    border-color: rgb(148 163 184 / 100%);
-    background: rgb(248 250 252 / 100%);
+    border-color: var(--granter-gray-400);
+    background: var(--granter-gray-50);
 }
 
 .Root[data-selected='true'][data-tone='accent'] .Visual,
 .Root[data-selected='true'][data-tone='cool'] .Visual,
 .Root[data-selected='true'][data-tone='warm'] .Visual {
-    border-color: rgb(148 163 184 / 100%);
-    background: rgb(248 250 252 / 100%);
+    border-color: var(--granter-gray-400);
+    background: var(--granter-gray-50);
 }
 
 .Root[data-selected='true'] .Action {
-    background: rgb(255 255 255 / 100%);
+    background: var(--granter-white);
 }
 
 .Root[data-selected='true'][data-tone='accent'] .Action,
 .Root[data-selected='true'][data-tone='cool'] .Action,
 .Root[data-selected='true'][data-tone='warm'] .Action {
-    border-color: rgb(203 213 225 / 100%);
+    border-color: var(--granter-gray-300);
 }
 
 .Root[data-has-action='false'] {

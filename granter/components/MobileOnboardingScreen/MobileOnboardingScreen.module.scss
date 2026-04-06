@@ -36,7 +36,7 @@
 
 .HeaderTitle {
     overflow: hidden;
-    color: rgb(17 24 39 / 100%);
+    color: var(--granter-gray-900);
     font-size: 17px;
     font-weight: 700;
     line-height: 24px;
@@ -62,7 +62,7 @@
     border: 0;
     border-radius: 999px;
     background: transparent;
-    color: rgb(17 24 39 / 100%);
+    color: var(--granter-gray-900);
     cursor: pointer;
     transition:
         background-color 0.18s ease,
@@ -72,8 +72,8 @@
 
 .BackButton:hover,
 .BackButton:focus-visible {
-    background: rgb(241 245 249 / 92%);
-    color: rgb(15 23 42 / 100%);
+    background: var(--granter-gray-100);
+    color: var(--granter-gray-900);
     transform: translateX(-1px);
     outline: none;
 }
@@ -104,14 +104,14 @@
 }
 
 .Eyebrow {
-    color: rgb(107 114 128 / 100%);
+    color: var(--granter-gray-500);
     font-size: 14px;
     line-height: 20px;
 }
 
 .Title {
     width: 100%;
-    color: rgb(17 24 39 / 100%);
+    color: var(--granter-gray-900);
     font-size: 22px;
     font-weight: 800;
     line-height: 31px;
@@ -121,7 +121,7 @@
 
 .Description {
     width: 100%;
-    color: rgb(107 114 128 / 100%);
+    color: var(--granter-gray-500);
     font-size: 13px;
     line-height: 20px;
     word-break: keep-all;

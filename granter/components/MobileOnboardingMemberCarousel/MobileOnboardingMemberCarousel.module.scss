@@ -13,9 +13,9 @@
     gap: 10px;
     height: 48px;
     padding: 0 10px 0 12px;
-    border: 1px solid rgb(214 224 234 / 100%);
+    border: 1px solid var(--granter-gray-200);
     border-radius: 999px;
-    background: rgb(255 255 255 / 92%);
+    background: var(--granter-white);
     box-shadow: 0 12px 22px rgb(148 163 184 / 8%);
     transition:
         border-color 0.18s ease,
@@ -24,7 +24,7 @@
 }
 
 .SearchField:focus-within {
-    border-color: rgb(151 168 186 / 100%);
+    border-color: var(--granter-gray-400);
     box-shadow:
         0 12px 24px rgb(148 163 184 / 12%),
         0 0 0 4px rgb(226 232 240 / 72%);
@@ -36,7 +36,7 @@
     flex: 1;
     border: 0;
     background: transparent;
-    color: rgb(31 41 55 / 100%);
+    color: var(--granter-gray-900);
     font-size: 14px;
     font-weight: 600;
     line-height: 20px;
@@ -44,7 +44,7 @@
 }
 
 .SearchField input::placeholder {
-    color: rgb(148 163 184 / 100%);
+    color: var(--granter-gray-400);
     font-weight: 500;
 }
 
@@ -55,8 +55,8 @@
     align-items: center;
     justify-content: center;
     border-radius: 999px;
-    background: rgb(241 245 249 / 100%);
-    color: rgb(100 116 139 / 100%);
+    background: var(--granter-gray-100);
+    color: var(--granter-gray-500);
     flex-shrink: 0;
 }
 
@@ -70,8 +70,8 @@
     padding: 0;
     border: 0;
     border-radius: 999px;
-    background: rgb(241 245 249 / 100%);
-    color: rgb(100 116 139 / 100%);
+    background: var(--granter-gray-100);
+    color: var(--granter-gray-500);
     flex-shrink: 0;
     cursor: pointer;
     transition:
@@ -81,8 +81,8 @@
 }
 
 .ClearButton:hover {
-    background: rgb(226 232 240 / 100%);
-    color: rgb(71 85 105 / 100%);
+    background: var(--granter-gray-200);
+    color: var(--granter-gray-700);
     transform: scale(1.04);
 }
 
@@ -105,9 +105,9 @@
     justify-content: space-between;
     gap: 18px;
     padding: 18px 18px 20px;
-    border: 1px solid rgb(214 224 234 / 100%);
+    border: 1px solid var(--granter-gray-200);
     border-radius: 28px;
-    background: rgb(255 255 255 / 100%);
+    background: var(--granter-white);
     box-shadow: none;
     color: inherit;
     font: inherit;
@@ -137,7 +137,7 @@
 }
 
 .Card[data-selected='true'] {
-    border-color: rgb(151 168 186 / 100%);
+    border-color: var(--granter-gray-400);
     box-shadow:
         0 18px 34px rgb(100 116 139 / 12%),
         0 4px 10px rgb(100 116 139 / 8%);
@@ -150,7 +150,7 @@
 }
 
 .Eyebrow {
-    color: rgb(123 139 156 / 100%);
+    color: var(--granter-gray-500);
     font-size: 12px;
     font-weight: 700;
     line-height: 16px;
@@ -158,7 +158,7 @@
 }
 
 .Name {
-    color: rgb(17 24 39 / 100%);
+    color: var(--granter-gray-900);
     font-size: 26px;
     font-weight: 800;
     line-height: 1.14;
@@ -167,7 +167,7 @@
 
 .Description {
     max-width: 180px;
-    color: rgb(107 114 128 / 100%);
+    color: var(--granter-gray-500);
     font-size: 13px;
     font-weight: 500;
     line-height: 18px;
@@ -195,7 +195,7 @@
     width: 6px;
     height: 6px;
     border-radius: 999px;
-    background: rgb(213 219 229 / 100%);
+    background: var(--granter-gray-300);
     transition:
         width 0.2s ease,
         background-color 0.2s ease,
@@ -204,7 +204,7 @@
 
 .Indicator[data-active='true'] {
     width: 18px;
-    background: rgb(95 111 134 / 100%);
+    background: var(--granter-gray-600);
 }
 
 .Empty {
@@ -215,10 +215,10 @@
     align-items: center;
     justify-content: center;
     padding: 24px;
-    border: 1px solid rgb(226 232 240 / 100%);
+    border: 1px solid var(--granter-gray-200);
     border-radius: 24px;
-    background: rgb(255 255 255 / 100%);
-    color: rgb(100 116 139 / 100%);
+    background: var(--granter-white);
+    color: var(--granter-gray-500);
     font-size: 14px;
     line-height: 20px;
     text-align: center;
