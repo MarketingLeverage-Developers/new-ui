@@ -4,4 +4,10 @@ import styles from './Content.module.scss';
 
 type ContentProps = React.ComponentProps<typeof Dropdown.Content>;
 
-export const Content = ({ ...props }: ContentProps) => <Dropdown.Content {...props} className={styles.Content} />;
+export const Content = ({ keepMounted = false, className, ...props }: ContentProps) => (
+    <Dropdown.Content
+        {...props}
+        keepMounted={keepMounted}
+        className={[styles.Content, className].filter(Boolean).join(' ')}
+    />
+);
