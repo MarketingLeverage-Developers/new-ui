@@ -862,6 +862,29 @@ const useTable = <T,>({
         [visibleColumnKeysDesired, leafKeySet]
     );
 
+    useEffect(() => {
+        if (leafKeys.length === 0) return;
+        if (visibleColumnKeys.length > 0) return;
+        if (pendingHydrationRef.current && !hydratedRef.current) return;
+
+        const recoveredVisibleKeys = defaultVisibleLeafKeys.length > 0 ? defaultVisibleLeafKeys : leafKeys;
+        const preserved = visibleColumnKeysDesired.filter((key) => !leafKeySet.has(key));
+        const next = uniq([...preserved, ...recoveredVisibleKeys]);
+
+        if (areStringArraysEqual(visibleColumnKeysDesired, next)) return;
+
+        setVisibleColumnKeysDesired(next);
+        stateRef.current = { ...stateRef.current, visibleColumnKeys: next };
+        persistNow();
+    }, [
+        defaultVisibleLeafKeys,
+        leafKeySet,
+        leafKeys,
+        persistNow,
+        visibleColumnKeys.length,
+        visibleColumnKeysDesired,
+    ]);
+
     const setVisibleColumnKeys = useCallback(
         (nextVisibleKeysOnCurrentLeaf: string[]) => {
             const nextKeys = uniq(nextVisibleKeysOnCurrentLeaf.map(String));
