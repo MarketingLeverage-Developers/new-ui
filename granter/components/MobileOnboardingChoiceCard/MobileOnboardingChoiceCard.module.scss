@@ -1,0 +1,159 @@
+.Root {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 8px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    text-align: left;
+}
+
+.Visual {
+    display: flex;
+    min-height: 124px;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 14px 14px 12px;
+    border: 1px solid rgb(226 232 240 / 100%);
+    border-radius: 12px;
+    background: rgb(255 255 255 / 100%);
+    transition:
+        border-color 0.16s ease,
+        background-color 0.16s ease;
+}
+
+.Copy {
+    display: flex;
+    max-width: 100%;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.Eyebrow {
+    color: rgb(17 24 39 / 100%);
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 22px;
+    letter-spacing: -0.03em;
+}
+
+.Title {
+    color: rgb(17 24 39 / 100%);
+    font-size: 15px;
+    line-height: 22px;
+    letter-spacing: -0.03em;
+    word-break: keep-all;
+}
+
+.Description {
+    margin-top: 1px;
+    color: rgb(107 114 128 / 100%);
+    font-size: 12px;
+    line-height: 18px;
+    letter-spacing: -0.02em;
+    word-break: keep-all;
+}
+
+.Graphic {
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    min-height: 44px;
+}
+
+.Action {
+    display: inline-flex;
+    width: 100%;
+    min-height: 42px;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgb(226 232 240 / 100%);
+    border-radius: 12px;
+    background: rgb(248 250 252 / 100%);
+    color: rgb(51 65 85 / 100%);
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 20px;
+    letter-spacing: -0.02em;
+    transition:
+        border-color 0.16s ease,
+        background-color 0.16s ease,
+        color 0.16s ease;
+}
+
+.Root:hover .Visual,
+.Root:focus-visible .Visual {
+    border-color: rgb(203 213 225 / 100%);
+}
+
+.Root:hover .Action,
+.Root:focus-visible .Action {
+    border-color: rgb(203 213 225 / 100%);
+}
+
+.Root:focus-visible {
+    outline: none;
+}
+
+.Root[data-tone='accent'] .Graphic,
+.Root[data-tone='accent'] .Action,
+.Root[data-tone='cool'] .Graphic,
+.Root[data-tone='cool'] .Action,
+.Root[data-tone='warm'] .Graphic,
+.Root[data-tone='warm'] .Action,
+.Root[data-tone='neutral'] .Graphic,
+.Root[data-tone='neutral'] .Action {
+    color: rgb(71 85 105 / 100%);
+}
+
+.Root[data-selected='true'] .Visual {
+    border-color: rgb(148 163 184 / 100%);
+    background: rgb(248 250 252 / 100%);
+}
+
+.Root[data-selected='true'][data-tone='accent'] .Visual,
+.Root[data-selected='true'][data-tone='cool'] .Visual,
+.Root[data-selected='true'][data-tone='warm'] .Visual {
+    border-color: rgb(148 163 184 / 100%);
+    background: rgb(248 250 252 / 100%);
+}
+
+.Root[data-selected='true'] .Action {
+    background: rgb(255 255 255 / 100%);
+}
+
+.Root[data-selected='true'][data-tone='accent'] .Action,
+.Root[data-selected='true'][data-tone='cool'] .Action,
+.Root[data-selected='true'][data-tone='warm'] .Action {
+    border-color: rgb(203 213 225 / 100%);
+}
+
+.Root[data-has-action='false'] {
+    gap: 0;
+}
+
+@media (max-width: 420px) {
+    .Visual {
+        min-height: 118px;
+        padding: 13px 13px 12px;
+    }
+
+    .Eyebrow,
+    .Title {
+        font-size: 14px;
+        line-height: 20px;
+    }
+
+    .Description {
+        font-size: 11px;
+        line-height: 16px;
+    }
+
+    .Action {
+        min-height: 40px;
+        font-size: 13px;
+    }
+}

@@ -1,0 +1,84 @@
+.Root {
+    --granter-mobile-onboarding-form-row-label-width: 98px;
+    display: grid;
+    grid-template-columns: minmax(0, var(--granter-mobile-onboarding-form-row-label-width)) minmax(0, 1fr);
+    gap: 14px;
+    align-items: center;
+    padding: 18px 0;
+    border-bottom: 1px solid rgb(226 232 240 / 100%);
+}
+
+.Root[data-align='start'] {
+    align-items: start;
+}
+
+.Root[data-divider='false'],
+.Root:last-child {
+    border-bottom: 0;
+}
+
+.Label {
+    min-width: 0;
+}
+
+.LabelInner {
+    display: inline-flex;
+    align-items: flex-start;
+    gap: 4px;
+}
+
+.LabelText {
+    color: rgb(100 116 139 / 100%);
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 22px;
+    letter-spacing: -0.02em;
+    word-break: keep-all;
+}
+
+.RequiredMark {
+    color: rgb(248 113 113 / 100%);
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 22px;
+}
+
+.Content {
+    width: 100%;
+    min-width: 0;
+}
+
+.FieldStack {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.Error {
+    padding-left: 2px;
+    color: rgb(239 68 68 / 100%);
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 16px;
+    letter-spacing: -0.01em;
+}
+
+@media (max-width: 420px) {
+    .Root {
+        --granter-mobile-onboarding-form-row-label-width: 90px;
+        gap: 12px;
+        padding: 17px 0;
+    }
+
+    .LabelText,
+    .RequiredMark {
+        font-size: 14px;
+        line-height: 20px;
+    }
+
+    .Error {
+        font-size: 11px;
+        line-height: 15px;
+    }
+}

@@ -27,6 +27,15 @@ export type FileUploaderDropzoneProps = {
     helperText?: string;
 } & React.HTMLAttributes<HTMLDivElement>;
 
+export type FileUploaderTriggerRenderProps = {
+    openFileDialog: () => void;
+    dragging: boolean;
+};
+
+export type FileUploaderTriggerProps = {
+    children: (props: FileUploaderTriggerRenderProps) => React.ReactNode;
+};
+
 export type FileUploaderFileListProps = React.HTMLAttributes<HTMLDivElement>;
 export type FileUploaderImageListProps = React.HTMLAttributes<HTMLDivElement>;
 
@@ -130,6 +139,12 @@ const DropzoneRenderer = ({ buttonText, guideText, helperText, className, ...pro
     );
 };
 
+const FileUploaderTrigger = ({ children }: FileUploaderTriggerProps) => {
+    const { dragging, openFileDialog } = useImageUploader();
+
+    return <>{children({ dragging, openFileDialog })}</>;
+};
+
 const FileUploaderFileList = ({ className, ...props }: FileUploaderFileListProps) => (
     <ImageUploader.FileList
         {...props}
@@ -177,12 +192,14 @@ const FileUploaderImageList = ({ className, ...props }: FileUploaderImageListPro
 
 type FileUploaderCompound = React.FC<FileUploaderProps> & {
     Dropzone: React.FC<FileUploaderDropzoneProps>;
+    Trigger: React.FC<FileUploaderTriggerProps>;
     FileList: React.FC<FileUploaderFileListProps>;
     ImageList: React.FC<FileUploaderImageListProps>;
 };
 
 const FileUploader = Object.assign(FileUploaderRoot, {
     Dropzone: FileUploaderDropzone,
+    Trigger: FileUploaderTrigger,
     FileList: FileUploaderFileList,
     ImageList: FileUploaderImageList,
 }) as FileUploaderCompound;

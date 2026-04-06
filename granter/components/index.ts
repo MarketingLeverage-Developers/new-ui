@@ -153,6 +153,20 @@ export { default as SheetModal } from './SheetModal/SheetModal';
 export type { SheetModalProps } from './SheetModal/SheetModal';
 export { default as CompactPageShell } from './CompactPageShell/CompactPageShell';
 export type { CompactPageShellProps } from './CompactPageShell/CompactPageShell';
+export { default as MobileOnboardingScreen } from './MobileOnboardingScreen/MobileOnboardingScreen';
+export type { MobileOnboardingScreenProps } from './MobileOnboardingScreen/MobileOnboardingScreen';
+export { default as MobileOnboardingChoiceCard } from './MobileOnboardingChoiceCard/MobileOnboardingChoiceCard';
+export type {
+    MobileOnboardingChoiceCardProps,
+    MobileOnboardingChoiceCardTone,
+} from './MobileOnboardingChoiceCard/MobileOnboardingChoiceCard';
+export { default as MobileOnboardingMemberCarousel } from './MobileOnboardingMemberCarousel/MobileOnboardingMemberCarousel';
+export type {
+    MobileOnboardingMemberCarouselItem,
+    MobileOnboardingMemberCarouselProps,
+} from './MobileOnboardingMemberCarousel/MobileOnboardingMemberCarousel';
+export { default as MobileOnboardingFormRow } from './MobileOnboardingFormRow/MobileOnboardingFormRow';
+export type { MobileOnboardingFormRowProps } from './MobileOnboardingFormRow/MobileOnboardingFormRow';
 export { default as InsightPanel } from './InsightPanel/InsightPanel';
 export type { InsightPanelProps } from './InsightPanel/InsightPanel';
 export { default as SummaryStatList } from './SummaryStatList/SummaryStatList';
@@ -268,6 +282,8 @@ export { default as FileUploader } from './FileUploader/FileUploader';
 export type {
     FileUploaderProps,
     FileUploaderDropzoneProps,
+    FileUploaderTriggerProps,
+    FileUploaderTriggerRenderProps,
     FileUploaderFileListProps,
     FileUploaderImageListProps,
 } from './FileUploader/FileUploader';

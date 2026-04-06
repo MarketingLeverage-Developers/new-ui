@@ -13,6 +13,10 @@ export { default as AnalyticsChart } from './components/AnalyticsChart/Analytics
 export { default as SectionBlock } from './components/SectionBlock/SectionBlock';
 export { default as SheetModal } from './components/SheetModal/SheetModal';
 export { default as CompactPageShell } from './components/CompactPageShell/CompactPageShell';
+export { default as MobileOnboardingScreen } from './components/MobileOnboardingScreen/MobileOnboardingScreen';
+export { default as MobileOnboardingChoiceCard } from './components/MobileOnboardingChoiceCard/MobileOnboardingChoiceCard';
+export { default as MobileOnboardingMemberCarousel } from './components/MobileOnboardingMemberCarousel/MobileOnboardingMemberCarousel';
+export { default as MobileOnboardingFormRow } from './components/MobileOnboardingFormRow/MobileOnboardingFormRow';
 export { default as InsightPanel } from './components/InsightPanel/InsightPanel';
 export { default as SummaryStatList } from './components/SummaryStatList/SummaryStatList';
 export { default as RankedMetricList } from './components/RankedMetricList/RankedMetricList';
@@ -173,6 +177,16 @@ export type { SurfacePanelProps } from './components/SurfacePanel/SurfacePanel';
 export type { SectionBlockProps } from './components/SectionBlock/SectionBlock';
 export type { SheetModalProps } from './components/SheetModal/SheetModal';
 export type { CompactPageShellProps } from './components/CompactPageShell/CompactPageShell';
+export type { MobileOnboardingScreenProps } from './components/MobileOnboardingScreen/MobileOnboardingScreen';
+export type {
+    MobileOnboardingChoiceCardProps,
+    MobileOnboardingChoiceCardTone,
+} from './components/MobileOnboardingChoiceCard/MobileOnboardingChoiceCard';
+export type {
+    MobileOnboardingMemberCarouselItem,
+    MobileOnboardingMemberCarouselProps,
+} from './components/MobileOnboardingMemberCarousel/MobileOnboardingMemberCarousel';
+export type { MobileOnboardingFormRowProps } from './components/MobileOnboardingFormRow/MobileOnboardingFormRow';
 export type { InsightPanelProps } from './components/InsightPanel/InsightPanel';
 export type { SummaryStatListProps, SummaryStatListItem } from './components/SummaryStatList/SummaryStatList';
 export type { RankedMetricListProps, RankedMetricListItem } from './components/RankedMetricList/RankedMetricList';
@@ -233,6 +247,8 @@ export type {
 export type {
     FileUploaderProps,
     FileUploaderDropzoneProps,
+    FileUploaderTriggerProps,
+    FileUploaderTriggerRenderProps,
     FileUploaderFileListProps,
     FileUploaderImageListProps,
 } from './components/FileUploader/FileUploader';

@@ -1,0 +1,260 @@
+.Root {
+    display: flex;
+    width: min(100%, 332px);
+    margin: 0 auto;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.SearchField {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    gap: 10px;
+    height: 48px;
+    padding: 0 10px 0 12px;
+    border: 1px solid rgb(214 224 234 / 100%);
+    border-radius: 999px;
+    background: rgb(255 255 255 / 92%);
+    box-shadow: 0 12px 22px rgb(148 163 184 / 8%);
+    transition:
+        border-color 0.18s ease,
+        box-shadow 0.18s ease,
+        transform 0.18s ease;
+}
+
+.SearchField:focus-within {
+    border-color: rgb(151 168 186 / 100%);
+    box-shadow:
+        0 12px 24px rgb(148 163 184 / 12%),
+        0 0 0 4px rgb(226 232 240 / 72%);
+    transform: translateY(-1px);
+}
+
+.SearchField input {
+    min-width: 0;
+    flex: 1;
+    border: 0;
+    background: transparent;
+    color: rgb(31 41 55 / 100%);
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 20px;
+    outline: none;
+}
+
+.SearchField input::placeholder {
+    color: rgb(148 163 184 / 100%);
+    font-weight: 500;
+}
+
+.SearchIcon {
+    display: inline-flex;
+    width: 28px;
+    height: 28px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    background: rgb(241 245 249 / 100%);
+    color: rgb(100 116 139 / 100%);
+    flex-shrink: 0;
+}
+
+.ClearButton {
+    appearance: none;
+    display: inline-flex;
+    width: 28px;
+    height: 28px;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 0;
+    border-radius: 999px;
+    background: rgb(241 245 249 / 100%);
+    color: rgb(100 116 139 / 100%);
+    flex-shrink: 0;
+    cursor: pointer;
+    transition:
+        background-color 0.18s ease,
+        color 0.18s ease,
+        transform 0.18s ease;
+}
+
+.ClearButton:hover {
+    background: rgb(226 232 240 / 100%);
+    color: rgb(71 85 105 / 100%);
+    transform: scale(1.04);
+}
+
+.Swiper {
+    width: 100%;
+    overflow: visible;
+}
+
+.Slide {
+    height: auto;
+    padding: 2px 0 6px;
+}
+
+.Card {
+    appearance: none;
+    display: flex;
+    min-height: 204px;
+    width: 100%;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 18px;
+    padding: 18px 18px 20px;
+    border: 1px solid rgb(214 224 234 / 100%);
+    border-radius: 28px;
+    background: rgb(255 255 255 / 100%);
+    box-shadow: none;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    transition:
+        transform 0.34s cubic-bezier(0.22, 1, 0.36, 1),
+        box-shadow 0.34s cubic-bezier(0.22, 1, 0.36, 1),
+        border-color 0.2s ease,
+        opacity 0.2s ease;
+}
+
+.Card:not(:disabled) {
+    cursor: pointer;
+}
+
+.Card:disabled {
+    cursor: default;
+}
+
+.Card[data-active='false'] {
+    transform: scale(0.965);
+    opacity: 0.72;
+}
+
+.Card[data-active='true'] {
+    transform: translateY(-2px);
+}
+
+.Card[data-selected='true'] {
+    border-color: rgb(151 168 186 / 100%);
+    box-shadow:
+        0 18px 34px rgb(100 116 139 / 12%),
+        0 4px 10px rgb(100 116 139 / 8%);
+}
+
+.CardCopy {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.Eyebrow {
+    color: rgb(123 139 156 / 100%);
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 16px;
+    letter-spacing: -0.01em;
+}
+
+.Name {
+    color: rgb(17 24 39 / 100%);
+    font-size: 26px;
+    font-weight: 800;
+    line-height: 1.14;
+    letter-spacing: -0.04em;
+}
+
+.Description {
+    max-width: 180px;
+    color: rgb(107 114 128 / 100%);
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 18px;
+    letter-spacing: -0.01em;
+    word-break: keep-all;
+}
+
+.CardVisual {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.Avatar {
+    box-shadow: 0 10px 24px rgb(148 163 184 / 18%);
+}
+
+.Indicators {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.Indicator {
+    width: 6px;
+    height: 6px;
+    border-radius: 999px;
+    background: rgb(213 219 229 / 100%);
+    transition:
+        width 0.2s ease,
+        background-color 0.2s ease,
+        opacity 0.2s ease;
+}
+
+.Indicator[data-active='true'] {
+    width: 18px;
+    background: rgb(95 111 134 / 100%);
+}
+
+.Empty {
+    display: flex;
+    width: min(100%, 332px);
+    min-height: 180px;
+    margin: 0 auto;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    border: 1px solid rgb(226 232 240 / 100%);
+    border-radius: 24px;
+    background: rgb(255 255 255 / 100%);
+    color: rgb(100 116 139 / 100%);
+    font-size: 14px;
+    line-height: 20px;
+    text-align: center;
+}
+
+@media (max-width: 520px) {
+    .Root {
+        width: min(100%, 320px);
+    }
+
+    .SearchField {
+        height: 46px;
+        padding: 0 10px 0 11px;
+    }
+
+    .SearchField input {
+        font-size: 13px;
+    }
+
+    .Card {
+        min-height: 188px;
+        padding: 16px 16px 18px;
+        border-radius: 26px;
+    }
+
+    .Name {
+        font-size: 24px;
+    }
+
+    .Description {
+        max-width: 168px;
+        font-size: 12px;
+        line-height: 17px;
+    }
+
+    .Avatar {
+        box-shadow: 0 8px 20px rgb(148 163 184 / 16%);
+    }
+}

@@ -1,0 +1,238 @@
+.Root {
+    --mobile-onboarding-inline-padding: 16px;
+    display: flex;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    flex-direction: column;
+    background: transparent;
+}
+
+.Header {
+    display: grid;
+    grid-template-columns: 44px minmax(0, 1fr) 44px;
+    align-items: center;
+    gap: 12px;
+    padding: 4px var(--mobile-onboarding-inline-padding) 0;
+}
+
+.HeaderSide {
+    display: flex;
+    min-width: 0;
+    align-items: center;
+}
+
+.HeaderSide[data-align='start'] {
+    justify-content: flex-start;
+}
+
+.HeaderSide[data-align='end'] {
+    justify-content: flex-end;
+}
+
+.HeaderCenter {
+    min-width: 0;
+}
+
+.HeaderTitle {
+    overflow: hidden;
+    color: rgb(17 24 39 / 100%);
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 24px;
+    letter-spacing: -0.02em;
+    text-align: center;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.BackButton,
+.HeaderSpacer {
+    display: inline-flex;
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+}
+
+.BackButton {
+    margin-left: -10px;
+    padding: 0;
+    border: 0;
+    border-radius: 999px;
+    background: transparent;
+    color: rgb(17 24 39 / 100%);
+    cursor: pointer;
+    transition:
+        background-color 0.18s ease,
+        color 0.18s ease,
+        transform 0.18s ease;
+}
+
+.BackButton:hover,
+.BackButton:focus-visible {
+    background: rgb(241 245 249 / 92%);
+    color: rgb(15 23 42 / 100%);
+    transform: translateX(-1px);
+    outline: none;
+}
+
+.Content {
+    display: flex;
+    width: 100%;
+    min-height: 0;
+    flex: 1;
+    flex-direction: column;
+    gap: 22px;
+    overflow-y: auto;
+    padding: 10px var(--mobile-onboarding-inline-padding) 18px;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.Content::-webkit-scrollbar {
+    display: none;
+}
+
+.Copy {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    gap: 2px;
+    padding-top: 8px;
+}
+
+.Eyebrow {
+    color: rgb(107 114 128 / 100%);
+    font-size: 14px;
+    line-height: 20px;
+}
+
+.Title {
+    width: 100%;
+    color: rgb(17 24 39 / 100%);
+    font-size: 22px;
+    font-weight: 800;
+    line-height: 31px;
+    letter-spacing: -0.04em;
+    word-break: keep-all;
+}
+
+.Description {
+    width: 100%;
+    color: rgb(107 114 128 / 100%);
+    font-size: 13px;
+    line-height: 20px;
+    word-break: keep-all;
+}
+
+.Hero {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+}
+
+.Body {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.Notice {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+}
+
+.Footer {
+    padding: 12px var(--mobile-onboarding-inline-padding) calc(16px + env(safe-area-inset-bottom));
+}
+
+.FooterInner {
+    width: 100%;
+}
+
+.FooterInner > * {
+    width: 100%;
+}
+
+.Root[data-copy-align='center'] .Copy {
+    align-items: center;
+    text-align: center;
+}
+
+.Root[data-copy-align='center'] .Header {
+    padding-top: 4px;
+}
+
+.Root[data-copy-align='center'] .HeaderCenter {
+    padding-top: 0;
+}
+
+.Root[data-copy-align='center'] .Content {
+    gap: 22px;
+    padding-top: 92px;
+}
+
+.Root[data-copy-align='center'] .Copy {
+    gap: 0;
+    padding-top: 0;
+}
+
+.Root[data-copy-align='center'] .Title,
+.Root[data-copy-align='center'] .Description {
+    max-width: 320px;
+}
+
+.Root[data-copy-align='center'] .Body {
+    align-items: center;
+}
+
+.Root[data-copy-align='center'] .Body > * {
+    width: 100%;
+    max-width: 346px;
+}
+
+@media (max-width: 420px) {
+    .Header {
+        padding-top: 4px;
+    }
+
+    .Title {
+        font-size: 21px;
+        line-height: 30px;
+    }
+
+    .Description {
+        font-size: 12px;
+        line-height: 18px;
+    }
+
+    .Footer {
+        padding-top: 10px;
+        padding-bottom: calc(14px + env(safe-area-inset-bottom));
+    }
+
+    .Root[data-copy-align='center'] .Content {
+        gap: 18px;
+        padding-top: 80px;
+    }
+
+    .Root[data-copy-align='center'] .Header {
+        padding-top: 4px;
+    }
+
+    .Root[data-copy-align='center'] .HeaderCenter {
+        padding-top: 0;
+    }
+
+    .Root[data-copy-align='center'] .Copy {
+        padding-top: 0;
+    }
+
+    .Root[data-copy-align='center'] .Body > * {
+        max-width: 338px;
+    }
+}
