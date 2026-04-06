@@ -38,6 +38,11 @@
     overflow: hidden;
 }
 
+.Viewport[data-fill='true'] {
+    width: 100%;
+    flex: 1 1 auto;
+}
+
 .Viewport[data-carousel='true'] {
     width: fit-content;
     flex: 0 0 auto;
@@ -65,6 +70,16 @@
 
 .Tabs[data-carousel='true'] {
     overflow: visible;
+}
+
+.Tabs[data-fill='true'] {
+    width: 100%;
+}
+
+.Tabs[data-fill='true']:not([data-carousel='true']) {
+    display: flex;
+    padding-inline: 4px;
+    box-sizing: border-box;
 }
 
 .Tabs[data-carousel='true'][data-fill='true'] {
@@ -191,7 +206,9 @@
 
 .Item[data-fill='true'] {
     width: 100%;
+    flex: 1 1 auto;
     justify-content: center;
+    padding: 0 14px;
 }
 
 .Item[data-tone='green'][data-active='true'] {
