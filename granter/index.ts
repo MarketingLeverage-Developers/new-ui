@@ -16,6 +16,7 @@ export { default as CompactPageShell } from './components/CompactPageShell/Compa
 export { default as MobileOnboardingScreen } from './components/MobileOnboardingScreen/MobileOnboardingScreen';
 export { default as MobileOnboardingChoiceCard } from './components/MobileOnboardingChoiceCard/MobileOnboardingChoiceCard';
 export { default as MobileOnboardingMemberCarousel } from './components/MobileOnboardingMemberCarousel/MobileOnboardingMemberCarousel';
+export { default as OnboardingMemberList } from './components/OnboardingMemberList/OnboardingMemberList';
 export { default as MobileOnboardingFormRow } from './components/MobileOnboardingFormRow/MobileOnboardingFormRow';
 export { default as InsightPanel } from './components/InsightPanel/InsightPanel';
 export { default as SummaryStatList } from './components/SummaryStatList/SummaryStatList';

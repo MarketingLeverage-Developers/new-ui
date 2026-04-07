@@ -165,6 +165,11 @@ export type {
     MobileOnboardingMemberCarouselItem,
     MobileOnboardingMemberCarouselProps,
 } from './MobileOnboardingMemberCarousel/MobileOnboardingMemberCarousel';
+export { default as OnboardingMemberList } from './OnboardingMemberList/OnboardingMemberList';
+export type {
+    OnboardingMemberListItem,
+    OnboardingMemberListProps,
+} from './OnboardingMemberList/OnboardingMemberList';
 export { default as MobileOnboardingFormRow } from './MobileOnboardingFormRow/MobileOnboardingFormRow';
 export type { MobileOnboardingFormRowProps } from './MobileOnboardingFormRow/MobileOnboardingFormRow';
 export { default as InsightPanel } from './InsightPanel/InsightPanel';
