@@ -263,8 +263,6 @@ const FONT_FAMILY = 'Pretendard, Apple SD Gothic Neo, Noto Sans KR, sans-serif';
 const LINE_AVATAR_SIZE = 28;
 const GROUPED_STACK_AVATAR_SIZE = 30;
 const MIN_VERTICAL_CHART_PADDING = 12;
-const PLACEHOLDER_BAR_KEY = '__missing__';
-const PLACEHOLDER_BAR_STROKE = '#94A3B8';
 const INTEGER_AXIS_INCREMENTS = [
     1, 2, 5, 10, 20, 25, 50, 100, 200, 250, 500, 1000, 2000, 2500, 5000, 10000,
 ] as const;
@@ -1187,14 +1185,16 @@ const getPlotFrame = (chart: uPlot | null): PlotFrame | null => {
     };
 };
 
-const buildCategoryLabels = (labels: string[], stride: number, condensed: boolean) =>
-    (labels.length > 0 ? labels : []).map((label, index) => {
+const buildCategoryLabels = (labels: string[], stride: number, condensed: boolean) => {
+    void stride;
+
+    return (labels.length > 0 ? labels : []).map((label, index) => {
         if (!condensed) return label;
 
         const isEdge = index === 0 || index === labels.length - 1;
-        const shouldShow = isEdge || index % Math.max(stride, 1) === 0;
-        return shouldShow ? label : '';
+        return isEdge ? label : '';
     });
+};
 
 const buildNumericXAxis = ({
     labelsRef,
@@ -1762,20 +1762,6 @@ const buildBarGeometry = ({
             }
         });
 
-        if (datum.isMissingData && !hasVisibleValue && !isGroupedStackBar) {
-            const height = frame.height;
-            const top = frame.top;
-
-            rects.push({
-                seriesKey: PLACEHOLDER_BAR_KEY,
-                idx,
-                left: clusterLeft,
-                top,
-                width: clusterVisibleWidth,
-                height,
-                isPlaceholder: true,
-            });
-        }
     });
 
     return { rects, avatars };
@@ -2094,7 +2080,6 @@ const UplotBarChart = ({
     dashboardBarGap,
     dashboardBarXAxisLabelStride,
     groupedStackSeries,
-    allPeriodsMissing,
 }: {
     size: ChartAreaSize;
     labels: string[];
@@ -2127,7 +2112,6 @@ const UplotBarChart = ({
     dashboardBarMaxWidth?: number;
     dashboardBarXAxisLabelStride: number;
     groupedStackSeries: AnalyticsChartGroupedStackSeries[];
-    allPeriodsMissing: boolean;
 }) => {
     const [chart, setChart] = useState<uPlot | null>(null);
     const [avatarAnchors, setAvatarAnchors] = useState<AvatarAnchor[]>([]);
@@ -2147,7 +2131,6 @@ const UplotBarChart = ({
     const barModeRef = useLatestRef(barMode);
     const dashboardPresetRef = useLatestRef(isDashboardMetricPreset);
     const dashboardBarMaxWidthRef = useLatestRef(dashboardBarMaxWidth);
-    const allPeriodsMissingRef = useLatestRef(allPeriodsMissing);
     const barTickFormatterRef = useLatestRef(barTickFormatter);
 
     const xData = useMemo(() => labels.map((_, index) => index), [labels]);
@@ -2268,127 +2251,6 @@ const UplotBarChart = ({
                             rects.forEach((rect) => {
                                 if (rect.width <= 0 || rect.height <= 0) return;
 
-                                if (rect.isPlaceholder) {
-                                    ctx.save();
-                                    const leftPx = rect.left * pxRatio;
-                                    const topPx = rect.top * pxRatio;
-                                    const widthPx = rect.width * pxRatio;
-                                    const heightPx = rect.height * pxRatio;
-                                    const radiusPx = 0;
-                                    const insetPx = Math.max(pxRatio, 1);
-                                    const innerLeftPx = leftPx + insetPx;
-                                    const innerTopPx = topPx + insetPx;
-                                    const innerWidthPx = Math.max(widthPx - insetPx * 2, 0);
-                                    const innerHeightPx = Math.max(heightPx - insetPx * 2, 0);
-                                    const orderedPlaceholderSeries = [...barSeriesRef.current].sort((left, right) => {
-                                        const getOrder = (key: string) => {
-                                            if (
-                                                key === 'stoppedAmount' ||
-                                                key === 'endAmount' ||
-                                                key === 'stopByClientAmount' ||
-                                                key === 'stopByPerformanceAmount'
-                                            ) {
-                                                return 0;
-                                            }
-                                            if (key === 'liveAmount') return 1;
-                                            if (key === 'pendingAmount') return 2;
-                                            if (key === 'totalAmount') return 3;
-                                            return 99;
-                                        };
-
-                                        return getOrder(left.key) - getOrder(right.key);
-                                    });
-
-                                    ctx.fillStyle = 'rgba(255, 255, 255, 0.74)';
-                                    drawRoundedRectPath(
-                                        ctx,
-                                        leftPx,
-                                        topPx,
-                                        widthPx,
-                                        heightPx,
-                                        radiusPx
-                                    );
-                                    ctx.fill();
-                                    ctx.restore();
-
-                                    ctx.save();
-                                    drawRoundedRectPath(
-                                        ctx, leftPx, topPx, widthPx, heightPx, radiusPx
-                                    );
-                                    ctx.clip();
-                                    const segmentGapPx =
-                                        orderedPlaceholderSeries.length > 1 ? Math.max(pxRatio, 1) : 0;
-                                    const availableHeightPx = Math.max(
-                                        innerHeightPx - segmentGapPx * Math.max(orderedPlaceholderSeries.length - 1, 0),
-                                        0
-                                    );
-                                    const segmentHeightPx =
-                                        orderedPlaceholderSeries.length > 0
-                                            ? availableHeightPx / orderedPlaceholderSeries.length
-                                            : availableHeightPx;
-
-                                    orderedPlaceholderSeries.forEach((seriesItem, index) => {
-                                        const segmentBottomPx =
-                                            innerTopPx +
-                                            innerHeightPx -
-                                            index * (segmentHeightPx + segmentGapPx);
-                                        const segmentTopPx = segmentBottomPx - segmentHeightPx;
-                                        ctx.fillStyle = withAlpha(
-                                            seriesItem.color,
-                                            allPeriodsMissingRef.current ? 0.34 : 0.22
-                                        );
-                                        drawRoundedRectPath(
-                                            ctx,
-                                            innerLeftPx,
-                                            segmentTopPx,
-                                            innerWidthPx,
-                                            segmentHeightPx,
-                                            0
-                                        );
-                                        ctx.fill();
-                                    });
-
-                                    ctx.restore();
-
-                                    ctx.save();
-                                    ctx.strokeStyle = PLACEHOLDER_BAR_STROKE;
-                                    ctx.lineWidth = 1.2 * pxRatio;
-                                    ctx.setLineDash([5 * pxRatio, 4 * pxRatio]);
-                                    drawRoundedRectPath(
-                                        ctx,
-                                        leftPx,
-                                        topPx,
-                                        widthPx,
-                                        heightPx,
-                                        radiusPx
-                                    );
-                                    ctx.stroke();
-
-                                    const placeholderText =
-                                        allPeriodsMissingRef.current || rect.width >= 88
-                                            ? '데이터 없음'
-                                            : rect.width >= 52
-                                              ? '없음'
-                                              : '';
-
-                                    if (placeholderText.length > 0) {
-                                        ctx.fillStyle = '#475569';
-                                        ctx.font = `600 ${Math.max(11 * pxRatio, 11)}px ${FONT_FAMILY}`;
-                                        ctx.textAlign = 'center';
-                                        ctx.textBaseline = 'middle';
-                                        ctx.shadowColor = 'rgba(255, 255, 255, 0.85)';
-                                        ctx.shadowBlur = 8 * pxRatio;
-                                        ctx.fillText(
-                                            placeholderText,
-                                            leftPx + widthPx / 2,
-                                            topPx + heightPx / 2
-                                        );
-                                    }
-
-                                    ctx.restore();
-                                    return;
-                                }
-
                                 const series = barSeriesRef.current.find((item) => item.key === rect.seriesKey);
                                 if (!series) return;
 
@@ -2406,7 +2268,6 @@ const UplotBarChart = ({
         ],
         [
             cursorStore,
-            allPeriodsMissingRef,
             barDataRef,
             barGapRef,
             barModeRef,
@@ -2894,14 +2755,6 @@ const AnalyticsChart = ({
         return [...source].sort((a, b) => compareTooltipSeriesOrder(a, b) || a.label.localeCompare(b.label, 'ko-KR'));
     }, [barMode, barSeries, chartType, isGroupedAmountBar, isGroupedStackBar, lineSeriesMeta]);
 
-    const isEmpty =
-        !isLoading &&
-        (chartType === 'LINE'
-            ? lineSeriesMeta.length === 0 || lineChartData.length === 0
-            : barData.length === 0 ||
-              (barMode === 'amount' &&
-                  (lineData?.periodLabels?.length ?? 0) > 0 &&
-                  lineSeriesMeta.length === 0));
     return (
         <div style={containerStyle}>
             {showTitle ? (
@@ -2914,12 +2767,6 @@ const AnalyticsChart = ({
                 <Flex justify="center" align="center" style={chartAreaStyle}>
                     <Text size="sm" tone="muted">
                         데이터를 불러오는 중입니다.
-                    </Text>
-                </Flex>
-            ) : isEmpty ? (
-                <Flex justify="center" align="center" style={chartAreaStyle}>
-                    <Text size="sm" tone="muted">
-                        집계된 데이터가 없습니다.
                     </Text>
                 </Flex>
             ) : (
@@ -2963,7 +2810,6 @@ const AnalyticsChart = ({
                                     dashboardBarMaxWidth={dashboardBarMaxWidth}
                                     dashboardBarXAxisLabelStride={dashboardBarXAxisLabelStride}
                                     groupedStackSeries={groupedStackData?.series ?? []}
-                                    allPeriodsMissing={isAllBarPeriodsMissing}
                                 />
                             )}
                         </div>
