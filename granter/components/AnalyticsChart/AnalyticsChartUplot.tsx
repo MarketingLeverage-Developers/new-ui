@@ -1983,8 +1983,8 @@ const UplotLineChart = ({
                 strideRef,
                 condensedRef,
                 axisLineColor: isDashboardMetricPreset ? 'transparent' : '#E5E7EB',
-                size: isDashboardMetricPreset ? 40 : 36,
-                gap: isDashboardMetricPreset ? 0 : 8,
+                size: isDashboardMetricPreset ? 44 : 36,
+                gap: isDashboardMetricPreset ? 8 : 8,
             }),
         [condensedRef, isDashboardMetricPreset, labelsRef, strideRef]
     );
