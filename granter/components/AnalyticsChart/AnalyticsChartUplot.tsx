@@ -5,6 +5,7 @@ import toProfileShortName from '@/shared/utils/profile/toProfileShortName';
 import Flex from '../Flex/Flex';
 import Text from '../Text/Text';
 import { memo, useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import uPlot from 'uplot';
 import 'uplot/dist/uPlot.min.css';
 import {
@@ -25,7 +26,7 @@ import {
 } from './AnalyticsChart.constants';
 import styles from './AnalyticsChart.module.scss';
 
-export type AnalyticsChartBarMode = 'amount' | 'statusRatio' | 'statusAmount' | 'inboundStatusCount';
+export type AnalyticsChartBarMode = 'amount' | 'statusRatio' | 'statusAmount' | 'statusCount' | 'inboundStatusCount';
 export type AnalyticsChartType = 'BAR' | 'LINE' | 'PIE';
 export type AnalyticsChartPreset = 'default' | 'dashboardMetric';
 export type AnalyticsChartStatusSeriesMode = 'reason' | 'category';
@@ -398,7 +399,7 @@ const renderChartAvatar = ({
         />
     );
 };
-const formatCount = (value: number) => `${value.toLocaleString('ko-KR')}건`;
+const formatCount = (value: number) => `${value.toLocaleString('ko-KR')}개`;
 
 const clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max);
 
@@ -471,6 +472,50 @@ const useLatestRef = <T,>(value: T) => {
     return ref;
 };
 
+const useChartAnimation = (data: uPlot.AlignedData | null, duration = 800) => {
+    const [progress, setProgress] = useState(0);
+    const requestRef = useRef<number | null>(null);
+    const startTimeRef = useRef<number | null>(null);
+
+    const animate = useCallback(
+        (time: number) => {
+            if (startTimeRef.current === null) {
+                startTimeRef.current = time;
+            }
+            const elapsedTime = time - startTimeRef.current;
+            const nextProgress = Math.min(elapsedTime / duration, 1);
+
+            // Easing function: cubic-bezier(0.2, 0.8, 0.2, 1) or similar
+            // Simple easeOutQuart: 1 - Math.pow(1 - x, 4)
+            const easedProgress = 1 - Math.pow(1 - nextProgress, 4);
+
+            setProgress(easedProgress);
+
+            if (nextProgress < 1) {
+                requestRef.current = requestAnimationFrame(animate);
+            }
+        },
+        [duration]
+    );
+
+    useEffect(() => {
+        setProgress(0);
+        startTimeRef.current = null;
+        if (requestRef.current !== null) {
+            cancelAnimationFrame(requestRef.current);
+        }
+        requestRef.current = requestAnimationFrame(animate);
+
+        return () => {
+            if (requestRef.current !== null) {
+                cancelAnimationFrame(requestRef.current);
+            }
+        };
+    }, [data, animate]);
+
+    return progress;
+};
+
 type ManagedUplotProps = {
     options: uPlot.Options;
     data: uPlot.AlignedData;
@@ -509,11 +554,17 @@ const getOptionsUpdateState = (prev: uPlot.Options, next: uPlot.Options): Option
 const doesAlignedDataMatch = (left: uPlot.AlignedData, right: uPlot.AlignedData) => {
     if (left.length !== right.length) return false;
 
-    return left.every((leftSeries, seriesIndex) => {
-        const rightSeries = right[seriesIndex];
-        if (leftSeries.length !== rightSeries.length) return false;
-        return leftSeries.every((value, valueIndex) => value === rightSeries[valueIndex]);
-    });
+    for (let i = 0; i < left.length; i += 1) {
+        const l = left[i];
+        const r = right[i];
+        if (l.length !== r.length) return false;
+
+        for (let j = 0; j < l.length; j += 1) {
+            if ((l as (number | null)[])[j] !== (r as (number | null)[])[j]) return false;
+        }
+    }
+
+    return true;
 };
 
 const ManagedUplot = memo(({
@@ -882,7 +933,12 @@ const getDivergingBarDomain = (
     barMode: BarMode,
     statusSeriesMode: AnalyticsChartStatusSeriesMode
 ): [number, number] | undefined => {
-    if (barMode !== 'statusRatio' && barMode !== 'statusAmount' && barMode !== 'inboundStatusCount') {
+    if (
+        barMode !== 'statusRatio' &&
+        barMode !== 'statusAmount' &&
+        barMode !== 'statusCount' &&
+        barMode !== 'inboundStatusCount'
+    ) {
         return undefined;
     }
 
@@ -929,7 +985,7 @@ const getDivergingBarDomain = (
         return [-padded, padded];
     }
 
-    if (barMode === 'inboundStatusCount') {
+    if (barMode === 'statusCount' || barMode === 'inboundStatusCount') {
         const padded = Math.max(1, toTightCountDomainValue(maxAbsStack * 1.08));
         return [-padded, padded];
     }
@@ -1042,7 +1098,7 @@ const getPositiveBarDomain = (
 };
 
 const getBarSeries = (barMode: BarMode, statusSeriesMode: AnalyticsChartStatusSeriesMode) => {
-    if (barMode === 'statusRatio' || barMode === 'statusAmount') {
+    if (barMode === 'statusRatio' || barMode === 'statusAmount' || barMode === 'statusCount') {
         return statusSeriesMode === 'category' ? [...STATUS_CATEGORY_SERIES] : [...STATUS_REASON_SERIES];
     }
     if (barMode === 'inboundStatusCount') return [...INBOUND_STATUS_SERIES];
@@ -1051,12 +1107,14 @@ const getBarSeries = (barMode: BarMode, statusSeriesMode: AnalyticsChartStatusSe
 
 const getBarTickFormatter = (barMode: BarMode) => {
     if (barMode === 'statusRatio') return (value: number) => `${Math.round(value)}%`;
-    if (barMode === 'inboundStatusCount') return (value: number) => value.toLocaleString('ko-KR');
+    if (barMode === 'statusCount') return (value: number) => formatCount(value);
+    if (barMode === 'inboundStatusCount') return (value: number) => formatCount(value);
     return (value: number) => formatCompactAmount(value);
 };
 
 const getTooltipValueFormatter = (barMode: BarMode) => {
     if (barMode === 'statusRatio') return formatPercent;
+    if (barMode === 'statusCount') return formatCount;
     if (barMode === 'inboundStatusCount') return formatCount;
     return formatCurrency;
 };
@@ -1234,7 +1292,6 @@ const buildNumericXAxis = ({
     strideRef,
     condensedRef,
     axisLineColor,
-    showTicks,
     size,
     gap,
 }: {
@@ -1242,7 +1299,6 @@ const buildNumericXAxis = ({
     strideRef: React.MutableRefObject<number>;
     condensedRef: React.MutableRefObject<boolean>;
     axisLineColor: string;
-    showTicks: boolean;
     size: number;
     gap: number;
 }): uPlot.Axis => ({
@@ -1255,10 +1311,7 @@ const buildNumericXAxis = ({
     values: () => buildCategoryLabels(labelsRef.current, strideRef.current, condensedRef.current),
     grid: { show: false },
     ticks: {
-        show: showTicks,
-        stroke: '#CBD5E1',
-        width: 1,
-        size: showTicks ? 8 : 4,
+        show: false,
     },
     border: {
         show: true,
@@ -1830,6 +1883,16 @@ const UplotLineChart = ({
         ],
         [lineChartData, seriesMeta, xData]
     );
+
+    const animationProgress = useChartAnimation(alignedData);
+    const animatedAlignedData = useMemo<uPlot.AlignedData>(() => {
+        if (animationProgress >= 1) return alignedData;
+
+        return alignedData.map((series, i) => {
+            if (i === 0) return series; // x data
+            return (series as (number | null)[]).map((val) => (val == null ? null : val * animationProgress));
+        }) as uPlot.AlignedData;
+    }, [alignedData, animationProgress]);
     const labelsRef = useLatestRef(labels);
     const strideRef = useLatestRef(dashboardLineXAxisLabelStride);
     const condensedRef = useLatestRef(isDashboardMetricPreset);
@@ -1868,7 +1931,6 @@ const UplotLineChart = ({
                 strideRef,
                 condensedRef,
                 axisLineColor: isDashboardMetricPreset ? 'transparent' : '#E5E7EB',
-                showTicks: isDashboardMetricPreset,
                 size: isDashboardMetricPreset ? 40 : 36,
                 gap: isDashboardMetricPreset ? 0 : 8,
             }),
@@ -1942,7 +2004,7 @@ const UplotLineChart = ({
         <div className={styles.UplotRoot}>
             <ManagedUplot
                 options={options}
-                data={alignedData}
+                data={animatedAlignedData}
                 onCreate={setChart}
                 onDelete={() => setChart(null)}
                 resetScales
@@ -2171,6 +2233,8 @@ const UplotBarChart = ({
         [barData, barSeries, xData]
     );
 
+    const animationProgress = useChartAnimation(alignedData);
+
     const syncBarGeometry = useCallback((nextRects: DrawnBarRect[], nextAvatars: AvatarAnchor[]) => {
         barRectsRef.current = nextRects;
         setAvatarAnchors((prev) => (areAvatarAnchorsEqual(prev, nextAvatars) ? prev : nextAvatars));
@@ -2182,7 +2246,6 @@ const UplotBarChart = ({
                 strideRef,
                 condensedRef,
                 axisLineColor: isDashboardMetricPreset ? 'transparent' : '#E5E7EB',
-                showTicks: isDashboardMetricPreset,
                 size: isDashboardMetricPreset ? 40 : 36,
                 gap: isDashboardMetricPreset ? 0 : 8,
             }),
@@ -2194,7 +2257,7 @@ const UplotBarChart = ({
                 width: barYAxisWidth,
                 formatterRef: barTickFormatterRef,
                 showGrid: !isDashboardMetricPreset,
-                integerOnly: barMode === 'inboundStatusCount',
+                integerOnly: barMode === 'statusCount' || barMode === 'inboundStatusCount',
             }),
         [barMode, barTickFormatterRef, barYAxisWidth, isDashboardMetricPreset]
     );
@@ -2272,15 +2335,30 @@ const UplotBarChart = ({
                             ctx.rect(frame.left * pxRatio, frame.top * pxRatio, frame.width * pxRatio, frame.height * pxRatio);
                             ctx.clip();
 
+                            const zeroY = instance.valToPos(0, 'y');
+
                             rects.forEach((rect) => {
                                 if (rect.width <= 0 || rect.height <= 0) return;
 
                                 const series = barSeriesRef.current.find((item) => item.key === rect.seriesKey);
                                 if (!series) return;
 
+                                const animatedHeight = rect.height * animationProgress;
+                                // 0 기준 위로 또는 아래로 자라나도록 top 조정
+                                // uPlot y coordinates are 0 at top. valToPos(0, 'y') is the zero line.
+                                const rectCenterY = rect.top + rect.height / 2;
+                                const isPositive = rectCenterY < frame.top + zeroY;
+
+                                let animatedTop = rect.top;
+                                if (isPositive) {
+                                    animatedTop = frame.top + zeroY - (frame.top + zeroY - rect.top) * animationProgress;
+                                } else {
+                                    animatedTop = frame.top + zeroY;
+                                }
+
                                 ctx.beginPath();
                                 ctx.fillStyle = series.color;
-                                ctx.rect(rect.left * pxRatio, rect.top * pxRatio, rect.width * pxRatio, rect.height * pxRatio);
+                                ctx.rect(rect.left * pxRatio, animatedTop * pxRatio, rect.width * pxRatio, animatedHeight * pxRatio);
                                 ctx.fill();
                             });
 
@@ -2302,6 +2380,7 @@ const UplotBarChart = ({
             isGroupedStackBar,
             avatarAnchors,
             syncBarGeometry,
+            animationProgress,
         ]
     );
 
@@ -2604,7 +2683,13 @@ const AnalyticsChart = ({
         (groupedStackData?.data.length ?? 0) > 0;
     const isDivergingDataBar =
         chartType === 'BAR' &&
-        (isGroupedStackBar || barMode === 'statusRatio' || barMode === 'statusAmount' || barMode === 'inboundStatusCount');
+        (
+            isGroupedStackBar ||
+            barMode === 'statusRatio' ||
+            barMode === 'statusAmount' ||
+            barMode === 'statusCount' ||
+            barMode === 'inboundStatusCount'
+        );
 
     const resolvedPreset = useMemo<AnalyticsChartPreset>(() => {
         if (preset) return preset;
@@ -2684,6 +2769,8 @@ const AnalyticsChart = ({
     const barYAxisWidth =
         isDashboardMetricPreset
             ? barMode === 'statusAmount'
+                ? 72
+                : barMode === 'statusCount'
                 ? 72
                 : barMode === 'statusRatio'
                 ? 84
@@ -2768,7 +2855,12 @@ const AnalyticsChart = ({
 
         if (
             chartType !== 'BAR' ||
-            (barMode !== 'statusRatio' && barMode !== 'statusAmount' && !isGroupedStackBar)
+            (
+                barMode !== 'statusRatio' &&
+                barMode !== 'statusAmount' &&
+                barMode !== 'statusCount' &&
+                !isGroupedStackBar
+            )
         ) {
             return source;
         }
