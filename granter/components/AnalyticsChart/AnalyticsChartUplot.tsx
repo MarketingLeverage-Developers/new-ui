@@ -1133,6 +1133,37 @@ const parseGroupedSeriesKey = (value?: string | number) => {
     };
 };
 
+const STATUS_COUNT_KEY_BY_SERIES_KEY: Record<string, string> = {
+    totalAmount: 'totalCount',
+    liveAmount: 'liveCount',
+    pendingAmount: 'pendingCount',
+    stoppedAmount: 'stoppedCount',
+    endAmount: 'endCount',
+    stopByClientAmount: 'stopByClientCount',
+    stopByPerformanceAmount: 'stopByPerformanceCount',
+};
+
+const getTooltipCountValue = (
+    dataKey: string | number | undefined,
+    payload?: LineChartDatum
+): number | null => {
+    if (!payload) return null;
+
+    const normalizedKey = String(dataKey ?? '').trim();
+    if (!normalizedKey) return null;
+
+    const groupedCountValue = Number(payload[`${normalizedKey}__count`] ?? Number.NaN);
+    if (Number.isFinite(groupedCountValue)) {
+        return groupedCountValue;
+    }
+
+    const countKey = STATUS_COUNT_KEY_BY_SERIES_KEY[normalizedKey];
+    if (!countKey) return null;
+
+    const countValue = Number(payload[countKey] ?? Number.NaN);
+    return Number.isFinite(countValue) ? countValue : null;
+};
+
 const normalizeStatusDatum = (datum: LineChartDatum): LineChartDatum => ({
     ...datum,
     liveAmount: normalizeChartAmount(datum.liveAmount, 'positive'),
@@ -1414,17 +1445,23 @@ const BarTooltipContent = ({
     if (!active || !payload || payload.length === 0) return null;
 
     const valueByKey = new Map<string, number>();
+    const payloadByKey = new Map<string, TooltipPayloadItem>();
 
     payload.forEach((item: TooltipPayloadItem) => {
         const key = String(item.dataKey ?? '').trim();
         const value = Number(item.value);
         if (key.length > 0 && Number.isFinite(value)) {
             valueByKey.set(key, value);
+            payloadByKey.set(key, item);
         }
     });
 
     const sortedItems = seriesMeta
-        .map((item) => ({ ...item, value: valueByKey.get(item.key) ?? 0 }))
+        .map((item) => ({
+            ...item,
+            value: valueByKey.get(item.key) ?? 0,
+            count: getTooltipCountValue(item.key, payloadByKey.get(item.key)?.payload as LineChartDatum | undefined),
+        }))
         .filter((item) => Math.abs(item.value) > 0)
         .sort(
             (a, b) =>
@@ -1447,9 +1484,16 @@ const BarTooltipContent = ({
                         <Text size={13} style={{ minWidth: 0, wordBreak: 'break-word' }}>
                             {item.label}
                         </Text>
-                        <Text size={13} weight={'semibold'}>
-                            {valueFormatter(Math.abs(item.value))}
-                        </Text>
+                        <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+                            <Text size={13} weight={'semibold'}>
+                                {valueFormatter(Math.abs(item.value))}
+                            </Text>
+                            {typeof item.count === 'number' ? (
+                                <Text size={12} tone="muted">
+                                    {formatCount(item.count)}
+                                </Text>
+                            ) : null}
+                        </div>
                     </div>
                 ))}
             </div>
@@ -1496,6 +1540,7 @@ const GroupedStackTooltipContent = ({
             marketerName: item.label.split(' · ')[0] ?? item.label,
             statusLabel: item.label.split(' · ')[1] ?? item.label,
             value: Number(activeDatum[item.key] ?? 0),
+            count: getTooltipCountValue(item.key, activeDatum as LineChartDatum),
         }))
         .filter((item) => Number.isFinite(item.value) && Math.abs(item.value) > 0)
         .sort(
@@ -1531,9 +1576,16 @@ const GroupedStackTooltipContent = ({
                         <Text size={13} style={{ minWidth: 0, wordBreak: 'break-word' }}>
                             {item.statusLabel}
                         </Text>
-                        <Text size={13} weight={'semibold'}>
-                            {valueFormatter(Math.abs(item.value))}
-                        </Text>
+                        <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+                            <Text size={13} weight={'semibold'}>
+                                {valueFormatter(Math.abs(item.value))}
+                            </Text>
+                            {typeof item.count === 'number' ? (
+                                <Text size={12} tone="muted">
+                                    {formatCount(item.count)}
+                                </Text>
+                            ) : null}
+                        </div>
                     </div>
                 ))}
             </div>
@@ -2725,6 +2777,13 @@ const AnalyticsChart = ({
                           liveAmount: item.liveAmount,
                           pendingAmount: item.pendingAmount,
                           stoppedAmount: item.stoppedAmount,
+                          totalCount: item.totalCount,
+                          liveCount: item.liveCount,
+                          pendingCount: item.pendingCount,
+                          stoppedCount: item.stoppedCount,
+                          endCount: item.endCount,
+                          stopByClientCount: item.stopByClientCount,
+                          stopByPerformanceCount: item.stopByPerformanceCount,
                           endAmount: item.endAmount ?? 0,
                           stopByClientAmount: item.stopByClientAmount ?? 0,
                           stopByPerformanceAmount: item.stopByPerformanceAmount ?? 0,
