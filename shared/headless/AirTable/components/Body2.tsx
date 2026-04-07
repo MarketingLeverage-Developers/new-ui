@@ -41,6 +41,7 @@ type BodyRowData<T> = {
 type BodyRowProps<T> = {
     row: BodyRowData<T>;
     actualRi: number;
+    rowCount: number;
     baseOrder: string[];
     gridTemplateColumns: string;
     rowClassName?: string;
@@ -292,6 +293,7 @@ const BodyRowInner = <T,>({
     getShiftStyle,
     getPinnedStyle,
     toggleRowExpanded,
+    rowCount,
     indentTargetKey,
     canExpand,
     expanded,
@@ -313,6 +315,7 @@ const BodyRowInner = <T,>({
     const meta: CellRenderMeta<T> = {
         rowKey,
         ri: actualRi,
+        rowCount,
         level: row.level,
         toggleRowExpanded,
         isRowExpanded: (candidateRowKey: string) => candidateRowKey === rowKey && expanded,
@@ -447,6 +450,7 @@ const areBodyRowPropsEqual = (prev: BodyRowProps<unknown>, next: BodyRowProps<un
     prev.row.level === next.row.level &&
     prev.row.cells.length === next.row.cells.length &&
     prev.actualRi === next.actualRi &&
+    prev.rowCount === next.rowCount &&
     prev.baseOrder === next.baseOrder &&
     prev.gridTemplateColumns === next.gridTemplateColumns &&
     prev.rowClassName === next.rowClassName &&
@@ -766,6 +770,7 @@ export const Body2 = <T,>({
                                 key={row.key}
                                 row={row}
                                 actualRi={actualRi}
+                                rowCount={rows.length}
                                 baseOrder={baseOrder}
                                 gridTemplateColumns={gridTemplateColumns}
                                 rowClassName={rowClassName}

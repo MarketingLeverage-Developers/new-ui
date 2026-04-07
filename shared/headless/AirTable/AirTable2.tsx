@@ -29,6 +29,7 @@ import { CellContextMenuPortal2 as CellContextMenuPortal } from './components/Ce
 export type CellRenderMeta<T> = {
     rowKey: string;
     ri: number;
+    rowCount?: number;
     level?: number; // ✅ flatten 용 level
     toggleRowExpanded: (rowKey: string) => void;
     isRowExpanded: (rowKey: string) => boolean;
