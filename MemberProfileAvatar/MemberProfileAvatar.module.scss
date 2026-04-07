@@ -11,12 +11,17 @@
     justify-content: center;
     overflow: hidden;
     flex-shrink: 0;
+    box-sizing: border-box;
     background-color: transparent;
     color: var(--White1);
     font-size: var(--avatar-font-size);
     font-weight: 600;
     line-height: 1;
     user-select: none;
+}
+
+.MemberProfileAvatar[data-mode='icon'] {
+    border-radius: 8px;
 }
 
 .Fallback {
@@ -30,6 +35,13 @@
     display: block;
     border: none;
     background: none;
+    box-sizing: border-box;
+}
+
+.Image[data-mode='icon'] {
+    object-fit: contain;
+    padding: 3px;
+    background-color: var(--granter-white);
 }
 
 .FallbackText {

@@ -215,6 +215,11 @@ export type { SectionFieldOptionToggleCardProps } from './SectionFieldOptionTogg
 
 export { default as SectionFieldSelect } from './SectionFieldSelect/SectionFieldSelect';
 export type { SectionFieldSelectProps, SectionFieldSelectOption } from './SectionFieldSelect/SectionFieldSelect';
+export { default as SectionFieldVisualSelect } from './SectionFieldVisualSelect/SectionFieldVisualSelect';
+export type {
+    SectionFieldVisualSelectProps,
+    SectionFieldVisualSelectOption,
+} from './SectionFieldVisualSelect/SectionFieldVisualSelect';
 export { default as SectionFieldMemberSelect } from './SectionFieldMemberSelect/SectionFieldMemberSelect';
 export type {
     SectionFieldMemberSelectProps,

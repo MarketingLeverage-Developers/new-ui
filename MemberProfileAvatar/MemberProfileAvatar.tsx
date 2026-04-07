@@ -4,12 +4,15 @@ import styles from './MemberProfileAvatar.module.scss';
 import { toCssUnit } from '../shared/utils';
 import type { CSSLength } from '../shared/types';
 
+export type MemberProfileAvatarMode = 'avatar' | 'icon';
+
 type MemberProfileAvatarProps = React.HTMLAttributes<HTMLDivElement> & {
     name?: string | null;
     src?: string | null;
     size?: CSSLength;
     fontSize?: CSSLength;
     alt?: string;
+    mode?: MemberProfileAvatarMode;
 };
 
 type CSSVarStyle = React.CSSProperties & Record<`--${string}`, string | number | undefined>;
@@ -43,6 +46,7 @@ const MemberProfileAvatar = ({
     size = 24,
     fontSize,
     alt,
+    mode = 'avatar',
     className,
     style,
     ...props
@@ -69,6 +73,7 @@ const MemberProfileAvatar = ({
         <div
             {...props}
             className={classNames(styles.MemberProfileAvatar, { [styles.Fallback]: !showImage }, className)}
+            data-mode={mode}
             style={{ ...cssVariables, ...style }}
         >
             {showImage ? (
@@ -76,6 +81,7 @@ const MemberProfileAvatar = ({
                     src={imageSrc}
                     alt={imageAlt}
                     className={styles.Image}
+                    data-mode={mode}
                     onError={() => setHasImageError(true)}
                 />
             ) : (
