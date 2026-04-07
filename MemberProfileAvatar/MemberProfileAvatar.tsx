@@ -9,6 +9,7 @@ export type MemberProfileAvatarMode = 'avatar' | 'icon';
 type MemberProfileAvatarProps = React.HTMLAttributes<HTMLDivElement> & {
     name?: string | null;
     src?: string | null;
+    fallbackText?: string | null;
     size?: CSSLength;
     fontSize?: CSSLength;
     alt?: string;
@@ -37,12 +38,13 @@ const getBackgroundColor = (name: string) => {
     }
 
     const hue = Math.abs(hash) % 360;
-    return `hsl(${hue} 60% 65%)`;
+    return `hsl(${hue} 65% 48%)`;
 };
 
 const MemberProfileAvatar = ({
     name,
     src,
+    fallbackText,
     size = 24,
     fontSize,
     alt,
@@ -55,7 +57,11 @@ const MemberProfileAvatar = ({
     const normalizedName = useMemo(() => normalizeName(name), [name]);
     const imageSrc = typeof src === 'string' ? src.trim() : '';
     const showImage = imageSrc.length > 0 && !hasImageError;
-    const fallbackText = useMemo(() => getFallbackText(normalizedName), [normalizedName]);
+    const resolvedFallbackText = useMemo(() => {
+        const normalizedFallbackText = String(fallbackText ?? '').trim();
+
+        return normalizedFallbackText || getFallbackText(normalizedName);
+    }, [fallbackText, normalizedName]);
     const backgroundColor = useMemo(() => getBackgroundColor(normalizedName), [normalizedName]);
     const imageAlt = alt ?? `${normalizedName || 'member'} profile`;
 
@@ -85,7 +91,7 @@ const MemberProfileAvatar = ({
                     onError={() => setHasImageError(true)}
                 />
             ) : (
-                <span className={styles.FallbackText}>{fallbackText}</span>
+                <span className={styles.FallbackText}>{resolvedFallbackText}</span>
             )}
         </div>
     );

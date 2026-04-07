@@ -1,4 +1,5 @@
 import { getFallbackUserProfileSrc } from '@/shared/utils/profile/getFallbackUserProfileSrc';
+import toProfileShortName from '@/shared/utils/profile/toProfileShortName';
 import React, { useMemo } from 'react';
 import SectionFieldVisualSelect from '../SectionFieldVisualSelect/SectionFieldVisualSelect';
 
@@ -24,6 +25,7 @@ const resolveUserAvatarSrc = <T extends string>(option: SectionFieldMemberSelect
 
 type SectionFieldMemberSelectCommonProps<T extends string = string> = {
     options: SectionFieldMemberSelectOption<T>[];
+    useShortNameAvatar?: boolean;
     className?: string;
     menuClassName?: string;
     disabled?: boolean;
@@ -67,12 +69,13 @@ const SectionFieldMemberSelect = <T extends string = string>(props: SectionField
             props.options.map((option) => ({
                 value: option.value,
                 label: option.label,
-                imageSrc: resolveUserAvatarSrc(option),
+                imageSrc: props.useShortNameAvatar ? undefined : resolveUserAvatarSrc(option),
                 imageAlt: `${option.label} profile`,
+                visualText: props.useShortNameAvatar ? toProfileShortName(option.label) : undefined,
                 disabled: option.disabled,
                 searchText: option.searchText,
             })),
-        [props.options]
+        [props.options, props.useShortNameAvatar]
     );
 
     if (isMultipleProps(props)) {
