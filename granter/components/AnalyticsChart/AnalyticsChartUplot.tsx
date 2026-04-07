@@ -83,6 +83,7 @@ export type AnalyticsChartProps = {
     groupedStackData?: AnalyticsChartGroupedStackData;
     chartType?: AnalyticsChartType;
     barMode?: AnalyticsChartBarMode;
+    dashboardBarMaxWidth?: number;
     preset?: AnalyticsChartPreset;
     statusSeriesMode?: AnalyticsChartStatusSeriesMode;
     goalMarkerBySeriesId?: Record<string, number>;
@@ -255,6 +256,7 @@ const INBOUND_STATUS_SERIES = [
 ] as const;
 
 const DEFAULT_BAR_PLOT_WIDTH = 940;
+const DEFAULT_DASHBOARD_BAR_WIDTH = 200;
 const MIN_BAR_PLOT_WIDTH = 320;
 const TOOLTIP_MAX_WIDTH = 220;
 const FONT_FAMILY = 'Pretendard, Apple SD Gothic Neo, Noto Sans KR, sans-serif';
@@ -759,11 +761,6 @@ type DashboardBarLayout = {
     barGap: number;
 };
 
-const getDashboardCategoryWidth = (periodCount: number, plotWidth: number) => {
-    if (periodCount <= 0) return Math.max(plotWidth, DEFAULT_BAR_PLOT_WIDTH);
-    return Math.max(plotWidth, DEFAULT_BAR_PLOT_WIDTH) / periodCount;
-};
-
 const getDashboardBarLayout = (
     periodCount: number,
     plotWidth: number,
@@ -792,14 +789,21 @@ const getDashboardBarLayout = (
     };
 };
 
-const getDashboardXAxisLabelStride = (periodCount: number, plotWidth: number) => {
+const getDashboardBarFillRatio = (periodCount: number) => {
+    if (periodCount <= 1) return 0.92;
+    if (periodCount <= 2) return 0.9;
+    if (periodCount <= 4) return 0.86;
+    if (periodCount <= 8) return 0.8;
+    return 0.72;
+};
+
+const getDashboardXAxisLabelStride = (periodCount: number) => {
     if (periodCount <= 1) return 1;
-
-    const categoryWidth = getDashboardCategoryWidth(periodCount, plotWidth);
-    const targetLabelWidth = 64;
-
-    if (categoryWidth >= targetLabelWidth) return 1;
-    return Math.max(2, Math.ceil(targetLabelWidth / Math.max(categoryWidth, 1)));
+    if (periodCount <= 8) return 1;
+    if (periodCount <= 16) return 2;
+    if (periodCount <= 24) return 3;
+    if (periodCount <= 36) return 4;
+    return 7;
 };
 
 const toNiceDomainValue = (value: number) => {
@@ -834,6 +838,8 @@ const toTightAmountDomainValue = (value: number) => {
 
     const magnitude = 10 ** Math.floor(Math.log10(value));
     const normalized = value / magnitude;
+    // 이 steps 배열이 y축 끝점을 결정하는 기준입니다.
+    // 2.5억(normalized 2.5)일 때 다음 스텝인 3을 선택하게 되어 있습니다.
     const steps = [1, 1.2, 1.5, 1.8, 2, 2.5, 3, 4, 5, 6, 7.5, 8, 9, 10];
     const nextStep = steps.find((step) => normalized <= step) ?? 10;
 
@@ -849,32 +855,43 @@ const getDivergingBarDomain = (
         return undefined;
     }
 
-    const maxAbsStack = data.reduce((acc, item) => {
-        if (barMode === 'inboundStatusCount') {
-            const managed = Number(item.liveAmount ?? 0);
-            const prospect = Number(item.pendingAmount ?? 0);
-            const contracted = Number(item.totalAmount ?? 0);
-            const failed = Math.abs(Number(item.stoppedAmount ?? 0));
-            const positiveTotal = managed + prospect + contracted;
+    const { maxPositiveStack, maxNegativeStack, maxAbsStack } = data.reduce(
+        (acc, item) => {
+            if (barMode === 'inboundStatusCount') {
+                const managed = Number(item.liveAmount ?? 0);
+                const prospect = Number(item.pendingAmount ?? 0);
+                const contracted = Number(item.totalAmount ?? 0);
+                const failed = Math.abs(Number(item.stoppedAmount ?? 0));
+                const positiveTotal = managed + prospect + contracted;
 
-            return Math.max(acc, positiveTotal, failed);
-        }
+                return {
+                    maxPositiveStack: Math.max(acc.maxPositiveStack, positiveTotal),
+                    maxNegativeStack: Math.max(acc.maxNegativeStack, failed),
+                    maxAbsStack: Math.max(acc.maxAbsStack, positiveTotal, failed),
+                };
+            }
 
-        const live = Number(item.liveAmount ?? 0);
-        const pending = Number(item.pendingAmount ?? 0);
-        const stopByClient =
-            statusSeriesMode === 'category'
-                ? Math.abs(Number(item.stoppedAmount ?? 0))
-                : Math.abs(Number(item.stopByClientAmount ?? 0));
-        const stopByPerformance =
-            statusSeriesMode === 'category'
-                ? Math.abs(Number(item.endAmount ?? 0))
-                : Math.abs(Number(item.stopByPerformanceAmount ?? 0));
-        const positiveTotal = live + pending;
-        const negativeTotal = stopByClient + stopByPerformance;
+            const live = Number(item.liveAmount ?? 0);
+            const pending = Number(item.pendingAmount ?? 0);
+            const stopByClient =
+                statusSeriesMode === 'category'
+                    ? Math.abs(Number(item.stoppedAmount ?? 0))
+                    : Math.abs(Number(item.stopByClientAmount ?? 0));
+            const stopByPerformance =
+                statusSeriesMode === 'category'
+                    ? Math.abs(Number(item.endAmount ?? 0))
+                    : Math.abs(Number(item.stopByPerformanceAmount ?? 0));
+            const positiveTotal = live + pending;
+            const negativeTotal = stopByClient + stopByPerformance;
 
-        return Math.max(acc, positiveTotal, negativeTotal);
-    }, 0);
+            return {
+                maxPositiveStack: Math.max(acc.maxPositiveStack, positiveTotal),
+                maxNegativeStack: Math.max(acc.maxNegativeStack, negativeTotal),
+                maxAbsStack: Math.max(acc.maxAbsStack, positiveTotal, negativeTotal),
+            };
+        },
+        { maxPositiveStack: 0, maxNegativeStack: 0, maxAbsStack: 0 }
+    );
 
     if (barMode === 'statusRatio') {
         const padded = Math.min(100, Math.max(10, Math.ceil((maxAbsStack * 1.1) / 10) * 10));
@@ -886,8 +903,15 @@ const getDivergingBarDomain = (
         return [-padded, padded];
     }
 
-    const padded = toNiceDomainValue(maxAbsStack * 1.1);
-    return [-padded, padded];
+    const positivePadded =
+        maxPositiveStack > 0 ? Math.max(1, toTightAmountDomainValue(maxPositiveStack * 1.02)) : 0;
+    const negativePadded =
+        maxNegativeStack > 0 ? Math.max(1, toTightAmountDomainValue(maxNegativeStack * 1.02)) : 0;
+
+    if (positivePadded === 0 && negativePadded === 0) return [-1, 1];
+    if (negativePadded === 0) return [0, positivePadded];
+    if (positivePadded === 0) return [-negativePadded, 0];
+    return [-negativePadded, positivePadded];
 };
 
 const getGroupedStackBarDomain = (
@@ -948,9 +972,9 @@ const getGroupedStackBarDomain = (
     }
 
     const positivePadded =
-        maxPositiveStack > 0 ? toTightAmountDomainValue(maxPositiveStack * 1.08) : 0;
+        maxPositiveStack > 0 ? toTightAmountDomainValue(maxPositiveStack * 1.02) : 0;
     const negativePadded =
-        maxNegativeStack > 0 ? toTightAmountDomainValue(maxNegativeStack * 1.08) : 0;
+        maxNegativeStack > 0 ? toTightAmountDomainValue(maxNegativeStack * 1.02) : 0;
 
     if (positivePadded === 0 && negativePadded === 0) return [-1, 1];
     if (negativePadded === 0) return [0, positivePadded];
@@ -981,7 +1005,7 @@ const getPositiveBarDomain = (
 
     const padded = Math.max(
         1,
-        tight ? toTightAmountDomainValue(maxValue * 1.04) : toNiceDomainValue(maxValue * 1.08)
+        tight ? toTightAmountDomainValue(maxValue * 1.2) : toNiceDomainValue(maxValue * 1.1)
     );
     return [0, padded];
 };
@@ -1223,7 +1247,7 @@ const buildNumericYAxis = ({
 }): uPlot.Axis => ({
     side: 3,
     size: width,
-    gap: 4,
+    gap: 0,
     align: 1,
     alignTo: 2,
     stroke: '#6B7280',
@@ -1266,7 +1290,7 @@ const LineTooltipContent = ({
     return (
         <div style={tooltipStyle}>
             {label ? (
-                <Text size="sm" weight="semibold">
+                <Text size={13}>
                     {label}
                 </Text>
             ) : null}
@@ -1284,10 +1308,10 @@ const LineTooltipContent = ({
                             fontSize={11}
                             style={chartAvatarStyle}
                         />
-                        <Text size="sm" style={{ minWidth: 0, wordBreak: 'break-word' }}>
+                        <Text size={13} style={{ minWidth: 0, wordBreak: 'break-word' }}>
                             {item.label}
                         </Text>
-                        <Text size="sm" weight="medium">
+                        <Text size={13} weight={'semibold'}>
                             {formatCurrency(item.value)}
                         </Text>
                     </div>
@@ -1329,7 +1353,7 @@ const BarTooltipContent = ({
     return (
         <div style={tooltipStyle}>
             {label ? (
-                <Text size="sm" weight="semibold">
+                <Text size={13}>
                     {label}
                 </Text>
             ) : null}
@@ -1337,10 +1361,10 @@ const BarTooltipContent = ({
                 {sortedItems.map((item) => (
                     <div key={item.key} style={tooltipItemStyle}>
                         {renderTooltipMarker(item.key, item.color, item.label)}
-                        <Text size="sm" style={{ minWidth: 0, wordBreak: 'break-word' }}>
+                        <Text size={13} style={{ minWidth: 0, wordBreak: 'break-word' }}>
                             {item.label}
                         </Text>
-                        <Text size="sm" weight="medium">
+                        <Text size={13} weight={'semibold'}>
                             {valueFormatter(Math.abs(item.value))}
                         </Text>
                     </div>
@@ -1353,11 +1377,11 @@ const BarTooltipContent = ({
 const NoDataTooltipContent = ({ label }: { label?: string | number }) => (
     <div style={tooltipStyle}>
         {label ? (
-            <Text size="sm" weight="semibold">
+            <Text size={13}>
                 {label}
             </Text>
         ) : null}
-        <Text size="sm" tone="muted">
+        <Text size={13} tone="muted">
             집계 데이터 없음
         </Text>
     </div>
@@ -1408,12 +1432,12 @@ const GroupedStackTooltipContent = ({
     return (
         <div style={tooltipStyle}>
             {label ? (
-                <Text size="sm" weight="semibold">
+                <Text size={13}>
                     {label}
                 </Text>
             ) : null}
             {marketerName ? (
-                <Text size="sm" tone="muted">
+                <Text size={13} tone="muted">
                     {marketerName}
                 </Text>
             ) : null}
@@ -1421,10 +1445,10 @@ const GroupedStackTooltipContent = ({
                 {marketerSeriesItems.map((item) => (
                     <div key={item.key} style={tooltipItemStyle}>
                         {renderTooltipMarker(parseGroupedSeriesKey(item.key)?.statusKey, item.color, item.statusLabel)}
-                        <Text size="sm" style={{ minWidth: 0, wordBreak: 'break-word' }}>
+                        <Text size={13} style={{ minWidth: 0, wordBreak: 'break-word' }}>
                             {item.statusLabel}
                         </Text>
-                        <Text size="sm" weight="medium">
+                        <Text size={13} weight={'semibold'}>
                             {valueFormatter(Math.abs(item.value))}
                         </Text>
                     </div>
@@ -1468,7 +1492,7 @@ const AmountShareTooltipContent = ({
     return (
         <div style={tooltipStyle}>
             {label ? (
-                <Text size="sm" weight="semibold">
+                <Text size={13}>
                     {label}
                 </Text>
             ) : null}
@@ -1486,10 +1510,10 @@ const AmountShareTooltipContent = ({
                             fontSize={11}
                             style={chartAvatarStyle}
                         />
-                        <Text size="sm" style={{ minWidth: 0, wordBreak: 'break-word' }}>
+                        <Text size={13} style={{ minWidth: 0, wordBreak: 'break-word' }}>
                             {`${item.label} · ${Math.round(item.ratio)}%`}
                         </Text>
-                        <Text size="sm" weight="medium">
+                        <Text size={13} weight={'semibold'}>
                             {formatCurrency(item.raw)}
                         </Text>
                     </div>
@@ -1592,6 +1616,7 @@ const buildBarGeometry = ({
     dashboardBarGap,
     isDashboardMetricPreset,
     barMode,
+    dashboardBarMaxWidth,
 }: {
     chart: uPlot;
     data: LineChartDatum[];
@@ -1612,6 +1637,7 @@ const buildBarGeometry = ({
     dashboardBarGap?: number;
     isDashboardMetricPreset: boolean;
     barMode: BarMode;
+    dashboardBarMaxWidth?: number;
 }): { rects: DrawnBarRect[]; avatars: AvatarAnchor[] } => {
     const frame = getPlotFrame(chart);
     if (!frame || data.length === 0) return { rects: [], avatars: [] };
@@ -1620,6 +1646,9 @@ const buildBarGeometry = ({
     const categoryWidth = plotWidth / data.length;
     const gapPx = isDashboardMetricPreset ? dashboardCategoryGap : 30;
     const intraGapPx = dashboardBarGap ?? 0;
+    const fillRatio = isDashboardMetricPreset ? getDashboardBarFillRatio(data.length) : 1;
+    const totalCategoryGapWidth = gapPx * Math.max(data.length - 1, 0);
+    const countAwareCategoryWidth = Math.max(plotWidth - totalCategoryGapWidth, 0) / Math.max(data.length, 1);
 
     const stackIds = isGroupedStackBar
         ? Array.from(new Set(seriesMeta.map((item) => item.stackId ?? item.key)))
@@ -1632,7 +1661,21 @@ const buildBarGeometry = ({
     const rawGroupWidth =
         groupCount > 1 ? (clusterWidth - intraGapPx * (groupCount - 1)) / groupCount : clusterWidth;
     const fixedAmountWidth = !isDashboardMetricPreset && barMode === 'amount' ? 42 : undefined;
-    const groupWidth = fixedAmountWidth ? Math.min(rawGroupWidth, fixedAmountWidth) : rawGroupWidth;
+    const countAwareGroupWidth = Math.max(
+        1,
+        Math.floor(
+            (countAwareCategoryWidth * fillRatio - intraGapPx * Math.max(groupCount - 1, 0)) /
+                Math.max(groupCount, 1)
+        )
+    );
+    const dashboardBarWidth = isDashboardMetricPreset
+        ? Math.min(dashboardBarMaxWidth ?? DEFAULT_DASHBOARD_BAR_WIDTH, countAwareGroupWidth)
+        : undefined;
+    const groupWidth = fixedAmountWidth
+        ? Math.min(rawGroupWidth, fixedAmountWidth)
+        : dashboardBarWidth !== undefined
+          ? Math.min(rawGroupWidth, dashboardBarWidth)
+          : rawGroupWidth;
     const clusterVisibleWidth =
         groupCount > 1 ? groupWidth * groupCount + intraGapPx * (groupCount - 1) : groupWidth;
 
@@ -1793,10 +1836,16 @@ const UplotLineChart = ({
         const min = Math.min(...values);
         const max = Math.max(...values);
 
-        return [
-            Math.min(0, Math.floor(min * 1.1)),
-            !Number.isFinite(max) || max === 0 ? 1 : Math.ceil(max * 1.4),
-        ];
+        if (min >= 0) {
+            return [0, Math.max(1, toTightAmountDomainValue(max * 1.2))];
+        }
+
+        if (max <= 0) {
+            return [-Math.max(1, toTightAmountDomainValue(Math.abs(min) * 1.02)), 0];
+        }
+
+        const padded = Math.max(1, toTightAmountDomainValue(Math.max(Math.abs(min), Math.abs(max)) * 1.02));
+        return [-padded, padded];
     }, [lineChartData, seriesMeta]);
     const lineYRangeRef = useLatestRef(lineYRange);
     const xAxis = useMemo(
@@ -2036,6 +2085,7 @@ const UplotBarChart = ({
     shouldShowGroupedStackAvatars,
     isDashboardMetricPreset,
     barMode,
+    dashboardBarMaxWidth,
     barYAxisWidth,
     metricBarDomain,
     barTickFormatter,
@@ -2074,6 +2124,7 @@ const UplotBarChart = ({
     barTooltipValueFormatter: (value: number) => string;
     dashboardBarCategoryGap: number;
     dashboardBarGap?: number;
+    dashboardBarMaxWidth?: number;
     dashboardBarXAxisLabelStride: number;
     groupedStackSeries: AnalyticsChartGroupedStackSeries[];
     allPeriodsMissing: boolean;
@@ -2095,6 +2146,7 @@ const UplotBarChart = ({
     const barGapRef = useLatestRef(dashboardBarGap);
     const barModeRef = useLatestRef(barMode);
     const dashboardPresetRef = useLatestRef(isDashboardMetricPreset);
+    const dashboardBarMaxWidthRef = useLatestRef(dashboardBarMaxWidth);
     const allPeriodsMissingRef = useLatestRef(allPeriodsMissing);
     const barTickFormatterRef = useLatestRef(barTickFormatter);
 
@@ -2195,6 +2247,7 @@ const UplotBarChart = ({
                                 dashboardBarGap: barGapRef.current,
                                 isDashboardMetricPreset: dashboardPresetRef.current,
                                 barMode: barModeRef.current,
+                                dashboardBarMaxWidth: dashboardBarMaxWidthRef.current,
                             });
 
                             if (
@@ -2211,19 +2264,6 @@ const UplotBarChart = ({
                             ctx.beginPath();
                             ctx.rect(frame.left * pxRatio, frame.top * pxRatio, frame.width * pxRatio, frame.height * pxRatio);
                             ctx.clip();
-
-                            if (
-                                Number(instance.scales.y.min ?? 0) < 0 &&
-                                Number(instance.scales.y.max ?? 0) > 0
-                            ) {
-                                const zeroY = frame.top + instance.valToPos(0, 'y');
-                                ctx.beginPath();
-                                ctx.strokeStyle = '#CBD5E1';
-                                ctx.lineWidth = pxRatio;
-                                ctx.moveTo(frame.left * pxRatio, zeroY * pxRatio);
-                                ctx.lineTo((frame.left + frame.width) * pxRatio, zeroY * pxRatio);
-                                ctx.stroke();
-                            }
 
                             rects.forEach((rect) => {
                                 if (rect.width <= 0 || rect.height <= 0) return;
@@ -2636,6 +2676,7 @@ const AnalyticsChart = ({
     groupedStackData,
     chartType = 'BAR',
     barMode = 'amount',
+    dashboardBarMaxWidth,
     preset,
     statusSeriesMode = 'reason',
     goalMarkerBySeriesId,
@@ -2761,12 +2802,12 @@ const AnalyticsChart = ({
     const barYAxisWidth =
         isDashboardMetricPreset
             ? barMode === 'statusAmount'
-                ? 132
+                ? 72
                 : barMode === 'statusRatio'
                 ? 84
                 : barMode === 'inboundStatusCount'
                 ? 72
-                : 96
+                : 84
             : 54;
 
     const barChartPadding = useMemo<[number, number, number, number]>(
@@ -2777,12 +2818,12 @@ const AnalyticsChart = ({
                           shouldShowGroupedStackAvatars || shouldShowGroupedAmountAvatars ? 64 : 0,
                           MIN_VERTICAL_CHART_PADDING
                       ),
-                      Math.max(barYAxisWidth - 40, 0),
+                      barMode === 'statusAmount' ? 8 : Math.max(barYAxisWidth - 40, 0),
                       MIN_VERTICAL_CHART_PADDING,
                       0,
                   ]
                 : [8, 12, MIN_VERTICAL_CHART_PADDING, 0],
-        [barYAxisWidth, isDashboardMetricPreset, shouldShowGroupedAmountAvatars, shouldShowGroupedStackAvatars]
+        [barMode, barYAxisWidth, isDashboardMetricPreset, shouldShowGroupedAmountAvatars, shouldShowGroupedStackAvatars]
     );
 
     const barPlotWidth = useMemo(() => {
@@ -2801,19 +2842,13 @@ const AnalyticsChart = ({
     );
 
     const dashboardBarXAxisLabelStride = useMemo(
-        () => (isDashboardMetricPreset ? getDashboardXAxisLabelStride(barData.length, barPlotWidth) : 1),
-        [barData.length, barPlotWidth, isDashboardMetricPreset]
+        () => (isDashboardMetricPreset ? getDashboardXAxisLabelStride(barData.length) : 1),
+        [barData.length, isDashboardMetricPreset]
     );
 
     const dashboardLineXAxisLabelStride = useMemo(
-        () =>
-            isDashboardMetricPreset
-                ? getDashboardXAxisLabelStride(
-                      lineChartData.length,
-                      Math.max(chartAreaSize.width - 12, MIN_BAR_PLOT_WIDTH)
-                  )
-                : 1,
-        [chartAreaSize.width, isDashboardMetricPreset, lineChartData.length]
+        () => (isDashboardMetricPreset ? getDashboardXAxisLabelStride(lineChartData.length) : 1),
+        [isDashboardMetricPreset, lineChartData.length]
     );
 
     const divergingStatusDomain = useMemo(() => {
@@ -2830,7 +2865,7 @@ const AnalyticsChart = ({
                       barData,
                       barSeries.map((item) => item.key),
                       barMode,
-                      isAmountShareBar,
+                      false,
                       isDashboardMetricPreset
                   )
                 : undefined,
@@ -2925,6 +2960,7 @@ const AnalyticsChart = ({
                                     barTooltipValueFormatter={barTooltipValueFormatter}
                                     dashboardBarCategoryGap={dashboardBarLayout.categoryGap}
                                     dashboardBarGap={dashboardBarLayout.barGap}
+                                    dashboardBarMaxWidth={dashboardBarMaxWidth}
                                     dashboardBarXAxisLabelStride={dashboardBarXAxisLabelStride}
                                     groupedStackSeries={groupedStackData?.series ?? []}
                                     allPeriodsMissing={isAllBarPeriodsMissing}
