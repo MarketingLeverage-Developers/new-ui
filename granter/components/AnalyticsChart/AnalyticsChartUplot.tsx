@@ -1,6 +1,7 @@
 import MemberProfileAvatar from '@/components/common/MemberProfileAvatar/MemberProfileAvatar';
 import { getFallbackProfileSrc } from '@/shared/utils/profile/getFallbackProfileSrc';
 import { getFallbackUserProfileSrc } from '@/shared/utils/profile/getFallbackUserProfileSrc';
+import toProfileShortName from '@/shared/utils/profile/toProfileShortName';
 import Flex from '../Flex/Flex';
 import Text from '../Text/Text';
 import { memo, useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
@@ -323,6 +324,10 @@ const chartAvatarStyle: React.CSSProperties = {
     boxSizing: 'border-box',
     backgroundColor: 'var(--granter-gray-50)',
 };
+const chartShortNameAvatarStyle: React.CSSProperties = {
+    boxSizing: 'border-box',
+    boxShadow: 'inset 0 0 0 1px rgba(255, 255, 255, 0.2)',
+};
 
 const legendDotStyle = (color: string): React.CSSProperties => ({
     display: 'inline-flex',
@@ -365,6 +370,34 @@ const resolveAvatarSrc = (
         profileSrc,
         avatarKind === 'company' ? getFallbackProfileSrc(seed) : getFallbackUserProfileSrc(seed)
     );
+const renderChartAvatar = ({
+    label,
+    profileSrc,
+    seed,
+    avatarKind = 'user',
+    size,
+    fontSize,
+}: {
+    label?: string | null;
+    profileSrc?: string | null;
+    seed?: string | null;
+    avatarKind?: AnalyticsChartAvatarKind;
+    size: number;
+    fontSize: number;
+}) => {
+    const useShortNameAvatar = avatarKind === 'user';
+
+    return (
+        <MemberProfileAvatar
+            name={label}
+            src={useShortNameAvatar ? undefined : resolveAvatarSrc(profileSrc, seed, avatarKind)}
+            fallbackText={useShortNameAvatar ? toProfileShortName(label || seed) : undefined}
+            size={size}
+            fontSize={fontSize}
+            style={useShortNameAvatar ? chartShortNameAvatarStyle : chartAvatarStyle}
+        />
+    );
+};
 const formatCount = (value: number) => `${value.toLocaleString('ko-KR')}건`;
 
 const clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max);
@@ -1297,17 +1330,14 @@ const LineTooltipContent = ({
             <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                 {sortedItems.map((item) => (
                     <div key={item.key} style={tooltipItemStyle}>
-                        <MemberProfileAvatar
-                            name={item.label}
-                            src={resolveAvatarSrc(
-                                item.profileSrc,
-                                item.avatarSeed ?? item.key,
-                                item.avatarKind ?? 'user'
-                            )}
-                            size={20}
-                            fontSize={11}
-                            style={chartAvatarStyle}
-                        />
+                        {renderChartAvatar({
+                            label: item.label,
+                            profileSrc: item.profileSrc,
+                            seed: item.avatarSeed ?? item.key,
+                            avatarKind: item.avatarKind ?? 'user',
+                            size: 20,
+                            fontSize: 11,
+                        })}
                         <Text size={13} style={{ minWidth: 0, wordBreak: 'break-word' }}>
                             {item.label}
                         </Text>
@@ -1499,17 +1529,14 @@ const AmountShareTooltipContent = ({
             <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                 {items.map((item) => (
                     <div key={item.key} style={tooltipItemStyle}>
-                        <MemberProfileAvatar
-                            name={item.label}
-                            src={resolveAvatarSrc(
-                                item.profileSrc,
-                                item.avatarSeed ?? item.key,
-                                item.avatarKind ?? 'user'
-                            )}
-                            size={20}
-                            fontSize={11}
-                            style={chartAvatarStyle}
-                        />
+                        {renderChartAvatar({
+                            label: item.label,
+                            profileSrc: item.profileSrc,
+                            seed: item.avatarSeed ?? item.key,
+                            avatarKind: item.avatarKind ?? 'user',
+                            size: 20,
+                            fontSize: 11,
+                        })}
                         <Text size={13} style={{ minWidth: 0, wordBreak: 'break-word' }}>
                             {`${item.label} · ${Math.round(item.ratio)}%`}
                         </Text>
@@ -2022,17 +2049,14 @@ const UplotLineTooltipOverlay = memo(({
                             transform: 'translateX(-50%)',
                         }}
                     >
-                        <MemberProfileAvatar
-                            name={activeLinePoint.label}
-                            src={resolveAvatarSrc(
-                                activeLinePoint.profileSrc,
-                                activeLinePoint.avatarSeed ?? activeLinePoint.key,
-                                activeLinePoint.avatarKind ?? 'user'
-                            )}
-                            size={LINE_AVATAR_SIZE}
-                            fontSize={11}
-                            style={chartAvatarStyle}
-                        />
+                        {renderChartAvatar({
+                            label: activeLinePoint.label,
+                            profileSrc: activeLinePoint.profileSrc,
+                            seed: activeLinePoint.avatarSeed ?? activeLinePoint.key,
+                            avatarKind: activeLinePoint.avatarKind ?? 'user',
+                            size: LINE_AVATAR_SIZE,
+                            fontSize: 11,
+                        })}
                     </div>
                 </>
             ) : null}
@@ -2362,17 +2386,14 @@ const UplotBarChart = ({
                                 transform: 'translateX(-50%)',
                             }}
                         >
-                            <MemberProfileAvatar
-                                name={item.label}
-                                src={resolveAvatarSrc(
-                                    item.profileSrc,
-                                    item.avatarSeed ?? item.label,
-                                    item.avatarKind ?? 'user'
-                                )}
-                                size={GROUPED_STACK_AVATAR_SIZE}
-                                fontSize={11}
-                                style={chartAvatarStyle}
-                            />
+                            {renderChartAvatar({
+                                label: item.label,
+                                profileSrc: item.profileSrc,
+                                seed: item.avatarSeed ?? item.label,
+                                avatarKind: item.avatarKind ?? 'user',
+                                size: GROUPED_STACK_AVATAR_SIZE,
+                                fontSize: 11,
+                            })}
                         </div>
                     ))
                     : null}
