@@ -1,7 +1,7 @@
 import React from 'react';
 import { FiX } from 'react-icons/fi';
 import FileUploader, { type FileUploaderProps } from '../FileUploader/FileUploader';
-import { useImageUploader } from '../../../shared/headless/ImageUploader/ImageUploader';
+import { useImageUploader } from '@/shared/headless/ImageUploader/ImageUploader';
 import styles from './SectionFieldRowFileUpload.module.scss';
 
 export type SectionFieldRowFileUploadProps = Omit<FileUploaderProps, 'children'> & {
