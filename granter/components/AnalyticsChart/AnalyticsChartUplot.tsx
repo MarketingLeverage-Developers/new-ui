@@ -347,8 +347,8 @@ const statusIconStyle: React.CSSProperties = {
     flexShrink: 0,
 };
 
-const formatCompactAmount = (value: number) => Math.round(value).toLocaleString('ko-KR');
-const formatCurrency = (value: number) => `${value.toLocaleString('ko-KR')}원`;
+const formatCompactAmount = (value: number) => `${(value / 10000).toLocaleString('ko-KR')}만원`;
+const formatCurrency = (value: number) => `${(value / 10000).toLocaleString('ko-KR')}만원`;
 const formatPercent = (value: number) => `${value.toFixed(1)}%`;
 const pickProfileSrc = (...candidates: Array<string | null | undefined>) => {
     for (const candidate of candidates) {
@@ -1250,7 +1250,7 @@ const buildNumericXAxis = ({
     size,
     gap,
     stroke: '#6B7280',
-    font: `12px ${FONT_FAMILY}`,
+    font: `11px ${FONT_FAMILY}`,
     splits: () => labelsRef.current.map((_, index) => index),
     values: () => buildCategoryLabels(labelsRef.current, strideRef.current, condensedRef.current),
     grid: { show: false },
@@ -1284,7 +1284,7 @@ const buildNumericYAxis = ({
     align: 1,
     alignTo: 2,
     stroke: '#6B7280',
-    font: `12px ${FONT_FAMILY}`,
+    font: `11px ${FONT_FAMILY}`,
     incrs: integerOnly ? [...INTEGER_AXIS_INCREMENTS] : undefined,
     filter: (_self, splits) => dedupeAxisSplitsByFormatter(splits, formatterRef.current),
     values: (_self, splits) =>
