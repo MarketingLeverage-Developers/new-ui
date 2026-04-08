@@ -12,26 +12,6 @@ export const ANALYTICS_CHART_PALETTE = {
     charcoal: '#475569',
 } as const;
 
-export const ANALYTICS_CHART_STATUS_COLORS = {
-    live: ANALYTICS_CHART_PALETTE.positive,
-    waiting: ANALYTICS_CHART_PALETTE.orange,
-    stopped: ANALYTICS_CHART_PALETTE.negative,
-    stopByClient: ANALYTICS_CHART_PALETTE.negative,
-    stopByPerformance: ANALYTICS_CHART_PALETTE.negative,
-    end: ANALYTICS_CHART_PALETTE.charcoal,
-    contracted: ANALYTICS_CHART_PALETTE.green,
-} as const;
-
-export const ANALYTICS_CHART_DASHBOARD_STATUS_COLORS = {
-    live: ANALYTICS_CHART_PALETTE.negative,
-    waiting: ANALYTICS_CHART_PALETTE.orange,
-    stopped: ANALYTICS_CHART_PALETTE.positive,
-    stopByClient: ANALYTICS_CHART_PALETTE.positive,
-    stopByPerformance: ANALYTICS_CHART_PALETTE.positive,
-    end: ANALYTICS_CHART_PALETTE.charcoal,
-    contracted: ANALYTICS_CHART_PALETTE.green,
-} as const;
-
 export const ANALYTICS_CHART_LINE_COLORS = [
     ANALYTICS_CHART_PALETTE.positive,
     ANALYTICS_CHART_PALETTE.positiveDeep,
