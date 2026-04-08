@@ -12,9 +12,10 @@ type Props = {
     open: boolean;
     tab: TabKey;
     onSelectTab: (tab: TabKey) => void;
+    showFilters?: boolean;
 };
 
-export const TableSettingRail = ({ open, tab, onSelectTab }: Props) => (
+export const TableSettingRail = ({ open, tab, onSelectTab, showFilters = true }: Props) => (
     <div
         style={{
             width: 42,
@@ -68,23 +69,24 @@ export const TableSettingRail = ({ open, tab, onSelectTab }: Props) => (
             </span>
         </BaseTooltip>
 
-        {/* ✅ 필터 설정 */}
-        <BaseTooltip label="필터 설정" side="left">
-            <span style={{ display: 'inline-flex' }}>
-                <BaseButton
-                    type="button"
-                    padding={{ x: 0, y: 0 }}
-                    width={32}
-                    height={32}
-                    radius={8}
-                    bgColor={tab === 'filters' && open ? getThemeColor('Gray6') : getThemeColor('White1')}
-                    textColor={tab === 'filters' && open ? getThemeColor('Primary1') : getThemeColor('Gray2')}
-                    onClick={() => onSelectTab('filters')}
-                    aria-label="필터 설정"
-                >
-                    <FaFilter />
-                </BaseButton>
-            </span>
-        </BaseTooltip>
+        {showFilters ? (
+            <BaseTooltip label="필터 설정" side="left">
+                <span style={{ display: 'inline-flex' }}>
+                    <BaseButton
+                        type="button"
+                        padding={{ x: 0, y: 0 }}
+                        width={32}
+                        height={32}
+                        radius={8}
+                        bgColor={tab === 'filters' && open ? getThemeColor('Gray6') : getThemeColor('White1')}
+                        textColor={tab === 'filters' && open ? getThemeColor('Primary1') : getThemeColor('Gray2')}
+                        onClick={() => onSelectTab('filters')}
+                        aria-label="필터 설정"
+                    >
+                        <FaFilter />
+                    </BaseButton>
+                </span>
+            </BaseTooltip>
+        ) : null}
     </div>
 );
