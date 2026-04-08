@@ -1,11 +1,6 @@
-import MemberProfileAvatar from '@/components/common/MemberProfileAvatar/MemberProfileAvatar';
-import { getFallbackProfileSrc } from '@/shared/utils/profile/getFallbackProfileSrc';
-import { getFallbackUserProfileSrc } from '@/shared/utils/profile/getFallbackUserProfileSrc';
-import toProfileShortName from '@/shared/utils/profile/toProfileShortName';
 import Flex from '../Flex/Flex';
 import Text from '../Text/Text';
 import { memo, useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import uPlot from 'uplot';
 import 'uplot/dist/uPlot.min.css';
 import {
@@ -18,97 +13,22 @@ import {
     HiOutlinePlayCircle,
     HiOutlineXCircle,
 } from 'react-icons/hi2';
-import {
-    ANALYTICS_CHART_DASHBOARD_STATUS_COLORS,
-    ANALYTICS_CHART_LINE_COLORS,
-    ANALYTICS_CHART_PALETTE,
-    ANALYTICS_CHART_STATUS_COLORS,
-} from './AnalyticsChart.constants';
+import type {
+    AnalyticsChartAvatarKind,
+    AnalyticsChartAvatarRenderer,
+    AnalyticsChartBarPresentation,
+    AnalyticsChartDatum,
+    AnalyticsChartMarkerKind,
+    AnalyticsChartPreset,
+    AnalyticsChartProps,
+    AnalyticsChartSeries,
+    AnalyticsChartTooltipMode,
+} from './AnalyticsChart.types';
 import styles from './AnalyticsChart.module.scss';
 
-export type AnalyticsChartBarMode = 'amount' | 'statusRatio' | 'statusAmount' | 'statusCount' | 'inboundStatusCount';
-export type AnalyticsChartType = 'BAR' | 'LINE' | 'PIE';
-export type AnalyticsChartPreset = 'default' | 'dashboardMetric';
-export type AnalyticsChartStatusSeriesMode = 'reason' | 'category';
-export type AnalyticsChartAvatarKind = 'company' | 'user';
-
-export type AnalyticsChartPeriodItem = {
-    periodLabel: string;
-    totalAmount: number;
-    liveAmount: number;
-    pendingAmount: number;
-    stoppedAmount: number;
-    isMissingData?: boolean;
-    endAmount?: number;
-    stopByClientAmount?: number;
-    stopByPerformanceAmount?: number;
-};
-
-export type AnalyticsChartLineSeries = {
-    id: string;
-    name: string;
-    totalAmount: number;
-    values: number[];
-    profileImageUrl?: string;
-    profileSrc?: string;
-    avatarKind?: AnalyticsChartAvatarKind;
-    avatarSeed?: string;
-};
-
-export type AnalyticsChartLineData = {
-    periodLabels: string[];
-    series: AnalyticsChartLineSeries[];
-};
-
-export type AnalyticsChartDatum = {
-    periodLabel: string;
-    isMissingData?: boolean;
-} & Record<string, string | number | boolean | undefined>;
-
-export type AnalyticsChartGroupedStackSeries = {
-    key: string;
-    label: string;
-    color: string;
-    stackId: string;
-    avatarName?: string;
-    avatarSrc?: string;
-};
-
-export type AnalyticsChartGroupedStackData = {
-    data: AnalyticsChartDatum[];
-    series: AnalyticsChartGroupedStackSeries[];
-};
-
-export type AnalyticsChartProps = {
-    periods?: AnalyticsChartPeriodItem[];
-    lineData?: AnalyticsChartLineData;
-    groupedStackData?: AnalyticsChartGroupedStackData;
-    chartType?: AnalyticsChartType;
-    barMode?: AnalyticsChartBarMode;
-    dashboardBarMaxWidth?: number;
-    preset?: AnalyticsChartPreset;
-    statusSeriesMode?: AnalyticsChartStatusSeriesMode;
-    goalMarkerBySeriesId?: Record<string, number>;
-    isLoading?: boolean;
-    title?: string;
-    showTitle?: boolean;
-    showLegend?: boolean;
-    showSeriesAvatars?: boolean;
-};
-
-type BarMode = AnalyticsChartBarMode;
-
-type LineSeriesMeta = {
-    key: string;
-    label: string;
-    color: string;
-    profileSrc?: string;
-    avatarKind?: AnalyticsChartAvatarKind;
-    avatarSeed?: string;
-};
-
+type LineSeriesMeta = AnalyticsChartSeries;
 type LineChartDatum = AnalyticsChartDatum;
-type GroupedStackSeriesMeta = AnalyticsChartGroupedStackSeries;
+type GroupedStackSeriesMeta = AnalyticsChartSeries;
 
 type TooltipPayloadItem = {
     dataKey?: string | number;
@@ -121,14 +41,17 @@ type LineTooltipContentProps = {
     payload?: TooltipPayloadItem[];
     label?: string | number;
     seriesMeta: LineSeriesMeta[];
+    valueFormatter: (value: number) => string;
+    avatarRenderer?: AnalyticsChartAvatarRenderer;
 };
 
 type BarTooltipContentProps = {
     active?: boolean;
     payload?: TooltipPayloadItem[];
     label?: string | number;
-    seriesMeta: { key: string; label: string; color: string }[];
+    seriesMeta: AnalyticsChartSeries[];
     valueFormatter: (value: number) => string;
+    countFormatter: (value: number) => string;
 };
 
 type GroupedStackTooltipContentProps = {
@@ -137,6 +60,7 @@ type GroupedStackTooltipContentProps = {
     label?: string | number;
     seriesMeta: GroupedStackSeriesMeta[];
     valueFormatter: (value: number) => string;
+    countFormatter: (value: number) => string;
 };
 
 type AmountShareTooltipContentProps = {
@@ -144,6 +68,8 @@ type AmountShareTooltipContentProps = {
     payload?: TooltipPayloadItem[];
     label?: string | number;
     seriesMeta: LineSeriesMeta[];
+    valueFormatter: (value: number) => string;
+    avatarRenderer?: AnalyticsChartAvatarRenderer;
 };
 
 type ChartAreaSize = {
@@ -176,29 +102,6 @@ type DrawnBarRect = {
     isPlaceholder?: boolean;
 };
 
-const drawRoundedRectPath = (
-    ctx: CanvasRenderingContext2D,
-    left: number,
-    top: number,
-    width: number,
-    height: number,
-    radius: number
-) => {
-    const safeRadius = Math.max(0, Math.min(radius, width / 2, height / 2));
-
-    ctx.beginPath();
-    ctx.moveTo(left + safeRadius, top);
-    ctx.lineTo(left + width - safeRadius, top);
-    ctx.quadraticCurveTo(left + width, top, left + width, top + safeRadius);
-    ctx.lineTo(left + width, top + height - safeRadius);
-    ctx.quadraticCurveTo(left + width, top + height, left + width - safeRadius, top + height);
-    ctx.lineTo(left + safeRadius, top + height);
-    ctx.quadraticCurveTo(left, top + height, left, top + height - safeRadius);
-    ctx.lineTo(left, top + safeRadius);
-    ctx.quadraticCurveTo(left, top, left + safeRadius, top);
-    ctx.closePath();
-};
-
 type AvatarAnchor = {
     key: string;
     label: string;
@@ -209,60 +112,17 @@ type AvatarAnchor = {
     top: number;
 };
 
-type LinePointOverlay = {
-    key: string;
-    label: string;
-    profileSrc?: string;
-    avatarKind?: AnalyticsChartAvatarKind;
-    avatarSeed?: string;
-    left: number;
-    top: number;
-    value: number;
-};
-
 type LocalStore<T> = {
     getSnapshot: () => T;
     subscribe: (listener: () => void) => () => void;
     set: (next: T) => void;
 };
 
-const AMOUNT_SERIES = [{ key: 'totalAmount', label: '소진액', color: ANALYTICS_CHART_PALETTE.positive }] as const;
-
-const STATUS_REASON_SERIES = [
-    { key: 'pendingAmount', label: '운영대기중', color: ANALYTICS_CHART_DASHBOARD_STATUS_COLORS.waiting },
-    { key: 'liveAmount', label: '라이브중', color: ANALYTICS_CHART_DASHBOARD_STATUS_COLORS.live },
-    {
-        key: 'stopByClientAmount',
-        label: '중단-광고주요청',
-        color: ANALYTICS_CHART_DASHBOARD_STATUS_COLORS.stopByClient,
-    },
-    {
-        key: 'stopByPerformanceAmount',
-        label: '중단-성과저하',
-        color: ANALYTICS_CHART_DASHBOARD_STATUS_COLORS.stopByPerformance,
-    },
-] as const;
-
-const STATUS_CATEGORY_SERIES = [
-    { key: 'pendingAmount', label: '운영대기중', color: ANALYTICS_CHART_DASHBOARD_STATUS_COLORS.waiting },
-    { key: 'liveAmount', label: '라이브중', color: ANALYTICS_CHART_DASHBOARD_STATUS_COLORS.live },
-    { key: 'stoppedAmount', label: '광고중단', color: ANALYTICS_CHART_DASHBOARD_STATUS_COLORS.stopped },
-    { key: 'endAmount', label: '피이관', color: ANALYTICS_CHART_DASHBOARD_STATUS_COLORS.end },
-] as const;
-
-const INBOUND_STATUS_SERIES = [
-    { key: 'liveAmount', label: '관리', color: ANALYTICS_CHART_STATUS_COLORS.live },
-    { key: 'pendingAmount', label: '가망', color: ANALYTICS_CHART_STATUS_COLORS.waiting },
-    { key: 'stoppedAmount', label: '실패', color: ANALYTICS_CHART_STATUS_COLORS.stopped },
-    { key: 'totalAmount', label: '계약', color: ANALYTICS_CHART_STATUS_COLORS.contracted },
-] as const;
-
 const DEFAULT_BAR_PLOT_WIDTH = 940;
 const DEFAULT_DASHBOARD_BAR_WIDTH = 200;
 const MIN_BAR_PLOT_WIDTH = 320;
 const TOOLTIP_MAX_WIDTH = 220;
 const FONT_FAMILY = 'Pretendard, Apple SD Gothic Neo, Noto Sans KR, sans-serif';
-const LINE_AVATAR_SIZE = 28;
 const GROUPED_STACK_AVATAR_SIZE = 30;
 const MIN_VERTICAL_CHART_PADDING = 12;
 const INTEGER_AXIS_INCREMENTS = [
@@ -320,15 +180,6 @@ const tooltipItemStyle: React.CSSProperties = {
     alignItems: 'center',
     gap: 8,
 };
-const chartAvatarStyle: React.CSSProperties = {
-    border: '1px solid var(--granter-gray-200)',
-    boxSizing: 'border-box',
-    backgroundColor: 'var(--granter-gray-50)',
-};
-const chartShortNameAvatarStyle: React.CSSProperties = {
-    boxSizing: 'border-box',
-    boxShadow: 'inset 0 0 0 1px rgba(255, 255, 255, 0.2)',
-};
 
 const legendDotStyle = (color: string): React.CSSProperties => ({
     display: 'inline-flex',
@@ -348,30 +199,10 @@ const statusIconStyle: React.CSSProperties = {
     flexShrink: 0,
 };
 
-const formatCompactAmount = (value: number) => `${(value / 10000).toLocaleString('ko-KR')}만원`;
-const formatCurrency = (value: number) => `${(value / 10000).toLocaleString('ko-KR')}만원`;
-const formatPercent = (value: number) => `${value.toFixed(1)}%`;
-const pickProfileSrc = (...candidates: Array<string | null | undefined>) => {
-    for (const candidate of candidates) {
-        const normalized = String(candidate ?? '').trim();
+const formatNumericValue = (value: number) => value.toLocaleString('ko-KR');
 
-        if (normalized.length > 0) {
-            return normalized;
-        }
-    }
-
-    return '';
-};
-const resolveAvatarSrc = (
-    profileSrc?: string | null,
-    seed?: string | null,
-    avatarKind: AnalyticsChartAvatarKind = 'user'
-) =>
-    pickProfileSrc(
-        profileSrc,
-        avatarKind === 'company' ? getFallbackProfileSrc(seed) : getFallbackUserProfileSrc(seed)
-    );
 const renderChartAvatar = ({
+    avatarRenderer,
     label,
     profileSrc,
     seed,
@@ -385,62 +216,18 @@ const renderChartAvatar = ({
     avatarKind?: AnalyticsChartAvatarKind;
     size: number;
     fontSize: number;
-}) => {
-    const useShortNameAvatar = avatarKind === 'user';
-
-    return (
-        <MemberProfileAvatar
-            name={label}
-            src={useShortNameAvatar ? undefined : resolveAvatarSrc(profileSrc, seed, avatarKind)}
-            fallbackText={useShortNameAvatar ? toProfileShortName(label || seed) : undefined}
-            size={size}
-            fontSize={fontSize}
-            style={useShortNameAvatar ? chartShortNameAvatarStyle : chartAvatarStyle}
-        />
-    );
-};
-const formatCount = (value: number) => `${value.toLocaleString('ko-KR')}개`;
+    avatarRenderer?: AnalyticsChartAvatarRenderer;
+}) =>
+    avatarRenderer?.({
+        label,
+        profileSrc,
+        seed,
+        avatarKind,
+        size,
+        fontSize,
+    }) ?? null;
 
 const clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max);
-
-const withAlpha = (color: string, alpha: number) => {
-    const normalized = color.trim();
-
-    if (/^#([0-9a-f]{3})$/i.test(normalized)) {
-        const [, shortHex = ''] = normalized.match(/^#([0-9a-f]{3})$/i) ?? [];
-        const expanded = shortHex
-            .split('')
-            .map((char) => char + char)
-            .join('');
-        const red = parseInt(expanded.slice(0, 2), 16);
-        const green = parseInt(expanded.slice(2, 4), 16);
-        const blue = parseInt(expanded.slice(4, 6), 16);
-        return `rgba(${red}, ${green}, ${blue}, ${alpha})`;
-    }
-
-    if (/^#([0-9a-f]{6})$/i.test(normalized)) {
-        const [, hex = '000000'] = normalized.match(/^#([0-9a-f]{6})$/i) ?? [];
-        const red = parseInt(hex.slice(0, 2), 16);
-        const green = parseInt(hex.slice(2, 4), 16);
-        const blue = parseInt(hex.slice(4, 6), 16);
-        return `rgba(${red}, ${green}, ${blue}, ${alpha})`;
-    }
-
-    const rgbMatch = normalized.match(/^rgba?\(([^)]+)\)$/i);
-    if (rgbMatch) {
-        const channels = rgbMatch[1]
-            .split(',')
-            .slice(0, 3)
-            .map((item) => Number(item.trim()))
-            .filter((item) => Number.isFinite(item));
-
-        if (channels.length === 3) {
-            return `rgba(${channels[0]}, ${channels[1]}, ${channels[2]}, ${alpha})`;
-        }
-    }
-
-    return `rgba(148, 163, 184, ${alpha})`;
-};
 
 const areCursorStatesEqual = (left: CursorState, right: CursorState) =>
     left.idx === right.idx &&
@@ -677,101 +464,14 @@ const dedupeAxisSplitsByFormatter = (
     });
 };
 
-const normalizeChartAmount = (value: unknown, direction: 'positive' | 'negative') => {
-    const numeric = Number(value ?? 0);
-    if (!Number.isFinite(numeric)) return 0;
+const getSeriesOrder = (series: { order?: number; label?: string }) =>
+    series.order ?? Number.MAX_SAFE_INTEGER;
 
-    const absolute = Math.abs(numeric);
-    return direction === 'negative' ? -absolute : absolute;
-};
-
-const toTooltipStatusIconKey = (
-    value?: string | number
-): 'live' | 'waiting' | 'adStop' | 'end' | 'managed' | 'prospect' | 'failed' | 'contracted' | null => {
-    const normalized = String(value ?? '').trim();
-
-    switch (normalized) {
-        case '관리':
-            return 'managed';
-        case '가망':
-            return 'prospect';
-        case '실패':
-            return 'failed';
-        case 'live':
-        case 'liveAmount':
-        case '라이브':
-        case '라이브중':
-            return 'live';
-        case 'waiting':
-        case 'pendingAmount':
-        case '대기':
-        case '운영대기':
-        case '운영대기중':
-            return 'waiting';
-        case 'adStop':
-        case 'stoppedAmount':
-        case 'stopByClient':
-        case 'stopByPerformance':
-        case 'stopByClientAmount':
-        case 'stopByPerformanceAmount':
-        case '중단':
-        case '광고중단':
-        case '중단 - 광고주 요청':
-        case '중단 - 성과 저하':
-        case '중단-광고주요청':
-        case '중단-성과저하':
-            return 'adStop';
-        case 'end':
-        case 'endAmount':
-        case '피이관':
-        case '피이관 - 광고주 요청':
-        case '피이관 - 성과 저하':
-        case '피이관-광고주요청':
-        case '피이관-성과저하':
-            return 'end';
-        case 'total':
-        case 'totalAmount':
-        case 'contracted':
-        case '계약':
-            return 'contracted';
-        default:
-            return null;
-    }
-};
-
-const getTooltipStatusOrder = (value?: string | number) => {
-    const statusKey = toTooltipStatusIconKey(value);
-
-    if (statusKey === 'managed') return 0;
-    if (statusKey === 'prospect') return 1;
-    if (statusKey === 'failed') return 2;
-    if (statusKey === 'contracted') return 3;
-    if (statusKey === 'live') return 0;
-    if (statusKey === 'waiting') return 1;
-    if (statusKey === 'adStop') return 2;
-    if (statusKey === 'end') return 3;
-
-    return Number.MAX_SAFE_INTEGER;
-};
-
-const compareTooltipSeriesOrder = (
-    left: { key?: string | number; label?: string },
-    right: { key?: string | number; label?: string }
+const renderTooltipMarker = (
+    markerKind: AnalyticsChartMarkerKind | undefined,
+    color: string
 ) => {
-    const leftOrder = Math.min(getTooltipStatusOrder(left.key), getTooltipStatusOrder(left.label));
-    const rightOrder = Math.min(getTooltipStatusOrder(right.key), getTooltipStatusOrder(right.label));
-
-    if (leftOrder !== rightOrder) {
-        return leftOrder - rightOrder;
-    }
-
-    return 0;
-};
-
-const renderTooltipMarker = (keyOrLabel: string | number | undefined, color: string, fallbackLabel?: string) => {
-    const statusKey = toTooltipStatusIconKey(keyOrLabel) ?? toTooltipStatusIconKey(fallbackLabel);
-
-    if (statusKey === 'live') {
+    if (markerKind === 'playCircle') {
         return (
             <span style={statusIconStyle}>
                 <HiOutlinePlayCircle size={16} color={color} />
@@ -779,7 +479,7 @@ const renderTooltipMarker = (keyOrLabel: string | number | undefined, color: str
         );
     }
 
-    if (statusKey === 'managed') {
+    if (markerKind === 'clipboard') {
         return (
             <span style={statusIconStyle}>
                 <HiOutlineClipboardDocumentList size={16} color={color} />
@@ -787,7 +487,7 @@ const renderTooltipMarker = (keyOrLabel: string | number | undefined, color: str
         );
     }
 
-    if (statusKey === 'prospect') {
+    if (markerKind === 'magnifyingGlass') {
         return (
             <span style={statusIconStyle}>
                 <HiOutlineMagnifyingGlass size={16} color={color} />
@@ -795,7 +495,7 @@ const renderTooltipMarker = (keyOrLabel: string | number | undefined, color: str
         );
     }
 
-    if (statusKey === 'failed') {
+    if (markerKind === 'xCircle') {
         return (
             <span style={statusIconStyle}>
                 <HiOutlineXCircle size={16} color={color} />
@@ -803,7 +503,7 @@ const renderTooltipMarker = (keyOrLabel: string | number | undefined, color: str
         );
     }
 
-    if (statusKey === 'waiting') {
+    if (markerKind === 'clock') {
         return (
             <span style={statusIconStyle}>
                 <HiOutlineClock size={16} color={color} />
@@ -811,7 +511,7 @@ const renderTooltipMarker = (keyOrLabel: string | number | undefined, color: str
         );
     }
 
-    if (statusKey === 'adStop') {
+    if (markerKind === 'pauseCircle') {
         return (
             <span style={statusIconStyle}>
                 <HiOutlinePauseCircle size={16} color={color} />
@@ -819,7 +519,7 @@ const renderTooltipMarker = (keyOrLabel: string | number | undefined, color: str
         );
     }
 
-    if (statusKey === 'end') {
+    if (markerKind === 'warningTriangle') {
         return (
             <span style={statusIconStyle}>
                 <HiOutlineExclamationTriangle size={16} color={color} />
@@ -827,7 +527,7 @@ const renderTooltipMarker = (keyOrLabel: string | number | undefined, color: str
         );
     }
 
-    if (statusKey === 'contracted') {
+    if (markerKind === 'checkCircle') {
         return (
             <span style={statusIconStyle}>
                 <HiOutlineCheckCircle size={16} color={color} />
@@ -928,140 +628,92 @@ const toTightAmountDomainValue = (value: number) => {
     return nextStep * magnitude;
 };
 
-const getDivergingBarDomain = (
-    data: LineChartDatum[],
-    barMode: BarMode,
-    statusSeriesMode: AnalyticsChartStatusSeriesMode
-): [number, number] | undefined => {
-    if (
-        barMode !== 'statusRatio' &&
-        barMode !== 'statusAmount' &&
-        barMode !== 'statusCount' &&
-        barMode !== 'inboundStatusCount'
-    ) {
+const getStackedBarDomain = ({
+    data,
+    seriesMeta,
+    integerOnly = false,
+    percentScale = false,
+}: {
+    data: LineChartDatum[];
+    seriesMeta: Array<{ key: string; stackId?: string }>;
+    integerOnly?: boolean;
+    percentScale?: boolean;
+}): [number, number] | undefined => {
+    if (data.length === 0 || seriesMeta.length === 0) {
         return undefined;
     }
 
+    const stackIds = Array.from(
+        new Set(seriesMeta.map((item) => item.stackId ?? '__single__'))
+    );
+
     const { maxPositiveStack, maxNegativeStack, maxAbsStack } = data.reduce(
-        (acc, item) => {
-            if (barMode === 'inboundStatusCount') {
-                const managed = Number(item.liveAmount ?? 0);
-                const prospect = Number(item.pendingAmount ?? 0);
-                const contracted = Number(item.totalAmount ?? 0);
-                const failed = Math.abs(Number(item.stoppedAmount ?? 0));
-                const positiveTotal = managed + prospect + contracted;
+        (acc, datum) => {
+            stackIds.forEach((stackId) => {
+                const stackSeries = seriesMeta.filter(
+                    (item) => (item.stackId ?? '__single__') === stackId
+                );
 
-                return {
-                    maxPositiveStack: Math.max(acc.maxPositiveStack, positiveTotal),
-                    maxNegativeStack: Math.max(acc.maxNegativeStack, failed),
-                    maxAbsStack: Math.max(acc.maxAbsStack, positiveTotal, failed),
-                };
-            }
+                const totals = stackSeries.reduce(
+                    (sum, item) => {
+                        const value = Number(datum[item.key] ?? 0);
 
-            const live = Number(item.liveAmount ?? 0);
-            const pending = Number(item.pendingAmount ?? 0);
-            const stopByClient =
-                statusSeriesMode === 'category'
-                    ? Math.abs(Number(item.stoppedAmount ?? 0))
-                    : Math.abs(Number(item.stopByClientAmount ?? 0));
-            const stopByPerformance =
-                statusSeriesMode === 'category'
-                    ? Math.abs(Number(item.endAmount ?? 0))
-                    : Math.abs(Number(item.stopByPerformanceAmount ?? 0));
-            const positiveTotal = live + pending;
-            const negativeTotal = stopByClient + stopByPerformance;
+                        if (!Number.isFinite(value)) {
+                            return sum;
+                        }
 
-            return {
-                maxPositiveStack: Math.max(acc.maxPositiveStack, positiveTotal),
-                maxNegativeStack: Math.max(acc.maxNegativeStack, negativeTotal),
-                maxAbsStack: Math.max(acc.maxAbsStack, positiveTotal, negativeTotal),
-            };
+                        if (value >= 0) {
+                            sum.positive += value;
+                        } else {
+                            sum.negative += Math.abs(value);
+                        }
+
+                        return sum;
+                    },
+                    { positive: 0, negative: 0 }
+                );
+
+                acc.maxPositiveStack = Math.max(
+                    acc.maxPositiveStack,
+                    totals.positive
+                );
+                acc.maxNegativeStack = Math.max(
+                    acc.maxNegativeStack,
+                    totals.negative
+                );
+                acc.maxAbsStack = Math.max(
+                    acc.maxAbsStack,
+                    totals.positive,
+                    totals.negative
+                );
+            });
+
+            return acc;
         },
         { maxPositiveStack: 0, maxNegativeStack: 0, maxAbsStack: 0 }
     );
 
-    if (barMode === 'statusRatio') {
-        const padded = Math.min(100, Math.max(10, Math.ceil((maxAbsStack * 1.1) / 10) * 10));
+    if (percentScale) {
+        const padded = Math.min(
+            100,
+            Math.max(10, Math.ceil((maxAbsStack * 1.1) / 10) * 10)
+        );
         return [-padded, padded];
     }
 
-    if (barMode === 'statusCount' || barMode === 'inboundStatusCount') {
+    if (integerOnly) {
         const padded = Math.max(1, toTightCountDomainValue(maxAbsStack * 1.08));
         return [-padded, padded];
     }
 
     const positivePadded =
-        maxPositiveStack > 0 ? Math.max(1, toTightAmountDomainValue(maxPositiveStack * 1.02)) : 0;
+        maxPositiveStack > 0
+            ? Math.max(1, toTightAmountDomainValue(maxPositiveStack * 1.02))
+            : 0;
     const negativePadded =
-        maxNegativeStack > 0 ? Math.max(1, toTightAmountDomainValue(maxNegativeStack * 1.02)) : 0;
-
-    if (positivePadded === 0 && negativePadded === 0) return [-1, 1];
-    if (negativePadded === 0) return [0, positivePadded];
-    if (positivePadded === 0) return [-negativePadded, 0];
-    return [-negativePadded, positivePadded];
-};
-
-const getGroupedStackBarDomain = (
-    data: LineChartDatum[],
-    seriesMeta: Array<{ key: string; stackId?: string }>,
-    barMode: BarMode
-): [number, number] | undefined => {
-    if (data.length === 0 || seriesMeta.length === 0) {
-        return undefined;
-    }
-
-    const stackIds = Array.from(new Set(seriesMeta.map((item) => item.stackId ?? item.key)));
-
-    const { maxPositiveStack, maxNegativeStack } = data.reduce(
-        (acc, datum) => {
-            stackIds.forEach((stackId) => {
-            const stackSeries = seriesMeta.filter((item) => (item.stackId ?? item.key) === stackId);
-
-            const { positiveTotal, negativeTotal } = stackSeries.reduce(
-                (totals, seriesItem) => {
-                    const value = Number(datum[seriesItem.key] ?? 0);
-                    if (!Number.isFinite(value)) return totals;
-
-                    if (value >= 0) {
-                        totals.positiveTotal += value;
-                    } else {
-                        totals.negativeTotal += Math.abs(value);
-                    }
-
-                    return totals;
-                },
-                { positiveTotal: 0, negativeTotal: 0 }
-            );
-
-                acc.maxPositiveStack = Math.max(acc.maxPositiveStack, positiveTotal);
-                acc.maxNegativeStack = Math.max(acc.maxNegativeStack, negativeTotal);
-            });
-
-            return acc;
-        },
-        { maxPositiveStack: 0, maxNegativeStack: 0 }
-    );
-
-    if (barMode === 'statusRatio') {
-        const positivePadded =
-            maxPositiveStack > 0
-                ? Math.min(100, Math.max(10, Math.ceil((maxPositiveStack * 1.1) / 10) * 10))
-                : 0;
-        const negativePadded =
-            maxNegativeStack > 0
-                ? Math.min(100, Math.max(10, Math.ceil((maxNegativeStack * 1.1) / 10) * 10))
-                : 0;
-
-        if (positivePadded === 0 && negativePadded === 0) return [-10, 10];
-        if (negativePadded === 0) return [0, positivePadded];
-        if (positivePadded === 0) return [-negativePadded, 0];
-        return [-negativePadded, positivePadded];
-    }
-
-    const positivePadded =
-        maxPositiveStack > 0 ? toTightAmountDomainValue(maxPositiveStack * 1.02) : 0;
-    const negativePadded =
-        maxNegativeStack > 0 ? toTightAmountDomainValue(maxNegativeStack * 1.02) : 0;
+        maxNegativeStack > 0
+            ? Math.max(1, toTightAmountDomainValue(maxNegativeStack * 1.02))
+            : 0;
 
     if (positivePadded === 0 && negativePadded === 0) return [-1, 1];
     if (negativePadded === 0) return [0, positivePadded];
@@ -1072,19 +724,24 @@ const getGroupedStackBarDomain = (
 const getPositiveBarDomain = (
     data: LineChartDatum[],
     seriesKeys: string[],
-    barMode: BarMode,
     stacked = false,
     tight = false
 ): [number, number] | undefined => {
-    if (barMode !== 'amount') {
+    if (data.length === 0 || seriesKeys.length === 0) {
         return undefined;
     }
 
     const maxValue = data.reduce((acc, item) => {
         const nextValue = seriesKeys.reduce((seriesAcc, key) => {
             const value = Number(item[key] ?? 0);
-            if (!Number.isFinite(value)) return seriesAcc;
-            return stacked ? seriesAcc + Math.max(value, 0) : Math.max(seriesAcc, value);
+
+            if (!Number.isFinite(value)) {
+                return seriesAcc;
+            }
+
+            return stacked
+                ? seriesAcc + Math.max(value, 0)
+                : Math.max(seriesAcc, value);
         }, 0);
 
         return Math.max(acc, nextValue);
@@ -1092,119 +749,26 @@ const getPositiveBarDomain = (
 
     const padded = Math.max(
         1,
-        tight ? toTightAmountDomainValue(maxValue * 1.2) : toNiceDomainValue(maxValue * 1.1)
+        tight
+            ? toTightAmountDomainValue(maxValue * 1.2)
+            : toNiceDomainValue(maxValue * 1.1)
     );
+
     return [0, padded];
 };
 
-const getBarSeries = (barMode: BarMode, statusSeriesMode: AnalyticsChartStatusSeriesMode) => {
-    if (barMode === 'statusRatio' || barMode === 'statusAmount' || barMode === 'statusCount') {
-        return statusSeriesMode === 'category' ? [...STATUS_CATEGORY_SERIES] : [...STATUS_REASON_SERIES];
-    }
-    if (barMode === 'inboundStatusCount') return [...INBOUND_STATUS_SERIES];
-    return [...AMOUNT_SERIES];
-};
-
-const getBarTickFormatter = (barMode: BarMode) => {
-    if (barMode === 'statusRatio') return (value: number) => `${Math.round(value)}%`;
-    if (barMode === 'statusCount') return (value: number) => formatCount(value);
-    if (barMode === 'inboundStatusCount') return (value: number) => formatCount(value);
-    return (value: number) => formatCompactAmount(value);
-};
-
-const getTooltipValueFormatter = (barMode: BarMode) => {
-    if (barMode === 'statusRatio') return formatPercent;
-    if (barMode === 'statusCount') return formatCount;
-    if (barMode === 'inboundStatusCount') return formatCount;
-    return formatCurrency;
-};
-
-const parseGroupedSeriesKey = (value?: string | number) => {
-    const normalized = String(value ?? '').trim();
-    const separatorIndex = normalized.indexOf('__');
-
-    if (separatorIndex <= 0 || separatorIndex >= normalized.length - 2) {
-        return null;
-    }
-
-    return {
-        stackId: normalized.slice(0, separatorIndex),
-        statusKey: normalized.slice(separatorIndex + 2),
-    };
-};
-
-const STATUS_COUNT_KEY_BY_SERIES_KEY: Record<string, string> = {
-    totalAmount: 'totalCount',
-    liveAmount: 'liveCount',
-    pendingAmount: 'pendingCount',
-    stoppedAmount: 'stoppedCount',
-    endAmount: 'endCount',
-    stopByClientAmount: 'stopByClientCount',
-    stopByPerformanceAmount: 'stopByPerformanceCount',
-};
-
 const getTooltipCountValue = (
-    dataKey: string | number | undefined,
+    seriesMeta: Pick<AnalyticsChartSeries, 'key' | 'countKey'>,
     payload?: LineChartDatum
 ): number | null => {
     if (!payload) return null;
 
-    const normalizedKey = String(dataKey ?? '').trim();
-    if (!normalizedKey) return null;
-
-    const groupedCountValue = Number(payload[`${normalizedKey}__count`] ?? Number.NaN);
-    if (Number.isFinite(groupedCountValue)) {
-        return groupedCountValue;
-    }
-
-    const countKey = STATUS_COUNT_KEY_BY_SERIES_KEY[normalizedKey];
+    const countKey = (seriesMeta.countKey ?? `${seriesMeta.key}__count`).trim();
     if (!countKey) return null;
 
     const countValue = Number(payload[countKey] ?? Number.NaN);
     return Number.isFinite(countValue) ? countValue : null;
 };
-
-const normalizeStatusDatum = (datum: LineChartDatum): LineChartDatum => ({
-    ...datum,
-    liveAmount: normalizeChartAmount(datum.liveAmount, 'positive'),
-    pendingAmount: normalizeChartAmount(datum.pendingAmount, 'positive'),
-    stoppedAmount: normalizeChartAmount(datum.stoppedAmount, 'negative'),
-    endAmount: normalizeChartAmount(datum.endAmount, 'negative'),
-    stopByClientAmount: normalizeChartAmount(datum.stopByClientAmount, 'negative'),
-    stopByPerformanceAmount: normalizeChartAmount(datum.stopByPerformanceAmount, 'negative'),
-});
-
-const normalizeGroupedStatusDatum = (datum: LineChartDatum): LineChartDatum =>
-    Object.entries(datum).reduce<LineChartDatum>((acc, [key, value]) => {
-        if (key === 'periodLabel') {
-            acc[key] = value;
-            return acc;
-        }
-
-        const groupedInfo = parseGroupedSeriesKey(key);
-        if (!groupedInfo) {
-            acc[key] = value;
-            return acc;
-        }
-
-        if (groupedInfo.statusKey === 'live' || groupedInfo.statusKey === 'waiting') {
-            acc[key] = normalizeChartAmount(value, 'positive');
-            return acc;
-        }
-
-        if (
-            groupedInfo.statusKey === 'adStop' ||
-            groupedInfo.statusKey === 'end' ||
-            groupedInfo.statusKey === 'stopByClient' ||
-            groupedInfo.statusKey === 'stopByPerformance'
-        ) {
-            acc[key] = normalizeChartAmount(value, 'negative');
-            return acc;
-        }
-
-        acc[key] = value;
-        return acc;
-    }, {} as LineChartDatum);
 
 const areAvatarAnchorsEqual = (a: AvatarAnchor[], b: AvatarAnchor[]) => {
     if (a === b) return true;
@@ -1387,6 +951,8 @@ const LineTooltipContent = ({
     payload,
     label,
     seriesMeta,
+    valueFormatter,
+    avatarRenderer,
 }: LineTooltipContentProps) => {
     if (!active || !payload || payload.length === 0) return null;
 
@@ -1415,6 +981,7 @@ const LineTooltipContent = ({
                 {sortedItems.map((item) => (
                     <div key={item.key} style={tooltipItemStyle}>
                         {renderChartAvatar({
+                            avatarRenderer,
                             label: item.label,
                             profileSrc: item.profileSrc,
                             seed: item.avatarSeed ?? item.key,
@@ -1426,7 +993,7 @@ const LineTooltipContent = ({
                             {item.label}
                         </Text>
                         <Text size={13} weight={'semibold'}>
-                            {formatCurrency(item.value)}
+                            {valueFormatter(item.value)}
                         </Text>
                     </div>
                 ))}
@@ -1441,6 +1008,7 @@ const BarTooltipContent = ({
     label,
     seriesMeta,
     valueFormatter,
+    countFormatter,
 }: BarTooltipContentProps) => {
     if (!active || !payload || payload.length === 0) return null;
 
@@ -1460,12 +1028,15 @@ const BarTooltipContent = ({
         .map((item) => ({
             ...item,
             value: valueByKey.get(item.key) ?? 0,
-            count: getTooltipCountValue(item.key, payloadByKey.get(item.key)?.payload as LineChartDatum | undefined),
+            count: getTooltipCountValue(
+                item,
+                payloadByKey.get(item.key)?.payload as LineChartDatum | undefined
+            ),
         }))
         .filter((item) => Math.abs(item.value) > 0)
         .sort(
             (a, b) =>
-                compareTooltipSeriesOrder(a, b) ||
+                getSeriesOrder(a) - getSeriesOrder(b) ||
                 Math.abs(b.value) - Math.abs(a.value) ||
                 a.label.localeCompare(b.label, 'ko-KR')
         );
@@ -1480,9 +1051,9 @@ const BarTooltipContent = ({
             <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                 {sortedItems.map((item) => (
                     <div key={item.key} style={tooltipItemStyle}>
-                        {renderTooltipMarker(item.key, item.color, item.label)}
+                        {renderTooltipMarker(item.markerKind, item.color)}
                         <Text size={13} style={{ minWidth: 0, wordBreak: 'break-word' }}>
-                            {item.label}
+                            {item.tooltipLabel ?? item.label}
                         </Text>
                         <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
                             <Text size={13} weight={'semibold'}>
@@ -1490,7 +1061,7 @@ const BarTooltipContent = ({
                             </Text>
                             {typeof item.count === 'number' ? (
                                 <Text size={12} tone="muted">
-                                    {formatCount(item.count)}
+                                    {countFormatter(item.count)}
                                 </Text>
                             ) : null}
                         </div>
@@ -1501,7 +1072,13 @@ const BarTooltipContent = ({
     );
 };
 
-const NoDataTooltipContent = ({ label }: { label?: string | number }) => (
+const NoDataTooltipContent = ({
+    label,
+    description,
+}: {
+    label?: string | number;
+    description: string;
+}) => (
     <div style={tooltipStyle}>
         {label ? (
             <Text size={13}>
@@ -1509,7 +1086,7 @@ const NoDataTooltipContent = ({ label }: { label?: string | number }) => (
             </Text>
         ) : null}
         <Text size={13} tone="muted">
-            집계 데이터 없음
+            {description}
         </Text>
     </div>
 );
@@ -1520,42 +1097,42 @@ const GroupedStackTooltipContent = ({
     label,
     seriesMeta,
     valueFormatter,
+    countFormatter,
 }: GroupedStackTooltipContentProps) => {
     if (!active || !payload || payload.length === 0) return null;
 
     const activeSeriesKey = payload
         .map((item) => String(item.dataKey ?? '').trim())
-        .find((item) => parseGroupedSeriesKey(item) !== null);
-
-    const groupedInfo = parseGroupedSeriesKey(activeSeriesKey);
-    if (!groupedInfo) return null;
+        .find((item) =>
+            seriesMeta.some((seriesItem) => seriesItem.key === item && seriesItem.stackId)
+        );
+    const activeSeries = seriesMeta.find((item) => item.key === activeSeriesKey);
+    if (!activeSeries?.stackId) return null;
 
     const activeDatum = payload.find((item) => String(item.dataKey ?? '').trim() === activeSeriesKey)?.payload;
     if (!activeDatum) return null;
 
     const marketerSeriesItems = seriesMeta
-        .filter((item) => item.stackId === groupedInfo.stackId)
+        .filter((item) => item.stackId === activeSeries.stackId)
         .map((item) => ({
             ...item,
-            marketerName: item.label.split(' · ')[0] ?? item.label,
-            statusLabel: item.label.split(' · ')[1] ?? item.label,
             value: Number(activeDatum[item.key] ?? 0),
-            count: getTooltipCountValue(item.key, activeDatum as LineChartDatum),
+            count: getTooltipCountValue(item, activeDatum as LineChartDatum),
         }))
         .filter((item) => Number.isFinite(item.value) && Math.abs(item.value) > 0)
         .sort(
             (a, b) =>
-                compareTooltipSeriesOrder(
-                    { key: parseGroupedSeriesKey(a.key)?.statusKey, label: a.statusLabel },
-                    { key: parseGroupedSeriesKey(b.key)?.statusKey, label: b.statusLabel }
-                ) ||
+                getSeriesOrder(a) - getSeriesOrder(b) ||
                 Math.abs(b.value) - Math.abs(a.value) ||
-                a.statusLabel.localeCompare(b.statusLabel, 'ko-KR')
+                (a.tooltipLabel ?? a.label).localeCompare(
+                    b.tooltipLabel ?? b.label,
+                    'ko-KR'
+                )
         );
 
     if (marketerSeriesItems.length === 0) return null;
 
-    const marketerName = marketerSeriesItems[0]?.marketerName ?? '';
+    const marketerName = marketerSeriesItems[0]?.tooltipGroupLabel ?? '';
 
     return (
         <div style={tooltipStyle}>
@@ -1572,9 +1149,9 @@ const GroupedStackTooltipContent = ({
             <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                 {marketerSeriesItems.map((item) => (
                     <div key={item.key} style={tooltipItemStyle}>
-                        {renderTooltipMarker(parseGroupedSeriesKey(item.key)?.statusKey, item.color, item.statusLabel)}
+                        {renderTooltipMarker(item.markerKind, item.color)}
                         <Text size={13} style={{ minWidth: 0, wordBreak: 'break-word' }}>
-                            {item.statusLabel}
+                            {item.tooltipLabel ?? item.label}
                         </Text>
                         <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
                             <Text size={13} weight={'semibold'}>
@@ -1582,7 +1159,7 @@ const GroupedStackTooltipContent = ({
                             </Text>
                             {typeof item.count === 'number' ? (
                                 <Text size={12} tone="muted">
-                                    {formatCount(item.count)}
+                                    {countFormatter(item.count)}
                                 </Text>
                             ) : null}
                         </div>
@@ -1598,6 +1175,8 @@ const AmountShareTooltipContent = ({
     payload,
     label,
     seriesMeta,
+    valueFormatter,
+    avatarRenderer,
 }: AmountShareTooltipContentProps) => {
     if (!active || !payload || payload.length === 0) return null;
 
@@ -1635,6 +1214,7 @@ const AmountShareTooltipContent = ({
                 {items.map((item) => (
                     <div key={item.key} style={tooltipItemStyle}>
                         {renderChartAvatar({
+                            avatarRenderer,
                             label: item.label,
                             profileSrc: item.profileSrc,
                             seed: item.avatarSeed ?? item.key,
@@ -1646,28 +1226,13 @@ const AmountShareTooltipContent = ({
                             {`${item.label} · ${Math.round(item.ratio)}%`}
                         </Text>
                         <Text size={13} weight={'semibold'}>
-                            {formatCurrency(item.raw)}
+                            {valueFormatter(item.raw)}
                         </Text>
                     </div>
                 ))}
             </div>
         </div>
     );
-};
-
-const buildLineTooltipPayload = (
-    idx: number,
-    lineChartData: LineChartDatum[],
-    seriesMeta: LineSeriesMeta[]
-): TooltipPayloadItem[] => {
-    const datum = lineChartData[idx];
-    if (!datum) return [];
-
-    return seriesMeta.map((seriesItem) => ({
-        dataKey: seriesItem.key,
-        value: datum[seriesItem.key],
-        payload: datum,
-    }));
 };
 
 const buildBarTooltipPayload = (
@@ -1685,59 +1250,6 @@ const buildBarTooltipPayload = (
     }));
 };
 
-const getStackOrderKey = (statusKey: string) => {
-    if (statusKey === 'live') return 0;
-    if (statusKey === 'waiting') return 1;
-    if (statusKey === 'stopByClient') return 2;
-    if (statusKey === 'stopByPerformance') return 3;
-    if (statusKey === 'adStop') return 2;
-    if (statusKey === 'end') return 3;
-    return 99;
-};
-
-const createGoalLinePlugin = (
-    goalMarkerBySeriesIdRef: React.MutableRefObject<Record<string, number> | undefined>,
-    seriesMetaRef: React.MutableRefObject<LineSeriesMeta[]>
-): uPlot.Plugin => ({
-    hooks: {
-        draw: [
-            (chart) => {
-                const goalMarkerBySeriesId = goalMarkerBySeriesIdRef.current;
-                if (!goalMarkerBySeriesId || Object.keys(goalMarkerBySeriesId).length === 0) return;
-
-                const frame = getPlotFrame(chart);
-                if (!frame) return;
-
-                const ctx = chart.ctx;
-                const pxRatio = uPlot.pxRatio || 1;
-                const seriesMetaByKey = seriesMetaRef.current.reduce<Map<string, LineSeriesMeta>>(
-                    (acc, item) => acc.set(item.key, item),
-                    new Map()
-                );
-
-                ctx.save();
-                ctx.setLineDash([4 * pxRatio, 4 * pxRatio]);
-                ctx.lineWidth = pxRatio;
-
-                Object.entries(goalMarkerBySeriesId).forEach(([seriesKey, goal]) => {
-                    const meta = seriesMetaByKey.get(seriesKey);
-                    if (!meta || !Number.isFinite(goal)) return;
-
-                    const y = frame.top + chart.valToPos(goal, 'y');
-                    ctx.beginPath();
-                    ctx.strokeStyle = meta.color;
-                    ctx.globalAlpha = 0.2;
-                    ctx.moveTo(frame.left * pxRatio, y * pxRatio);
-                    ctx.lineTo((frame.left + frame.width) * pxRatio, y * pxRatio);
-                    ctx.stroke();
-                });
-
-                ctx.restore();
-            },
-        ],
-    },
-});
-
 const buildBarGeometry = ({
     chart,
     data,
@@ -1747,7 +1259,7 @@ const buildBarGeometry = ({
     dashboardCategoryGap,
     dashboardBarGap,
     isDashboardMetricPreset,
-    barMode,
+    barPresentation,
     dashboardBarMaxWidth,
 }: {
     chart: uPlot;
@@ -1762,13 +1274,15 @@ const buildBarGeometry = ({
         avatarName?: string;
         avatarKind?: AnalyticsChartAvatarKind;
         avatarSeed?: string;
+        tooltipGroupLabel?: string;
+        order?: number;
     }>;
     isGroupedAmountBar: boolean;
     isGroupedStackBar: boolean;
     dashboardCategoryGap: number;
     dashboardBarGap?: number;
     isDashboardMetricPreset: boolean;
-    barMode: BarMode;
+    barPresentation: AnalyticsChartBarPresentation;
     dashboardBarMaxWidth?: number;
 }): { rects: DrawnBarRect[]; avatars: AvatarAnchor[] } => {
     const frame = getPlotFrame(chart);
@@ -1792,7 +1306,8 @@ const buildBarGeometry = ({
     const clusterWidth = Math.max(categoryWidth - gapPx, Math.min(categoryWidth * 0.92, categoryWidth));
     const rawGroupWidth =
         groupCount > 1 ? (clusterWidth - intraGapPx * (groupCount - 1)) / groupCount : clusterWidth;
-    const fixedAmountWidth = !isDashboardMetricPreset && barMode === 'amount' ? 42 : undefined;
+    const fixedBarWidth =
+        !isDashboardMetricPreset && barPresentation === 'single' ? 42 : undefined;
     const countAwareGroupWidth = Math.max(
         1,
         Math.floor(
@@ -1803,8 +1318,8 @@ const buildBarGeometry = ({
     const dashboardBarWidth = isDashboardMetricPreset
         ? Math.min(dashboardBarMaxWidth ?? DEFAULT_DASHBOARD_BAR_WIDTH, countAwareGroupWidth)
         : undefined;
-    const groupWidth = fixedAmountWidth
-        ? Math.min(rawGroupWidth, fixedAmountWidth)
+    const groupWidth = fixedBarWidth
+        ? Math.min(rawGroupWidth, fixedBarWidth)
         : dashboardBarWidth !== undefined
           ? Math.min(rawGroupWidth, dashboardBarWidth)
           : rawGroupWidth;
@@ -1822,18 +1337,17 @@ const buildBarGeometry = ({
                   ? seriesMeta.filter((item) => item.key === stackId)
                   : seriesMeta;
 
-        acc[stackId] = stackSeries.sort((left, right) => {
-            const leftKey = parseGroupedSeriesKey(left.key)?.statusKey ?? left.key;
-            const rightKey = parseGroupedSeriesKey(right.key)?.statusKey ?? right.key;
-            return getStackOrderKey(leftKey) - getStackOrderKey(rightKey);
-        });
+        acc[stackId] = [...stackSeries].sort(
+            (left, right) =>
+                getSeriesOrder(left) - getSeriesOrder(right) ||
+                left.label.localeCompare(right.label, 'ko-KR')
+        );
         return acc;
     }, {});
 
     data.forEach((datum, idx) => {
         const centerX = frame.left + chart.valToPos(idx, 'x');
         const clusterLeft = centerX - clusterVisibleWidth / 2;
-        let hasVisibleValue = false;
 
         stackIds.forEach((stackId, groupIndex) => {
             const groupLeft = clusterLeft + groupIndex * (groupWidth + intraGapPx);
@@ -1869,14 +1383,16 @@ const buildBarGeometry = ({
                 };
 
                 rects.push(nextRect);
-                hasVisibleValue = true;
                 stackTop = stackTop === null ? nextRect.top : Math.min(stackTop, nextRect.top);
             });
 
             if (stackTop !== null) {
                 const avatarSeries = stackSeries.find((item) => (item.stackId ?? item.key) === stackId);
                 if (avatarSeries) {
-                    const avatarLabel = avatarSeries.label.split(' · ')[0] ?? avatarSeries.label;
+                    const avatarLabel =
+                        avatarSeries.tooltipGroupLabel ??
+                        avatarSeries.avatarName ??
+                        avatarSeries.label;
                     avatars.push({
                         key: `${stackId}-${idx}`,
                         label: avatarLabel,
@@ -1899,325 +1415,30 @@ const buildBarGeometry = ({
     return { rects, avatars };
 };
 
-const UplotLineChart = ({
-    size,
-    labels,
-    lineChartData,
-    seriesMeta,
-    isDashboardMetricPreset,
-    dashboardLineXAxisLabelStride,
-    goalMarkerBySeriesId,
-}: {
-    size: ChartAreaSize;
-    labels: string[];
-    lineChartData: LineChartDatum[];
-    seriesMeta: LineSeriesMeta[];
-    isDashboardMetricPreset: boolean;
-    dashboardLineXAxisLabelStride: number;
-    goalMarkerBySeriesId?: Record<string, number>;
-}) => {
-    const [chart, setChart] = useState<uPlot | null>(null);
-    const cursorStore = useMemo(
-        () => createLocalStore<CursorState>({ idx: null, left: 0, top: 0 }, areCursorStatesEqual),
-        []
-    );
-
-    const xData = useMemo(() => labels.map((_, index) => index), [labels]);
-    const alignedData = useMemo<uPlot.AlignedData>(
-        () => [
-            xData,
-            ...seriesMeta.map((seriesItem) =>
-                lineChartData.map((datum) => {
-                    const value = Number(datum[seriesItem.key] ?? 0);
-                    return Number.isFinite(value) ? value : null;
-                })
-            ),
-        ],
-        [lineChartData, seriesMeta, xData]
-    );
-
-    const animationProgress = useChartAnimation(alignedData);
-    const animatedAlignedData = useMemo<uPlot.AlignedData>(() => {
-        if (animationProgress >= 1) return alignedData;
-
-        return alignedData.map((series, i) => {
-            if (i === 0) return series; // x data
-            return (series as (number | null)[]).map((val) => (val == null ? null : val * animationProgress));
-        }) as uPlot.AlignedData;
-    }, [alignedData, animationProgress]);
-    const labelsRef = useLatestRef(labels);
-    const strideRef = useLatestRef(dashboardLineXAxisLabelStride);
-    const condensedRef = useLatestRef(isDashboardMetricPreset);
-    const lineChartDataRef = useLatestRef(lineChartData);
-    const seriesMetaRef = useLatestRef(seriesMeta);
-    const goalMarkerBySeriesIdRef = useLatestRef(goalMarkerBySeriesId);
-
-    const lineYRange = useMemo<[number, number]>(() => {
-        const values = lineChartData.flatMap((datum) =>
-            seriesMeta
-                .map((seriesItem) => Number(datum[seriesItem.key] ?? 0))
-                .filter((value) => Number.isFinite(value))
-        );
-
-        if (values.length === 0) return [0, 1];
-
-        const min = Math.min(...values);
-        const max = Math.max(...values);
-
-        if (min >= 0) {
-            return [0, Math.max(1, toTightAmountDomainValue(max * 1.2))];
-        }
-
-        if (max <= 0) {
-            return [-Math.max(1, toTightAmountDomainValue(Math.abs(min) * 1.02)), 0];
-        }
-
-        const padded = Math.max(1, toTightAmountDomainValue(Math.max(Math.abs(min), Math.abs(max)) * 1.02));
-        return [-padded, padded];
-    }, [lineChartData, seriesMeta]);
-    const lineYRangeRef = useLatestRef(lineYRange);
-    const xAxis = useMemo(
-        () =>
-            buildNumericXAxis({
-                labelsRef,
-                strideRef,
-                condensedRef,
-                axisLineColor: isDashboardMetricPreset ? 'transparent' : '#E5E7EB',
-                size: isDashboardMetricPreset ? 44 : 36,
-                gap: isDashboardMetricPreset ? 8 : 8,
-            }),
-        [condensedRef, isDashboardMetricPreset, labelsRef, strideRef]
-    );
-
-    const plugins = useMemo<uPlot.Plugin[]>(
-        () => [
-            {
-                hooks: {
-                    setCursor: [
-                        (instance) => {
-                            cursorStore.set({
-                                idx: instance.cursor.idx ?? null,
-                                left: instance.cursor.left ?? 0,
-                                top: instance.cursor.top ?? 0,
-                            });
-                        },
-                    ],
-                },
-            },
-            createGoalLinePlugin(goalMarkerBySeriesIdRef, seriesMetaRef),
-        ],
-        [cursorStore, goalMarkerBySeriesIdRef, seriesMetaRef]
-    );
-
-    const options = useMemo<uPlot.Options>(() => {
-        const lineSeries: uPlot.Series[] = seriesMeta.map((seriesItem) => ({
-            label: seriesItem.label,
-            stroke: seriesItem.color,
-            width: 2,
-            points: { show: false },
-        }));
-
-        return {
-            width: Math.max(size.width, 1),
-            height: Math.max(size.height, 1),
-            padding: [28, 12, MIN_VERTICAL_CHART_PADDING, 0],
-            legend: { show: false },
-            plugins,
-            scales: {
-                x: {
-                    time: false,
-                    range: () => (labelsRef.current.length > 0 ? [-0.5, labelsRef.current.length - 0.5] : [0, 1]),
-                },
-                y: {
-                    auto: false,
-                    range: () => lineYRangeRef.current,
-                },
-            },
-            axes: [
-                xAxis,
-                {
-                    show: false,
-                },
-            ],
-            cursor: {
-                y: false,
-                x: true,
-                drag: { setScale: false, x: false, y: false },
-                focus: { prox: 24 },
-                points: { show: false },
-            },
-            series: [{}, ...lineSeries],
-        };
-    }, [labelsRef, lineYRangeRef, plugins, seriesMeta, size.height, size.width, xAxis]);
-
-    if (size.width <= 0 || size.height <= 0) return null;
-
-    return (
-        <div className={styles.UplotRoot}>
-            <ManagedUplot
-                options={options}
-                data={animatedAlignedData}
-                onCreate={setChart}
-                onDelete={() => setChart(null)}
-                resetScales
-            />
-            <div className={styles.OverlayLayer}>
-                <UplotLineTooltipOverlay
-                    chart={chart}
-                    cursorStore={cursorStore}
-                    size={size}
-                    labels={labels}
-                    lineChartData={lineChartDataRef.current}
-                    seriesMeta={seriesMetaRef.current}
-                />
-            </div>
-        </div>
-    );
-};
-
-const UplotLineTooltipOverlay = memo(({
-    chart,
-    cursorStore,
-    size,
-    labels,
-    lineChartData,
-    seriesMeta,
-}: {
-    chart: uPlot | null;
-    cursorStore: LocalStore<CursorState>;
-    size: ChartAreaSize;
-    labels: string[];
-    lineChartData: LineChartDatum[];
-    seriesMeta: LineSeriesMeta[];
-}) => {
-    const cursorState = useSyncExternalStore(
-        cursorStore.subscribe,
-        cursorStore.getSnapshot,
-        cursorStore.getSnapshot
-    );
-
-    const frame = getPlotFrame(chart);
-
-    const activeLinePoint = useMemo<LinePointOverlay | null>(() => {
-        if (!chart || !frame || cursorState.idx === null || cursorState.idx < 0 || cursorState.idx >= lineChartData.length) {
-            return null;
-        }
-
-        let candidate: LinePointOverlay | null = null;
-
-        seriesMeta.forEach((seriesItem) => {
-            const value = Number(lineChartData[cursorState.idx]?.[seriesItem.key] ?? 0);
-            if (!Number.isFinite(value)) return;
-
-            const x = frame.left + chart.valToPos(cursorState.idx, 'x');
-            const y = frame.top + chart.valToPos(value, 'y');
-            const dist = Math.abs(y - (frame.top + cursorState.top));
-
-            if (!candidate || dist < Math.abs(candidate.top - (frame.top + cursorState.top))) {
-                candidate = {
-                    key: seriesItem.key,
-                    label: seriesItem.label,
-                    profileSrc: seriesItem.profileSrc,
-                    avatarKind: seriesItem.avatarKind,
-                    avatarSeed: seriesItem.avatarSeed,
-                    left: x,
-                    top: y,
-                    value,
-                };
-            }
-        });
-
-        return candidate;
-    }, [chart, cursorState.idx, cursorState.top, frame, lineChartData, seriesMeta]);
-
-    const tooltipPayload = useMemo(
-        () =>
-            cursorState.idx === null ? [] : buildLineTooltipPayload(cursorState.idx, lineChartData, seriesMeta),
-        [cursorState.idx, lineChartData, seriesMeta]
-    );
-
-    if (!frame) return null;
-
-    return (
-        <>
-            {activeLinePoint ? (
-                <>
-                    <div
-                        style={{
-                            position: 'absolute',
-                            left: activeLinePoint.left,
-                            top: activeLinePoint.top,
-                            width: 10,
-                            height: 10,
-                            borderRadius: 999,
-                            background: '#111827',
-                            border: '2px solid #fff',
-                            transform: 'translate(-50%, -50%)',
-                        }}
-                    />
-                    <div
-                        style={{
-                            position: 'absolute',
-                            left: activeLinePoint.left,
-                            top: Math.max(activeLinePoint.top - LINE_AVATAR_SIZE - 10, 4),
-                            transform: 'translateX(-50%)',
-                        }}
-                    >
-                        {renderChartAvatar({
-                            label: activeLinePoint.label,
-                            profileSrc: activeLinePoint.profileSrc,
-                            seed: activeLinePoint.avatarSeed ?? activeLinePoint.key,
-                            avatarKind: activeLinePoint.avatarKind ?? 'user',
-                            size: LINE_AVATAR_SIZE,
-                            fontSize: 11,
-                        })}
-                    </div>
-                </>
-            ) : null}
-            {cursorState.idx !== null ? (
-                <div
-                    style={{
-                        position: 'absolute',
-                        left: clamp(frame.left + cursorState.left + 16, 12, Math.max(size.width - TOOLTIP_MAX_WIDTH, 12)),
-                        top: clamp(frame.top + cursorState.top - 12, 12, Math.max(size.height - 140, 12)),
-                    }}
-                >
-                    <LineTooltipContent
-                        active
-                        payload={tooltipPayload}
-                        label={labels[cursorState.idx] ?? ''}
-                        seriesMeta={seriesMeta}
-                    />
-                </div>
-            ) : null}
-        </>
-    );
-});
-
-UplotLineTooltipOverlay.displayName = 'UplotLineTooltipOverlay';
-
 const UplotBarChart = ({
     size,
     labels,
     barData,
     barSeries,
-    lineSeriesMeta,
-    isGroupedAmountBar,
-    isGroupedStackBar,
-    isAmountShareBar,
+    tooltipSeriesMeta,
     shouldShowGroupedAmountAvatars,
     shouldShowGroupedStackAvatars,
     isDashboardMetricPreset,
-    barMode,
+    barPresentation,
+    tooltipMode,
     dashboardBarMaxWidth,
     barYAxisWidth,
+    barYAxisIntegerOnly,
     metricBarDomain,
     barTickFormatter,
     barTooltipValueFormatter,
+    countFormatter,
+    noDataLabel,
     dashboardBarCategoryGap,
     dashboardBarGap,
     dashboardBarXAxisLabelStride,
     groupedStackSeries,
+    avatarRenderer,
 }: {
     size: ChartAreaSize;
     labels: string[];
@@ -2232,28 +1453,33 @@ const UplotBarChart = ({
         avatarName?: string;
         avatarKind?: AnalyticsChartAvatarKind;
         avatarSeed?: string;
+        tooltipGroupLabel?: string;
+        order?: number;
     }>;
-    lineSeriesMeta: LineSeriesMeta[];
-    isGroupedAmountBar: boolean;
-    isGroupedStackBar: boolean;
-    isAmountShareBar: boolean;
+    tooltipSeriesMeta: LineSeriesMeta[];
     shouldShowGroupedAmountAvatars: boolean;
     shouldShowGroupedStackAvatars: boolean;
     isDashboardMetricPreset: boolean;
-    barMode: BarMode;
+    barPresentation: AnalyticsChartBarPresentation;
+    tooltipMode: AnalyticsChartTooltipMode;
     barYAxisWidth: number;
+    barYAxisIntegerOnly?: boolean;
     metricBarDomain?: [number, number];
     barTickFormatter: (value: number) => string;
     barTooltipValueFormatter: (value: number) => string;
+    countFormatter: (value: number) => string;
+    noDataLabel: string;
     dashboardBarCategoryGap: number;
     dashboardBarGap?: number;
     dashboardBarMaxWidth?: number;
     dashboardBarXAxisLabelStride: number;
-    groupedStackSeries: AnalyticsChartGroupedStackSeries[];
+    groupedStackSeries: AnalyticsChartSeries[];
+    avatarRenderer?: AnalyticsChartAvatarRenderer;
 }) => {
     const [chart, setChart] = useState<uPlot | null>(null);
     const [avatarAnchors, setAvatarAnchors] = useState<AvatarAnchor[]>([]);
     const barRectsRef = useRef<DrawnBarRect[]>([]);
+    const isGroupedStackBar = barPresentation === 'groupedStack';
     const cursorStore = useMemo(
         () => createLocalStore<CursorState>({ idx: null, left: 0, top: 0 }, areCursorStatesEqual),
         []
@@ -2266,7 +1492,7 @@ const UplotBarChart = ({
     const metricBarDomainRef = useLatestRef(metricBarDomain ?? [0, 1] as [number, number]);
     const categoryGapRef = useLatestRef(dashboardBarCategoryGap);
     const barGapRef = useLatestRef(dashboardBarGap);
-    const barModeRef = useLatestRef(barMode);
+    const barPresentationRef = useLatestRef(barPresentation);
     const dashboardPresetRef = useLatestRef(isDashboardMetricPreset);
     const dashboardBarMaxWidthRef = useLatestRef(dashboardBarMaxWidth);
     const barTickFormatterRef = useLatestRef(barTickFormatter);
@@ -2309,9 +1535,14 @@ const UplotBarChart = ({
                 width: barYAxisWidth,
                 formatterRef: barTickFormatterRef,
                 showGrid: !isDashboardMetricPreset,
-                integerOnly: barMode === 'statusCount' || barMode === 'inboundStatusCount',
+                integerOnly: Boolean(barYAxisIntegerOnly),
             }),
-        [barMode, barTickFormatterRef, barYAxisWidth, isDashboardMetricPreset]
+        [
+            barTickFormatterRef,
+            barYAxisIntegerOnly,
+            barYAxisWidth,
+            isDashboardMetricPreset,
+        ]
     );
 
     const plugins = useMemo<uPlot.Plugin[]>(
@@ -2363,12 +1594,12 @@ const UplotBarChart = ({
                                 chart: instance,
                                 data: barDataRef.current,
                                 seriesMeta: barSeriesRef.current,
-                                isGroupedAmountBar,
-                                isGroupedStackBar,
+                                isGroupedAmountBar: barPresentation === 'grouped',
+                                isGroupedStackBar: barPresentation === 'groupedStack',
                                 dashboardCategoryGap: categoryGapRef.current,
                                 dashboardBarGap: barGapRef.current,
                                 isDashboardMetricPreset: dashboardPresetRef.current,
-                                barMode: barModeRef.current,
+                                barPresentation: barPresentationRef.current,
                                 dashboardBarMaxWidth: dashboardBarMaxWidthRef.current,
                             });
 
@@ -2424,11 +1655,12 @@ const UplotBarChart = ({
             cursorStore,
             barDataRef,
             barGapRef,
-            barModeRef,
+            barPresentationRef,
             barSeriesRef,
             categoryGapRef,
+            dashboardBarMaxWidthRef,
             dashboardPresetRef,
-            isGroupedAmountBar,
+            barPresentation,
             isGroupedStackBar,
             avatarAnchors,
             syncBarGeometry,
@@ -2518,6 +1750,7 @@ const UplotBarChart = ({
                             }}
                         >
                             {renderChartAvatar({
+                                avatarRenderer,
                                 label: item.label,
                                 profileSrc: item.profileSrc,
                                 seed: item.avatarSeed ?? item.label,
@@ -2535,13 +1768,14 @@ const UplotBarChart = ({
                     labels={labels}
                     barData={barData}
                     barSeries={barSeries}
-                    lineSeriesMeta={lineSeriesMeta}
+                    tooltipSeriesMeta={tooltipSeriesMeta}
                     groupedStackSeries={groupedStackSeries}
-                    isGroupedAmountBar={isGroupedAmountBar}
-                    isGroupedStackBar={isGroupedStackBar}
-                    isAmountShareBar={isAmountShareBar}
+                    tooltipMode={tooltipMode}
                     barTooltipValueFormatter={barTooltipValueFormatter}
+                    countFormatter={countFormatter}
+                    noDataLabel={noDataLabel}
                     barRectsRef={barRectsRef}
+                    avatarRenderer={avatarRenderer}
                 />
             </div>
         </div>
@@ -2555,27 +1789,29 @@ const UplotBarTooltipOverlay = memo(({
     labels,
     barData,
     barSeries,
-    lineSeriesMeta,
+    tooltipSeriesMeta,
     groupedStackSeries,
-    isGroupedAmountBar,
-    isGroupedStackBar,
-    isAmountShareBar,
+    tooltipMode,
     barTooltipValueFormatter,
+    countFormatter,
+    noDataLabel,
     barRectsRef,
+    avatarRenderer,
 }: {
     chart: uPlot | null;
     cursorStore: LocalStore<CursorState>;
     size: ChartAreaSize;
     labels: string[];
     barData: LineChartDatum[];
-    barSeries: Array<{ key: string; label: string; color: string; stackId?: string; avatarSrc?: string; avatarName?: string }>;
-    lineSeriesMeta: LineSeriesMeta[];
-    groupedStackSeries: AnalyticsChartGroupedStackSeries[];
-    isGroupedAmountBar: boolean;
-    isGroupedStackBar: boolean;
-    isAmountShareBar: boolean;
+    barSeries: AnalyticsChartSeries[];
+    tooltipSeriesMeta: LineSeriesMeta[];
+    groupedStackSeries: AnalyticsChartSeries[];
+    tooltipMode: AnalyticsChartTooltipMode;
     barTooltipValueFormatter: (value: number) => string;
+    countFormatter: (value: number) => string;
+    noDataLabel: string;
     barRectsRef: React.RefObject<DrawnBarRect[]>;
+    avatarRenderer?: AnalyticsChartAvatarRenderer;
 }) => {
     const cursorState = useSyncExternalStore(
         cursorStore.subscribe,
@@ -2590,7 +1826,7 @@ const UplotBarTooltipOverlay = memo(({
     const activeTooltipPayload = useMemo(() => {
         if (cursorState.idx === null || cursorState.idx < 0 || cursorState.idx >= barData.length) return [];
 
-        if (!isGroupedStackBar) {
+        if (tooltipMode !== 'groupedStack') {
             return buildBarTooltipPayload(
                 cursorState.idx,
                 barData,
@@ -2608,11 +1844,11 @@ const UplotBarTooltipOverlay = memo(({
         const datum = barData[cursorState.idx];
         const stackSeries = groupedStackSeries
             .filter((item) => item.stackId === activeRect.stackId)
-            .sort((left, right) => {
-                const leftOrder = getStackOrderKey(parseGroupedSeriesKey(left.key)?.statusKey ?? left.key);
-                const rightOrder = getStackOrderKey(parseGroupedSeriesKey(right.key)?.statusKey ?? right.key);
-                return leftOrder - rightOrder;
-            });
+            .sort(
+                (left, right) =>
+                    getSeriesOrder(left) - getSeriesOrder(right) ||
+                    left.label.localeCompare(right.label, 'ko-KR')
+            );
 
         const first = stackSeries.find((item) => item.key === cursorState.activeSeriesKey) ?? stackSeries[0];
 
@@ -2630,7 +1866,7 @@ const UplotBarTooltipOverlay = memo(({
                     payload: datum,
                 })),
         ];
-    }, [barData, barRectsRef, barSeries, cursorState.activeSeriesKey, cursorState.idx, groupedStackSeries, isGroupedStackBar]);
+    }, [barData, barRectsRef, barSeries, cursorState.activeSeriesKey, cursorState.idx, groupedStackSeries, tooltipMode]);
 
     if (!frame || cursorState.idx === null || (!isMissingPeriod && activeTooltipPayload.length === 0)) {
         return null;
@@ -2644,29 +1880,37 @@ const UplotBarTooltipOverlay = memo(({
                 top: clamp(frame.top + cursorState.top - 12, 12, Math.max(size.height - 160, 12)),
             }}
         >
-            {isAmountShareBar ? (
+            {tooltipMode === 'amountShare' ? (
                 <AmountShareTooltipContent
                     active
                     payload={activeTooltipPayload}
                     label={labels[cursorState.idx] ?? ''}
-                    seriesMeta={lineSeriesMeta}
+                    seriesMeta={tooltipSeriesMeta}
+                    valueFormatter={barTooltipValueFormatter}
+                    avatarRenderer={avatarRenderer}
                 />
             ) : isMissingPeriod ? (
-                <NoDataTooltipContent label={labels[cursorState.idx] ?? ''} />
-            ) : isGroupedAmountBar ? (
+                <NoDataTooltipContent
+                    label={labels[cursorState.idx] ?? ''}
+                    description={noDataLabel}
+                />
+            ) : tooltipMode === 'lineSeries' ? (
                 <LineTooltipContent
                     active
                     payload={activeTooltipPayload}
                     label={labels[cursorState.idx] ?? ''}
-                    seriesMeta={lineSeriesMeta}
+                    seriesMeta={tooltipSeriesMeta}
+                    valueFormatter={barTooltipValueFormatter}
+                    avatarRenderer={avatarRenderer}
                 />
-            ) : isGroupedStackBar ? (
+            ) : tooltipMode === 'groupedStack' ? (
                 <GroupedStackTooltipContent
                     active
                     payload={activeTooltipPayload}
                     label={labels[cursorState.idx] ?? ''}
                     seriesMeta={groupedStackSeries}
                     valueFormatter={barTooltipValueFormatter}
+                    countFormatter={countFormatter}
                 />
             ) : (
                 <BarTooltipContent
@@ -2675,6 +1919,7 @@ const UplotBarTooltipOverlay = memo(({
                     label={labels[cursorState.idx] ?? ''}
                     seriesMeta={barSeries}
                     valueFormatter={barTooltipValueFormatter}
+                    countFormatter={countFormatter}
                 />
             )}
         </div>
@@ -2684,127 +1929,61 @@ const UplotBarTooltipOverlay = memo(({
 UplotBarTooltipOverlay.displayName = 'UplotBarTooltipOverlay';
 
 const AnalyticsChart = ({
-    periods = [],
-    lineData,
-    groupedStackData,
-    chartType = 'BAR',
-    barMode = 'amount',
-    dashboardBarMaxWidth,
+    barChart,
+    avatarRenderer,
     preset,
-    statusSeriesMode = 'reason',
-    goalMarkerBySeriesId,
     isLoading = false,
     title = '운영 내역',
     showTitle = true,
     showLegend = true,
-    showSeriesAvatars = false,
 }: AnalyticsChartProps) => {
     const [chartAreaElement, setChartAreaElement] = useState<HTMLDivElement | null>(null);
     const chartAreaSize = useElementSize(chartAreaElement);
+    const barSeries = useMemo(() => barChart.series ?? [], [barChart.series]);
+    const barData = useMemo(() => barChart.data ?? [], [barChart.data]);
 
-    const lineSeriesMeta = useMemo<LineSeriesMeta[]>(
-        () =>
-            (lineData?.series ?? []).map((item, index) => ({
-                key: item.id,
-                label: item.name,
-                color: ANALYTICS_CHART_LINE_COLORS[index % ANALYTICS_CHART_LINE_COLORS.length],
-                profileSrc: (item.profileImageUrl ?? item.profileSrc ?? '').trim() || undefined,
-                avatarKind: item.avatarKind,
-                avatarSeed: item.avatarSeed ?? item.id,
-            })),
-        [lineData?.series]
+    const resolvedPreset = useMemo<AnalyticsChartPreset>(
+        () => preset ?? 'dashboardMetric',
+        [preset]
     );
-
-    const lineChartData = useMemo<LineChartDatum[]>(
-        () =>
-            (lineData?.periodLabels ?? []).map((periodLabel, index) => {
-                const datum: LineChartDatum = { periodLabel };
-                (lineData?.series ?? []).forEach((seriesItem) => {
-                    datum[seriesItem.id] = seriesItem.values[index] ?? 0;
-                });
-                return datum;
-            }),
-        [lineData?.periodLabels, lineData?.series]
-    );
-
-    const isGroupedAmountBar =
-        chartType === 'BAR' && barMode === 'amount' && lineSeriesMeta.length > 0 && lineChartData.length > 0;
-    const isGroupedStackBar =
-        chartType === 'BAR' &&
-        (groupedStackData?.series.length ?? 0) > 0 &&
-        (groupedStackData?.data.length ?? 0) > 0;
-    const isDivergingDataBar =
-        chartType === 'BAR' &&
-        (
-            isGroupedStackBar ||
-            barMode === 'statusRatio' ||
-            barMode === 'statusAmount' ||
-            barMode === 'statusCount' ||
-            barMode === 'inboundStatusCount'
-        );
-
-    const resolvedPreset = useMemo<AnalyticsChartPreset>(() => {
-        if (preset) return preset;
-        if (chartType === 'BAR') return 'dashboardMetric';
-        return 'default';
-    }, [chartType, preset]);
 
     const isDashboardMetricPreset = resolvedPreset === 'dashboardMetric';
-    const isAmountShareBar = isDashboardMetricPreset && isGroupedAmountBar;
+    const barPresentation = useMemo<AnalyticsChartBarPresentation>(() => {
+        if (barChart.presentation) return barChart.presentation;
+        if (barSeries.some((item) => item.stackId)) return 'groupedStack';
+        if (barSeries.length > 1) return 'grouped';
+        return 'single';
+    }, [barChart.presentation, barSeries]);
+    const isGroupedAmountBar =
+        barPresentation === 'grouped' &&
+        barSeries.length > 0 &&
+        barData.length > 0;
+    const isGroupedStackBar =
+        barPresentation === 'groupedStack' &&
+        barSeries.length > 0 &&
+        barData.length > 0;
 
     const hasAnyGroupedAmountValue = useMemo(
         () =>
-            lineChartData.some((datum) =>
-                lineSeriesMeta.some((seriesItem) => Math.abs(Number(datum[seriesItem.key] ?? 0)) > 0)
+            barData.some((datum) =>
+                barSeries.some((seriesItem) => Math.abs(Number(datum[seriesItem.key] ?? 0)) > 0)
             ),
-        [lineChartData, lineSeriesMeta]
+        [barData, barSeries]
     );
-
-    const barData = useMemo(
+    const resolvedBarData = useMemo(
         () =>
             isGroupedAmountBar
-                ? lineChartData.map((datum) => ({
+                ? barData.map((datum) => ({
                       ...datum,
                       isMissingData: !hasAnyGroupedAmountValue,
                   }))
-                : isGroupedStackBar
-                ? (groupedStackData?.data ?? []).map(normalizeGroupedStatusDatum)
-                : periods.map((item) =>
-                      normalizeStatusDatum({
-                          periodLabel: item.periodLabel,
-                          isMissingData: item.isMissingData,
-                          totalAmount: item.totalAmount,
-                          liveAmount: item.liveAmount,
-                          pendingAmount: item.pendingAmount,
-                          stoppedAmount: item.stoppedAmount,
-                          totalCount: item.totalCount,
-                          liveCount: item.liveCount,
-                          pendingCount: item.pendingCount,
-                          stoppedCount: item.stoppedCount,
-                          endCount: item.endCount,
-                          stopByClientCount: item.stopByClientCount,
-                          stopByPerformanceCount: item.stopByPerformanceCount,
-                          endAmount: item.endAmount ?? 0,
-                          stopByClientAmount: item.stopByClientAmount ?? 0,
-                          stopByPerformanceAmount: item.stopByPerformanceAmount ?? 0,
-                      })
-                  ),
-        [groupedStackData?.data, hasAnyGroupedAmountValue, isGroupedAmountBar, isGroupedStackBar, lineChartData, periods]
-    );
-
-    const barSeries = useMemo(
-        () =>
-            isGroupedAmountBar
-                ? lineSeriesMeta
-                : isGroupedStackBar
-                ? groupedStackData?.series ?? []
-                : getBarSeries(barMode, statusSeriesMode),
-        [barMode, groupedStackData?.series, isGroupedAmountBar, isGroupedStackBar, lineSeriesMeta, statusSeriesMode]
+                : barData,
+        [barData, hasAnyGroupedAmountValue, isGroupedAmountBar]
     );
 
     const groupedStackCount = useMemo(
-        () => new Set((groupedStackData?.series ?? []).map((item) => item.stackId)).size,
-        [groupedStackData?.series]
+        () => new Set(barSeries.map((item) => item.stackId).filter(Boolean)).size,
+        [barSeries]
     );
 
     const dashboardBarGroupCount = isGroupedAmountBar
@@ -2814,29 +1993,34 @@ const AnalyticsChart = ({
           : 1;
 
     const shouldShowGroupedStackAvatars =
-        isDashboardMetricPreset && isGroupedStackBar && groupedStackCount > 0 && groupedStackCount <= 5;
+        Boolean(barChart.showAvatars) &&
+        isDashboardMetricPreset &&
+        isGroupedStackBar &&
+        groupedStackCount > 0 &&
+        groupedStackCount <= 5;
     const shouldShowGroupedAmountAvatars =
-        showSeriesAvatars &&
+        Boolean(barChart.showAvatars) &&
         isDashboardMetricPreset &&
         isGroupedAmountBar &&
         barSeries.length > 0 &&
         barSeries.length <= 5;
-
-    const barTickFormatter = useMemo(() => getBarTickFormatter(barMode), [barMode]);
-    const barTooltipValueFormatter = useMemo(() => getTooltipValueFormatter(barMode), [barMode]);
-
-    const barYAxisWidth =
-        isDashboardMetricPreset
-            ? barMode === 'statusAmount'
-                ? 72
-                : barMode === 'statusCount'
-                ? 72
-                : barMode === 'statusRatio'
-                ? 84
-                : barMode === 'inboundStatusCount'
-                ? 72
-                : 84
-            : 54;
+    const barTickFormatter =
+        barChart.yAxisFormatter ?? formatNumericValue;
+    const barTooltipValueFormatter =
+        barChart.tooltipValueFormatter ?? barTickFormatter;
+    const barCountFormatter = barChart.countFormatter ?? formatNumericValue;
+    const barYAxisWidth = barChart.yAxisWidth ?? (isDashboardMetricPreset ? 72 : 54);
+    const barYAxisIntegerOnly = Boolean(barChart.yAxisIntegerOnly);
+    const barTooltipMode =
+        barChart.tooltipMode ??
+        (isGroupedStackBar
+            ? 'groupedStack'
+            : isGroupedAmountBar
+              ? isDashboardMetricPreset
+                  ? 'amountShare'
+                  : 'lineSeries'
+              : 'barSeries');
+    const noDataLabel = barChart.noDataLabel ?? '집계 데이터 없음';
 
     const barChartPadding = useMemo<[number, number, number, number]>(
         () =>
@@ -2846,12 +2030,17 @@ const AnalyticsChart = ({
                           shouldShowGroupedStackAvatars || shouldShowGroupedAmountAvatars ? 64 : 0,
                           MIN_VERTICAL_CHART_PADDING
                       ),
-                      barMode === 'statusAmount' ? 8 : Math.max(barYAxisWidth - 40, 0),
+                      Math.max(barYAxisWidth - 40, 0),
                       MIN_VERTICAL_CHART_PADDING,
                       0,
                   ]
                 : [8, 12, MIN_VERTICAL_CHART_PADDING, 0],
-        [barMode, barYAxisWidth, isDashboardMetricPreset, shouldShowGroupedAmountAvatars, shouldShowGroupedStackAvatars]
+        [
+            barYAxisWidth,
+            isDashboardMetricPreset,
+            shouldShowGroupedAmountAvatars,
+            shouldShowGroupedStackAvatars,
+        ]
     );
 
     const barPlotWidth = useMemo(() => {
@@ -2864,68 +2053,73 @@ const AnalyticsChart = ({
     const dashboardBarLayout = useMemo(
         () =>
             isDashboardMetricPreset
-                ? getDashboardBarLayout(barData.length, barPlotWidth, dashboardBarGroupCount)
+                ? getDashboardBarLayout(
+                      resolvedBarData.length,
+                      barPlotWidth,
+                      dashboardBarGroupCount
+                  )
                 : { categoryGap: 30, barGap: 0 },
-        [barData.length, barPlotWidth, dashboardBarGroupCount, isDashboardMetricPreset]
+        [
+            dashboardBarGroupCount,
+            barPlotWidth,
+            isDashboardMetricPreset,
+            resolvedBarData.length,
+        ]
     );
 
     const dashboardBarXAxisLabelStride = useMemo(
-        () => (isDashboardMetricPreset ? getDashboardXAxisLabelStride(barData.length) : 1),
-        [barData.length, isDashboardMetricPreset]
-    );
-
-    const dashboardLineXAxisLabelStride = useMemo(
-        () => (isDashboardMetricPreset ? getDashboardXAxisLabelStride(lineChartData.length) : 1),
-        [isDashboardMetricPreset, lineChartData.length]
-    );
-
-    const divergingStatusDomain = useMemo(() => {
-        if (!isDivergingDataBar) return undefined;
-        if (isGroupedStackBar) return getGroupedStackBarDomain(barData, barSeries, barMode);
-
-        return getDivergingBarDomain(barData, barMode, statusSeriesMode);
-    }, [barData, barMode, barSeries, isDivergingDataBar, isGroupedStackBar, statusSeriesMode]);
-
-    const positiveAmountDomain = useMemo(
         () =>
-            barMode === 'amount'
-                ? getPositiveBarDomain(
-                      barData,
-                      barSeries.map((item) => item.key),
-                      barMode,
-                      false,
-                      isDashboardMetricPreset
-                  )
-                : undefined,
-        [barData, barMode, barSeries, isAmountShareBar, isDashboardMetricPreset]
+            isDashboardMetricPreset
+                ? getDashboardXAxisLabelStride(resolvedBarData.length)
+                : 1,
+        [isDashboardMetricPreset, resolvedBarData.length]
+    );
+    const hasNegativeBarValue = useMemo(
+        () =>
+            resolvedBarData.some((datum) =>
+                barSeries.some((item) => Number(datum[item.key] ?? 0) < 0)
+            ),
+        [barSeries, resolvedBarData]
     );
 
     const isAllBarPeriodsMissing =
         !isLoading &&
-        chartType === 'BAR' &&
-        barData.length > 0 &&
+        resolvedBarData.length > 0 &&
         !isGroupedStackBar &&
-        barData.every((item) => item.isMissingData);
+        resolvedBarData.every((item) => item.isMissingData);
 
-    const metricBarDomain = isAllBarPeriodsMissing ? ([0, 1] as [number, number]) : divergingStatusDomain ?? positiveAmountDomain;
-
-    const legendSeries = useMemo(() => {
-        const source = chartType === 'LINE' || isGroupedAmountBar ? lineSeriesMeta : barSeries;
-
-        if (
-            chartType !== 'BAR' ||
-            (
-                barMode !== 'statusRatio' &&
-                barMode !== 'statusAmount' &&
-                barMode !== 'statusCount' &&
-                !isGroupedStackBar
-            )
-        ) {
-            return source;
+    const fallbackBarDomain = useMemo(() => {
+        if (hasNegativeBarValue) {
+            return getStackedBarDomain({
+                data: resolvedBarData,
+                seriesMeta: barSeries,
+                integerOnly: barYAxisIntegerOnly,
+            });
         }
 
-        return [...source].sort((a, b) => compareTooltipSeriesOrder(a, b) || a.label.localeCompare(b.label, 'ko-KR'));
-    }, [barMode, barSeries, chartType, isGroupedAmountBar, isGroupedStackBar, lineSeriesMeta]);
+        return getPositiveBarDomain(
+            resolvedBarData,
+            barSeries.map((item) => item.key),
+            !isGroupedAmountBar,
+            isDashboardMetricPreset
+        );
+    }, [
+        barSeries,
+        barYAxisIntegerOnly,
+        hasNegativeBarValue,
+        isDashboardMetricPreset,
+        isGroupedAmountBar,
+        resolvedBarData,
+    ]);
+
+    const metricBarDomain = isAllBarPeriodsMissing
+        ? ([0, 1] as [number, number])
+        : barChart.yAxisDomain ?? fallbackBarDomain;
+
+    const legendSeries = useMemo(
+        () => barChart.legendItems ?? barSeries,
+        [barChart.legendItems, barSeries]
+    );
 
     return (
         <div style={containerStyle}>
@@ -2945,45 +2139,31 @@ const AnalyticsChart = ({
                 <div className={styles.ContentMotion}>
                     <div className={styles.ChartMotion}>
                         <div ref={setChartAreaElement} style={chartAreaStyle}>
-                            {chartType === 'LINE' ? (
-                                <UplotLineChart
-                                    size={chartAreaSize}
-                                    labels={lineData?.periodLabels ?? []}
-                                    lineChartData={lineChartData}
-                                    seriesMeta={lineSeriesMeta}
-                                    isDashboardMetricPreset={isDashboardMetricPreset}
-                                    dashboardLineXAxisLabelStride={dashboardLineXAxisLabelStride}
-                                    goalMarkerBySeriesId={goalMarkerBySeriesId}
-                                />
-                            ) : (
-                                <UplotBarChart
-                                    size={chartAreaSize}
-                                    labels={barData.map((item) => String(item.periodLabel ?? ''))}
-                                    barData={barData}
-                                    barSeries={barSeries.map((item) => ({
-                                        ...item,
-                                        avatarName: 'avatarName' in item ? item.avatarName : undefined,
-                                        avatarSrc: 'avatarSrc' in item ? item.avatarSrc : undefined,
-                                    }))}
-                                    lineSeriesMeta={lineSeriesMeta}
-                                    isGroupedAmountBar={isGroupedAmountBar}
-                                    isGroupedStackBar={isGroupedStackBar}
-                                    isAmountShareBar={isAmountShareBar}
-                                    shouldShowGroupedAmountAvatars={shouldShowGroupedAmountAvatars}
-                                    shouldShowGroupedStackAvatars={shouldShowGroupedStackAvatars}
-                                    isDashboardMetricPreset={isDashboardMetricPreset}
-                                    barMode={barMode}
-                                    barYAxisWidth={barYAxisWidth}
-                                    metricBarDomain={metricBarDomain}
-                                    barTickFormatter={barTickFormatter}
-                                    barTooltipValueFormatter={barTooltipValueFormatter}
-                                    dashboardBarCategoryGap={dashboardBarLayout.categoryGap}
-                                    dashboardBarGap={dashboardBarLayout.barGap}
-                                    dashboardBarMaxWidth={dashboardBarMaxWidth}
-                                    dashboardBarXAxisLabelStride={dashboardBarXAxisLabelStride}
-                                    groupedStackSeries={groupedStackData?.series ?? []}
-                                />
-                            )}
+                            <UplotBarChart
+                                size={chartAreaSize}
+                                labels={resolvedBarData.map((item) => String(item.periodLabel ?? ''))}
+                                barData={resolvedBarData}
+                                barSeries={barSeries}
+                                tooltipSeriesMeta={barSeries}
+                                shouldShowGroupedAmountAvatars={shouldShowGroupedAmountAvatars}
+                                shouldShowGroupedStackAvatars={shouldShowGroupedStackAvatars}
+                                isDashboardMetricPreset={isDashboardMetricPreset}
+                                barPresentation={barPresentation}
+                                tooltipMode={barTooltipMode}
+                                barYAxisWidth={barYAxisWidth}
+                                barYAxisIntegerOnly={barYAxisIntegerOnly}
+                                metricBarDomain={metricBarDomain}
+                                barTickFormatter={barTickFormatter}
+                                barTooltipValueFormatter={barTooltipValueFormatter}
+                                countFormatter={barCountFormatter}
+                                noDataLabel={noDataLabel}
+                                dashboardBarCategoryGap={dashboardBarLayout.categoryGap}
+                                dashboardBarGap={dashboardBarLayout.barGap}
+                                dashboardBarMaxWidth={barChart.dashboardBarMaxWidth}
+                                dashboardBarXAxisLabelStride={dashboardBarXAxisLabelStride}
+                                groupedStackSeries={barSeries}
+                                avatarRenderer={avatarRenderer}
+                            />
                         </div>
                     </div>
 

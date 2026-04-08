@@ -106,16 +106,18 @@ export type {
     BasicBarChartSeries,
 } from './components/BasicBarChart/BasicBarChart';
 export type {
-    AnalyticsChartBarMode,
+    AnalyticsChartAvatarKind,
+    AnalyticsChartAvatarRenderer,
+    AnalyticsChartAvatarRendererParams,
+    AnalyticsChartBarModel,
+    AnalyticsChartBarPresentation,
     AnalyticsChartDatum,
-    AnalyticsChartGroupedStackData,
-    AnalyticsChartGroupedStackSeries,
-    AnalyticsChartLineData,
-    AnalyticsChartLineSeries,
-    AnalyticsChartPeriodItem,
+    AnalyticsChartLegendItem,
+    AnalyticsChartMarkerKind,
     AnalyticsChartPreset,
     AnalyticsChartProps,
-    AnalyticsChartType,
+    AnalyticsChartSeries,
+    AnalyticsChartTooltipMode,
 } from './components/AnalyticsChart/AnalyticsChart';
 export type { BasicDonutChartProps, BasicDonutChartDatum } from './components/BasicDonutChart/BasicDonutChart';
 export type { AvatarStackButtonProps, AvatarStackButtonItem } from './components/AvatarStackButton/AvatarStackButton';

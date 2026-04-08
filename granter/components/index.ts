@@ -248,16 +248,18 @@ export type { BasicBarChartProps, BasicBarChartDatum, BasicBarChartSeries } from
 
 export { default as AnalyticsChart } from './AnalyticsChart/AnalyticsChart';
 export type {
-    AnalyticsChartBarMode,
+    AnalyticsChartAvatarKind,
+    AnalyticsChartAvatarRenderer,
+    AnalyticsChartAvatarRendererParams,
+    AnalyticsChartBarModel,
+    AnalyticsChartBarPresentation,
     AnalyticsChartDatum,
-    AnalyticsChartGroupedStackData,
-    AnalyticsChartGroupedStackSeries,
-    AnalyticsChartLineData,
-    AnalyticsChartLineSeries,
-    AnalyticsChartPeriodItem,
+    AnalyticsChartLegendItem,
+    AnalyticsChartMarkerKind,
     AnalyticsChartPreset,
     AnalyticsChartProps,
-    AnalyticsChartType,
+    AnalyticsChartSeries,
+    AnalyticsChartTooltipMode,
 } from './AnalyticsChart/AnalyticsChart';
 
 export { default as BasicDonutChart } from './BasicDonutChart/BasicDonutChart';
