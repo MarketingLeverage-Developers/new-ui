@@ -186,7 +186,7 @@ export { default as SectionFormDrawerContent } from './SectionFormDrawerContent/
 export type { SectionFormDrawerContentProps } from './SectionFormDrawerContent/SectionFormDrawerContent';
 
 export { default as SectionFieldRow } from './SectionFieldRow/SectionFieldRow';
-export type { SectionFieldRowProps } from './SectionFieldRow/SectionFieldRow';
+export type { SectionFieldRowProps, SectionFieldRowSubFieldProps } from './SectionFieldRow/SectionFieldRow';
 
 export { default as SectionFieldInput } from './SectionFieldInput/SectionFieldInput';
 export type { SectionFieldInputProps } from './SectionFieldInput/SectionFieldInput';

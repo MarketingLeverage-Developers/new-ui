@@ -194,7 +194,7 @@ export type { SummaryStatListProps, SummaryStatListItem } from './components/Sum
 export type { RankedMetricListProps, RankedMetricListItem } from './components/RankedMetricList/RankedMetricList';
 export type { SectionIntroProps } from './components/SectionIntro/SectionIntro';
 export type { SectionFormDrawerContentProps } from './components/SectionFormDrawerContent/SectionFormDrawerContent';
-export type { SectionFieldRowProps } from './components/SectionFieldRow/SectionFieldRow';
+export type { SectionFieldRowProps, SectionFieldRowSubFieldProps } from './components/SectionFieldRow/SectionFieldRow';
 export type { SectionFieldInputProps } from './components/SectionFieldInput/SectionFieldInput';
 export type { SectionFieldRowInputProps } from './components/SectionFieldRowInput/SectionFieldRowInput';
 export type { SectionFieldRowFileUploadProps } from './components/SectionFieldRowFileUpload/SectionFieldRowFileUpload';

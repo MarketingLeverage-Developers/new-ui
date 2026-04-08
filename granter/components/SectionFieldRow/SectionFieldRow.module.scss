@@ -51,6 +51,27 @@
     gap: 6px;
 }
 
+.SubField {
+    display: flex;
+    width: 100%;
+    min-width: 0;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.SubFieldLabel {
+    min-width: 0;
+    color: var(--granter-gray-500);
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 18px;
+}
+
+.SubFieldContent {
+    min-width: 0;
+    width: 100%;
+}
+
 .Value {
     color: var(--granter-gray-900);
     font-size: 16px;

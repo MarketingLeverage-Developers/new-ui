@@ -22,12 +22,46 @@ export type SectionFieldRowProps = Omit<React.HTMLAttributes<HTMLDivElement>, 'c
     valueClassName?: string;
 };
 
+export type SectionFieldRowSubFieldProps = Omit<React.HTMLAttributes<HTMLDivElement>, 'children'> & {
+    label?: React.ReactNode;
+    children?: React.ReactNode;
+    required?: boolean;
+    labelClassName?: string;
+    contentClassName?: string;
+};
+
 const toCssLength = (value?: number | string) => {
     if (value === undefined) return undefined;
     return typeof value === 'number' ? `${value}px` : value;
 };
 
-const SectionFieldRow = ({
+const SectionFieldRowSubField = ({
+    label,
+    children,
+    required,
+    className,
+    labelClassName,
+    contentClassName,
+    ...props
+}: SectionFieldRowSubFieldProps) => (
+    <div className={classNames(styles.SubField, className)} {...props}>
+        {label !== undefined ? (
+            <div className={classNames(styles.SubFieldLabel, labelClassName)}>
+                <span className={styles.LabelInner}>
+                    <span className={styles.LabelText}>{label}</span>
+                    {required ? <span className={styles.RequiredMark}>*</span> : null}
+                </span>
+            </div>
+        ) : null}
+        {children !== undefined ? <div className={classNames(styles.SubFieldContent, contentClassName)}>{children}</div> : null}
+    </div>
+);
+
+type SectionFieldRowComponent = ((props: SectionFieldRowProps) => React.ReactElement) & {
+    SubField: typeof SectionFieldRowSubField;
+};
+
+const SectionFieldRow = (({
     label,
     value,
     children,
@@ -74,6 +108,8 @@ const SectionFieldRow = ({
             </div>
         </div>
     );
-};
+}) as SectionFieldRowComponent;
+
+SectionFieldRow.SubField = SectionFieldRowSubField;
 
 export default SectionFieldRow;
