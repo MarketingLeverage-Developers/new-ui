@@ -127,8 +127,16 @@ const TOOLTIP_MAX_WIDTH = 320;
 const FONT_FAMILY = 'Pretendard, Apple SD Gothic Neo, Noto Sans KR, sans-serif';
 const GROUPED_STACK_AVATAR_SIZE = 30;
 const MIN_VERTICAL_CHART_PADDING = 12;
+const DEFAULT_BAR_Y_AXIS_MAX_TICK_COUNT = 6;
+const DASHBOARD_BAR_Y_AXIS_MAX_TICK_COUNT = 5;
 const INTEGER_AXIS_INCREMENTS = [
     1, 2, 5, 10, 20, 25, 50, 100, 200, 250, 500, 1000, 2000, 2500, 5000, 10000,
+] as const;
+const SMALL_COUNT_DASHBOARD_BAR_MAX_WIDTH_RATIOS = [
+    0.634, 0.358, 0.249, 0.192, 0.156, 0.131, 0.112,
+] as const;
+const SMALL_COUNT_DASHBOARD_BAR_FILL_RATIOS = [
+    0.92, 0.9, 0.88, 0.86, 0.88, 0.9, 0.92,
 ] as const;
 
 const containerStyle: React.CSSProperties = {
@@ -450,11 +458,57 @@ ManagedUplot.displayName = 'ManagedUplot';
 
 const dedupeAxisSplitsByFormatter = (
     splits: number[],
-    formatter: (value: number) => string
+    formatter: (value: number) => string,
+    maxTickCount = DEFAULT_BAR_Y_AXIS_MAX_TICK_COUNT
 ): (number | null)[] => {
+    const finiteSplits = splits.filter((value) => Number.isFinite(value));
+    const limitedSplits = (() => {
+        if (finiteSplits.length <= maxTickCount || maxTickCount < 2) return finiteSplits;
+
+        const baseStep = finiteSplits.reduce<number>((acc, value, index, arr) => {
+            if (index === 0) return acc;
+
+            const diff = Math.abs(value - arr[index - 1]);
+            if (diff <= Number.EPSILON) return acc;
+            return acc === 0 ? diff : Math.min(acc, diff);
+        }, 0);
+
+        if (baseStep <= 0) return finiteSplits;
+
+        const stride = Math.max(1, Math.ceil((finiteSplits.length - 1) / Math.max(maxTickCount - 1, 1)));
+        const step = baseStep * stride;
+        const min = finiteSplits[0];
+        const max = finiteSplits[finiteSplits.length - 1];
+        const epsilon = step / 1000;
+        const next: number[] = [];
+
+        if (min < 0 && max > 0) {
+            for (let value = 0; value <= max + epsilon; value += step) {
+                next.push(Number(value.toFixed(10)));
+            }
+
+            for (let value = -step; value >= min - epsilon; value -= step) {
+                next.unshift(Number(value.toFixed(10)));
+            }
+
+            return next;
+        }
+
+        const start = Math.ceil(min / step) * step;
+        for (let value = start; value <= max + epsilon; value += step) {
+            next.push(Number(value.toFixed(10)));
+        }
+
+        return next.length > 0 ? next : finiteSplits;
+    })();
+    const allowedSplitKeys = new Set(limitedSplits.map((value) => value.toFixed(10)));
     let previousLabel: string | null = null;
 
     return splits.map((value) => {
+        if (!allowedSplitKeys.has(Number(value).toFixed(10))) {
+            return null;
+        }
+
         const nextLabel = formatter(Number(value));
 
         if (nextLabel === previousLabel) {
@@ -545,6 +599,8 @@ type DashboardBarLayout = {
     barGap: number;
 };
 
+const DENSE_DASHBOARD_BAR_PERIOD_THRESHOLD = 28;
+
 const getDashboardBarLayout = (
     periodCount: number,
     plotWidth: number,
@@ -559,11 +615,26 @@ const getDashboardBarLayout = (
     }
 
     const isNarrow = plotWidth < 760;
+    const isDense = periodCount >= DENSE_DASHBOARD_BAR_PERIOD_THRESHOLD;
 
     if (groupCount > 1) {
+        if (isDense) {
+            return {
+                categoryGap: isNarrow ? 8 : 10,
+                barGap: isNarrow ? 3 : 4,
+            };
+        }
+
         return {
             categoryGap: isNarrow ? 12 : 18,
             barGap: isNarrow ? 4 : 6,
+        };
+    }
+
+    if (isDense) {
+        return {
+            categoryGap: isNarrow ? 8 : 10,
+            barGap: 0,
         };
     }
 
@@ -573,12 +644,33 @@ const getDashboardBarLayout = (
     };
 };
 
-const getDashboardBarFillRatio = (periodCount: number) => {
+const getDashboardBarFillRatio = (periodCount: number, groupCount: number) => {
+    if (groupCount === 1) {
+        const calibratedFillRatio = SMALL_COUNT_DASHBOARD_BAR_FILL_RATIOS[periodCount - 1];
+
+        if (calibratedFillRatio !== undefined) {
+            return calibratedFillRatio;
+        }
+    }
+
     if (periodCount <= 1) return 0.92;
     if (periodCount <= 2) return 0.9;
     if (periodCount <= 4) return 0.86;
     if (periodCount <= 8) return 0.8;
+    if (periodCount >= DENSE_DASHBOARD_BAR_PERIOD_THRESHOLD) {
+        return groupCount > 1 ? 0.8 : 0.86;
+    }
     return 0.72;
+};
+
+const getDashboardSingleBarMaxWidth = (periodCount: number, plotWidth: number) => {
+    const calibratedWidthRatio = SMALL_COUNT_DASHBOARD_BAR_MAX_WIDTH_RATIOS[periodCount - 1];
+
+    if (calibratedWidthRatio === undefined) {
+        return undefined;
+    }
+
+    return Math.max(1, Math.round(plotWidth * calibratedWidthRatio));
 };
 
 const getDashboardXAxisLabelStride = (periodCount: number) => {
@@ -922,11 +1014,13 @@ const buildNumericYAxis = ({
     formatterRef,
     showGrid,
     integerOnly = false,
+    maxTickCount = DEFAULT_BAR_Y_AXIS_MAX_TICK_COUNT,
 }: {
     width: number;
     formatterRef: React.MutableRefObject<(value: number) => string>;
     showGrid: boolean;
     integerOnly?: boolean;
+    maxTickCount?: number;
 }): uPlot.Axis => ({
     side: 3,
     size: width,
@@ -936,7 +1030,7 @@ const buildNumericYAxis = ({
     stroke: '#6B7280',
     font: `11px ${FONT_FAMILY}`,
     incrs: integerOnly ? [...INTEGER_AXIS_INCREMENTS] : undefined,
-    filter: (_self, splits) => dedupeAxisSplitsByFormatter(splits, formatterRef.current),
+    filter: (_self, splits) => dedupeAxisSplitsByFormatter(splits, formatterRef.current, maxTickCount),
     values: (_self, splits) =>
         splits.map((value) => (value == null ? '' : formatterRef.current(Number(value)))),
     ticks: { show: false },
@@ -1316,10 +1410,6 @@ const buildBarGeometry = ({
     const categoryWidth = plotWidth / data.length;
     const gapPx = isDashboardMetricPreset ? dashboardCategoryGap : 30;
     const intraGapPx = dashboardBarGap ?? 0;
-    const fillRatio = isDashboardMetricPreset ? getDashboardBarFillRatio(data.length) : 1;
-    const totalCategoryGapWidth = gapPx * Math.max(data.length - 1, 0);
-    const countAwareCategoryWidth = Math.max(plotWidth - totalCategoryGapWidth, 0) / Math.max(data.length, 1);
-
     const stackIds = isGroupedStackBar
         ? Array.from(new Set(seriesMeta.map((item) => item.stackId ?? item.key)))
         : isGroupedAmountBar
@@ -1327,6 +1417,9 @@ const buildBarGeometry = ({
         : ['__single__'];
 
     const groupCount = Math.max(stackIds.length, 1);
+    const fillRatio = isDashboardMetricPreset ? getDashboardBarFillRatio(data.length, groupCount) : 1;
+    const totalCategoryGapWidth = gapPx * Math.max(data.length - 1, 0);
+    const countAwareCategoryWidth = Math.max(plotWidth - totalCategoryGapWidth, 0) / Math.max(data.length, 1);
     const clusterWidth = Math.max(categoryWidth - gapPx, Math.min(categoryWidth * 0.92, categoryWidth));
     const rawGroupWidth =
         groupCount > 1 ? (clusterWidth - intraGapPx * (groupCount - 1)) / groupCount : clusterWidth;
@@ -1339,8 +1432,16 @@ const buildBarGeometry = ({
                 Math.max(groupCount, 1)
         )
     );
+    const calibratedDashboardBarMaxWidth =
+        isDashboardMetricPreset && groupCount === 1
+            ? getDashboardSingleBarMaxWidth(data.length, plotWidth)
+            : undefined;
+    const resolvedDashboardBarMaxWidth =
+        calibratedDashboardBarMaxWidth ??
+        dashboardBarMaxWidth ??
+        DEFAULT_DASHBOARD_BAR_WIDTH;
     const dashboardBarWidth = isDashboardMetricPreset
-        ? Math.min(dashboardBarMaxWidth ?? DEFAULT_DASHBOARD_BAR_WIDTH, countAwareGroupWidth)
+        ? Math.min(resolvedDashboardBarMaxWidth, countAwareGroupWidth)
         : undefined;
     const groupWidth = fixedBarWidth
         ? Math.min(rawGroupWidth, fixedBarWidth)
@@ -1562,6 +1663,9 @@ const UplotBarChart = ({
                 formatterRef: barTickFormatterRef,
                 showGrid: !isDashboardMetricPreset,
                 integerOnly: Boolean(barYAxisIntegerOnly),
+                maxTickCount: isDashboardMetricPreset
+                    ? DASHBOARD_BAR_Y_AXIS_MAX_TICK_COUNT
+                    : DEFAULT_BAR_Y_AXIS_MAX_TICK_COUNT,
             }),
         [
             barTickFormatterRef,
