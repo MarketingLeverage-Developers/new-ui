@@ -23,7 +23,7 @@ const BasicRightDrawer = ({
     onChange,
     content,
     keepMounted = false,
-    width = 580,
+    width = 560,
     maxHeight = '100%',
     enterAction,
     lockBodyScroll = true,

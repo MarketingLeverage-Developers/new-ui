@@ -26,6 +26,7 @@ export { default as SectionIntro } from './components/SectionIntro/SectionIntro'
 export { default as SectionFormDrawerContent } from './components/SectionFormDrawerContent/SectionFormDrawerContent';
 export { default as SectionFieldRow } from './components/SectionFieldRow/SectionFieldRow';
 export { default as SectionFieldInput } from './components/SectionFieldInput/SectionFieldInput';
+export { default as SectionFieldDateInput } from './components/SectionFieldDateInput/SectionFieldDateInput';
 export { default as SectionFieldRowInput } from './components/SectionFieldRowInput/SectionFieldRowInput';
 export { default as SectionFieldRowFileUpload } from './components/SectionFieldRowFileUpload/SectionFieldRowFileUpload';
 export { default as SectionFieldRowSelect } from './components/SectionFieldRowSelect/SectionFieldRowSelect';
@@ -199,6 +200,7 @@ export type { SectionIntroProps } from './components/SectionIntro/SectionIntro';
 export type { SectionFormDrawerContentProps } from './components/SectionFormDrawerContent/SectionFormDrawerContent';
 export type { SectionFieldRowProps, SectionFieldRowSubFieldProps } from './components/SectionFieldRow/SectionFieldRow';
 export type { SectionFieldInputProps } from './components/SectionFieldInput/SectionFieldInput';
+export type { SectionFieldDateInputProps } from './components/SectionFieldDateInput/SectionFieldDateInput';
 export type { SectionFieldRowInputProps } from './components/SectionFieldRowInput/SectionFieldRowInput';
 export type { SectionFieldRowFileUploadProps } from './components/SectionFieldRowFileUpload/SectionFieldRowFileUpload';
 export type { SectionFieldRowSelectProps } from './components/SectionFieldRowSelect/SectionFieldRowSelect';

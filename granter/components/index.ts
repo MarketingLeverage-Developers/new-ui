@@ -190,6 +190,8 @@ export type { SectionFieldRowProps, SectionFieldRowSubFieldProps } from './Secti
 
 export { default as SectionFieldInput } from './SectionFieldInput/SectionFieldInput';
 export type { SectionFieldInputProps } from './SectionFieldInput/SectionFieldInput';
+export { default as SectionFieldDateInput } from './SectionFieldDateInput/SectionFieldDateInput';
+export type { SectionFieldDateInputProps } from './SectionFieldDateInput/SectionFieldDateInput';
 export { default as SectionFieldRowInput } from './SectionFieldRowInput/SectionFieldRowInput';
 export type { SectionFieldRowInputProps } from './SectionFieldRowInput/SectionFieldRowInput';
 export { default as SectionFieldRowFileUpload } from './SectionFieldRowFileUpload/SectionFieldRowFileUpload';

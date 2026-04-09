@@ -35,7 +35,7 @@ const SectionFormDrawerContent = ({
     introTitleAs = 'h3',
     onCancel,
     cancelLabel = '취소',
-    confirmLabel = '저장하기',
+    confirmLabel = '저장',
     confirmDisabled = false,
     bodyClassName,
     introClassName,

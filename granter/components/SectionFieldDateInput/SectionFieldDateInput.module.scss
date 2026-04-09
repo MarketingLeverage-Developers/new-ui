@@ -1,4 +1,4 @@
-.Input {
+.Trigger {
     width: 100%;
     min-width: 0;
     height: 40px;
@@ -7,37 +7,51 @@
     border-radius: 10px;
     background-color: var(--granter-white);
     color: var(--granter-gray-900);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
     font-family: 'Pretendard', sans-serif;
     font-size: 14px;
     font-weight: 500;
     line-height: 20px;
     outline: none;
+    cursor: pointer;
     transition:
         border-color 0.15s ease,
         box-shadow 0.15s ease,
         background-color 0.15s ease;
 }
 
-.Input::placeholder {
-    color: var(--granter-gray-400);
-    font-weight: 400;
-}
-
-.Input:hover:not(:disabled) {
+.Trigger:hover:not(:disabled) {
     border-color: var(--granter-gray-400);
 }
 
-.Input:focus {
+.Trigger:focus {
     border-color: var(--granter-sky-500);
     box-shadow: 0 0 0 4px rgb(14 165 233 / 12%);
 }
 
-.Input:disabled {
+.Trigger:disabled {
     background-color: var(--granter-gray-100);
     color: var(--granter-gray-500);
     cursor: not-allowed;
 }
 
-.Input[type='date'] {
-    color-scheme: light;
+.Value {
+    min-width: 0;
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.Placeholder {
+    color: var(--granter-gray-400);
+    font-weight: 400;
+}
+
+.Icon {
+    flex: 0 0 auto;
+    color: var(--granter-gray-500);
 }

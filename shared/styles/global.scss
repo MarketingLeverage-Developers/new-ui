@@ -12,9 +12,11 @@
 // 4. Global base style
 html,
 body,
+input,
+select,
 textarea,
 button {
-    font-family: 'Pretendard';
+    font-family: 'Pretendard', sans-serif;
     box-sizing: border-box;
     background-color: var(--White1);
     color: var(--Black1);
