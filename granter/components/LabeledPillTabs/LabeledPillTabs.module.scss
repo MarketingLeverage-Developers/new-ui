@@ -38,6 +38,23 @@
     overflow: hidden;
 }
 
+.Root[data-variant='floating'] .Viewport[data-carousel='true'] {
+    overflow-x: hidden;
+    overflow-y: visible;
+    -webkit-mask-image: linear-gradient(
+        to right,
+        rgba(0, 0, 0, 1) 0,
+        rgba(0, 0, 0, 1) calc(100% - 28px),
+        transparent 100%
+    );
+    mask-image: linear-gradient(
+        to right,
+        rgba(0, 0, 0, 1) 0,
+        rgba(0, 0, 0, 1) calc(100% - 28px),
+        transparent 100%
+    );
+}
+
 .Viewport[data-fill='true'] {
     width: 100%;
     flex: 1 1 auto;
@@ -69,7 +86,13 @@
 }
 
 .Tabs[data-carousel='true'] {
-    overflow: visible;
+    --lpt-carousel-gap: 8px;
+    --lpt-carousel-side-width: 42px;
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 32px;
+    overflow: hidden;
 }
 
 .Tabs[data-fill='true'] {
@@ -112,10 +135,15 @@
     cursor: pointer;
     opacity: 0.56;
     transition:
-        opacity 0.16s ease,
-        border-color 0.16s ease,
-        background-color 0.16s ease,
-        color 0.16s ease;
+        opacity 0.28s ease,
+        border-color 0.28s ease,
+        background-color 0.28s ease,
+        color 0.28s ease,
+        left 0.42s cubic-bezier(0.22, 0.61, 0.36, 1),
+        width 0.42s cubic-bezier(0.22, 0.61, 0.36, 1),
+        box-shadow 0.32s ease,
+        transform 0.22s ease,
+        filter 0.3s ease;
 }
 
 .Icon {
@@ -124,6 +152,18 @@
     justify-content: center;
     flex: 0 0 auto;
     color: inherit;
+}
+
+.TrailingIcon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    color: inherit;
+    opacity: 0.82;
+    transition:
+        opacity 0.18s ease,
+        transform 0.24s ease;
 }
 
 .ItemLabel {
@@ -211,6 +251,142 @@
     padding: 0 14px;
 }
 
+.Item[data-carousel='true'] {
+    position: absolute;
+    top: 0;
+    min-width: 0;
+}
+
+.Item[data-carousel='true'][data-carousel-role='hidden'] {
+    width: 0;
+    padding-inline: 0;
+    opacity: 0;
+    border-width: 0;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.Item[data-carousel='true'][data-carousel-role='hidden'][data-carousel-side='prev'] {
+    left: 0;
+}
+
+.Item[data-carousel='true'][data-carousel-role='hidden'][data-carousel-side='next'] {
+    left: 100%;
+}
+
+.Item[data-carousel='true'][data-carousel-role='side'][data-carousel-side='prev'] {
+    left: 0;
+    width: var(--lpt-carousel-side-width);
+    padding-inline: 3px;
+    opacity: 0.46;
+    z-index: 1;
+}
+
+.Item[data-carousel='true'][data-carousel-role='side'][data-carousel-side='next'] {
+    left: calc(100% - var(--lpt-carousel-side-width));
+    width: var(--lpt-carousel-side-width);
+    padding-inline: 3px;
+    opacity: 0.46;
+    z-index: 1;
+}
+
+.Item[data-carousel='true'][data-carousel-role='current'] {
+    left: 0;
+    width: 100%;
+    opacity: 1;
+    z-index: 2;
+}
+
+.Tabs[data-carousel='true'][data-carousel-has-prev='true'][data-carousel-has-next='true']
+    .Item[data-carousel='true'][data-carousel-role='current'] {
+    left: calc(var(--lpt-carousel-side-width) + var(--lpt-carousel-gap));
+    width: calc(100% - (var(--lpt-carousel-side-width) * 2) - (var(--lpt-carousel-gap) * 2));
+}
+
+.Tabs[data-carousel='true'][data-carousel-has-prev='true'][data-carousel-has-next='false']
+    .Item[data-carousel='true'][data-carousel-role='current'] {
+    left: calc(var(--lpt-carousel-side-width) + var(--lpt-carousel-gap));
+    width: calc(100% - var(--lpt-carousel-side-width) - var(--lpt-carousel-gap));
+}
+
+.Tabs[data-carousel='true'][data-carousel-has-prev='false'][data-carousel-has-next='true']
+    .Item[data-carousel='true'][data-carousel-role='current'] {
+    left: 0;
+    width: calc(100% - var(--lpt-carousel-side-width) - var(--lpt-carousel-gap));
+}
+
+.Root[data-variant='floating'] .Item {
+    gap: 4px;
+    padding: 0 10px 0 8px;
+    border-color: transparent;
+    box-shadow: none;
+}
+
+.Root[data-variant='floating'] .Item:hover:not(:disabled) {
+    border-color: transparent;
+    opacity: 1;
+    box-shadow: none;
+}
+
+.Root[data-variant='floating'] .Item:hover:not(:disabled) .TrailingIcon {
+    opacity: 1;
+    transform: rotate(90deg) scale(1.04);
+}
+
+.Root[data-variant='floating'] .Item[data-active='true'] {
+    border-color: transparent;
+    box-shadow: none;
+    filter: saturate(1);
+}
+
+.Root[data-variant='floating'] .Item[data-active='true']:hover:not(:disabled) {
+    box-shadow: none;
+    filter: saturate(1);
+}
+
+.Root[data-variant='floating'] .Tabs[data-carousel='true'] {
+    --lpt-carousel-gap: 4px;
+    --lpt-carousel-side-width: 34px;
+}
+
+.Root[data-variant='floating'] .Item[data-carousel='true'] {
+    min-width: 0;
+    border-color: transparent;
+    box-shadow: none;
+    filter: saturate(0.9);
+}
+
+.Root[data-variant='floating'] .Item[data-carousel='true'][data-carousel-role='current'] {
+    opacity: 1;
+    filter: saturate(1);
+    justify-content: center;
+}
+
+.Root[data-variant='floating'] .Item[data-carousel='true'][data-carousel-role='side'] .Icon,
+.Root[data-variant='floating'] .Item[data-carousel='true'][data-carousel-role='side'] .TrailingIcon {
+    display: none;
+}
+
+.Root[data-variant='floating'] .Item[data-carousel='true'][data-carousel-role='side'] .ItemLabel {
+    -webkit-mask-image: linear-gradient(to right, rgba(0, 0, 0, 1) 42%, rgba(0, 0, 0, 0) 100%);
+    mask-image: linear-gradient(to right, rgba(0, 0, 0, 1) 42%, rgba(0, 0, 0, 0) 100%);
+}
+
+.Root[data-variant='floating'] .Item[data-carousel='true'][data-carousel-role='side'][data-carousel-side='prev'] {
+    justify-content: flex-end;
+    padding-right: 4px;
+}
+
+.Root[data-variant='floating'] .Item[data-carousel='true'][data-carousel-role='side'][data-carousel-side='next'] {
+    justify-content: flex-start;
+    padding-left: 4px;
+}
+
+.Root[data-variant='floating'] .Item[data-carousel='true'][data-carousel-role='side']:hover:not(:disabled) {
+    opacity: 0.72;
+    filter: saturate(1);
+}
+
 .Item[data-tone='green'][data-active='true'] {
     background-color: #e7f5ec;
 }
@@ -246,6 +422,10 @@
 
     .Tabs {
         gap: 6px;
+    }
+
+    .Tabs[data-carousel='true'] {
+        height: 30px;
     }
 
     .Item {
