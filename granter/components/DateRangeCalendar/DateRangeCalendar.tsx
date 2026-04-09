@@ -29,6 +29,7 @@ export type DateRangeCalendarProps = {
     onChange: (next: DateRange | undefined) => void;
     onPresetSelect?: (key: PresetKey) => void;
     className?: string;
+    allowFutureDates?: boolean;
 } & Omit<DayPickerProps, 'mode' | 'selected' | 'onSelect' | 'month' | 'numberOfMonths'>;
 
 const PRESETS: { key: PresetKey; label: string }[] = [
@@ -109,7 +110,14 @@ const parseIso = (value: string): Date | undefined => {
     return date;
 };
 
-const DateRangeCalendar = ({ range, onChange, onPresetSelect, className, ...props }: DateRangeCalendarProps) => {
+const DateRangeCalendar = ({
+    range,
+    onChange,
+    onPresetSelect,
+    className,
+    allowFutureDates = false,
+    ...props
+}: DateRangeCalendarProps) => {
     const today = React.useMemo(() => new Date(), []);
     const [currentMonth, setCurrentMonth] = React.useState<Date>(range?.from ?? today);
     const [tempRange, setTempRange] = React.useState<DateRange | undefined>(range);
@@ -150,11 +158,12 @@ const DateRangeCalendar = ({ range, onChange, onPresetSelect, className, ...prop
         const endOfQuarter = (date: Date, quarter: 1 | 2 | 3 | 4) => new Date(date.getFullYear(), quarter * 3, 0);
 
         const yesterday = addDays(today, -1);
+        const thisMonthEnd = allowFutureDates ? endOfMonth(today) : today;
 
         return {
             YESTERDAY: { from: yesterday, to: yesterday },
             TODAY: { from: today, to: today },
-            THIS_MONTH: { from: startOfMonth(today), to: today },
+            THIS_MONTH: { from: startOfMonth(today), to: thisMonthEnd },
             LAST_MONTH: { from: startOfMonth(subMonths(today, 1)), to: endOfMonth(subMonths(today, 1)) },
             LAST_7_DAYS: { from: addDays(today, -6), to: today },
             LAST_3_MONTHS: { from: startOfMonth(subMonths(today, 2)), to: today },
@@ -167,7 +176,7 @@ const DateRangeCalendar = ({ range, onChange, onPresetSelect, className, ...prop
             Q3: { from: startOfQuarter(today, 3), to: endOfQuarter(today, 3) },
             Q4: { from: startOfQuarter(today, 4), to: endOfQuarter(today, 4) },
         };
-    }, [today]);
+    }, [allowFutureDates, today]);
 
     const years = React.useMemo(() => {
         const year = currentMonth.getFullYear();
@@ -274,7 +283,7 @@ const DateRangeCalendar = ({ range, onChange, onPresetSelect, className, ...prop
 
     const handleNextMonth = () => {
         const nextRange = shiftRangeBySelection(tempRange ?? range, 1);
-        if (!nextRange?.to || isAfterDay(nextRange.to, today)) return;
+        if (!nextRange?.to || (!allowFutureDates && isAfterDay(nextRange.to, today))) return;
 
         commitRange(nextRange);
         setHoveredDay(undefined);
@@ -286,7 +295,7 @@ const DateRangeCalendar = ({ range, onChange, onPresetSelect, className, ...prop
     };
 
     const nextRange = React.useMemo(() => shiftRangeBySelection(tempRange ?? range, 1), [range, tempRange]);
-    const isNextDisabled = !nextRange?.to || isAfterDay(nextRange.to, today);
+    const isNextDisabled = !nextRange?.to || (!allowFutureDates && isAfterDay(nextRange.to, today));
 
     const activePreset = React.useMemo(() => {
         const isSameDay = (a?: Date, b?: Date) =>
@@ -583,8 +592,8 @@ const DateRangeCalendar = ({ range, onChange, onPresetSelect, className, ...prop
                             if (!isSelectingRangeEnd || modifiers.disabled) return;
                             setHoveredDay(day);
                         }}
-                        disabled={{ after: today }}
-                        toMonth={today}
+                        disabled={allowFutureDates ? undefined : { after: today }}
+                        toMonth={allowFutureDates ? undefined : today}
                         modifiers={{
                             rowRangeStart: isRowRangeStart,
                             rowRangeEnd: isRowRangeEnd,

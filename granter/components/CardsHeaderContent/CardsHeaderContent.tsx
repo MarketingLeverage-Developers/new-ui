@@ -34,6 +34,7 @@ export type HeaderBreadcrumbProps = {
 export type HeaderDateRangeControlProps = {
     dateLabel: React.ReactNode;
     mode?: 'date' | 'month';
+    allowFutureDates?: boolean;
     onPrevDate?: () => void;
     onNextDate?: () => void;
     onDateLabelClick?: () => void;
@@ -297,6 +298,7 @@ const HeaderDateRangeTrigger = ({
 const HeaderDateRangeControl = ({
     dateLabel,
     mode = 'date',
+    allowFutureDates = false,
     onPrevDate = noop,
     onNextDate = noop,
     onDateLabelClick,
@@ -350,11 +352,12 @@ const HeaderDateRangeControl = ({
 
     const nextRange = React.useMemo(() => shiftRangeBySelection(selectedRange, 1, mode), [mode, selectedRange]);
     const isNextDisabled = React.useMemo(() => {
+        if (allowFutureDates) return false;
         if (!nextRange?.to) return true;
 
         if (mode === 'month') return isAfterMonth(nextRange.to, today);
         return startOfDay(nextRange.to).getTime() > startOfDay(today).getTime();
-    }, [mode, nextRange, today]);
+    }, [allowFutureDates, mode, nextRange, today]);
 
     return (
         <Dropdown>
@@ -389,9 +392,17 @@ const HeaderDateRangeControl = ({
             >
                 <div className={styles.DateRangePanel}>
                     {mode === 'month' ? (
-                        <MonthRangeCalendar range={selectedRange} onChange={handleRangeChange} />
+                        <MonthRangeCalendar
+                            range={selectedRange}
+                            onChange={handleRangeChange}
+                            allowFutureDates={allowFutureDates}
+                        />
                     ) : (
-                        <DateRangeCalendar range={selectedRange} onChange={handleRangeChange} />
+                        <DateRangeCalendar
+                            range={selectedRange}
+                            onChange={handleRangeChange}
+                            allowFutureDates={allowFutureDates}
+                        />
                     )}
                 </div>
             </Dropdown.Content>

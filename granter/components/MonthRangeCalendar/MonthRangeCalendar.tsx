@@ -25,6 +25,7 @@ export type MonthRangeCalendarProps = {
     onChange: (next: DateRange | undefined) => void;
     onPresetSelect?: (key: PresetKey) => void;
     className?: string;
+    allowFutureDates?: boolean;
 };
 
 const PRESETS: { key: PresetKey; label: string }[] = [
@@ -95,7 +96,13 @@ const normalizeMonthRange = (from: Date, to: Date): DateRange => {
     };
 };
 
-const MonthRangeCalendar = ({ range, onChange, onPresetSelect, className }: MonthRangeCalendarProps) => {
+const MonthRangeCalendar = ({
+    range,
+    onChange,
+    onPresetSelect,
+    className,
+    allowFutureDates = false,
+}: MonthRangeCalendarProps) => {
     const today = React.useMemo(() => new Date(), []);
     const [currentYear, setCurrentYear] = React.useState<number>((range?.from ?? today).getFullYear());
     const [tempRange, setTempRange] = React.useState<DateRange | undefined>(range);
@@ -220,7 +227,7 @@ const MonthRangeCalendar = ({ range, onChange, onPresetSelect, className }: Mont
     };
 
     const handleMonthClick = (date: Date) => {
-        if (isAfterMonth(date, today)) return;
+        if (!allowFutureDates && isAfterMonth(date, today)) return;
 
         if (pendingStartMonth && !isSameMonth(pendingStartMonth, date)) {
             const nextRange = normalizeMonthRange(pendingStartMonth, date);
@@ -256,7 +263,7 @@ const MonthRangeCalendar = ({ range, onChange, onPresetSelect, className }: Mont
         [presetRanges, tempRange]
     );
 
-    const isNextDisabled = currentYear >= today.getFullYear();
+    const isNextDisabled = !allowFutureDates && currentYear >= today.getFullYear();
     const selectedFromMonth = tempRange?.from ? startOfMonth(tempRange.from) : undefined;
     const selectedToMonth = tempRange?.to ? startOfMonth(tempRange.to) : selectedFromMonth;
     const previewFromMonth = previewRange?.from ? startOfMonth(previewRange.from) : undefined;
@@ -384,7 +391,7 @@ const MonthRangeCalendar = ({ range, onChange, onPresetSelect, className }: Mont
                     <div className={styles.MonthGrid}>
                         {MONTH_LABELS.map((label, monthIndex) => {
                             const monthDate = new Date(currentYear, monthIndex, 1);
-                            const disabled = isAfterMonth(monthDate, today);
+                            const disabled = !allowFutureDates && isAfterMonth(monthDate, today);
                             const isInSelectedRange = isMonthWithin(monthDate, selectedFromMonth, selectedToMonth);
                             const isRangeStart = isSameMonth(monthDate, selectedFromMonth);
                             const isRangeEnd = isSameMonth(monthDate, selectedToMonth);
