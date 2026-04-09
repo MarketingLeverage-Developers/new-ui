@@ -10,6 +10,7 @@ export type LabeledPillTabsTone =
     | 'gray';
 
 export type LabeledPillTabsVariant = 'default' | 'floating';
+export type LabeledPillTabsCarouselDirection = 'horizontal' | 'vertical';
 type LabeledPillTabsCarouselRole = 'current' | 'side' | 'hidden';
 type LabeledPillTabsCarouselSide = 'prev' | 'next' | null;
 
@@ -35,6 +36,7 @@ export type LabeledPillTabsProps<T extends string = string> = Omit<
     itemClassName?: string;
     tabsClassName?: string;
     carousel?: boolean;
+    carouselDirection?: LabeledPillTabsCarouselDirection;
     fill?: boolean;
 };
 
@@ -49,6 +51,7 @@ const LabeledPillTabs = <T extends string = string>({
     itemClassName,
     tabsClassName,
     carousel = false,
+    carouselDirection = 'horizontal',
     fill = false,
     ...props
 }: LabeledPillTabsProps<T>) => {
@@ -63,6 +66,15 @@ const LabeledPillTabs = <T extends string = string>({
                         key: item.value,
                         carouselRole: null as LabeledPillTabsCarouselRole | null,
                         carouselSide: null as LabeledPillTabsCarouselSide,
+                    };
+                }
+
+                if (carouselDirection === 'vertical' && items.length === 2) {
+                    return {
+                        item,
+                        key: item.value,
+                        carouselRole: index === currentIndex ? ('current' as const) : ('side' as const),
+                        carouselSide: index === currentIndex ? null : ('prev' as const),
                     };
                 }
 
@@ -83,7 +95,7 @@ const LabeledPillTabs = <T extends string = string>({
                     carouselSide,
                 };
             }),
-        [carousel, currentIndex, items]
+        [carousel, carouselDirection, currentIndex, items]
     );
     const hasPrevVisible = displayedItems.some(
         ({ carouselRole, carouselSide }) => carouselRole === 'side' && carouselSide === 'prev'
@@ -115,12 +127,14 @@ const LabeledPillTabs = <T extends string = string>({
                 <div
                     className={styles.Viewport}
                     data-carousel={carousel ? 'true' : 'false'}
+                    data-carousel-direction={carousel ? carouselDirection : undefined}
                     data-fill={fill ? 'true' : 'false'}
                 >
                     <div
                         className={classNames(styles.Tabs, tabsClassName)}
                         role="tablist"
                         data-carousel={carousel ? 'true' : 'false'}
+                        data-carousel-direction={carousel ? carouselDirection : undefined}
                         data-carousel-has-prev={carousel && hasPrevVisible ? 'true' : 'false'}
                         data-carousel-has-next={carousel && hasNextVisible ? 'true' : 'false'}
                         data-fill={fill ? 'true' : 'false'}
@@ -141,6 +155,7 @@ const LabeledPillTabs = <T extends string = string>({
                                         className={classNames(styles.Item, itemClassName)}
                                         data-active={active ? 'true' : 'false'}
                                         data-carousel={carousel ? 'true' : undefined}
+                                        data-carousel-direction={carousel ? carouselDirection : undefined}
                                         data-carousel-role={carouselRole ?? undefined}
                                         data-carousel-side={carouselSide ?? undefined}
                                         data-tone={tone}
