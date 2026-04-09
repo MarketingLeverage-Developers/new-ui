@@ -178,17 +178,20 @@ const tooltipStyle: React.CSSProperties = {
     display: 'flex',
     flexDirection: 'column',
     gap: 8,
-    minWidth: 240,
+    width: 'max-content',
+    minWidth: 0,
+    maxWidth: TOOLTIP_MAX_WIDTH,
     padding: 12,
     border: '1px solid var(--granter-gray-200)',
     borderRadius: 12,
     background: 'var(--granter-white)',
     boxShadow: '0 10px 24px rgba(15, 23, 42, 0.12)',
+    boxSizing: 'border-box',
 };
 
 const tooltipItemStyle: React.CSSProperties = {
     display: 'grid',
-    gridTemplateColumns: '20px max-content auto',
+    gridTemplateColumns: '20px auto max-content',
     alignItems: 'center',
     gap: 8,
 };
