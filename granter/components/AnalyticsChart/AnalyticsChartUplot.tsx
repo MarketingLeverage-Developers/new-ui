@@ -129,6 +129,8 @@ const GROUPED_STACK_AVATAR_SIZE = 30;
 const MIN_VERTICAL_CHART_PADDING = 12;
 const DEFAULT_BAR_Y_AXIS_MAX_TICK_COUNT = 6;
 const DASHBOARD_BAR_Y_AXIS_MAX_TICK_COUNT = 5;
+const BAR_GEOMETRY_ANIMATION_DURATION_MS = 960;
+const BAR_GEOMETRY_ANIMATION_CSS_EASING = 'cubic-bezier(0.65, 0, 0.35, 1)';
 const INTEGER_AXIS_INCREMENTS = [
     1, 2, 5, 10, 20, 25, 50, 100, 200, 250, 500, 1000, 2000, 2500, 5000, 10000,
 ] as const;
@@ -269,7 +271,15 @@ const useLatestRef = <T,>(value: T) => {
     return ref;
 };
 
-const useChartAnimation = (data: uPlot.AlignedData | null, duration = 800) => {
+const easeInOutCubic = (value: number) =>
+    value < 0.5
+        ? 4 * value * value * value
+        : 1 - Math.pow(-2 * value + 2, 3) / 2;
+
+const useChartAnimation = (
+    data: uPlot.AlignedData | null,
+    duration = BAR_GEOMETRY_ANIMATION_DURATION_MS
+) => {
     const [progress, setProgress] = useState(0);
     const requestRef = useRef<number | null>(null);
     const startTimeRef = useRef<number | null>(null);
@@ -281,10 +291,7 @@ const useChartAnimation = (data: uPlot.AlignedData | null, duration = 800) => {
             }
             const elapsedTime = time - startTimeRef.current;
             const nextProgress = Math.min(elapsedTime / duration, 1);
-
-            // Easing function: cubic-bezier(0.2, 0.8, 0.2, 1) or similar
-            // Simple easeOutQuart: 1 - Math.pow(1 - x, 4)
-            const easedProgress = 1 - Math.pow(1 - nextProgress, 4);
+            const easedProgress = easeInOutCubic(nextProgress);
 
             setProgress(easedProgress);
 
@@ -911,6 +918,86 @@ const areDrawnBarRectsEqual = (a: DrawnBarRect[], b: DrawnBarRect[]) => {
     }
 
     return true;
+};
+
+const getDrawnBarRectKey = (
+    rect: Pick<DrawnBarRect, 'seriesKey' | 'stackId' | 'idx'>
+) => `${rect.idx}__${rect.stackId ?? '__single__'}__${rect.seriesKey}`;
+
+const interpolateNumber = (from: number, to: number, progress: number) =>
+    from + (to - from) * progress;
+
+const collapseDrawnBarRect = (
+    rect: DrawnBarRect,
+    zeroLine: number
+): DrawnBarRect => ({
+    ...rect,
+    left: rect.left + rect.width / 2,
+    top: zeroLine,
+    width: 0,
+    height: 0,
+});
+
+const interpolateDrawnBarRect = (
+    from: DrawnBarRect,
+    to: DrawnBarRect,
+    progress: number
+): DrawnBarRect => ({
+    ...to,
+    left: interpolateNumber(from.left, to.left, progress),
+    top: interpolateNumber(from.top, to.top, progress),
+    width: interpolateNumber(from.width, to.width, progress),
+    height: interpolateNumber(from.height, to.height, progress),
+});
+
+const buildAnimatedBarRects = ({
+    previousRects,
+    nextRects,
+    progress,
+    zeroLine,
+}: {
+    previousRects: DrawnBarRect[];
+    nextRects: DrawnBarRect[];
+    progress: number;
+    zeroLine: number;
+}) => {
+    if (progress >= 1 || previousRects.length === 0) {
+        return nextRects;
+    }
+
+    const previousRectByKey = new Map(
+        previousRects.map((item) => [getDrawnBarRectKey(item), item] as const)
+    );
+    const nextRectByKey = new Map(
+        nextRects.map((item) => [getDrawnBarRectKey(item), item] as const)
+    );
+    const orderedKeys = [
+        ...nextRects.map((item) => getDrawnBarRectKey(item)),
+        ...previousRects
+            .map((item) => getDrawnBarRectKey(item))
+            .filter((key) => !nextRectByKey.has(key)),
+    ];
+
+    return orderedKeys.flatMap((key) => {
+        const previousRect = previousRectByKey.get(key);
+        const nextRect = nextRectByKey.get(key);
+
+        if (previousRect && nextRect) {
+            return [interpolateDrawnBarRect(previousRect, nextRect, progress)];
+        }
+
+        if (nextRect) {
+            const collapsedRect = collapseDrawnBarRect(nextRect, zeroLine);
+            return [interpolateDrawnBarRect(collapsedRect, nextRect, progress)];
+        }
+
+        if (previousRect) {
+            const collapsedRect = collapseDrawnBarRect(previousRect, zeroLine);
+            return [interpolateDrawnBarRect(previousRect, collapsedRect, progress)];
+        }
+
+        return [];
+    });
 };
 
 const useElementSize = (element: HTMLElement | null) => {
@@ -1605,7 +1692,9 @@ const UplotBarChart = ({
 }) => {
     const [chart, setChart] = useState<uPlot | null>(null);
     const [avatarAnchors, setAvatarAnchors] = useState<AvatarAnchor[]>([]);
-    const barRectsRef = useRef<DrawnBarRect[]>([]);
+    const previousBarRectsRef = useRef<DrawnBarRect[]>([]);
+    const targetBarRectsRef = useRef<DrawnBarRect[]>([]);
+    const renderedBarRectsRef = useRef<DrawnBarRect[]>([]);
     const isGroupedStackBar = barPresentation === 'groupedStack';
     const cursorStore = useMemo(
         () => createLocalStore<CursorState>({ idx: null, left: 0, top: 0 }, areCursorStatesEqual),
@@ -1641,7 +1730,13 @@ const UplotBarChart = ({
     const animationProgress = useChartAnimation(alignedData);
 
     const syncBarGeometry = useCallback((nextRects: DrawnBarRect[], nextAvatars: AvatarAnchor[]) => {
-        barRectsRef.current = nextRects;
+        if (!areDrawnBarRectsEqual(targetBarRectsRef.current, nextRects)) {
+            previousBarRectsRef.current =
+                renderedBarRectsRef.current.length > 0
+                    ? renderedBarRectsRef.current
+                    : targetBarRectsRef.current;
+            targetBarRectsRef.current = nextRects;
+        }
         setAvatarAnchors((prev) => (areAvatarAnchorsEqual(prev, nextAvatars) ? prev : nextAvatars));
     }, []);
     const xAxis = useMemo(
@@ -1694,7 +1789,7 @@ const UplotBarChart = ({
                                 const frame = getPlotFrame(instance);
                                 const plotLeft = frame?.left ?? 0;
                                 const plotTop = frame?.top ?? 0;
-                                const hovered = barRectsRef.current.find(
+                                const hovered = renderedBarRectsRef.current.find(
                                     (rect) =>
                                         rect.idx === nextIdx &&
                                         left + plotLeft >= rect.left &&
@@ -1734,7 +1829,7 @@ const UplotBarChart = ({
                             });
 
                             if (
-                                !areDrawnBarRectsEqual(barRectsRef.current, rects) ||
+                                !areDrawnBarRectsEqual(targetBarRectsRef.current, rects) ||
                                 !areAvatarAnchorsEqual(avatarAnchors, avatars)
                             ) {
                                 syncBarGeometry(rects, avatars);
@@ -1742,36 +1837,30 @@ const UplotBarChart = ({
 
                             const ctx = instance.ctx;
                             const pxRatio = uPlot.pxRatio || 1;
+                            const zeroLine = frame.top + instance.valToPos(0, 'y');
+                            const animatedRects = buildAnimatedBarRects({
+                                previousRects: previousBarRectsRef.current,
+                                nextRects: rects,
+                                progress: animationProgress,
+                                zeroLine,
+                            });
+
+                            renderedBarRectsRef.current = animatedRects;
 
                             ctx.save();
                             ctx.beginPath();
                             ctx.rect(frame.left * pxRatio, frame.top * pxRatio, frame.width * pxRatio, frame.height * pxRatio);
                             ctx.clip();
 
-                            const zeroY = instance.valToPos(0, 'y');
-
-                            rects.forEach((rect) => {
+                            animatedRects.forEach((rect) => {
                                 if (rect.width <= 0 || rect.height <= 0) return;
 
                                 const series = barSeriesRef.current.find((item) => item.key === rect.seriesKey);
                                 if (!series) return;
 
-                                const animatedHeight = rect.height * animationProgress;
-                                // 0 기준 위로 또는 아래로 자라나도록 top 조정
-                                // uPlot y coordinates are 0 at top. valToPos(0, 'y') is the zero line.
-                                const rectCenterY = rect.top + rect.height / 2;
-                                const isPositive = rectCenterY < frame.top + zeroY;
-
-                                let animatedTop = rect.top;
-                                if (isPositive) {
-                                    animatedTop = frame.top + zeroY - (frame.top + zeroY - rect.top) * animationProgress;
-                                } else {
-                                    animatedTop = frame.top + zeroY;
-                                }
-
                                 ctx.beginPath();
                                 ctx.fillStyle = series.color;
-                                ctx.rect(rect.left * pxRatio, animatedTop * pxRatio, rect.width * pxRatio, animatedHeight * pxRatio);
+                                ctx.rect(rect.left * pxRatio, rect.top * pxRatio, rect.width * pxRatio, rect.height * pxRatio);
                                 ctx.fill();
                             });
 
@@ -1877,6 +1966,9 @@ const UplotBarChart = ({
                                 left: item.left,
                                 top: item.top,
                                 transform: 'translateX(-50%)',
+                                transition:
+                                    `left ${BAR_GEOMETRY_ANIMATION_DURATION_MS}ms ${BAR_GEOMETRY_ANIMATION_CSS_EASING}, ` +
+                                    `top ${BAR_GEOMETRY_ANIMATION_DURATION_MS}ms ${BAR_GEOMETRY_ANIMATION_CSS_EASING}`,
                             }}
                         >
                             {renderChartAvatar({
@@ -1905,7 +1997,7 @@ const UplotBarChart = ({
                     countFormatter={countFormatter}
                     tooltipCountDivider={tooltipCountDivider}
                     noDataLabel={noDataLabel}
-                    barRectsRef={barRectsRef}
+                    barRectsRef={renderedBarRectsRef}
                     avatarRenderer={avatarRenderer}
                 />
             </div>
