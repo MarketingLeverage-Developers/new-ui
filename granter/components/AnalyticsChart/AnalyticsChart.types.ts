@@ -69,6 +69,7 @@ export type AnalyticsChartBarModel = {
     presentation?: AnalyticsChartBarPresentation;
     showAvatars?: boolean;
     tooltipMode?: AnalyticsChartTooltipMode;
+    tooltipCountDivider?: boolean;
     countFormatter?: (value: number) => string;
     yAxisWidth?: number;
     yAxisFormatter?: (value: number) => string;

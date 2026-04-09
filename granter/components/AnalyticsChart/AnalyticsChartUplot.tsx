@@ -32,7 +32,7 @@ type GroupedStackSeriesMeta = AnalyticsChartSeries;
 
 type TooltipPayloadItem = {
     dataKey?: string | number;
-    value?: string | number;
+    value?: string | number | boolean;
     payload?: LineChartDatum;
 };
 
@@ -52,6 +52,7 @@ type BarTooltipContentProps = {
     seriesMeta: AnalyticsChartSeries[];
     valueFormatter: (value: number) => string;
     countFormatter: (value: number) => string;
+    showCountDivider?: boolean;
 };
 
 type GroupedStackTooltipContentProps = {
@@ -61,6 +62,7 @@ type GroupedStackTooltipContentProps = {
     seriesMeta: GroupedStackSeriesMeta[];
     valueFormatter: (value: number) => string;
     countFormatter: (value: number) => string;
+    showCountDivider?: boolean;
 };
 
 type AmountShareTooltipContentProps = {
@@ -1009,6 +1011,7 @@ const BarTooltipContent = ({
     seriesMeta,
     valueFormatter,
     countFormatter,
+    showCountDivider = false,
 }: BarTooltipContentProps) => {
     if (!active || !payload || payload.length === 0) return null;
 
@@ -1060,9 +1063,16 @@ const BarTooltipContent = ({
                                 {valueFormatter(Math.abs(item.value))}
                             </Text>
                             {typeof item.count === 'number' ? (
-                                <Text size={12} tone="muted">
-                                    {countFormatter(item.count)}
-                                </Text>
+                                <>
+                                    {showCountDivider ? (
+                                        <Text size={12} tone="muted">
+                                            |
+                                        </Text>
+                                    ) : null}
+                                    <Text size={12} tone="muted">
+                                        {countFormatter(item.count)}
+                                    </Text>
+                                </>
                             ) : null}
                         </div>
                     </div>
@@ -1098,6 +1108,7 @@ const GroupedStackTooltipContent = ({
     seriesMeta,
     valueFormatter,
     countFormatter,
+    showCountDivider = false,
 }: GroupedStackTooltipContentProps) => {
     if (!active || !payload || payload.length === 0) return null;
 
@@ -1158,9 +1169,16 @@ const GroupedStackTooltipContent = ({
                                 {valueFormatter(Math.abs(item.value))}
                             </Text>
                             {typeof item.count === 'number' ? (
-                                <Text size={12} tone="muted">
-                                    {countFormatter(item.count)}
-                                </Text>
+                                <>
+                                    {showCountDivider ? (
+                                        <Text size={12} tone="muted">
+                                            |
+                                        </Text>
+                                    ) : null}
+                                    <Text size={12} tone="muted">
+                                        {countFormatter(item.count)}
+                                    </Text>
+                                </>
                             ) : null}
                         </div>
                     </div>
@@ -1433,6 +1451,7 @@ const UplotBarChart = ({
     barTickFormatter,
     barTooltipValueFormatter,
     countFormatter,
+    tooltipCountDivider,
     noDataLabel,
     dashboardBarCategoryGap,
     dashboardBarGap,
@@ -1468,6 +1487,7 @@ const UplotBarChart = ({
     barTickFormatter: (value: number) => string;
     barTooltipValueFormatter: (value: number) => string;
     countFormatter: (value: number) => string;
+    tooltipCountDivider?: boolean;
     noDataLabel: string;
     dashboardBarCategoryGap: number;
     dashboardBarGap?: number;
@@ -1773,6 +1793,7 @@ const UplotBarChart = ({
                     tooltipMode={tooltipMode}
                     barTooltipValueFormatter={barTooltipValueFormatter}
                     countFormatter={countFormatter}
+                    tooltipCountDivider={tooltipCountDivider}
                     noDataLabel={noDataLabel}
                     barRectsRef={barRectsRef}
                     avatarRenderer={avatarRenderer}
@@ -1794,6 +1815,7 @@ const UplotBarTooltipOverlay = memo(({
     tooltipMode,
     barTooltipValueFormatter,
     countFormatter,
+    tooltipCountDivider,
     noDataLabel,
     barRectsRef,
     avatarRenderer,
@@ -1809,6 +1831,7 @@ const UplotBarTooltipOverlay = memo(({
     tooltipMode: AnalyticsChartTooltipMode;
     barTooltipValueFormatter: (value: number) => string;
     countFormatter: (value: number) => string;
+    tooltipCountDivider?: boolean;
     noDataLabel: string;
     barRectsRef: React.RefObject<DrawnBarRect[]>;
     avatarRenderer?: AnalyticsChartAvatarRenderer;
@@ -1911,6 +1934,7 @@ const UplotBarTooltipOverlay = memo(({
                     seriesMeta={groupedStackSeries}
                     valueFormatter={barTooltipValueFormatter}
                     countFormatter={countFormatter}
+                    showCountDivider={tooltipCountDivider}
                 />
             ) : (
                 <BarTooltipContent
@@ -1920,6 +1944,7 @@ const UplotBarTooltipOverlay = memo(({
                     seriesMeta={barSeries}
                     valueFormatter={barTooltipValueFormatter}
                     countFormatter={countFormatter}
+                    showCountDivider={tooltipCountDivider}
                 />
             )}
         </div>
@@ -2009,6 +2034,7 @@ const AnalyticsChart = ({
     const barTooltipValueFormatter =
         barChart.tooltipValueFormatter ?? barTickFormatter;
     const barCountFormatter = barChart.countFormatter ?? formatNumericValue;
+    const barTooltipCountDivider = Boolean(barChart.tooltipCountDivider);
     const barYAxisWidth = barChart.yAxisWidth ?? (isDashboardMetricPreset ? 72 : 54);
     const barYAxisIntegerOnly = Boolean(barChart.yAxisIntegerOnly);
     const barTooltipMode =
@@ -2156,6 +2182,7 @@ const AnalyticsChart = ({
                                 barTickFormatter={barTickFormatter}
                                 barTooltipValueFormatter={barTooltipValueFormatter}
                                 countFormatter={barCountFormatter}
+                                tooltipCountDivider={barTooltipCountDivider}
                                 noDataLabel={noDataLabel}
                                 dashboardBarCategoryGap={dashboardBarLayout.categoryGap}
                                 dashboardBarGap={dashboardBarLayout.barGap}
