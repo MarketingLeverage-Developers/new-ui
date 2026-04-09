@@ -123,7 +123,7 @@ type LocalStore<T> = {
 const DEFAULT_BAR_PLOT_WIDTH = 940;
 const DEFAULT_DASHBOARD_BAR_WIDTH = 200;
 const MIN_BAR_PLOT_WIDTH = 320;
-const TOOLTIP_MAX_WIDTH = 220;
+const TOOLTIP_MAX_WIDTH = 320;
 const FONT_FAMILY = 'Pretendard, Apple SD Gothic Neo, Noto Sans KR, sans-serif';
 const GROUPED_STACK_AVATAR_SIZE = 30;
 const MIN_VERTICAL_CHART_PADDING = 12;
@@ -168,7 +168,7 @@ const tooltipStyle: React.CSSProperties = {
     display: 'flex',
     flexDirection: 'column',
     gap: 8,
-    minWidth: 180,
+    minWidth: 240,
     padding: 12,
     border: '1px solid var(--granter-gray-200)',
     borderRadius: 12,
@@ -178,7 +178,7 @@ const tooltipStyle: React.CSSProperties = {
 
 const tooltipItemStyle: React.CSSProperties = {
     display: 'grid',
-    gridTemplateColumns: '20px 1fr auto',
+    gridTemplateColumns: '20px max-content auto',
     alignItems: 'center',
     gap: 8,
 };
@@ -1055,7 +1055,10 @@ const BarTooltipContent = ({
                 {sortedItems.map((item) => (
                     <div key={item.key} style={tooltipItemStyle}>
                         {renderTooltipMarker(item.markerKind, item.color)}
-                        <Text size={13} style={{ minWidth: 0, wordBreak: 'break-word' }}>
+                        <Text
+                            size={13}
+                            style={{ minWidth: 0, whiteSpace: 'nowrap', wordBreak: 'keep-all' }}
+                        >
                             {item.tooltipLabel ?? item.label}
                         </Text>
                         <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
@@ -1161,7 +1164,10 @@ const GroupedStackTooltipContent = ({
                 {marketerSeriesItems.map((item) => (
                     <div key={item.key} style={tooltipItemStyle}>
                         {renderTooltipMarker(item.markerKind, item.color)}
-                        <Text size={13} style={{ minWidth: 0, wordBreak: 'break-word' }}>
+                        <Text
+                            size={13}
+                            style={{ minWidth: 0, whiteSpace: 'nowrap', wordBreak: 'keep-all' }}
+                        >
                             {item.tooltipLabel ?? item.label}
                         </Text>
                         <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
