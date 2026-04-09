@@ -16,14 +16,17 @@ type SearchSelectProps = {
     children: React.ReactNode;
     label: string;
     data: SelectItem[];
+    defaultValue?: string;
+    value?: string;
+    onChange?: (value: string) => void;
 };
 
-export const SearchSelect = ({ children, label, data }: SearchSelectProps) => (
+export const SearchSelect = ({ children, label, data, defaultValue, value, onChange }: SearchSelectProps) => (
     // const [query, setQuery] = useState('');
     // const value = React.useMemo(() => ({ query, setQuery, label, data }), [query, label, data]);
 
     <div className={styles.SearchSelect}>
-        <Select>
+        <Select defaultValue={defaultValue} value={value} onChange={onChange}>
             <Dropdown>
                 <QuerySearch<SelectItem> label={label} data={data}>
                     {children}
