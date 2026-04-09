@@ -68,6 +68,7 @@ type SectionFieldVisualSelectCommonProps<T extends string = string> = {
     options: SectionFieldVisualSelectOption<T>[];
     className?: string;
     menuClassName?: string;
+    emptyBadgeStyle?: React.CSSProperties;
     visualMode?: SectionFieldVisualMode;
     disabled?: boolean;
     searchable?: boolean;
@@ -199,6 +200,7 @@ const VisualToken = <T extends string>({
 type TriggerContentProps<T extends string = string> = {
     selectedOptions: SectionFieldVisualSelectOption<T>[];
     emptyLabel: React.ReactNode;
+    emptyBadgeStyle?: React.CSSProperties;
     multiple?: boolean;
     maxVisibleVisuals?: number;
     visualMode?: SectionFieldVisualMode;
@@ -207,12 +209,17 @@ type TriggerContentProps<T extends string = string> = {
 const TriggerContent = <T extends string>({
     selectedOptions,
     emptyLabel,
+    emptyBadgeStyle,
     multiple = false,
     maxVisibleVisuals = 3,
     visualMode = 'avatar',
 }: TriggerContentProps<T>) => {
     if (selectedOptions.length === 0) {
-        return <span className={styles.EmptyBadge}>{emptyLabel}</span>;
+        return (
+            <span className={styles.EmptyBadge} style={emptyBadgeStyle}>
+                {emptyLabel}
+            </span>
+        );
     }
 
     const visibleOptions = multiple
@@ -412,6 +419,7 @@ const SectionFieldVisualSelectBase = <T extends string>({
     options,
     className,
     menuClassName,
+    emptyBadgeStyle,
     visualMode = 'avatar',
     disabled = false,
     searchable = true,
@@ -476,6 +484,7 @@ const SectionFieldVisualSelectBase = <T extends string>({
                     <TriggerContent
                         selectedOptions={selectedOptions}
                         emptyLabel={emptyLabel}
+                        emptyBadgeStyle={emptyBadgeStyle}
                         multiple={multiple}
                         maxVisibleVisuals={maxVisibleVisuals}
                         visualMode={visualMode}
