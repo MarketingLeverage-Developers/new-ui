@@ -39,6 +39,7 @@ export { default as SectionFieldRowTab } from './components/SectionFieldRowTab/S
 export { default as SectionFieldOptionToggleCard } from './components/SectionFieldOptionToggleCard/SectionFieldOptionToggleCard';
 export { default as SectionFieldSelect } from './components/SectionFieldSelect/SectionFieldSelect';
 export { default as SectionFieldVisualSelect } from './components/SectionFieldVisualSelect/SectionFieldVisualSelect';
+export { default as SectionFieldVisualSelectPair } from './components/SectionFieldVisualSelectPair/SectionFieldVisualSelectPair';
 export { default as SectionFieldMemberSelect } from './components/SectionFieldMemberSelect/SectionFieldMemberSelect';
 export { default as ButtonTabGroup } from './components/ButtonTabGroup/ButtonTabGroup';
 export { default as BookmarkTabs } from './components/BookmarkTabs/BookmarkTabs';
@@ -222,6 +223,7 @@ export type {
     SectionFieldVisualSelectProps,
     SectionFieldVisualSelectOption,
 } from './components/SectionFieldVisualSelect/SectionFieldVisualSelect';
+export type { SectionFieldVisualSelectPairProps } from './components/SectionFieldVisualSelectPair/SectionFieldVisualSelectPair';
 export type {
     SectionFieldMemberSelectProps,
     SectionFieldMemberSelectOption,

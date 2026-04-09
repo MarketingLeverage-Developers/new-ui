@@ -48,9 +48,11 @@ const DetailSceneHeader = ({
             }
         >
             <div className={styles.SummaryMain}>
-                <span className={styles.IconWrap} data-tone={tone}>
-                    {icon}
-                </span>
+                {icon ? (
+                    <span className={styles.IconWrap} data-tone={tone}>
+                        {icon}
+                    </span>
+                ) : null}
 
                 <span className={styles.Copy}>
                     <Text as="span" className={styles.Title}>
