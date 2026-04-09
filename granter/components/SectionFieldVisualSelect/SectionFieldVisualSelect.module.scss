@@ -35,7 +35,9 @@
 }
 
 .Trigger:focus-visible .SelectedStack,
-.Trigger[data-open='true'] .SelectedStack {
+.Trigger[data-open='true'] .SelectedStack,
+.Trigger:focus-visible .SelectedSingle,
+.Trigger[data-open='true'] .SelectedSingle {
     filter: drop-shadow(0 0 0.2rem rgb(14 165 233 / 16%));
 }
 
@@ -65,6 +67,29 @@
     align-items: center;
     padding-right: 4px;
     transition: filter 0.15s ease;
+}
+
+.SelectedSingle {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+    transition: filter 0.15s ease;
+}
+
+.SelectedSingleVisual {
+    border: 2px solid var(--granter-white);
+}
+
+.SelectedSingleLabel {
+    min-width: 0;
+    color: var(--granter-gray-800);
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 20px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .AddBadge {

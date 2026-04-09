@@ -222,6 +222,27 @@ const TriggerContent = <T extends string>({
         );
     }
 
+    if (!multiple) {
+        const selectedOption = selectedOptions[0];
+
+        if (!selectedOption) {
+            return null;
+        }
+
+        return (
+            <span className={styles.SelectedSingle}>
+                <VisualToken
+                    option={selectedOption}
+                    size={40}
+                    fontSize={13}
+                    mode={visualMode}
+                    className={styles.SelectedSingleVisual}
+                />
+                <span className={styles.SelectedSingleLabel}>{selectedOption.label}</span>
+            </span>
+        );
+    }
+
     const visibleOptions = multiple
         ? selectedOptions.slice(0, Math.max(1, maxVisibleVisuals))
         : selectedOptions.slice(0, 1);

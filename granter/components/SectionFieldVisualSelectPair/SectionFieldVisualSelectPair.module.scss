@@ -1,0 +1,18 @@
+.Root {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+    max-width: 100%;
+}
+
+.Item {
+    min-width: 0;
+}
+
+.Divider {
+    width: 1px;
+    height: 28px;
+    flex-shrink: 0;
+    background: #edf2f7;
+}

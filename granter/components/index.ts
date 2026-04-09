@@ -225,6 +225,8 @@ export type {
     SectionFieldVisualSelectProps,
     SectionFieldVisualSelectOption,
 } from './SectionFieldVisualSelect/SectionFieldVisualSelect';
+export { default as SectionFieldVisualSelectPair } from './SectionFieldVisualSelectPair/SectionFieldVisualSelectPair';
+export type { SectionFieldVisualSelectPairProps } from './SectionFieldVisualSelectPair/SectionFieldVisualSelectPair';
 export { default as SectionFieldMemberSelect } from './SectionFieldMemberSelect/SectionFieldMemberSelect';
 export type {
     SectionFieldMemberSelectProps,
