@@ -46,7 +46,7 @@ const BasicRightDrawer = ({
             closeOnEsc={closeOnEsc}
         >
             <Portal>
-                <Modal.Backdrop className={backdropClassName} />
+                <Modal.Backdrop className={classNames(styles.TransparentBackdrop, backdropClassName)} />
                 <Modal.Content
                     width={width}
                     height="100vh"

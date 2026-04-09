@@ -28,7 +28,7 @@ const RightDrawerModalContainer = ({
         enterAction={enterAction}
     >
         <Portal>
-            <Modal.Backdrop />
+            <Modal.Backdrop className={styles.TransparentBackdrop} />
             <Modal.Content
                 width={width}
                 height="100vh"
