@@ -11,6 +11,5 @@ export * from './ListInfiniteScroll/ListInfiniteScroll';
 export * from './ListPagination/ListPagination';
 export * from './ListTable/ListTable';
 export * from './PageSizeSelect/PageSizeSelect';
-export * from './PageTemplate/PageTemplate';
 export * from './LogoLine/LogoLine';
 export * from './ModalContainer/ModalContainer';

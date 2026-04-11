@@ -13,7 +13,6 @@ import {
     ModalContainer,
     Overlays,
     PageSizeSelect,
-    PageTemplate,
     Sidebar,
     SubSidebar,
 } from './components';
@@ -40,6 +39,5 @@ Desktop.ListInfiniteScroll = ListInfiniteScroll;
 Desktop.ListPagination = ListPagination;
 Desktop.ListTable = ListTable;
 Desktop.PageSizeSelect = PageSizeSelect;
-Desktop.PageTemplate = PageTemplate;
 Desktop.LogoLine = LogoLine;
 Desktop.ModalContainer = ModalContainer;

@@ -6,4 +6,3 @@ export * from './ListTable/ListTable';
 export * from './PageSizeSelect/PageSizeSelect';
 export * from './IsDeleteSelect/IsDeleteSelect';
 export * from './DateSelect/DateSelect';
-export * from './PageTemplate/PageTemplate';

@@ -9,7 +9,6 @@ import {
     PageSizeSelect,
     IsDeleteSelect,
     DateSelect,
-    PageTemplate,
 } from './components';
 
 type MobileProps = {
@@ -26,4 +25,3 @@ Mobile.ListTable = ListTable;
 Mobile.PageSizeSelect = PageSizeSelect;
 Mobile.IsDeleteSelect = IsDeleteSelect;
 Mobile.DateSelect = DateSelect;
-Mobile.PageTemplate = PageTemplate;
