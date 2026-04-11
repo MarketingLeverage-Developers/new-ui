@@ -1,15 +1,18 @@
 .Root {
     position: relative;
-    display: inline-flex;
+    display: flex;
+    width: 100%;
     min-width: 0;
 }
 
 .TriggerWrap {
-    display: inline-flex;
+    display: flex;
+    width: 100%;
 }
 
 .Trigger {
-    display: inline-flex;
+    display: flex;
+    flex: 1;
     align-items: center;
     justify-content: flex-start;
     min-width: 0;
@@ -42,7 +45,8 @@
 }
 
 .EmptyBadge {
-    display: inline-flex;
+    display: flex;
+    width: 100%;
     align-items: center;
     justify-content: center;
     min-height: 40px;
@@ -70,7 +74,8 @@
 }
 
 .SelectedSingle {
-    display: inline-flex;
+    display: flex;
+    width: 100%;
     align-items: center;
     gap: 10px;
     min-width: 0;

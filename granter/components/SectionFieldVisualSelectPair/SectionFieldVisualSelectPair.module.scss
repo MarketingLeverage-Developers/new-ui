@@ -1,12 +1,14 @@
 .Root {
-    display: inline-flex;
+    display: flex;
     align-items: center;
     gap: 10px;
+    width: 100%;
     min-width: 0;
     max-width: 100%;
 }
 
 .Item {
+    flex: 1;
     min-width: 0;
 }
 
