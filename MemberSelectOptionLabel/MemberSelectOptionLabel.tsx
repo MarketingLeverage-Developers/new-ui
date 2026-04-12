@@ -7,6 +7,7 @@ type MemberSelectOptionLabelProps = {
     name: string;
     src?: string | null;
     useShortNameAvatar?: boolean;
+    useShortNameAvatarWhenProfileMissing?: boolean;
 };
 
 const resolveUserAvatarSrc = (name: string, src?: string | null) => {
@@ -24,19 +25,38 @@ const shortNameAvatarStyle = {
     boxShadow: 'inset 0 0 0 1px rgba(255, 255, 255, 0.2)',
 };
 
-const MemberSelectOptionLabel = ({ name, src, useShortNameAvatar = false }: MemberSelectOptionLabelProps) => (
-    <span className={styles.Root}>
-        <MemberProfileAvatar
-            className={styles.Avatar}
-            name={name}
-            src={useShortNameAvatar ? undefined : resolveUserAvatarSrc(name, src)}
-            fallbackText={useShortNameAvatar ? toProfileShortName(name) : undefined}
-            size={22}
-            fontSize={10}
-            style={useShortNameAvatar ? shortNameAvatarStyle : undefined}
-        />
-        <span className={styles.Name}>{name}</span>
-    </span>
-);
+const MemberSelectOptionLabel = ({
+    name,
+    src,
+    useShortNameAvatar = false,
+    useShortNameAvatarWhenProfileMissing = false,
+}: MemberSelectOptionLabelProps) => {
+    const normalizedSrc = src?.trim() ?? '';
+    const hasProfileSrc = normalizedSrc.length > 0;
+    const shouldUseShortNameAvatar =
+        useShortNameAvatar || (useShortNameAvatarWhenProfileMissing && !hasProfileSrc);
+    const resolvedSrc = useShortNameAvatar
+        ? undefined
+        : useShortNameAvatarWhenProfileMissing
+          ? hasProfileSrc
+              ? normalizedSrc
+              : undefined
+          : resolveUserAvatarSrc(name, normalizedSrc);
+
+    return (
+        <span className={styles.Root}>
+            <MemberProfileAvatar
+                className={styles.Avatar}
+                name={name}
+                src={resolvedSrc}
+                fallbackText={shouldUseShortNameAvatar ? toProfileShortName(name) : undefined}
+                size={22}
+                fontSize={10}
+                style={shouldUseShortNameAvatar ? shortNameAvatarStyle : undefined}
+            />
+            <span className={styles.Name}>{name}</span>
+        </span>
+    );
+};
 
 export default MemberSelectOptionLabel;

@@ -11,6 +11,7 @@ type MemberSelectOptionLike<T extends string = string> = {
 
 type MemberSelectOptionConfig = {
     useShortNameAvatar?: boolean;
+    useShortNameAvatarWhenProfileMissing?: boolean;
 };
 
 export const toMemberSelectOption = <T extends string, TOption extends MemberSelectOptionLike<T>>(
@@ -23,6 +24,7 @@ export const toMemberSelectOption = <T extends string, TOption extends MemberSel
             name={option.label}
             src={option.profileImageUrl}
             useShortNameAvatar={config?.useShortNameAvatar}
+            useShortNameAvatarWhenProfileMissing={config?.useShortNameAvatarWhenProfileMissing}
         />
     ),
     searchText: option.searchText ?? option.label,
