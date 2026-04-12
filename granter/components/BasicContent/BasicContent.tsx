@@ -27,6 +27,7 @@ export type BasicContentBodyProps = {
     children: React.ReactNode;
     className?: string;
     style?: React.CSSProperties;
+    bodyRef?: React.Ref<HTMLDivElement>;
 };
 
 export type BasicContentHeroProps = {
@@ -213,8 +214,8 @@ const BasicContentCloseButton = ({
     </button>
 );
 
-const BasicContentBody = ({ children, className, style }: BasicContentBodyProps) => (
-    <div className={classNames(styles.Body, className)} style={style}>
+const BasicContentBody = ({ children, className, style, bodyRef }: BasicContentBodyProps) => (
+    <div ref={bodyRef} className={classNames(styles.Body, className)} style={style}>
         {children}
     </div>
 );
