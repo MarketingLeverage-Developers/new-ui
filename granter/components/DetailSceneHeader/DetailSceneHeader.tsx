@@ -11,6 +11,7 @@ export type DetailSceneHeaderProps = {
     value?: React.ReactNode;
     icon?: React.ReactNode;
     onBack?: () => void;
+    backAriaLabel?: string;
     accessory?: React.ReactNode;
     middleContent?: React.ReactNode;
     tone?: DetailSceneHeaderTone;
@@ -23,6 +24,7 @@ const DetailSceneHeader = ({
     value,
     icon,
     onBack,
+    backAriaLabel = '상세보기 닫기',
     accessory = <FiChevronRight size={18} />,
     middleContent,
     tone = 'success',
@@ -89,7 +91,7 @@ const DetailSceneHeader = ({
                                 event.stopPropagation();
                                 onBack();
                             }}
-                            aria-label="상세보기 닫기"
+                            aria-label={backAriaLabel}
                         >
                             {accessory}
                         </button>
