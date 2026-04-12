@@ -26,6 +26,7 @@ const resolveUserAvatarSrc = <T extends string>(option: SectionFieldMemberSelect
 type SectionFieldMemberSelectCommonProps<T extends string = string> = {
     options: SectionFieldMemberSelectOption<T>[];
     useShortNameAvatar?: boolean;
+    useShortNameAvatarWhenProfileMissing?: boolean;
     className?: string;
     menuClassName?: string;
     disabled?: boolean;
@@ -66,16 +67,30 @@ const isMultipleProps = <T extends string>(
 const SectionFieldMemberSelect = <T extends string = string>(props: SectionFieldMemberSelectProps<T>) => {
     const visualOptions = useMemo(
         () =>
-            props.options.map((option) => ({
-                value: option.value,
-                label: option.label,
-                imageSrc: props.useShortNameAvatar ? undefined : resolveUserAvatarSrc(option),
-                imageAlt: `${option.label} profile`,
-                visualText: props.useShortNameAvatar ? toProfileShortName(option.label) : undefined,
-                disabled: option.disabled,
-                searchText: option.searchText,
-            })),
-        [props.options, props.useShortNameAvatar]
+            props.options.map((option) => {
+                const normalizedProfileImageUrl = option.profileImageUrl?.trim() ?? '';
+                const hasProfileImage = normalizedProfileImageUrl.length > 0;
+                const shouldUseShortNameAvatar =
+                    props.useShortNameAvatar ||
+                    (props.useShortNameAvatarWhenProfileMissing && !hasProfileImage);
+
+                return {
+                    value: option.value,
+                    label: option.label,
+                    imageSrc: props.useShortNameAvatar
+                        ? undefined
+                        : props.useShortNameAvatarWhenProfileMissing
+                          ? hasProfileImage
+                              ? normalizedProfileImageUrl
+                              : undefined
+                          : resolveUserAvatarSrc(option),
+                    imageAlt: `${option.label} profile`,
+                    visualText: shouldUseShortNameAvatar ? toProfileShortName(option.label) : undefined,
+                    disabled: option.disabled,
+                    searchText: option.searchText,
+                };
+            }),
+        [props.options, props.useShortNameAvatar, props.useShortNameAvatarWhenProfileMissing]
     );
 
     if (isMultipleProps(props)) {
