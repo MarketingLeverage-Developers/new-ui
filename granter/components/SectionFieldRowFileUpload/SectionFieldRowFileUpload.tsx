@@ -2,6 +2,8 @@ import React from 'react';
 import { FiX } from 'react-icons/fi';
 import FileUploader, { type FileUploaderProps } from '../FileUploader/FileUploader';
 import { useImageUploader } from '@/shared/headless/ImageUploader/ImageUploader';
+import Modal from '../../../shared/headless/Modal/Modal';
+import Portal from '../../../shared/headless/Portal/Portal';
 import styles from './SectionFieldRowFileUpload.module.scss';
 
 export type SectionFieldRowFileUploadProps = Omit<FileUploaderProps, 'children'> & {
@@ -11,6 +13,7 @@ export type SectionFieldRowFileUploadProps = Omit<FileUploaderProps, 'children'>
     removeButtonText?: string;
     helperText?: string;
     removable?: boolean;
+    previewOnImageClick?: boolean;
 };
 
 type TriggerContentProps = {
@@ -20,6 +23,7 @@ type TriggerContentProps = {
     removeButtonText: string;
     helperText?: string;
     removable: boolean;
+    previewOnImageClick: boolean;
 };
 
 const TriggerContent = ({
@@ -29,8 +33,10 @@ const TriggerContent = ({
     removeButtonText,
     helperText,
     removable,
+    previewOnImageClick,
 }: TriggerContentProps) => {
     const { imageUploaderValue, openFileDialog, clear, dragging, removeById } = useImageUploader();
+    const [previewOpen, setPreviewOpen] = React.useState(false);
     const fileCount = imageUploaderValue.length;
     const firstFile = imageUploaderValue[0];
     const buttonLabel = fileCount > 0 ? replaceButtonText : buttonText;
@@ -41,6 +47,22 @@ const TriggerContent = ({
               ? firstFile?.name || firstFile?.url || emptyText
               : `${fileCount.toLocaleString('ko-KR')}개 파일 업로드됨`;
     const hasSinglePreview = fileCount === 1 && Boolean(firstFile?.url);
+    const previewAlt = firstFile?.name || '업로드 이미지 원본';
+
+    React.useEffect(() => {
+        if (!hasSinglePreview && previewOpen) {
+            setPreviewOpen(false);
+        }
+    }, [hasSinglePreview, previewOpen]);
+
+    const handlePreviewButtonClick = () => {
+        if (previewOnImageClick && hasSinglePreview) {
+            setPreviewOpen(true);
+            return;
+        }
+
+        openFileDialog();
+    };
 
     if (hasSinglePreview && firstFile) {
         return (
@@ -50,7 +72,7 @@ const TriggerContent = ({
                         type="button"
                         className={styles.PreviewButton}
                         data-dragging={dragging ? 'true' : 'false'}
-                        onClick={openFileDialog}
+                        onClick={handlePreviewButtonClick}
                         title={helperText ? `${titleText}\n${helperText}` : titleText}
                     >
                         <img src={firstFile.url} alt={firstFile.name || '업로드 이미지'} />
@@ -73,6 +95,31 @@ const TriggerContent = ({
                         </button>
                     ) : null}
                 </div>
+                {previewOnImageClick ? (
+                    <Modal value={previewOpen} onChange={setPreviewOpen}>
+                        <Portal>
+                            <Modal.Backdrop className={styles.PreviewModalBackdrop} />
+                            <Modal.Content
+                                className={styles.PreviewModalContent}
+                                width="min(90vw, 1050px)"
+                                height="min(90vh, 930px)"
+                                maxHeight="90vh"
+                            >
+                                <div className={styles.PreviewModalImageWrapper}>
+                                    <button
+                                        type="button"
+                                        className={styles.PreviewModalCloseButton}
+                                        aria-label="미리보기 닫기"
+                                        onClick={() => setPreviewOpen(false)}
+                                    >
+                                        <FiX />
+                                    </button>
+                                    <img src={firstFile.url} alt={previewAlt} />
+                                </div>
+                            </Modal.Content>
+                        </Portal>
+                    </Modal>
+                ) : null}
             </div>
         );
     }
@@ -105,6 +152,7 @@ const SectionFieldRowFileUpload = ({
     removeButtonText = '삭제',
     helperText,
     removable = false,
+    previewOnImageClick = false,
     ...props
 }: SectionFieldRowFileUploadProps) => (
     <FileUploader {...props} className={className}>
@@ -115,6 +163,7 @@ const SectionFieldRowFileUpload = ({
             removeButtonText={removeButtonText}
             helperText={helperText}
             removable={removable}
+            previewOnImageClick={previewOnImageClick}
         />
     </FileUploader>
 );
