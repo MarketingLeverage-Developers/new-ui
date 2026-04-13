@@ -569,7 +569,7 @@ const RangeDatePicker = ({ range, onChange, onPresetSelect, ...props }: RangeDat
                         fixedWeeks
                         selected={tempRange}
                         onSelect={handleSelectRange}
-                        disabled={{ after: today }} // ✅ 미래 날짜 선택 막기
+                        // disabled={{ after: today }} // ✅ 미래 날짜 선택 막기
                         toMonth={today}
                         {...props}
                     />
