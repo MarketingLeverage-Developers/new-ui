@@ -506,9 +506,9 @@ const mergeOrderByLeafKeys = (prevOrder: string[], leafKeys: string[]) => {
     const prev = uniq(prevOrder);
     if (leafKeys.length === 0) return prev;
 
-    const leafSet = new Set(leafKeys);
-    const base = prev.filter((k) => leafSet.has(k));
-    const next = [...base];
+    // Keep previous non-leaf keys as-is so dynamic columns that temporarily disappear
+    // (before schema hydration completes) can restore their custom relative positions.
+    const next = [...prev];
 
     const findInsertIndex = (key: string) => {
         const idxInLeaf = leafKeys.indexOf(key);
