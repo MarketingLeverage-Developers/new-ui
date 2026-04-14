@@ -11,6 +11,8 @@ type SectionFieldTabCssProperties = React.CSSProperties & {
     '--granter-section-field-tab-min-item-width'?: string;
 };
 
+export type SectionFieldTabSize = 'default' | 'compact';
+
 export type SectionFieldTabProps<T extends string = string> = {
     children: React.ReactNode;
     value?: T;
@@ -18,6 +20,7 @@ export type SectionFieldTabProps<T extends string = string> = {
     onChange?: (nextValue: T) => void;
     full?: boolean;
     wrap?: boolean;
+    size?: SectionFieldTabSize;
     minItemWidth?: number | string;
     className?: string;
 };
@@ -192,6 +195,7 @@ const SectionFieldTab = (<T extends string = string>({
     onChange = noop,
     full: _full = true,
     wrap: _wrap = false,
+    size = 'default',
     minItemWidth,
     className,
 }: SectionFieldTabProps<T>) => {
@@ -209,6 +213,7 @@ const SectionFieldTab = (<T extends string = string>({
                 role="tablist"
                 className={classNames(styles.Root, className)}
                 style={cssVariables}
+                data-size={size}
                 // data-full={full ? 'true' : 'false'}
                 // data-wrap={wrap ? 'true' : 'false'}
             >

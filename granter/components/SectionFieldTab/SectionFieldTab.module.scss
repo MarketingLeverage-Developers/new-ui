@@ -9,6 +9,14 @@
     background-color: var(--granter-gray-100);
 }
 
+.Root[data-size='compact'] {
+    box-sizing: border-box;
+    height: 32px;
+    min-height: 32px;
+    padding: 2px;
+    border-radius: 8px;
+}
+
 .Root[data-wrap='false'] {
     box-sizing: border-box;
     height: 40px;
@@ -48,6 +56,16 @@
         background-color 0.16s ease,
         color 0.16s ease,
         box-shadow 0.16s ease;
+}
+
+.Root[data-size='compact'] .Item {
+    box-sizing: border-box;
+    height: 26px;
+    min-height: 26px;
+    padding: 0 10px;
+    border-radius: 6px;
+    font-size: 13px;
+    line-height: 18px;
 }
 
 .Root[data-full='false'] .Item {
