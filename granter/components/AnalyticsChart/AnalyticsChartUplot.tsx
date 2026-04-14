@@ -1788,28 +1788,30 @@ const UplotBarChart = ({
                             const top = instance.cursor.top ?? 0;
 
                             if (nextIdx === null) {
+                                instance.root.style.cursor = '';
                                 cursorStore.set({ idx: null, left: 0, top: 0 });
                                 return;
                             }
 
-                            if (isGroupedStackBar) {
-                                const frame = getPlotFrame(instance);
-                                const plotLeft = frame?.left ?? 0;
-                                const plotTop = frame?.top ?? 0;
-                                const hovered = renderedBarRectsRef.current.find(
-                                    (rect) =>
-                                        rect.idx === nextIdx &&
-                                        left + plotLeft >= rect.left &&
-                                        left + plotLeft <= rect.left + rect.width &&
-                                        top + plotTop >= rect.top &&
-                                        top + plotTop <= rect.top + rect.height
-                                );
+                            const frame = getPlotFrame(instance);
+                            const plotLeft = frame?.left ?? 0;
+                            const plotTop = frame?.top ?? 0;
+                            const hoveredRect = renderedBarRectsRef.current.find(
+                                (rect) =>
+                                    rect.idx === nextIdx &&
+                                    left + plotLeft >= rect.left &&
+                                    left + plotLeft <= rect.left + rect.width &&
+                                    top + plotTop >= rect.top &&
+                                    top + plotTop <= rect.top + rect.height
+                            );
+                            instance.root.style.cursor = onBarClick && hoveredRect ? 'pointer' : '';
 
+                            if (isGroupedStackBar) {
                                 cursorStore.set({
                                     idx: nextIdx,
                                     left,
                                     top,
-                                    activeSeriesKey: hovered?.seriesKey,
+                                    activeSeriesKey: hoveredRect?.seriesKey,
                                 });
                                 return;
                             }
@@ -1888,6 +1890,7 @@ const UplotBarChart = ({
             dashboardPresetRef,
             barPresentation,
             isGroupedStackBar,
+            onBarClick,
             avatarAnchors,
             syncBarGeometry,
             animationProgress,
