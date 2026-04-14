@@ -126,7 +126,7 @@ export { default as MetricStatusCard } from './MetricStatusCard/MetricStatusCard
 export type { MetricStatusCardProps } from './MetricStatusCard/MetricStatusCard';
 
 export { default as StatusChip } from './StatusChip/StatusChip';
-export type { StatusChipProps, StatusChipTone } from './StatusChip/StatusChip';
+export type { StatusChipProps, StatusChipSize, StatusChipTone } from './StatusChip/StatusChip';
 export { default as StatusBadge } from './StatusBadge/StatusBadge';
 export type { StatusBadgeProps } from './StatusBadge/StatusBadge';
 export { default as DetailSceneHeader } from './DetailSceneHeader/DetailSceneHeader';

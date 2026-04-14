@@ -277,7 +277,7 @@ export type {
 export type { TextProps, TextSize, TextTone, TextWeight } from './components/Text/Text';
 export type { StatusBadgeProps } from './components/StatusBadge/StatusBadge';
 export type { DetailSceneHeaderProps, DetailSceneHeaderTone } from './components/DetailSceneHeader/DetailSceneHeader';
-export type { StatusChipProps, StatusChipTone } from './components/StatusChip/StatusChip';
+export type { StatusChipProps, StatusChipSize, StatusChipTone } from './components/StatusChip/StatusChip';
 export type {
     SnapshotSummaryCardProps,
     SnapshotSummaryCardRow,
