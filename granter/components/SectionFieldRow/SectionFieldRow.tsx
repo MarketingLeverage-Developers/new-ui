@@ -3,6 +3,7 @@ import classNames from 'classnames';
 import styles from './SectionFieldRow.module.scss';
 
 type Align = 'center' | 'start';
+type Layout = 'inline' | 'stacked';
 
 type SectionFieldRowCssProperties = React.CSSProperties & {
     '--granter-section-field-label-width'?: string;
@@ -16,6 +17,7 @@ export type SectionFieldRowProps = Omit<React.HTMLAttributes<HTMLDivElement>, 'c
     error?: React.ReactNode;
     labelWidth?: number | string;
     align?: Align;
+    layout?: Layout;
     divider?: boolean;
     labelClassName?: string;
     contentClassName?: string;
@@ -69,6 +71,7 @@ const SectionFieldRow = (({
     error,
     labelWidth,
     align = 'center',
+    layout = 'inline',
     divider = true,
     className,
     labelClassName,
@@ -87,6 +90,7 @@ const SectionFieldRow = (({
             className={classNames(styles.Root, className)}
             style={cssVariables}
             data-align={align}
+            data-layout={layout}
             data-divider={divider ? 'true' : 'false'}
             {...props}
         >
