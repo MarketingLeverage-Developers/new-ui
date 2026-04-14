@@ -61,6 +61,18 @@ export type AnalyticsChartLegendItem = {
     color: string;
 };
 
+export type AnalyticsChartHeaderMetaItem = {
+    label: string;
+    value: string;
+    tone?: 'default' | 'positive' | 'negative';
+    color?: string;
+};
+
+export type AnalyticsChartHeaderMeta = {
+    title?: string;
+    items: AnalyticsChartHeaderMetaItem[];
+};
+
 export type AnalyticsChartBarClickPayload = {
     index: number;
     periodLabel: string;
@@ -97,5 +109,6 @@ export type AnalyticsChartProps = {
     title?: string;
     showTitle?: boolean;
     showLegend?: boolean;
+    headerMeta?: AnalyticsChartHeaderMeta | null;
     onBarClick?: (payload: AnalyticsChartBarClickPayload) => void;
 };

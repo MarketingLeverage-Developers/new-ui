@@ -258,6 +258,8 @@ export type {
     AnalyticsChartBarModel,
     AnalyticsChartBarPresentation,
     AnalyticsChartDatum,
+    AnalyticsChartHeaderMeta,
+    AnalyticsChartHeaderMetaItem,
     AnalyticsChartLegendItem,
     AnalyticsChartMarkerKind,
     AnalyticsChartPreset,

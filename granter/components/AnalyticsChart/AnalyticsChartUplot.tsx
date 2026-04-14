@@ -175,6 +175,40 @@ const legendItemStyle: React.CSSProperties = {
     color: 'var(--granter-gray-600)',
 };
 
+const headerMetaStyle: React.CSSProperties = {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 6,
+    flexWrap: 'wrap',
+    minWidth: 0,
+};
+
+const headerMetaTitleStyle: React.CSSProperties = {
+    fontSize: 11,
+    fontWeight: 400,
+    lineHeight: '16px',
+    fontFamily: FONT_FAMILY,
+    color: '#6B7280',
+};
+
+const headerMetaItemStyle: React.CSSProperties = {
+    fontSize: 11,
+    fontWeight: 400,
+    lineHeight: '16px',
+    fontFamily: FONT_FAMILY,
+    color: '#6B7280',
+};
+
+const headerMetaItemPositiveStyle: React.CSSProperties = {
+    ...headerMetaItemStyle,
+    color: 'var(--granter-blue-500)',
+};
+
+const headerMetaItemNegativeStyle: React.CSSProperties = {
+    ...headerMetaItemStyle,
+    color: 'var(--granter-red-500)',
+};
+
 const tooltipStyle: React.CSSProperties = {
     display: 'flex',
     flexDirection: 'column',
@@ -2214,6 +2248,7 @@ const AnalyticsChart = ({
     title = '운영 내역',
     showTitle = true,
     showLegend = true,
+    headerMeta,
     onBarClick,
 }: AnalyticsChartProps) => {
     const [chartAreaElement, setChartAreaElement] = useState<HTMLDivElement | null>(null);
@@ -2400,6 +2435,7 @@ const AnalyticsChart = ({
         () => barChart.legendItems ?? barSeries,
         [barChart.legendItems, barSeries]
     );
+    const hasHeaderMeta = Boolean(headerMeta && headerMeta.items.length > 0);
 
     return (
         <div style={containerStyle}>
@@ -2407,6 +2443,26 @@ const AnalyticsChart = ({
                 <Text size="md" weight="medium">
                     {title}
                 </Text>
+            ) : null}
+            {hasHeaderMeta ? (
+                <div style={headerMetaStyle}>
+                    <span style={headerMetaTitleStyle}>{headerMeta?.title ?? '선택된 금액'}</span>
+                    {headerMeta?.items.map((item, index) => (
+                        <span
+                            key={`${item.label}-${index}`}
+                            style={{
+                                ...(item.tone === 'positive'
+                                    ? headerMetaItemPositiveStyle
+                                    : item.tone === 'negative'
+                                      ? headerMetaItemNegativeStyle
+                                      : headerMetaItemStyle),
+                                ...(item.color ? { color: item.color } : {}),
+                            }}
+                        >
+                            {item.label}: {item.value}
+                        </span>
+                    ))}
+                </div>
             ) : null}
 
             {isLoading ? (
