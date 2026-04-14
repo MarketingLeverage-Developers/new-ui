@@ -16,6 +16,7 @@ import {
 import type {
     AnalyticsChartAvatarKind,
     AnalyticsChartAvatarRenderer,
+    AnalyticsChartBarClickPayload,
     AnalyticsChartBarPresentation,
     AnalyticsChartDatum,
     AnalyticsChartMarkerKind,
@@ -1655,6 +1656,7 @@ const UplotBarChart = ({
     dashboardBarXAxisLabelStride,
     groupedStackSeries,
     avatarRenderer,
+    onBarClick,
 }: {
     size: ChartAreaSize;
     labels: string[];
@@ -1692,6 +1694,7 @@ const UplotBarChart = ({
     dashboardBarXAxisLabelStride: number;
     groupedStackSeries: AnalyticsChartSeries[];
     avatarRenderer?: AnalyticsChartAvatarRenderer;
+    onBarClick?: (payload: AnalyticsChartBarClickPayload) => void;
 }) => {
     const [chart, setChart] = useState<uPlot | null>(null);
     const [avatarAnchors, setAvatarAnchors] = useState<AvatarAnchor[]>([]);
@@ -1715,6 +1718,7 @@ const UplotBarChart = ({
     const dashboardPresetRef = useLatestRef(isDashboardMetricPreset);
     const dashboardBarMaxWidthRef = useLatestRef(dashboardBarMaxWidth);
     const barTickFormatterRef = useLatestRef(barTickFormatter);
+    const onBarClickRef = useLatestRef(onBarClick);
 
     const xData = useMemo(() => labels.map((_, index) => index), [labels]);
     const alignedData = useMemo<uPlot.AlignedData>(
@@ -1889,6 +1893,47 @@ const UplotBarChart = ({
             animationProgress,
         ]
     );
+
+    useEffect(() => {
+        if (!chart || !onBarClick) {
+            return;
+        }
+
+        const handleClick = (event: MouseEvent) => {
+            const rootRect = chart.root.getBoundingClientRect();
+            const clickLeft = event.clientX - rootRect.left;
+            const clickTop = event.clientY - rootRect.top;
+            const hoveredRect = renderedBarRectsRef.current.find(
+                (rect) =>
+                    clickLeft >= rect.left &&
+                    clickLeft <= rect.left + rect.width &&
+                    clickTop >= rect.top &&
+                    clickTop <= rect.top + rect.height
+            );
+
+            if (!hoveredRect) {
+                return;
+            }
+
+            const datum = barDataRef.current[hoveredRect.idx];
+            if (!datum) {
+                return;
+            }
+
+            onBarClickRef.current?.({
+                index: hoveredRect.idx,
+                periodLabel: String(datum.periodLabel ?? ''),
+                datum,
+                seriesKey: hoveredRect.seriesKey,
+                stackId: hoveredRect.stackId,
+            });
+        };
+
+        chart.root.addEventListener('click', handleClick);
+        return () => {
+            chart.root.removeEventListener('click', handleClick);
+        };
+    }, [barDataRef, chart, onBarClick, onBarClickRef]);
 
     const options = useMemo<uPlot.Options>(() => ({
         width: Math.max(size.width, 1),
@@ -2166,6 +2211,7 @@ const AnalyticsChart = ({
     title = '운영 내역',
     showTitle = true,
     showLegend = true,
+    onBarClick,
 }: AnalyticsChartProps) => {
     const [chartAreaElement, setChartAreaElement] = useState<HTMLDivElement | null>(null);
     const chartAreaSize = useElementSize(chartAreaElement);
@@ -2395,6 +2441,7 @@ const AnalyticsChart = ({
                                 dashboardBarXAxisLabelStride={dashboardBarXAxisLabelStride}
                                 groupedStackSeries={barSeries}
                                 avatarRenderer={avatarRenderer}
+                                onBarClick={onBarClick}
                             />
                         </div>
                     </div>

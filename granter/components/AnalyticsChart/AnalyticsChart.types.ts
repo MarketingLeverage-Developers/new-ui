@@ -61,6 +61,14 @@ export type AnalyticsChartLegendItem = {
     color: string;
 };
 
+export type AnalyticsChartBarClickPayload = {
+    index: number;
+    periodLabel: string;
+    datum: AnalyticsChartDatum;
+    seriesKey?: string;
+    stackId?: string;
+};
+
 export type AnalyticsChartBarPresentation = 'single' | 'grouped' | 'groupedStack';
 
 export type AnalyticsChartBarModel = {
@@ -89,4 +97,5 @@ export type AnalyticsChartProps = {
     title?: string;
     showTitle?: boolean;
     showLegend?: boolean;
+    onBarClick?: (payload: AnalyticsChartBarClickPayload) => void;
 };
