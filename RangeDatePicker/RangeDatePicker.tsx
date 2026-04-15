@@ -205,7 +205,7 @@ const RangeDatePicker = ({ range, onChange, onPresetSelect, ...props }: RangeDat
         return {
             YESTERDAY: { from: y, to: y },
             TODAY: { from: today, to: today },
-            THIS_MONTH: { from: startOfMonth(today), to: today },
+            THIS_MONTH: { from: startOfMonth(today), to: endOfMonth(today) },
             LAST_MONTH: { from: startOfMonth(subMonths(today, 1)), to: endOfMonth(subMonths(today, 1)) },
             LAST_7_DAYS: { from: addDays(today, -6), to: today },
             LAST_3_MONTHS: { from: startOfMonth(subMonths(today, 2)), to: today },
