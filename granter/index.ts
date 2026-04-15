@@ -38,6 +38,7 @@ export { default as SectionFieldTextArea } from './components/SectionFieldTextAr
 export { default as SectionFieldTab } from './components/SectionFieldTab/SectionFieldTab';
 export { default as SectionFieldRowTab } from './components/SectionFieldRowTab/SectionFieldRowTab';
 export { default as SectionFieldOptionToggleCard } from './components/SectionFieldOptionToggleCard/SectionFieldOptionToggleCard';
+export { default as LabeledSwitch } from './components/LabeledSwitch/LabeledSwitch';
 export { default as SectionFieldSelect } from './components/SectionFieldSelect/SectionFieldSelect';
 export { default as SectionFieldVisualSelect } from './components/SectionFieldVisualSelect/SectionFieldVisualSelect';
 export { default as SectionFieldVisualSelectPair } from './components/SectionFieldVisualSelectPair/SectionFieldVisualSelectPair';
@@ -240,6 +241,7 @@ export type { DividerProps } from './components/Divider/Divider';
 export type { TooltipProps, TooltipAlign, TooltipSide } from './components/Tooltip/Tooltip';
 export type { HelpTooltipProps } from './components/HelpTooltip/HelpTooltip';
 export type { CheckboxTextToggleProps } from './components/CheckboxTextToggle/CheckboxTextToggle';
+export type { LabeledSwitchProps } from './components/LabeledSwitch/LabeledSwitch';
 export type { SearchToggleInputProps } from './components/SearchToggleInput/SearchToggleInput';
 export type { BookmarkTabsProps, BookmarkTabsItem } from './components/BookmarkTabs/BookmarkTabs';
 export type { HeaderBreadcrumbProps, HeaderBreadcrumbItem } from './components/HeaderBreadcrumb/HeaderBreadcrumb';

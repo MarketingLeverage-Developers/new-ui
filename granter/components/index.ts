@@ -287,6 +287,9 @@ export type { HelpTooltipProps } from './HelpTooltip/HelpTooltip';
 export { default as CheckboxTextToggle } from './CheckboxTextToggle/CheckboxTextToggle';
 export type { CheckboxTextToggleProps } from './CheckboxTextToggle/CheckboxTextToggle';
 
+export { default as LabeledSwitch } from './LabeledSwitch/LabeledSwitch';
+export type { LabeledSwitchProps } from './LabeledSwitch/LabeledSwitch';
+
 export { default as SearchToggleInput } from './SearchToggleInput/SearchToggleInput';
 export type { SearchToggleInputProps } from './SearchToggleInput/SearchToggleInput';
 
