@@ -1,46 +1,85 @@
 import React from 'react';
 import classNames from 'classnames';
-import { FiMoon, FiSun } from 'react-icons/fi';
+import { FiMoon, FiStar, FiSun } from 'react-icons/fi';
 import styles from './ThemeModeToggle.module.scss';
+import type { ThemeMode } from '@/shared/recoil/theme/atom';
 
-export type ThemeModeToggleTheme = 'light' | 'dark';
+export type ThemeModeToggleTheme = ThemeMode;
 
 export type ThemeModeToggleProps = {
     theme: ThemeModeToggleTheme;
-    onToggle: () => void;
+    onThemeChange: (nextTheme: ThemeModeToggleTheme) => void;
     size?: 'sm' | 'md';
     disabled?: boolean;
     className?: string;
     ariaLabel?: string;
 };
 
+const THEME_OPTIONS: Array<{ value: ThemeModeToggleTheme; label: string }> = [
+    { value: 'light', label: '라이트 모드' },
+    { value: 'dark', label: '다크 모드' },
+    { value: 'darker', label: '진한 다크 모드' },
+];
+
 const ThemeModeToggle = ({
     theme,
-    onToggle,
+    onThemeChange,
     size = 'sm',
     disabled = false,
     className,
-    ariaLabel = '다크모드 토글',
-}: ThemeModeToggleProps) => (
-    <button
-        type="button"
-        className={classNames(styles.Root, className)}
-        data-size={size}
-        data-theme-mode={theme}
-        onClick={onToggle}
-        disabled={disabled}
-        aria-label={ariaLabel}
-        aria-pressed={theme === 'dark'}
-    >
-        <span className={styles.Track} aria-hidden="true">
-            <span className={styles.Thumb}>
-                <span className={styles.Icon}>
-                    {theme === 'dark' ? <FiMoon size={12} /> : <FiSun size={12} />}
-                </span>
+    ariaLabel = '테마 모드 선택',
+}: ThemeModeToggleProps) => {
+    const handleOptionClick = (nextTheme: ThemeModeToggleTheme) => {
+        if (disabled || nextTheme === theme) return;
+        onThemeChange(nextTheme);
+    };
+
+    return (
+        <div
+            className={classNames(styles.Root, className)}
+            data-size={size}
+            data-theme-mode={theme}
+            data-disabled={disabled ? 'true' : 'false'}
+            role="radiogroup"
+            aria-label={ariaLabel}
+        >
+            <span className={styles.Track} aria-hidden="true">
+                <span className={styles.Indicator} />
+                {THEME_OPTIONS.map((option) => {
+                    const isActive = option.value === theme;
+                    const isDarkerOption = option.value === 'darker';
+
+                    return (
+                        <button
+                            key={option.value}
+                            type="button"
+                            className={styles.Option}
+                            data-theme-option={option.value}
+                            data-active={isActive ? 'true' : 'false'}
+                            onClick={() => handleOptionClick(option.value)}
+                            disabled={disabled}
+                            role="radio"
+                            aria-checked={isActive}
+                            aria-label={option.label}
+                        >
+                            <span className={classNames(styles.Icon, isDarkerOption && styles.IconDarker)}>
+                                {option.value === 'light' ? (
+                                    <FiSun size={12} />
+                                ) : option.value === 'darker' ? (
+                                    <FiStar size={12} />
+                                ) : (
+                                    <FiMoon size={12} />
+                                )}
+                            </span>
+                            <span className={styles.SrOnly}>{option.label}</span>
+                        </button>
+                    );
+                })}
             </span>
-        </span>
-        <span className={styles.SrOnly}>{theme === 'dark' ? '다크 모드' : '라이트 모드'}</span>
-    </button>
-);
+        </div>
+    );
+};
+
+ThemeModeToggle.displayName = 'ThemeModeToggle';
 
 export default ThemeModeToggle;

@@ -46,6 +46,10 @@
     @include theme.granter-dark-theme;
 }
 
+.PageTemplate[data-theme='darker'] {
+    @include theme.granter-darker-theme;
+}
+
 @media (prefers-color-scheme: dark) {
     .PageTemplate[data-theme='system'] {
         @include theme.granter-dark-theme;
@@ -262,7 +266,7 @@
     outline-offset: 1px;
 }
 
-.PageTemplate[data-theme='dark'] .SidebarToggle {
+:is(.PageTemplate[data-theme='dark'], .PageTemplate[data-theme='darker']) .SidebarToggle {
     border: 0;
     border-radius: 0;
     background: transparent;
@@ -270,39 +274,39 @@
     box-shadow: none;
 }
 
-.PageTemplate[data-theme='dark'] .SidebarToggle:hover {
+:is(.PageTemplate[data-theme='dark'], .PageTemplate[data-theme='darker']) .SidebarToggle:hover {
     color: var(--granter-gray-700);
 }
 
-.PageTemplate[data-theme='dark'] .HeaderSidebarOpenButton {
+:is(.PageTemplate[data-theme='dark'], .PageTemplate[data-theme='darker']) .HeaderSidebarOpenButton {
     color: var(--granter-gray-200);
 }
 
-.PageTemplate[data-theme='dark'] .HeaderSubSidebarOpenButton {
+:is(.PageTemplate[data-theme='dark'], .PageTemplate[data-theme='darker']) .HeaderSubSidebarOpenButton {
     color: var(--granter-gray-200);
 }
 
-.PageTemplate[data-theme='dark'] .SubSidebarToggle {
+:is(.PageTemplate[data-theme='dark'], .PageTemplate[data-theme='darker']) .SubSidebarToggle {
     border-color: var(--granter-gray-500);
     background: var(--granter-gray-700);
     color: var(--granter-gray-100);
     box-shadow: 0 3px 10px rgb(0 0 0 / 28%);
 }
 
-.PageTemplate[data-theme='dark'] .SubSidebarToggle:hover {
+:is(.PageTemplate[data-theme='dark'], .PageTemplate[data-theme='darker']) .SubSidebarToggle:hover {
     color: var(--granter-white);
     border-color: var(--granter-gray-300);
     background: var(--granter-gray-600);
     box-shadow: 0 4px 12px rgb(0 0 0 / 34%);
 }
 
-.PageTemplate[data-theme='dark'] .SidebarOverlayPanel {
+:is(.PageTemplate[data-theme='dark'], .PageTemplate[data-theme='darker']) .SidebarOverlayPanel {
     border-right-color: var(--granter-gray-700);
     background-color: var(--granter-gray-900);
     box-shadow: 0 8px 20px rgb(0 0 0 / 30%);
 }
 
-.PageTemplate[data-theme='dark'] .SubSidebarOverlayPanel {
+:is(.PageTemplate[data-theme='dark'], .PageTemplate[data-theme='darker']) .SubSidebarOverlayPanel {
     border-right-color: var(--granter-gray-700);
     background-color: var(--granter-gray-900);
     box-shadow: 0 8px 20px rgb(0 0 0 / 30%);

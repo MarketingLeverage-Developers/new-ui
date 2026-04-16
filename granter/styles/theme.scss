@@ -83,3 +83,46 @@
     --granter-orange-50: #431407;
     --granter-orange-500: #fb923c;
 }
+
+@mixin granter-darker-theme {
+    --granter-white: #1d1d1c;
+    --granter-black: #e8e1d9;
+
+    --granter-gray-900: #dfd7cf;
+    --granter-gray-700: #c4bbb2;
+    --granter-gray-600: #9d938b;
+    --granter-gray-500: #7c726b;
+    --granter-gray-400: #5c5550;
+    --granter-gray-300: #423d39;
+    --granter-gray-200: #2f2c29;
+    --granter-gray-100: #20201f;
+    --granter-gray-50: #171716;
+
+    --granter-slate-100: #272625;
+    --granter-slate-150: #2c2a28;
+
+    --granter-sky-600: #38bdf8;
+    --granter-sky-500: #0ea5e9;
+    --granter-sky-100: #082f49;
+    --granter-blue-600: #60a5fa;
+    --granter-blue-500: #3b82f6;
+    --granter-blue-100: #172554;
+
+    --granter-teal-500: #2dd4bf;
+    --granter-teal-100: #134e4a;
+    --granter-teal-50: #042f2e;
+
+    --granter-violet-500: #a78bfa;
+    --granter-violet-100: #312e81;
+
+    --granter-red-700: #f87171;
+    --granter-red-600: #ef4444;
+    --granter-red-500: #f87171;
+    --granter-red-400: #fca5a5;
+    --granter-red-100: #7f1d1d;
+    --granter-rose-50: #3f0d14;
+
+    --granter-orange-100: #7c2d12;
+    --granter-orange-50: #431407;
+    --granter-orange-500: #fb923c;
+}

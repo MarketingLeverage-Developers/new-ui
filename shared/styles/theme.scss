@@ -148,6 +148,79 @@
     color-scheme: dark;
 }
 
+@mixin darker-vars {
+    /* Grayscale (Darker) - deep charcoal palette */
+    --White1: #171716;
+    --Black1: #e8e1d9;
+    --Gray1: #d2cbc3;
+    --Gray2: #b2a89f;
+    --Gray3: #837a73;
+    --Gray4: #5c5651;
+    --Gray5: #403b37;
+    --Gray6: #2d2a27;
+    --Gray7: #1e1e1d;
+
+    /* Brand / Accent — 동일 유지 */
+    --Blue1: #{$Blue1};
+    --Blue2: #{$Blue2};
+
+    /* Status */
+    --Red1: #{$RedD1};
+    --Red2: #{$RedD2};
+    --Green1: #{$GreenD1};
+    --Green2: #{$GreenD2};
+
+    /* Primary (Brand Orange) — Dark와 동일 매핑 유지 */
+    --Primary1: #{$PrimaryD1};
+    --Primary2: #{$PrimaryD2};
+    --Primary3: #{$PrimaryD3};
+    --Primary4: #{$PrimaryD4};
+    --Primary5: #{$PrimaryD5};
+    --Primary6: #{$PrimaryD6};
+    --Complementary1: #{$ComplementaryD1};
+    --Complementary2: #{$ComplementaryD2};
+
+    --PrimaryAlpha16: #{$PrimaryAlpha16};
+    --PrimaryAlpha24: #{$PrimaryAlpha24};
+
+    --Gradient1: #{$Gradient1};
+    --Gradient2: #{$Gradient2};
+
+    /* Backdrop (Darker Mode) */
+    --BackdropColor: rgba(0, 0, 0, 0.72);
+    --BackdropBlur: 9px;
+    --BackdropWebkitBlur: 9px;
+
+    /* UI Tokens */
+    --RadiusXs: 4px;
+    --RadiusSm: 6px;
+    --RadiusMd: 8px;
+    --RadiusLg: 12px;
+    --RadiusXl: 20px;
+    --RadiusPill: 9999px;
+
+    --ShadowSm: 0 2px 8px rgba(0, 0, 0, 0.24);
+    --ShadowMd: 0 6px 24px rgba(0, 0, 0, 0.34), 0 2px 6px rgba(0, 0, 0, 0.24);
+    --ShadowLg: 0 14px 28px rgba(0, 0, 0, 0.44);
+
+    --FocusRing: 0 0 0 3px var(--PrimaryAlpha24);
+
+    --z-dropdown-portal: 7000;
+    --z-dropdown: 7000;
+    --z-dropdown-portal-modal: 9002;
+    --z-dropdown-modal: 9002;
+    --z-modal-backdrop: 9000;
+    --z-modal: 9001;
+    --z-overlay: 10002;
+
+    --ScrollbarSize: 6px;
+    --ScrollbarThumb: var(--Gray5);
+    --ScrollbarThumbHover: color-mix(in srgb, var(--Gray5) 78%, var(--Gray2));
+    --ScrollbarTrack: transparent;
+
+    color-scheme: dark;
+}
+
 /* ---------- 1) 기본(라이트) ---------- */
 :root {
     @include light-vars;
@@ -163,6 +236,10 @@
 /* ---------- 3) 수동 오버라이드 (Recoil State) ---------- */
 :root[data-theme='dark'] {
     @include dark-vars;
+}
+
+:root[data-theme='darker'] {
+    @include darker-vars;
 }
 
 :root[data-theme='light'] {

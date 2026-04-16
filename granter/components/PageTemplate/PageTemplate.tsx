@@ -19,7 +19,7 @@ export type PageTemplateProps = {
     aside?: React.ReactNode;
     overlay?: React.ReactNode;
     mainScrollable?: boolean;
-    theme?: 'light' | 'dark' | 'system';
+    theme?: 'light' | 'dark' | 'darker' | 'system';
     sidebarCollapsible?: boolean;
     sidebarCollapsed?: boolean;
     defaultSidebarCollapsed?: boolean;

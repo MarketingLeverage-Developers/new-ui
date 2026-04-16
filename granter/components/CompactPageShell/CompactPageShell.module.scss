@@ -19,6 +19,10 @@
     @include theme.granter-dark-theme;
 }
 
+.Root[data-theme='darker'] {
+    @include theme.granter-darker-theme;
+}
+
 @media (prefers-color-scheme: dark) {
     .Root[data-theme='system'] {
         @include theme.granter-dark-theme;

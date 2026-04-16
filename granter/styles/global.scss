@@ -14,6 +14,10 @@
     @include theme.granter-dark-theme;
 }
 
+:root[data-theme='darker'] {
+    @include theme.granter-darker-theme;
+}
+
 :root[data-theme='light'] {
     @include theme.granter-light-theme;
 }

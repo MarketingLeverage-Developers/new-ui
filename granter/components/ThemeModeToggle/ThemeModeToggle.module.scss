@@ -1,83 +1,176 @@
 .Root {
-    --toggle-width: 44px;
-    --toggle-height: 24px;
-    --toggle-padding: 1px;
-    --toggle-shift: 20px;
-    --thumb-size: 20px;
+    --toggle-width: 80px;
+    --toggle-height: 28px;
+    --toggle-padding: 2px;
+    --toggle-gap: 2px;
+    --active-index: 0;
+    --indicator-width: calc(
+        (var(--toggle-width) - (var(--toggle-padding) * 2) - (var(--toggle-gap) * 2)) / 3
+    );
 
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    border: 0;
-    padding: 0;
-    background: transparent;
-    cursor: pointer;
 }
 
 .Root[data-size='md'] {
-    --toggle-width: 52px;
-    --toggle-height: 28px;
-    --toggle-shift: 24px;
-    --thumb-size: 24px;
+    --toggle-width: 92px;
+    --toggle-height: 32px;
 }
 
-.Root:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
+.Root[data-theme-mode='dark'] {
+    --active-index: 1;
+}
+
+.Root[data-theme-mode='darker'] {
+    --active-index: 2;
 }
 
 .Track {
     position: relative;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--toggle-gap);
     width: var(--toggle-width);
     height: var(--toggle-height);
+    padding: var(--toggle-padding);
+    box-sizing: border-box;
     border-radius: 999px;
     border: 1px solid var(--granter-gray-300);
-    background-color: var(--granter-gray-200);
+    background-color: var(--granter-gray-100);
     transition:
         background-color 0.16s ease,
         border-color 0.16s ease;
 }
 
-.Root:hover:not(:disabled) .Track {
+.Root[data-theme-mode='dark'] .Track {
+    border-color: #29303a;
+    background-color: #171b22;
+}
+
+.Root[data-theme-mode='darker'] .Track {
+    border-color: #222a33;
+    background-color: #12161c;
+}
+
+.Root:hover .Track {
     border-color: var(--granter-gray-400);
 }
 
-.Root[data-theme-mode='dark'] .Track {
-    background-color: var(--granter-sky-500);
-    border-color: var(--granter-sky-500);
+.Root[data-theme-mode='dark']:hover .Track {
+    border-color: #36404c;
 }
 
-.Thumb {
+.Root[data-theme-mode='darker']:hover .Track {
+    border-color: #2b3440;
+}
+
+.Indicator {
     position: absolute;
     top: var(--toggle-padding);
     left: var(--toggle-padding);
-    width: var(--thumb-size);
-    height: var(--thumb-size);
+    width: var(--indicator-width);
+    height: calc(var(--toggle-height) - (var(--toggle-padding) * 2));
     border-radius: 999px;
     background-color: var(--granter-white);
     box-shadow: 0 1px 3px rgb(17 24 39 / 18%);
+    transform: translateX(calc(var(--active-index) * (var(--indicator-width) + var(--toggle-gap))));
+    transition:
+        transform 0.18s ease,
+        background-color 0.18s ease,
+        box-shadow 0.18s ease;
+    pointer-events: none;
+}
+
+.Root[data-theme-mode='dark'] .Indicator,
+.Root[data-theme-mode='darker'] .Indicator {
+    background-color: #f8fafc;
+    box-shadow: 0 1px 4px rgb(0 0 0 / 28%);
+}
+
+.Option {
+    position: relative;
+    z-index: 1;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    transform: translateX(0);
-    transition: transform 0.16s ease;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    border-radius: 999px;
+    padding: 0;
+    background: transparent;
+    color: var(--granter-gray-500);
+    cursor: pointer;
+    transition: color 0.16s ease;
 }
 
-.Root[data-theme-mode='dark'] .Thumb {
-    transform: translateX(var(--toggle-shift));
+.Root[data-disabled='true'] {
+    opacity: 0.5;
+    pointer-events: none;
 }
 
 .Icon {
     display: inline-flex;
+    position: relative;
     align-items: center;
     justify-content: center;
     width: 12px;
     height: 12px;
-    color: var(--granter-orange-500);
+    color: currentColor;
 }
 
-.Root[data-theme-mode='dark'] .Icon {
-    color: var(--granter-sky-600);
+.Icon :global(svg) {
+    display: block;
+    width: 12px;
+    height: 12px;
+}
+
+.IconDarker {
+    transform: translate(0.55px, -0.45px);
+}
+
+.Option[data-active='true'] {
+    color: var(--granter-gray-900);
+}
+
+.Root[data-theme-mode='dark'] .Option,
+.Root[data-theme-mode='darker'] .Option {
+    color: #b8bfca;
+}
+
+.Root[data-theme-mode='dark'] .Option[data-active='true'],
+.Root[data-theme-mode='darker'] .Option[data-active='true'] {
+    color: #111827;
+}
+
+.Root[data-theme-mode='darker'] .Option {
+    color: #adb6c2;
+}
+
+.Root[data-theme-mode='darker'] .Option[data-active='true'] {
+    color: #0d1523;
+}
+
+.Option[data-active='true'][data-theme-option='light'] .Icon {
+    color: #ea8a33;
+}
+
+.Option[data-active='true'][data-theme-option='dark'] .Icon {
+    color: #0284c7;
+}
+
+.Option[data-active='true'][data-theme-option='darker'] .Icon {
+    color: #4338ca;
+}
+
+.Option:disabled {
+    cursor: not-allowed;
+}
+
+.Option:focus-visible {
+    outline: 2px solid #60a5fa;
+    outline-offset: 1px;
 }
 
 .SrOnly {

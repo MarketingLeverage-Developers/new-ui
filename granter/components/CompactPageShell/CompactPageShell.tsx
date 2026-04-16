@@ -3,7 +3,7 @@ import type { ReactNode } from 'react';
 import styles from './CompactPageShell.module.scss';
 
 export type CompactPageShellProps = {
-    theme?: 'light' | 'dark' | 'system';
+    theme?: 'light' | 'dark' | 'darker' | 'system';
     headerTopLeft?: ReactNode;
     headerTopCenter?: ReactNode;
     headerTopRight?: ReactNode;

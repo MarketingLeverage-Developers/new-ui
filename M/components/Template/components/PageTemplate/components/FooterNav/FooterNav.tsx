@@ -95,7 +95,7 @@ const FooterNavBase = ({ className }: { className?: string }) => {
     const { addToast } = useToast();
     const { mutateAsync: userLogoutMutate } = useUserLogoutMutation();
     const { res } = useUserAuthQuery();
-    const { theme, toggleTheme } = useTheme();
+    const { theme, changeTheme } = useTheme();
     const [menuOpen, setMenuOpen] = useState(false);
 
     const user = res?.body;
@@ -126,9 +126,9 @@ const FooterNavBase = ({ className }: { className?: string }) => {
     };
 
     const themeItem: FooterNavMenuItem = {
-        icon: theme === 'dark' ? FiSun : FiMoon,
-        label: theme === 'dark' ? '라이트 모드' : '다크 모드',
-        onClick: toggleTheme,
+        icon: theme === 'light' ? FiMoon : FiSun,
+        label: theme === 'light' ? '다크 모드' : '라이트 모드',
+        onClick: () => changeTheme(theme === 'light' ? 'dark' : 'light'),
     };
 
     const fabItems: FooterNavMenuItem[] = [
