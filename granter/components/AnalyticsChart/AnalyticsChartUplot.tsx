@@ -1769,6 +1769,9 @@ const UplotBarChart = ({
     );
 
     const animationProgress = useChartAnimation(alignedData);
+    const animationProgressRef = useLatestRef(animationProgress);
+    const avatarAnchorsRef = useRef<AvatarAnchor[]>([]);
+    const chartInstanceRef = useRef<uPlot | null>(null);
 
     const syncBarGeometry = useCallback((nextRects: DrawnBarRect[], nextAvatars: AvatarAnchor[]) => {
         if (!areDrawnBarRectsEqual(targetBarRectsRef.current, nextRects)) {
@@ -1780,6 +1783,15 @@ const UplotBarChart = ({
         }
         setAvatarAnchors((prev) => (areAvatarAnchorsEqual(prev, nextAvatars) ? prev : nextAvatars));
     }, []);
+
+    useEffect(() => {
+        avatarAnchorsRef.current = avatarAnchors;
+    }, [avatarAnchors]);
+
+    useEffect(() => {
+        chartInstanceRef.current?.redraw();
+    }, [animationProgress]);
+
     const xAxis = useMemo(
         () =>
             buildNumericXAxis({
@@ -1873,7 +1885,7 @@ const UplotBarChart = ({
 
                             if (
                                 !areDrawnBarRectsEqual(targetBarRectsRef.current, rects) ||
-                                !areAvatarAnchorsEqual(avatarAnchors, avatars)
+                                !areAvatarAnchorsEqual(avatarAnchorsRef.current, avatars)
                             ) {
                                 syncBarGeometry(rects, avatars);
                             }
@@ -1884,7 +1896,7 @@ const UplotBarChart = ({
                             const animatedRects = buildAnimatedBarRects({
                                 previousRects: previousBarRectsRef.current,
                                 nextRects: rects,
-                                progress: animationProgress,
+                                progress: animationProgressRef.current,
                                 zeroLine,
                             });
 
@@ -1925,9 +1937,7 @@ const UplotBarChart = ({
             barPresentation,
             isGroupedStackBar,
             onBarClick,
-            avatarAnchors,
             syncBarGeometry,
-            animationProgress,
         ]
     );
 
@@ -2037,8 +2047,14 @@ const UplotBarChart = ({
             <ManagedUplot
                 options={options}
                 data={alignedData}
-                onCreate={setChart}
-                onDelete={() => setChart(null)}
+                onCreate={(newChart) => {
+                    chartInstanceRef.current = newChart;
+                    setChart(newChart);
+                }}
+                onDelete={() => {
+                    chartInstanceRef.current = null;
+                    setChart(null);
+                }}
                 resetScales
             />
             <div className={styles.OverlayLayer}>
