@@ -131,6 +131,7 @@ const MIN_VERTICAL_CHART_PADDING = 12;
 const DEFAULT_BAR_Y_AXIS_MAX_TICK_COUNT = 6;
 const DASHBOARD_BAR_Y_AXIS_MAX_TICK_COUNT = 5;
 const BAR_GEOMETRY_ANIMATION_DURATION_MS = 960;
+const BAR_BORDER_RADIUS = 3;
 const BAR_GEOMETRY_ANIMATION_CSS_EASING = 'cubic-bezier(0.65, 0, 0.35, 1)';
 const INTEGER_AXIS_INCREMENTS = [
     1, 2, 5, 10, 20, 25, 50, 100, 200, 250, 500, 1000, 2000, 2500, 5000, 10000,
@@ -1907,15 +1908,31 @@ const UplotBarChart = ({
                             ctx.rect(frame.left * pxRatio, frame.top * pxRatio, frame.width * pxRatio, frame.height * pxRatio);
                             ctx.clip();
 
+                            const stackMinTopMap = new Map<string, number>();
+                            animatedRects.forEach((rect) => {
+                                if (rect.width <= 0 || rect.height <= 0) return;
+                                const stackKey = `${rect.idx}__${rect.stackId ?? '__single__'}`;
+                                const prev = stackMinTopMap.get(stackKey);
+                                if (prev === undefined || rect.top < prev) stackMinTopMap.set(stackKey, rect.top);
+                            });
+
                             animatedRects.forEach((rect) => {
                                 if (rect.width <= 0 || rect.height <= 0) return;
 
                                 const series = barSeriesRef.current.find((item) => item.key === rect.seriesKey);
                                 if (!series) return;
 
+                                const stackKey = `${rect.idx}__${rect.stackId ?? '__single__'}`;
+                                const isTopRect = stackMinTopMap.get(stackKey) === rect.top;
+
                                 ctx.beginPath();
                                 ctx.fillStyle = series.color;
-                                ctx.rect(rect.left * pxRatio, rect.top * pxRatio, rect.width * pxRatio, rect.height * pxRatio);
+                                if (isTopRect) {
+                                    const radius = Math.min(BAR_BORDER_RADIUS * pxRatio, (rect.width * pxRatio) / 2, (rect.height * pxRatio) / 2);
+                                    ctx.roundRect(rect.left * pxRatio, rect.top * pxRatio, rect.width * pxRatio, rect.height * pxRatio, [radius, radius, 0, 0]);
+                                } else {
+                                    ctx.rect(rect.left * pxRatio, rect.top * pxRatio, rect.width * pxRatio, rect.height * pxRatio);
+                                }
                                 ctx.fill();
                             });
 
