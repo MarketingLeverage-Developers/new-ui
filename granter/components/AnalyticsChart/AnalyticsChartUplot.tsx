@@ -2463,6 +2463,10 @@ const AnalyticsChart = ({
     const metricBarDomain = isAllBarPeriodsMissing
         ? ([0, 1] as [number, number])
         : barChart.yAxisDomain ?? fallbackBarDomain;
+    const barLabels = useMemo(
+        () => resolvedBarData.map((item) => String(item.periodLabel ?? '')),
+        [resolvedBarData]
+    );
 
     const legendSeries = useMemo(
         () => barChart.legendItems ?? barSeries,
@@ -2510,7 +2514,7 @@ const AnalyticsChart = ({
                         <div ref={setChartAreaElement} style={chartAreaStyle}>
                             <UplotBarChart
                                 size={chartAreaSize}
-                                labels={resolvedBarData.map((item) => String(item.periodLabel ?? ''))}
+                                labels={barLabels}
                                 barData={resolvedBarData}
                                 barSeries={barSeries}
                                 tooltipSeriesMeta={barSeries}
