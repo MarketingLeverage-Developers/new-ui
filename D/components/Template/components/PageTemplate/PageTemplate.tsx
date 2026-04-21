@@ -19,6 +19,17 @@ const normalizePadding = (padding: PaddingSize | number): PaddingSize => {
     return padding;
 };
 
+// PageTemplateActionsBase, PageTemplateStateBase import 에러 뜨고 있어서 추가함
+export type PageTemplateStateBase = {
+    companyUuid?: string;
+    homepageUuid?: string;
+};
+
+export type PageTemplateActionsBase = {
+    changeCompanyUuid?: (companyUuid: string) => void;
+    changeHomepageUuid?: (homepageUuid: string) => void;
+};
+
 export type PageTemplateProps = {
     sidebar: React.ReactNode;
     subSidebar?: React.ReactNode;
