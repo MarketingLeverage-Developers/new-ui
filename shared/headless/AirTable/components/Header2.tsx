@@ -107,9 +107,36 @@ const DefaultColumnFilter = <T,>({
     const [keyword, setKeyword] = useState('');
     const config = sortConfigByKey.get(colKey);
 
-    useEffect(() => {
-        setKeyword('');
-    }, [colKey]);
+    useEffect(() => { setKeyword(''); }, [colKey]);
+
+    // filterState 에서 직접 읽기 — old Header.tsx 의 excludedSet 패턴과 동일
+    const includedSet = useMemo(() => {
+        const inc = filterState[colKey]?.included;
+        return Array.isArray(inc) && inc.length > 0 ? new Set<string>(inc) : new Set<string>();
+    }, [filterState, colKey]);
+
+    const isFilterApplied = includedSet.size > 0;
+    const isChecked = (key: string) => includedSet.has(key);
+
+    const toggleInclude = (key: string) => {
+        const next = new Set(includedSet);
+        if (next.has(key)) next.delete(key);
+        else next.add(key);
+
+        const nextState = { ...filterState };
+        if (next.size === 0) {
+            delete nextState[colKey];
+        } else {
+            nextState[colKey] = { included: Array.from(next) };
+        }
+        setFilterState(nextState);
+    };
+
+    const clearFilter = () => {
+        const nextState = { ...filterState };
+        delete nextState[colKey];
+        setFilterState(nextState);
+    };
 
     const options = useMemo(() => {
         if (!config?.sortValue) return [];
@@ -153,43 +180,6 @@ const DefaultColumnFilter = <T,>({
         if (!q) return options;
         return options.filter((opt) => opt.label.toLowerCase().includes(q));
     }, [options, keyword]);
-
-    // included = 선택된 항목 집합, null = 필터 미적용 (전체 표시)
-    const includedSet = useMemo(() => {
-        const inc = filterState[colKey]?.included;
-        return Array.isArray(inc) && inc.length > 0 ? new Set(inc) : null;
-    }, [filterState, colKey]);
-
-    const isFilterApplied = includedSet !== null;
-
-    // 체크 = 해당 항목이 included에 있음 (필터 미적용 시 전체 비체크)
-    const isChecked = (key: string) => includedSet !== null && includedSet.has(key);
-
-    const toggleInclude = (key: string) => {
-        const nextState = { ...filterState };
-        const current = new Set(filterState[colKey]?.included ?? []);
-
-        if (current.has(key)) {
-            current.delete(key);
-        } else {
-            current.add(key);
-        }
-
-        if (current.size === 0) {
-            delete nextState[colKey];
-        } else {
-            nextState[colKey] = { included: Array.from(current) };
-        }
-
-        setFilterState(nextState);
-    };
-
-    const clearFilter = () => {
-        if (!filterState[colKey]) return;
-        const nextState = { ...filterState };
-        delete nextState[colKey];
-        setFilterState(nextState);
-    };
 
     return (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -282,7 +272,7 @@ const DefaultColumnFilter = <T,>({
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <span style={{ fontSize: 11, color: getThemeColor('Gray2') }}>
-                    {isFilterApplied ? `선택 ${includedSet!.size} / 전체 ${options.length}` : '전체 표시 중'}
+                    {isFilterApplied ? `선택 ${includedSet.size} / 전체 ${options.length}` : '전체 표시 중'}
                 </span>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                     <button
