@@ -9,6 +9,7 @@ import VideoDefaultImage from '../../../../../../../shared/assets/components/C/c
 import Modal, { useModal } from '../../../../../../../shared/headless/Modal/Modal'; // ✅ 추가
 import Portal from '../../../../../../../shared/headless/Portal/Portal'; // ✅ 추가
 import { isMp4Preview, resolveMediaUrl, useVideoThumbnailMap } from './videoPreview';
+import { IoIosCloseCircle } from 'react-icons/io';
 
 type FileType = 'IMAGE' | 'ZIP' | 'VIDEO' | 'ETC';
 const MIN_PREVIEW_ZOOM = 1;
@@ -67,38 +68,48 @@ const ImagePreviewContent = ({
     }, []);
 
     return (
-        <div
-            ref={scrollRef}
-            className={styles.ImagePreviewViewport}
-            style={{
-                overflowX: isZoomedIn ? 'auto' : 'hidden',
-                overflowY: isZoomedIn ? 'auto' : 'hidden',
-            }}
-            onClick={() => closeModal()}
-        >
-            <div
-                className={styles.ImagePreviewCanvas}
-                style={{
-                    width: `${zoom * 100}%`,
-                    height: `${zoom * 100}%`,
-                }}
-                onClick={(e) => e.stopPropagation()}
+        <div className={styles.PreviewFrame}>
+            <button
+                type="button"
+                className={styles.PreviewClose}
+                aria-label="미리보기 닫기"
+                onClick={() => closeModal()}
             >
-                <Common.Image
-                    className={styles.ImageModalImage}
-                    src={src}
-                    prefix={prefix}
-                    fallbackSrc={fallbackSrc}
-                    alt={name}
-                    width="100%"
-                    height="100%"
-                    fit="contain"
-                    block
+                <IoIosCloseCircle size={28} />
+            </button>
+            <div
+                ref={scrollRef}
+                className={styles.ImagePreviewViewport}
+                style={{
+                    overflowX: isZoomedIn ? 'auto' : 'hidden',
+                    overflowY: isZoomedIn ? 'auto' : 'hidden',
+                }}
+                onClick={() => closeModal()}
+            >
+                <div
+                    className={styles.ImagePreviewCanvas}
                     style={{
-                        maxHeight: '100%',
-                        maxWidth: '100%',
+                        width: `${zoom * 100}%`,
+                        height: `${zoom * 100}%`,
                     }}
-                />
+                    onClick={(e) => e.stopPropagation()}
+                >
+                    <Common.Image
+                        className={styles.ImageModalImage}
+                        src={src}
+                        prefix={prefix}
+                        fallbackSrc={fallbackSrc}
+                        alt={name}
+                        width="100%"
+                        height="100%"
+                        fit="contain"
+                        block
+                        style={{
+                            maxHeight: '100%',
+                            maxWidth: '100%',
+                        }}
+                    />
+                </div>
             </div>
         </div>
     );
@@ -108,9 +119,27 @@ const VideoPreviewContent = ({ src, name }: { src: string; name: string }) => {
     const { closeModal } = useModal();
 
     return (
-        <div className={styles.VideoPreviewViewport} onClick={() => closeModal()}>
-            <div className={styles.VideoPreviewCanvas} onClick={(e) => e.stopPropagation()}>
-                <video className={styles.VideoModalPlayer} src={src} controls autoPlay playsInline muted aria-label={name} />
+        <div className={styles.PreviewFrame}>
+            <button
+                type="button"
+                className={styles.PreviewClose}
+                aria-label="미리보기 닫기"
+                onClick={() => closeModal()}
+            >
+                <IoIosCloseCircle size={28} />
+            </button>
+            <div className={styles.VideoPreviewViewport} onClick={() => closeModal()}>
+                <div className={styles.VideoPreviewCanvas} onClick={(e) => e.stopPropagation()}>
+                    <video
+                        className={styles.VideoModalPlayer}
+                        src={src}
+                        controls
+                        autoPlay
+                        playsInline
+                        muted
+                        aria-label={name}
+                    />
+                </div>
             </div>
         </div>
     );
