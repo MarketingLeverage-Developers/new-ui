@@ -1,11 +1,29 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { createPortal } from 'react-dom';
 import { MIN_COL_WIDTH, useAirTableContext } from '../AirTable2';
 import type { CellRenderMeta, FilterState, SortConfig, SortDirection, SortValue } from '../AirTable2';
 import { FaArrowDown, FaArrowUp } from 'react-icons/fa';
 import { VscFilter, VscFilterFilled } from 'react-icons/vsc';
 import { getThemeColor } from '../../../utils/css/getThemeColor';
 import { motion } from 'framer-motion';
+
+/*
+[설명]
+AirTable2 의 헤더 렌더링 컴포넌트입니다.
+컬럼 헤더 셀을 그리며, 드래그를 통한 컬럼 순서 변경, 리사이즈 핸들, 정렬(Sort), 필터(Filter), 컬럼 고정(Pin)/숨기기 기능을 제공합니다.
+그룹 헤더(children 컬럼)도 지원합니다.
+
+필터는 includes 방식으로 동작합니다.
+- 필터 팝업을 열면 전체 항목이 비체크(필터 미적용) 상태로 표시되며 전체 데이터가 보입니다.
+- 항목을 선택하면 해당 항목만 filterState 의 included 배열에 추가되어 해당 항목만 표시됩니다.
+- 모든 항목을 해제하면 included 가 삭제되어 다시 전체가 표시됩니다.
+
+필터 팝업 및 컨텍스트 메뉴는 sticky 헤더 컨테이너 내부에 absolute 로 배치되어,
+스크롤 시 헤더에 고정된 채로 표시됩니다.
+
+[이력]
+- 2026-04-21 | 이철욱 | includes 방식 필터 적용 (excluded → included, 비체크 기본 상태)
+- 2026-04-21 | 이철욱 | 필터 팝업/컨텍스트 메뉴를 createPortal(document.body) → sticky 헤더 내부 absolute 배치로 변경 (스크롤 추종 문제 해결)
+ */
 
 type HeaderProps = {
     className?: string;
@@ -325,13 +343,12 @@ const ColumnFilterPopup = ({
     }, [isOpen, onClose]);
 
     if (!isOpen) return null;
-    if (typeof document === 'undefined') return null;
 
-    return createPortal(
+    return (
         <div
             ref={ref}
             style={{
-                position: 'fixed',
+                position: 'absolute',
                 top: y,
                 left: x,
                 minWidth: 240,
@@ -339,15 +356,14 @@ const ColumnFilterPopup = ({
                 border: '1px solid rgba(0,0,0,0.08)',
                 borderRadius: 10,
                 boxShadow: '0 12px 24px rgba(0,0,0,0.14)',
-                zIndex: 2147483647,
+                zIndex: 200,
                 padding: 10,
                 cursor: 'default',
             }}
             onMouseDown={(e) => e.stopPropagation()}
         >
             {children}
-        </div>,
-        document.body
+        </div>
     );
 };
 
@@ -432,13 +448,12 @@ const HeaderContextMenu = ({
     }, [isOpen, onClose]);
 
     if (!isOpen) return null;
-    if (typeof document === 'undefined') return null;
 
-    return createPortal(
+    return (
         <div
             ref={ref}
             style={{
-                position: 'fixed',
+                position: 'absolute',
                 top: y,
                 left: x,
                 minWidth: 160,
@@ -446,7 +461,7 @@ const HeaderContextMenu = ({
                 border: '1px solid rgba(0,0,0,0.08)',
                 borderRadius: 10,
                 boxShadow: '0 12px 24px rgba(0,0,0,0.14)',
-                zIndex: 2147483647,
+                zIndex: 200,
                 padding: 6,
                 cursor: 'default',
                 userSelect: 'none',
@@ -477,8 +492,7 @@ const HeaderContextMenu = ({
             >
                 컬럼 숨기기
             </button>
-        </div>,
-        document.body
+        </div>
     );
 };
 
@@ -554,6 +568,8 @@ export const Header2 = <T,>({ className, headerCellClassName, resizeHandleClassN
         !!ghost &&
         (Math.abs(ghost.offsetX ?? 0) >= MOVE_THRESHOLD_PX || Math.abs(ghost.offsetY ?? 0) >= MOVE_THRESHOLD_PX);
 
+    const headerContainerRef = useRef<HTMLDivElement | null>(null);
+
     const [filterPopup, setFilterPopup] = useState<{
         open: boolean;
         colKey: string | null;
@@ -573,12 +589,13 @@ export const Header2 = <T,>({ className, headerCellClassName, resizeHandleClassN
         e.stopPropagation();
 
         const rect = e.currentTarget.getBoundingClientRect();
+        const containerRect = headerContainerRef.current?.getBoundingClientRect() ?? { left: 0, top: 0 };
 
         setFilterPopup({
             open: true,
             colKey,
-            x: rect.left - 200,
-            y: rect.bottom + 8,
+            x: rect.left - containerRect.left - 200,
+            y: rect.bottom - containerRect.top + 8,
         });
     }, []);
 
@@ -591,11 +608,13 @@ export const Header2 = <T,>({ className, headerCellClassName, resizeHandleClassN
             e.preventDefault();
             e.stopPropagation();
 
+            const containerRect = headerContainerRef.current?.getBoundingClientRect() ?? { left: 0, top: 0 };
+
             setContextMenu({
                 open: true,
                 colKey,
-                x: e.clientX,
-                y: e.clientY,
+                x: e.clientX - containerRect.left,
+                y: e.clientY - containerRect.top,
             });
         },
         []
@@ -750,18 +769,18 @@ export const Header2 = <T,>({ className, headerCellClassName, resizeHandleClassN
     );
 
     return (
-        <>
-            <div
-                className={className}
-                style={{
-                    position: 'sticky',
-                    top: 0,
-                    zIndex: 120,
-                    overflow: 'visible',
-                    width: 'fit-content',
-                    minWidth: '100%',
-                }}
-            >
+        <div
+            ref={headerContainerRef}
+            className={className}
+            style={{
+                position: 'sticky',
+                top: 0,
+                zIndex: 120,
+                overflow: 'visible',
+                width: 'fit-content',
+                minWidth: '100%',
+            }}
+        >
                 {hasGroupHeader ? (
                     <div
                         style={{
@@ -999,24 +1018,23 @@ export const Header2 = <T,>({ className, headerCellClassName, resizeHandleClassN
                         );
                     })}
                 </OuterWrapper>
+
+                <ColumnFilterPopup isOpen={filterPopup.open} x={filterPopup.x} y={filterPopup.y} onClose={closeFilter}>
+                    {activeFilterContent}
+                </ColumnFilterPopup>
+
+                <HeaderContextMenu
+                    isOpen={contextMenu.open}
+                    x={contextMenu.x}
+                    y={contextMenu.y}
+                    onClose={closeContextMenu}
+                    isPinned={isContextPinned}
+                    showPinAction={canContextPin}
+                    onPin={handlePin}
+                    onUnpin={handleUnpin}
+                    onHide={handleHide}
+                />
             </div>
-
-            <ColumnFilterPopup isOpen={filterPopup.open} x={filterPopup.x} y={filterPopup.y} onClose={closeFilter}>
-                {activeFilterContent}
-            </ColumnFilterPopup>
-
-            <HeaderContextMenu
-                isOpen={contextMenu.open}
-                x={contextMenu.x}
-                y={contextMenu.y}
-                onClose={closeContextMenu}
-                isPinned={isContextPinned}
-                showPinAction={canContextPin}
-                onPin={handlePin}
-                onUnpin={handleUnpin}
-                onHide={handleHide}
-            />
-        </>
     );
 };
 
