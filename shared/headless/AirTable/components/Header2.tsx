@@ -136,21 +136,33 @@ const DefaultColumnFilter = <T,>({
         return options.filter((opt) => opt.label.toLowerCase().includes(q));
     }, [options, keyword]);
 
-    const excludedSet = useMemo(() => new Set(filterState[colKey]?.excluded ?? []), [filterState, colKey]);
-    const visibleCount = Math.max(0, options.length - excludedSet.size);
-    const isFilterApplied = excludedSet.size > 0;
+    // included = 선택된 항목 집합, null = 필터 미적용 (전체 표시)
+    const includedSet = useMemo(() => {
+        const inc = filterState[colKey]?.included;
+        return Array.isArray(inc) && inc.length > 0 ? new Set(inc) : null;
+    }, [filterState, colKey]);
 
-    const toggleExclude = (key: string) => {
-        const nextExcluded = new Set(excludedSet);
-        if (nextExcluded.has(key)) nextExcluded.delete(key);
-        else nextExcluded.add(key);
+    const isFilterApplied = includedSet !== null;
 
+    // 체크 = 해당 항목이 included에 있음 (필터 미적용 시 전체 비체크)
+    const isChecked = (key: string) => includedSet !== null && includedSet.has(key);
+
+    const toggleInclude = (key: string) => {
         const nextState = { ...filterState };
-        if (nextExcluded.size === 0) {
+        const current = new Set(filterState[colKey]?.included ?? []);
+
+        if (current.has(key)) {
+            current.delete(key);
+        } else {
+            current.add(key);
+        }
+
+        if (current.size === 0) {
             delete nextState[colKey];
         } else {
-            nextState[colKey] = { excluded: Array.from(nextExcluded) };
+            nextState[colKey] = { included: Array.from(current) };
         }
+
         setFilterState(nextState);
     };
 
@@ -158,13 +170,6 @@ const DefaultColumnFilter = <T,>({
         if (!filterState[colKey]) return;
         const nextState = { ...filterState };
         delete nextState[colKey];
-        setFilterState(nextState);
-    };
-
-    const hideAll = () => {
-        if (options.length === 0) return;
-        const nextState = { ...filterState };
-        nextState[colKey] = { excluded: options.map((opt) => opt.key) };
         setFilterState(nextState);
     };
 
@@ -199,14 +204,13 @@ const DefaultColumnFilter = <T,>({
                     </div>
                 ) : (
                     filteredOptions.map((opt) => {
-                        const excluded = excludedSet.has(opt.key);
-                        const checked = !excluded;
+                        const checked = isChecked(opt.key);
                         return (
                             <label
                                 key={opt.key || '__empty__'}
                                 style={{
                                     width: '100%',
-                                    background: checked ? 'transparent' : getThemeColor('Gray7'),
+                                    background: isFilterApplied && !checked ? getThemeColor('Gray7') : 'transparent',
                                     borderRadius: 6,
                                     padding: '6px 8px',
                                     textAlign: 'left',
@@ -233,7 +237,7 @@ const DefaultColumnFilter = <T,>({
                                     <input
                                         type="checkbox"
                                         checked={checked}
-                                        onChange={() => toggleExclude(opt.key)}
+                                        onChange={() => toggleInclude(opt.key)}
                                         style={{
                                             width: 14,
                                             height: 14,
@@ -246,8 +250,7 @@ const DefaultColumnFilter = <T,>({
                                             overflow: 'hidden',
                                             textOverflow: 'ellipsis',
                                             whiteSpace: 'nowrap',
-                                            color: checked ? getThemeColor('Black1') : getThemeColor('Gray2'),
-                                            // textDecoration: checked ? 'none' : 'line-through',
+                                            color: isFilterApplied && !checked ? getThemeColor('Gray2') : getThemeColor('Black1'),
                                         }}
                                     >
                                         {opt.label}
@@ -261,22 +264,9 @@ const DefaultColumnFilter = <T,>({
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <span style={{ fontSize: 11, color: getThemeColor('Gray2') }}>
-                    {isFilterApplied ? `표시 ${visibleCount} / 전체 ${options.length}` : '전체 표시 중'}
+                    {isFilterApplied ? `선택 ${includedSet!.size} / 전체 ${options.length}` : '전체 표시 중'}
                 </span>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                    <button
-                        type="button"
-                        onClick={hideAll}
-                        style={{
-                            border: 'none',
-                            background: 'transparent',
-                            color: getThemeColor('Gray2'),
-                            fontSize: 12,
-                            cursor: 'pointer',
-                        }}
-                    >
-                        전체 숨김
-                    </button>
                     <button
                         type="button"
                         onClick={clearFilter}
@@ -842,7 +832,7 @@ export const Header2 = <T,>({ className, headerCellClassName, resizeHandleClassN
                         const isSortable = !!sortConfig;
                         const sortDirection = sortState?.key === colKey ? sortState.direction : null;
                         const hasFilterButton = !!col.filter || !!sortConfig?.sortValue;
-                        const isFilterActive = (filterState[colKey]?.excluded?.length ?? 0) > 0;
+                        const isFilterActive = (filterState[colKey]?.included?.length ?? 0) > 0;
                         const actionPaddingRight = 12 + (hasFilterButton ? 28 : 0) + (isSortable ? 24 : 0);
                         const sortButtonRight = hasFilterButton ? 42 : 14;
                         const pinnedStyle: React.CSSProperties = isPinned
