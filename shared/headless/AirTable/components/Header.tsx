@@ -498,12 +498,19 @@ const HeaderContextMenu = ({
             if (ev.key === 'Escape') onClose();
         };
 
+        const handleScroll = (e: Event) => {
+            if (ref.current?.contains(e.target as Node)) return;
+            onClose();
+        };
+
         window.addEventListener('mousedown', handleDown);
         window.addEventListener('keydown', handleEsc);
+        window.addEventListener('scroll', handleScroll, true);
 
         return () => {
             window.removeEventListener('mousedown', handleDown);
             window.removeEventListener('keydown', handleEsc);
+            window.removeEventListener('scroll', handleScroll, true);
         };
     }, [isOpen, onClose]);
 
@@ -646,6 +653,7 @@ export const Header = <T,>({ className, headerCellClassName, resizeHandleClassNa
     }>({ open: false, colKey: null, x: 0, y: 0 });
 
     const headerLabelRefMap = useRef<Record<string, HTMLDivElement | null>>({});
+    const filterButtonRef = useRef<HTMLButtonElement | null>(null);
     const [minWidthByKey, setMinWidthByKey] = useState<Record<string, number>>({});
 
     useEffect(() => {
@@ -669,6 +677,7 @@ export const Header = <T,>({ className, headerCellClassName, resizeHandleClassNa
         e.preventDefault();
         e.stopPropagation();
 
+        filterButtonRef.current = e.currentTarget;
         const rect = e.currentTarget.getBoundingClientRect();
 
         setFilterPopup((prev) => {
@@ -684,6 +693,20 @@ export const Header = <T,>({ className, headerCellClassName, resizeHandleClassNa
             };
         });
     }, []);
+
+    useEffect(() => {
+        if (!filterPopup.open) return;
+
+        const updatePosition = () => {
+            const btn = filterButtonRef.current;
+            if (!btn) return;
+            const rect = btn.getBoundingClientRect();
+            setFilterPopup((prev) => ({ ...prev, x: rect.left - 200, y: rect.bottom + 8 }));
+        };
+
+        window.addEventListener('scroll', updatePosition, true);
+        return () => window.removeEventListener('scroll', updatePosition, true);
+    }, [filterPopup.open]);
 
     const closeFilter = useCallback(() => {
         setFilterPopup((prev) => ({ ...prev, open: false }));
