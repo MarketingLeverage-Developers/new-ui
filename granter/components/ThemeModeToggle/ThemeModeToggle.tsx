@@ -27,56 +27,49 @@ const ThemeModeToggle = ({
     size = 'sm',
     disabled = false,
     className,
-    ariaLabel = '테마 모드 선택',
+    ariaLabel = '테마 모드 토글',
 }: ThemeModeToggleProps) => {
-    const handleOptionClick = (nextTheme: ThemeModeToggleTheme) => {
-        if (disabled || nextTheme === theme) return;
-        onThemeChange(nextTheme);
+    const currentThemeIndex = THEME_OPTIONS.findIndex((option) => option.value === theme);
+    const safeCurrentThemeIndex = currentThemeIndex >= 0 ? currentThemeIndex : 0;
+    const currentThemeOption = THEME_OPTIONS[safeCurrentThemeIndex]!;
+    const nextThemeOption = THEME_OPTIONS[(safeCurrentThemeIndex + 1) % THEME_OPTIONS.length]!;
+    const screenReaderMessage = `${currentThemeOption.label}. 클릭하면 ${nextThemeOption.label}로 전환됩니다.`;
+
+    const handleToggleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+        if (disabled) return;
+        const root = document.documentElement;
+        const rect = event.currentTarget.getBoundingClientRect();
+        const x = event.clientX > 0 ? event.clientX : rect.left + rect.width / 2;
+        const y = event.clientY > 0 ? event.clientY : rect.top + rect.height / 2;
+
+        root.style.setProperty('--theme-reveal-x', `${x}px`);
+        root.style.setProperty('--theme-reveal-y', `${y}px`);
+        root.dataset.themeReveal = 'radial';
+
+        onThemeChange(nextThemeOption.value);
     };
 
+    const CurrentThemeIcon = currentThemeOption.value === 'light' ? FiSun : currentThemeOption.value === 'dark' ? FiMoon : FiStar;
+
     return (
-        <div
+        <button
+            type="button"
             className={classNames(styles.Root, className)}
             data-size={size}
             data-theme-mode={theme}
-            data-disabled={disabled ? 'true' : 'false'}
-            role="radiogroup"
-            aria-label={ariaLabel}
+            aria-label={`${ariaLabel}. ${screenReaderMessage}`}
+            onClick={handleToggleClick}
+            disabled={disabled}
         >
             <span className={styles.Track} aria-hidden="true">
-                <span className={styles.Indicator} />
-                {THEME_OPTIONS.map((option) => {
-                    const isActive = option.value === theme;
-                    const isDarkerOption = option.value === 'darker';
-
-                    return (
-                        <button
-                            key={option.value}
-                            type="button"
-                            className={styles.Option}
-                            data-theme-option={option.value}
-                            data-active={isActive ? 'true' : 'false'}
-                            onClick={() => handleOptionClick(option.value)}
-                            disabled={disabled}
-                            role="radio"
-                            aria-checked={isActive}
-                            aria-label={option.label}
-                        >
-                            <span className={classNames(styles.Icon, isDarkerOption && styles.IconDarker)}>
-                                {option.value === 'light' ? (
-                                    <FiSun size={12} />
-                                ) : option.value === 'darker' ? (
-                                    <FiStar size={12} />
-                                ) : (
-                                    <FiMoon size={12} />
-                                )}
-                            </span>
-                            <span className={styles.SrOnly}>{option.label}</span>
-                        </button>
-                    );
-                })}
+                <span className={styles.Thumb}>
+                    <span className={classNames(styles.Icon, currentThemeOption.value === 'darker' && styles.IconDarker)}>
+                        <CurrentThemeIcon size={12} />
+                    </span>
+                </span>
             </span>
-        </div>
+            <span className={styles.SrOnly}>{screenReaderMessage}</span>
+        </button>
     );
 };
 

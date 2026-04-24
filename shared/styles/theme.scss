@@ -245,3 +245,28 @@
 :root[data-theme='light'] {
     @include light-vars;
 }
+
+:root {
+    --theme-reveal-x: 50vw;
+    --theme-reveal-y: 50vh;
+    --theme-reveal-ink-rgb: 120 130 200;
+}
+
+:root[data-theme-reveal='radial']::view-transition-old(root),
+:root[data-theme-reveal='radial']::view-transition-new(root) {
+    animation: none;
+    mix-blend-mode: normal;
+}
+
+:root[data-theme-reveal='radial']::view-transition-group(root) {
+    animation-duration: 0s;
+}
+
+:root[data-theme-reveal='radial']::view-transition-new(root) {
+    transform-origin: var(--theme-reveal-x) var(--theme-reveal-y);
+    will-change: clip-path, filter, opacity, transform;
+}
+
+:root[data-theme-reveal='radial']::view-transition-old(root) {
+    will-change: filter, opacity, transform;
+}
