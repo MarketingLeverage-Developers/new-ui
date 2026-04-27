@@ -253,7 +253,10 @@ const FileUploaderRoot: React.FC<FileUploaderProps> = (props) => {
         if (filtered.length === 0) return;
 
         const currentCount = serverItems.length;
-        const remainingCount = Math.max((maxCount ?? 0) - currentCount, 0);
+        // single 모드(multiple=false)는 교체이므로 항상 1개 허용
+        const remainingCount = !resolvedMultiple
+            ? 1
+            : Math.max((maxCount ?? 0) - currentCount, 0);
         const uploadable = maxCount !== undefined ? filtered.slice(0, remainingCount) : filtered;
 
         if (uploadable.length === 0) return;

@@ -172,11 +172,13 @@ const BaseFileUploaderList: React.FC = () => {
         removeItem(key);
     };
 
+    const encodeUrlBrackets = (u: string) => u.replace(/\[/g, '%5B').replace(/\]/g, '%5D');
+
     const resolveDownloadUrl = (url: string) => {
-        if (/^https?:\/\//i.test(url)) return url;
-        if (url.startsWith('/api/') && apiOrigin) return `${apiOrigin}${url}`;
-        if (apiPrefix) return `${apiPrefix}${url.startsWith('/') ? '' : '/'}${url}`;
-        return url;
+        if (/^https?:\/\//i.test(url)) return encodeUrlBrackets(url);
+        if (url.startsWith('/api/') && apiOrigin) return encodeUrlBrackets(`${apiOrigin}${url}`);
+        if (apiPrefix) return encodeUrlBrackets(`${apiPrefix}${url.startsWith('/') ? '' : '/'}${url}`);
+        return encodeUrlBrackets(url);
     };
 
     const handleFileDownload = async (url: string, fileName: string) => {
