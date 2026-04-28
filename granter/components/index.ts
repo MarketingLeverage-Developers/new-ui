@@ -124,6 +124,8 @@ export type { MetricValueCardProps, MetricValueCardVariant, MetricValueTone } fr
 
 export { default as MetricStatusCard } from './MetricStatusCard/MetricStatusCard';
 export type { MetricStatusCardProps } from './MetricStatusCard/MetricStatusCard';
+export { default as MediaSelectCard } from './MediaSelectCard/MediaSelectCard';
+export type { MediaSelectCardProps, MediaSelectCardStatusTone } from './MediaSelectCard/MediaSelectCard';
 
 export { default as StatusChip } from './StatusChip/StatusChip';
 export type { StatusChipProps, StatusChipSize, StatusChipTone } from './StatusChip/StatusChip';

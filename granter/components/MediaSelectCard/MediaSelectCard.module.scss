@@ -1,0 +1,98 @@
+.Card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    width: 76px;
+    flex-shrink: 0;
+    padding: 12px 10px 10px;
+    border: 1px solid var(--granter-gray-200);
+    border-radius: 12px;
+    background: var(--granter-white);
+    cursor: pointer;
+    text-align: center;
+    transition: border-color 0.15s ease, background-color 0.15s ease;
+    position: relative;
+}
+
+.Card:hover:not([data-selected='true']) {
+    border-color: var(--granter-gray-300);
+    background: var(--granter-gray-50);
+}
+
+.Card[data-selected='true'] {
+    border-color: #60a5fa;
+    background: #fbfdff;
+}
+
+.SelectedMark {
+    width: 16px;
+    height: 16px;
+    border-radius: 999px;
+    background: #3b82f6;
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    opacity: 0;
+    transform: scale(0.86);
+    transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.Card[data-selected='true'] .SelectedMark {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.LogoWrap {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.Logo {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+}
+
+.Name {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--granter-gray-700);
+    line-height: 1.2;
+    word-break: keep-all;
+}
+
+.StatusChip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+    padding: 2px 7px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+    line-height: 1.2;
+}
+
+.StatusChipConnected {
+    color: #0f9f57;
+    background: #dbf8e8;
+}
+
+.StatusChipWarning {
+    color: #f97316;
+    background: #fff2e8;
+}
+
+.StatusChipMuted {
+    color: var(--granter-gray-500);
+    background: var(--granter-gray-100);
+}
