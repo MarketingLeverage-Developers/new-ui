@@ -1,6 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
-import { GoCheck } from 'react-icons/go';
+import { GoCheck, GoX } from 'react-icons/go';
 import styles from './MediaSelectCard.module.scss';
 
 export type MediaSelectCardStatusTone = 'connected' | 'warning' | 'muted';
@@ -12,6 +12,7 @@ export type MediaSelectCardProps = {
     statusTone?: MediaSelectCardStatusTone;
     selected?: boolean;
     onClick?: () => void;
+    onDelete?: () => void;
     className?: string;
 };
 
@@ -22,6 +23,7 @@ const MediaSelectCard = ({
     statusTone = 'muted',
     selected = false,
     onClick,
+    onDelete,
     className,
 }: MediaSelectCardProps) => (
     <button
@@ -34,6 +36,17 @@ const MediaSelectCard = ({
         <span className={styles.SelectedMark} aria-hidden="true">
             <GoCheck size={10} />
         </span>
+
+        {onDelete && (
+            <span
+                role="button"
+                aria-label={`${name} 삭제`}
+                className={styles.DeleteBtn}
+                onClick={(e) => { e.stopPropagation(); onDelete(); }}
+            >
+                <GoX size={12} />
+            </span>
+        )}
 
         <span className={styles.LogoWrap}>
             <img src={logoSrc} alt={`${name}-logo`} width={24} height={24} className={styles.Logo} />

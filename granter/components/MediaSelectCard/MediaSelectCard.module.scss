@@ -47,6 +47,37 @@
     transform: scale(1);
 }
 
+.DeleteBtn {
+    width: 22px;
+    height: 22px;
+    border-radius: 999px;
+    background: var(--granter-gray-700);
+    border: 2px solid #fff;
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translate(40%, -40%);
+    opacity: 0;
+    font-size: 13px;
+    line-height: 1;
+    cursor: pointer;
+    transition: opacity 0.15s ease, background-color 0.15s ease;
+    z-index: 1;
+}
+
+.DeleteBtn:hover {
+    background: #ef4444;
+}
+
+.Card:hover .DeleteBtn {
+    opacity: 1;
+}
+
+
 .LogoWrap {
     width: 32px;
     height: 32px;
@@ -88,8 +119,8 @@
 }
 
 .StatusChipWarning {
-    color: #f97316;
-    background: #fff2e8;
+    color: #dc2626;
+    background: #fee2e2;
 }
 
 .StatusChipMuted {
