@@ -1,5 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
+import type { DayPickerProps } from 'react-day-picker';
 import { FiCalendar } from 'react-icons/fi';
 import Dropdown, { useDropdown } from '../../../shared/headless/Dropdown/Dropdown';
 import SingleDatePicker from '../SingleDatePicker/SingleDatePicker';
@@ -56,6 +57,7 @@ export type SectionFieldDateInputProps = {
     value?: string | null;
     onChange?: React.ChangeEventHandler<HTMLInputElement>;
     onValueChange?: (value: string) => void;
+    pickerDisabled?: DayPickerProps['disabled'];
     placeholder?: string;
     disabled?: boolean;
     name?: string;
@@ -69,15 +71,17 @@ export type SectionFieldDateInputProps = {
 type DatePickerDropdownContentProps = {
     selectedDate?: Date;
     onSelectDate: (date: Date) => void;
+    disabled?: DayPickerProps['disabled'];
 };
 
-const DatePickerDropdownContent = ({ selectedDate, onSelectDate }: DatePickerDropdownContentProps) => {
+const DatePickerDropdownContent = ({ selectedDate, onSelectDate, disabled }: DatePickerDropdownContentProps) => {
     const { close } = useDropdown();
 
     return (
         <Dropdown.Content placement="bottom-start" offset={8}>
             <SingleDatePicker
                 date={selectedDate ?? new Date()}
+                disabled={disabled}
                 onChangeDate={(nextDate) => {
                     onSelectDate(nextDate);
                     close();
@@ -95,6 +99,7 @@ const SectionFieldDateInput = React.forwardRef<HTMLInputElement, SectionFieldDat
             onValueChange,
             placeholder = '날짜를 선택하세요.',
             disabled = false,
+            pickerDisabled,
             name,
             id,
             required = false,
@@ -166,7 +171,11 @@ const SectionFieldDateInput = React.forwardRef<HTMLInputElement, SectionFieldDat
                 </Dropdown.Trigger>
 
                 {!disabled ? (
-                    <DatePickerDropdownContent selectedDate={selectedDate} onSelectDate={handleSelectDate} />
+                    <DatePickerDropdownContent
+                        selectedDate={selectedDate}
+                        onSelectDate={handleSelectDate}
+                        disabled={pickerDisabled}
+                    />
                 ) : null}
             </Dropdown>
         );
