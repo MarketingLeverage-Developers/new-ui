@@ -11,6 +11,8 @@ export { default as BasicBarChart } from './components/BasicBarChart/BasicBarCha
 export { default as BasicDonutChart } from './components/BasicDonutChart/BasicDonutChart';
 export { default as AnalyticsChart } from './components/AnalyticsChart/AnalyticsChart';
 export { default as SectionBlock } from './components/SectionBlock/SectionBlock';
+export { default as FieldSection } from './components/FieldSection/FieldSection';
+export type { FieldSectionProps, FieldSectionEmptyProps } from './components/FieldSection/FieldSection';
 export { default as SheetModal } from './components/SheetModal/SheetModal';
 export { default as CompactPageShell } from './components/CompactPageShell/CompactPageShell';
 export { default as MobileOnboardingScreen } from './components/MobileOnboardingScreen/MobileOnboardingScreen';

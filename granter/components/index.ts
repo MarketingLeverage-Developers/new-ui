@@ -151,6 +151,8 @@ export type { SurfacePanelProps } from './SurfacePanel/SurfacePanel';
 
 export { default as SectionBlock } from './SectionBlock/SectionBlock';
 export type { SectionBlockProps } from './SectionBlock/SectionBlock';
+export { default as FieldSection } from './FieldSection/FieldSection';
+export type { FieldSectionProps, FieldSectionEmptyProps } from './FieldSection/FieldSection';
 export { default as SheetModal } from './SheetModal/SheetModal';
 export type { SheetModalProps } from './SheetModal/SheetModal';
 export { default as CompactPageShell } from './CompactPageShell/CompactPageShell';
