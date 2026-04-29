@@ -35,17 +35,8 @@ const ThemeModeToggle = ({
     const nextThemeOption = THEME_OPTIONS[(safeCurrentThemeIndex + 1) % THEME_OPTIONS.length]!;
     const screenReaderMessage = `${currentThemeOption.label}. 클릭하면 ${nextThemeOption.label}로 전환됩니다.`;
 
-    const handleToggleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const handleToggleClick = () => {
         if (disabled) return;
-        const root = document.documentElement;
-        const rect = event.currentTarget.getBoundingClientRect();
-        const x = event.clientX > 0 ? event.clientX : rect.left + rect.width / 2;
-        const y = event.clientY > 0 ? event.clientY : rect.top + rect.height / 2;
-
-        root.style.setProperty('--theme-reveal-x', `${x}px`);
-        root.style.setProperty('--theme-reveal-y', `${y}px`);
-        root.dataset.themeReveal = 'radial';
-
         onThemeChange(nextThemeOption.value);
     };
 
