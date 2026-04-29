@@ -569,6 +569,16 @@ const dedupeAxisSplitsByFormatter = (
 const getSeriesOrder = (series: { order?: number; label?: string }) =>
     series.order ?? Number.MAX_SAFE_INTEGER;
 
+const getSeriesStackOrder = (series: { stackOrder?: number; order?: number; label?: string }) =>
+    series.stackOrder ?? getSeriesOrder(series);
+
+const compareSeriesByStackOrder = (
+    left: { stackOrder?: number; order?: number; label?: string },
+    right: { stackOrder?: number; order?: number; label?: string }
+) =>
+    getSeriesStackOrder(left) - getSeriesStackOrder(right) ||
+    (left.label ?? '').localeCompare(right.label ?? '', 'ko-KR');
+
 const renderTooltipMarker = (
     markerKind: AnalyticsChartMarkerKind | undefined,
     color: string
@@ -1588,11 +1598,7 @@ const buildBarGeometry = ({
                   ? seriesMeta.filter((item) => item.key === stackId)
                   : seriesMeta;
 
-        acc[stackId] = [...stackSeries].sort(
-            (left, right) =>
-                getSeriesOrder(left) - getSeriesOrder(right) ||
-                left.label.localeCompare(right.label, 'ko-KR')
-        );
+        acc[stackId] = [...stackSeries].sort(compareSeriesByStackOrder);
         return acc;
     }, {});
 

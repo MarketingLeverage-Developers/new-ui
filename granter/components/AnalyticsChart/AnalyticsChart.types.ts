@@ -43,6 +43,7 @@ export type AnalyticsChartSeries = {
     label: string;
     color: string;
     order?: number;
+    stackOrder?: number;
     stackId?: string;
     countKey?: string;
     markerKind?: AnalyticsChartMarkerKind;
