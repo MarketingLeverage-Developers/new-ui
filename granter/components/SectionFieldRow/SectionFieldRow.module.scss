@@ -30,13 +30,16 @@
 
 .LabelInner {
     display: inline-flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 4px;
     min-width: 0;
+    max-width: 100%;
 }
 
 .LabelText {
     min-width: 0;
+    word-break: keep-all;
+    overflow-wrap: break-word;
 }
 
 .RequiredMark {

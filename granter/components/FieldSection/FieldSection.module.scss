@@ -1,0 +1,21 @@
+.Root {
+    display: flex;
+    flex-direction: column;
+}
+
+.Title {
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--granter-gray-200);
+    line-height: 24px;
+}
+
+.Rows > * + * {
+    border-top: 1px solid var(--granter-gray-100);
+}
+
+.Empty {
+    padding: 12px 0;
+    font-size: 13px;
+    color: var(--granter-gray-400);
+    margin: 0;
+}

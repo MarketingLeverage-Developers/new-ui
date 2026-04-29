@@ -124,6 +124,8 @@ export type { MetricValueCardProps, MetricValueCardVariant, MetricValueTone } fr
 
 export { default as MetricStatusCard } from './MetricStatusCard/MetricStatusCard';
 export type { MetricStatusCardProps } from './MetricStatusCard/MetricStatusCard';
+export { default as MediaSelectCard } from './MediaSelectCard/MediaSelectCard';
+export type { MediaSelectCardProps, MediaSelectCardStatusTone } from './MediaSelectCard/MediaSelectCard';
 
 export { default as StatusChip } from './StatusChip/StatusChip';
 export type { StatusChipProps, StatusChipSize, StatusChipTone } from './StatusChip/StatusChip';
@@ -149,6 +151,8 @@ export type { SurfacePanelProps } from './SurfacePanel/SurfacePanel';
 
 export { default as SectionBlock } from './SectionBlock/SectionBlock';
 export type { SectionBlockProps } from './SectionBlock/SectionBlock';
+export { default as FieldSection } from './FieldSection/FieldSection';
+export type { FieldSectionProps, FieldSectionEmptyProps } from './FieldSection/FieldSection';
 export { default as SheetModal } from './SheetModal/SheetModal';
 export type { SheetModalProps } from './SheetModal/SheetModal';
 export { default as CompactPageShell } from './CompactPageShell/CompactPageShell';
@@ -192,6 +196,8 @@ export { default as SectionFieldInput } from './SectionFieldInput/SectionFieldIn
 export type { SectionFieldInputProps } from './SectionFieldInput/SectionFieldInput';
 export { default as SectionFieldDateInput } from './SectionFieldDateInput/SectionFieldDateInput';
 export type { SectionFieldDateInputProps } from './SectionFieldDateInput/SectionFieldDateInput';
+export { default as SectionFieldDateTextInput } from './SectionFieldDateTextInput/SectionFieldDateTextInput';
+export type { SectionFieldDateTextInputProps } from './SectionFieldDateTextInput/SectionFieldDateTextInput';
 export { default as SectionFieldRowInput } from './SectionFieldRowInput/SectionFieldRowInput';
 export type { SectionFieldRowInputProps } from './SectionFieldRowInput/SectionFieldRowInput';
 export { default as SectionFieldRowFileUpload } from './SectionFieldRowFileUpload/SectionFieldRowFileUpload';

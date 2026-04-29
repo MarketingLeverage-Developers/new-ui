@@ -11,6 +11,8 @@ export { default as BasicBarChart } from './components/BasicBarChart/BasicBarCha
 export { default as BasicDonutChart } from './components/BasicDonutChart/BasicDonutChart';
 export { default as AnalyticsChart } from './components/AnalyticsChart/AnalyticsChart';
 export { default as SectionBlock } from './components/SectionBlock/SectionBlock';
+export { default as FieldSection } from './components/FieldSection/FieldSection';
+export type { FieldSectionProps, FieldSectionEmptyProps } from './components/FieldSection/FieldSection';
 export { default as SheetModal } from './components/SheetModal/SheetModal';
 export { default as CompactPageShell } from './components/CompactPageShell/CompactPageShell';
 export { default as MobileOnboardingScreen } from './components/MobileOnboardingScreen/MobileOnboardingScreen';
@@ -27,6 +29,7 @@ export { default as SectionFormDrawerContent } from './components/SectionFormDra
 export { default as SectionFieldRow } from './components/SectionFieldRow/SectionFieldRow';
 export { default as SectionFieldInput } from './components/SectionFieldInput/SectionFieldInput';
 export { default as SectionFieldDateInput } from './components/SectionFieldDateInput/SectionFieldDateInput';
+export { default as SectionFieldDateTextInput } from './components/SectionFieldDateTextInput/SectionFieldDateTextInput';
 export { default as SectionFieldRowInput } from './components/SectionFieldRowInput/SectionFieldRowInput';
 export { default as SectionFieldRowFileUpload } from './components/SectionFieldRowFileUpload/SectionFieldRowFileUpload';
 export { default as SectionFieldRowSelect } from './components/SectionFieldRowSelect/SectionFieldRowSelect';
@@ -204,6 +207,7 @@ export type { SectionFormDrawerContentProps } from './components/SectionFormDraw
 export type { SectionFieldRowProps, SectionFieldRowSubFieldProps } from './components/SectionFieldRow/SectionFieldRow';
 export type { SectionFieldInputProps } from './components/SectionFieldInput/SectionFieldInput';
 export type { SectionFieldDateInputProps } from './components/SectionFieldDateInput/SectionFieldDateInput';
+export type { SectionFieldDateTextInputProps } from './components/SectionFieldDateTextInput/SectionFieldDateTextInput';
 export type { SectionFieldRowInputProps } from './components/SectionFieldRowInput/SectionFieldRowInput';
 export type { SectionFieldRowFileUploadProps } from './components/SectionFieldRowFileUpload/SectionFieldRowFileUpload';
 export type { SectionFieldRowSelectProps } from './components/SectionFieldRowSelect/SectionFieldRowSelect';

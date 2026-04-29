@@ -393,3 +393,8 @@
     background-color: var(--granter-gray-900);
     color: var(--granter-white);
 }
+
+.ActionButton:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+}

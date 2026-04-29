@@ -1,4 +1,5 @@
 import React from 'react';
+import classNames from 'classnames';
 import { FiSearch } from 'react-icons/fi';
 import { IoCloseOutline } from 'react-icons/io5';
 import PlainButton from '../Button/PlainButton';
@@ -13,6 +14,7 @@ export type SearchInputProps = {
     ariaLabel?: string;
     widthPreset?: SearchInputWidthPreset;
     fullWidth?: boolean;
+    className?: string;
 };
 
 const SearchInput = ({
@@ -22,6 +24,7 @@ const SearchInput = ({
     ariaLabel = placeholder,
     widthPreset = 'auto',
     fullWidth = false,
+    className,
 }: SearchInputProps) => {
     const [draftValue, setDraftValue] = React.useState(value);
     const isComposingRef = React.useRef(false);
@@ -57,7 +60,7 @@ const SearchInput = ({
 
     return (
         <div
-            className={styles.SearchInput}
+            className={classNames(styles.SearchInput, className)}
             data-width-preset={widthPreset}
             style={fullWidth ? { width: '100%' } : undefined}
         >

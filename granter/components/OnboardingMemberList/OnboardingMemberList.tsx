@@ -16,12 +16,18 @@ export type OnboardingMemberListItem = {
 };
 
 export type OnboardingMemberListProps = {
-    /** 현재 선택된 value */
-    value: string;
+    /** 현재 선택된 value (single 선택 모드) */
+    value?: string;
+    /** 현재 선택된 value 목록 (multiple 선택 모드) */
+    selectedValues?: string[];
+    /** 선택 모드 */
+    selectionMode?: 'single' | 'multiple';
     /** 표시할 멤버 목록 */
     items: OnboardingMemberListItem[];
-    /** value 변경 콜백 */
-    onChange: (value: string) => void;
+    /** value 변경 콜백 (single 선택 모드) */
+    onChange?: (value: string) => void;
+    /** value 토글 콜백 (multiple 선택 모드) */
+    onToggle?: (value: string) => void;
     /** 검색 placeholder */
     searchPlaceholder?: string;
     /** aria-label */
@@ -30,9 +36,12 @@ export type OnboardingMemberListProps = {
 };
 
 const OnboardingMemberList = ({
-    value,
+    value = '',
+    selectedValues = [],
+    selectionMode = 'single',
     items,
     onChange,
+    onToggle,
     searchPlaceholder = '이름이나 메일로 찾기',
     ariaLabel,
     className,
@@ -48,8 +57,15 @@ const OnboardingMemberList = ({
           )
         : items;
 
+    const isMultipleSelection = selectionMode === 'multiple';
+
     return (
-        <div className={[styles.Root, className].filter(Boolean).join(' ')} role="listbox" aria-label={ariaLabel}>
+        <div
+            className={[styles.Root, className].filter(Boolean).join(' ')}
+            role="listbox"
+            aria-label={ariaLabel}
+            aria-multiselectable={isMultipleSelection ? 'true' : undefined}
+        >
             {/* 검색 */}
             <div className={styles.Search}>
                 <PiMagnifyingGlass size={16} className={styles.SearchIcon} aria-hidden="true" />
@@ -79,7 +95,9 @@ const OnboardingMemberList = ({
                     <div className={styles.Empty}>검색 결과가 없습니다.</div>
                 ) : (
                     filtered.map((item) => {
-                        const isSelected = item.value === value;
+                        const isSelected = isMultipleSelection
+                            ? selectedValues.includes(item.value)
+                            : item.value === value;
                         const initial = (item.name || '?')[0].toUpperCase();
 
                         return (
@@ -92,7 +110,13 @@ const OnboardingMemberList = ({
                                 className={styles.Item}
                                 data-selected={isSelected ? 'true' : 'false'}
                                 disabled={item.disabled}
-                                onClick={() => onChange(item.value)}
+                                onClick={() => {
+                                    if (isMultipleSelection) {
+                                        onToggle?.(item.value);
+                                        return;
+                                    }
+                                    onChange?.(item.value);
+                                }}
                             >
                                 {/* 아바타 */}
                                 <div className={styles.Avatar} aria-hidden="true">
