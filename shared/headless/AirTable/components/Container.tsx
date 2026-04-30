@@ -27,6 +27,8 @@ const toCssSize = (v?: number | string) => {
     return v;
 };
 
+const isAutoCssSize = (v?: number | string) => v === 'auto';
+
 const findScrollableParent = (el: HTMLElement | null) => {
     let parent = el?.parentElement ?? null;
 
@@ -52,6 +54,7 @@ export const Container = ({
     ...rest
 }: ContainerProps) => {
     const { scrollRef } = useAirTableContext<any>();
+    const isAutoHeight = isAutoCssSize(height);
     const headerRef = useRef<HTMLDivElement | null>(null);
     const topScrollbarTrackRef = useRef<HTMLDivElement | null>(null);
     const topScrollbarDragRef = useRef<{ startClientX: number; startThumbLeft: number } | null>(null);
@@ -298,7 +301,7 @@ export const Container = ({
         <div className={className} style={mergedStyle} {...rest}>
             <div
                 style={{
-                    flex: 1,
+                    flex: isAutoHeight ? '0 0 auto' : 1,
                     minHeight: 0,
                     minWidth: 0,
                     position: 'relative',
@@ -308,7 +311,7 @@ export const Container = ({
                     ref={scrollRef}
                     className="airtable-scroll airtable-scroll--body"
                     style={{
-                        height: '100%',
+                        height: isAutoHeight ? 'auto' : '100%',
                         minHeight: 0,
                         minWidth: 0,
                         overflow: 'auto',
