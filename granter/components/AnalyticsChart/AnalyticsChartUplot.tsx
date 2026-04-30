@@ -1110,14 +1110,20 @@ const BarTooltipContent = ({
     });
 
     const sortedItems = seriesMeta
-        .map((item) => ({
-            ...item,
-            value: valueByKey.get(item.key) ?? 0,
-            count: getTooltipCountValue(
-                item,
-                payloadByKey.get(item.key)?.payload as LineChartDatum | undefined
-            ),
-        }))
+        .map((item) => {
+            const payloadDatum = payloadByKey.get(item.key)?.payload as LineChartDatum | undefined;
+            const tooltipValueKey = item.tooltipValueKey?.trim();
+            const tooltipValue = tooltipValueKey && payloadDatum
+                ? Number(payloadDatum[tooltipValueKey])
+                : valueByKey.get(item.key) ?? 0;
+
+            return {
+                ...item,
+                value: valueByKey.get(item.key) ?? 0,
+                tooltipValue: Number.isFinite(tooltipValue) ? tooltipValue : valueByKey.get(item.key) ?? 0,
+                count: getTooltipCountValue(item, payloadDatum),
+            };
+        })
         .filter((item) => Math.abs(item.value) > 0)
         .sort(
             (a, b) =>
@@ -1145,7 +1151,7 @@ const BarTooltipContent = ({
                         </Text>
                         <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
                             <Text size={13} weight={'semibold'}>
-                                {valueFormatter(Math.abs(item.value))}
+                                {(item.tooltipValueFormatter ?? valueFormatter)(Math.abs(item.tooltipValue))}
                             </Text>
                             {typeof item.count === 'number' ? (
                                 <>
@@ -2376,7 +2382,7 @@ const AnalyticsChart = ({
                                 tooltipCountDivider={barTooltipCountDivider}
                                 noDataLabel={noDataLabel}
                                 dashboardBarCategoryGap={dashboardBarLayout.categoryGap}
-                                dashboardBarGap={dashboardBarLayout.barGap}
+                                dashboardBarGap={barChart.dashboardBarGap ?? dashboardBarLayout.barGap}
                                 dashboardBarMaxWidth={barChart.dashboardBarMaxWidth}
                                 dashboardBarXAxisLabelStride={dashboardBarXAxisLabelStride}
                                 groupedStackSeries={barSeries}

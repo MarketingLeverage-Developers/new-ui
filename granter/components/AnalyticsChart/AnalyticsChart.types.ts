@@ -48,6 +48,8 @@ export type AnalyticsChartSeries = {
     countKey?: string;
     markerKind?: AnalyticsChartMarkerKind;
     tooltipLabel?: string;
+    tooltipValueKey?: string;
+    tooltipValueFormatter?: (value: number) => string;
     tooltipGroupLabel?: string;
     profileSrc?: string;
     avatarSrc?: string;
@@ -99,6 +101,7 @@ export type AnalyticsChartBarModel = {
     tooltipValueFormatter?: (value: number) => string;
     noDataLabel?: string;
     dashboardBarMaxWidth?: number;
+    dashboardBarGap?: number;
     legendItems?: AnalyticsChartLegendItem[];
 };
 
