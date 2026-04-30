@@ -1,13 +1,23 @@
 .Root {
     position: relative;
     min-width: 0;
-    min-height: 0;
+    min-height: 100%;
+    height: 100%;
+    --main-overlay-top: 0px;
+    --main-overlay-left: 0px;
+    --main-overlay-width: 100vw;
+    --main-overlay-height: 100vh;
 }
 
 /* StaticOverlay/BlurOverlay의 기본 fixed를 Main 영역 기준 absolute로 강제 */
 .Root :global([data-overlay-root]) {
-    position: absolute;
-    inset: 0;
+    position: fixed;
+    top: var(--main-overlay-top);
+    left: var(--main-overlay-left);
+    width: var(--main-overlay-width);
+    height: var(--main-overlay-height);
+    right: auto;
+    bottom: auto;
     z-index: var(--z-overlay, 10002);
 }
 

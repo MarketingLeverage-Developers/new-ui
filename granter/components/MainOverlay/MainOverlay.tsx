@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { useEffect, useLayoutEffect, useMemo, useRef } from 'react';
 import StaticOverlay from '../../../StaticOverlay/StaticOverlay';
 import LogoLottie from '../../../LogoLottie/LogoLottie';
 import BlurOverlay from '../../../BlurOverlay/BlurOverlay';
@@ -36,6 +36,32 @@ export type MainOverlayProps = {
 
 type OverlayMode = 'none' | 'initial' | 'blur';
 
+const getOverlayViewportElement = (root: HTMLElement) => {
+    let current = root.parentElement;
+
+    while (current && current !== document.body) {
+        const style = window.getComputedStyle(current);
+        const overflowY = style.overflowY;
+
+        if (overflowY === 'auto' || overflowY === 'scroll' || overflowY === 'hidden') {
+            return current;
+        }
+
+        current = current.parentElement;
+    }
+
+    return root;
+};
+
+const syncOverlayBounds = (root: HTMLElement, viewport: HTMLElement) => {
+    const rect = viewport.getBoundingClientRect();
+
+    root.style.setProperty('--main-overlay-top', `${rect.top}px`);
+    root.style.setProperty('--main-overlay-left', `${rect.left}px`);
+    root.style.setProperty('--main-overlay-width', `${rect.width}px`);
+    root.style.setProperty('--main-overlay-height', `${rect.height}px`);
+};
+
 const MainOverlay: React.FC<MainOverlayProps> = ({
     children,
     state,
@@ -55,6 +81,7 @@ const MainOverlay: React.FC<MainOverlayProps> = ({
     const suspenseFallbackCenterNode = _suspenseFallbackCenterNode ?? state?.suspenseFallbackCenterNode;
     const fetchingOverlayCenterNode = _fetchingOverlayCenterNode ?? state?.fetchingOverlayCenterNode;
     const onRetry = _onRetry ?? actions?.onRetry;
+    const rootRef = useRef<HTMLDivElement | null>(null);
     const hasStartedFirstFetchRef = useRef(false);
     const hasCompletedFirstFetchRef = useRef(false);
 
@@ -119,9 +146,45 @@ const MainOverlay: React.FC<MainOverlayProps> = ({
         return null;
     }, [mode, suspenseFallbackCenterNode, fetchingOverlayCenterNode]);
 
+    useLayoutEffect(() => {
+        if (mode === 'none') return;
+
+        const root = rootRef.current;
+        if (!root) return;
+
+        const viewport = getOverlayViewportElement(root);
+        const previousOverflow = viewport.style.overflow;
+        const previousOverscrollBehavior = viewport.style.overscrollBehavior;
+        let resizeObserver: ResizeObserver | null = null;
+
+        const updateBounds = () => {
+            syncOverlayBounds(root, viewport);
+        };
+
+        updateBounds();
+        viewport.style.overflow = 'hidden';
+        viewport.style.overscrollBehavior = 'contain';
+
+        window.addEventListener('resize', updateBounds);
+        window.addEventListener('scroll', updateBounds, true);
+
+        if (typeof ResizeObserver !== 'undefined') {
+            resizeObserver = new ResizeObserver(updateBounds);
+            resizeObserver.observe(viewport);
+        }
+
+        return () => {
+            viewport.style.overflow = previousOverflow;
+            viewport.style.overscrollBehavior = previousOverscrollBehavior;
+            window.removeEventListener('resize', updateBounds);
+            window.removeEventListener('scroll', updateBounds, true);
+            resizeObserver?.disconnect();
+        };
+    }, [mode]);
+
     if (hasError) {
         return (
-            <div className={styles.Root}>
+            <div ref={rootRef} className={styles.Root}>
                 {children}
                 <StaticOverlay
                     centerNode={
@@ -138,7 +201,7 @@ const MainOverlay: React.FC<MainOverlayProps> = ({
     }
 
     return (
-        <div className={styles.Root}>
+        <div ref={rootRef} className={styles.Root}>
             {children}
             {overlayNode ? (
                 <DeferredComponent
