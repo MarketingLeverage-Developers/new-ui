@@ -130,9 +130,7 @@ const GROUPED_STACK_AVATAR_SIZE = 30;
 const MIN_VERTICAL_CHART_PADDING = 12;
 const DEFAULT_BAR_Y_AXIS_MAX_TICK_COUNT = 6;
 const DASHBOARD_BAR_Y_AXIS_MAX_TICK_COUNT = 5;
-const BAR_GEOMETRY_ANIMATION_DURATION_MS = 960;
 const BAR_BORDER_RADIUS = 3;
-const BAR_GEOMETRY_ANIMATION_CSS_EASING = 'cubic-bezier(0.65, 0, 0.35, 1)';
 const INTEGER_AXIS_INCREMENTS = [
     1, 2, 5, 10, 20, 25, 50, 100, 200, 250, 500, 1000, 2000, 2500, 5000, 10000,
 ] as const;
@@ -310,55 +308,6 @@ const useLatestRef = <T,>(value: T) => {
     return ref;
 };
 
-const easeInOutCubic = (value: number) =>
-    value < 0.5
-        ? 4 * value * value * value
-        : 1 - Math.pow(-2 * value + 2, 3) / 2;
-
-const useChartAnimation = (
-    data: uPlot.AlignedData | null,
-    duration = BAR_GEOMETRY_ANIMATION_DURATION_MS
-) => {
-    const [progress, setProgress] = useState(0);
-    const requestRef = useRef<number | null>(null);
-    const startTimeRef = useRef<number | null>(null);
-
-    const animate = useCallback(
-        (time: number) => {
-            if (startTimeRef.current === null) {
-                startTimeRef.current = time;
-            }
-            const elapsedTime = time - startTimeRef.current;
-            const nextProgress = Math.min(elapsedTime / duration, 1);
-            const easedProgress = easeInOutCubic(nextProgress);
-
-            setProgress(easedProgress);
-
-            if (nextProgress < 1) {
-                requestRef.current = requestAnimationFrame(animate);
-            }
-        },
-        [duration]
-    );
-
-    useEffect(() => {
-        setProgress(0);
-        startTimeRef.current = null;
-        if (requestRef.current !== null) {
-            cancelAnimationFrame(requestRef.current);
-        }
-        requestRef.current = requestAnimationFrame(animate);
-
-        return () => {
-            if (requestRef.current !== null) {
-                cancelAnimationFrame(requestRef.current);
-            }
-        };
-    }, [data, animate]);
-
-    return progress;
-};
-
 type ManagedUplotProps = {
     options: uPlot.Options;
     data: uPlot.AlignedData;
@@ -392,22 +341,6 @@ const getOptionsUpdateState = (prev: uPlot.Options, next: uPlot.Options): Option
     }
 
     return state;
-};
-
-const doesAlignedDataMatch = (left: uPlot.AlignedData, right: uPlot.AlignedData) => {
-    if (left.length !== right.length) return false;
-
-    for (let i = 0; i < left.length; i += 1) {
-        const l = left[i];
-        const r = right[i];
-        if (l.length !== r.length) return false;
-
-        for (let j = 0; j < l.length; j += 1) {
-            if ((l as (number | null)[])[j] !== (r as (number | null)[])[j]) return false;
-        }
-    }
-
-    return true;
 };
 
 const ManagedUplot = memo(({
@@ -464,6 +397,7 @@ const ManagedUplot = memo(({
         optionsRef.current = options;
 
         if (!chartRef.current || updateState === 'create') {
+            dataRef.current = data;
             destroy(chartRef.current);
             create();
             return;
@@ -475,7 +409,7 @@ const ManagedUplot = memo(({
                 height: options.height ?? 0,
             });
         }
-    }, [create, destroy, options]);
+    }, [create, data, destroy, options]);
 
     useEffect(() => {
         if (dataRef.current === data) return;
@@ -486,12 +420,10 @@ const ManagedUplot = memo(({
             return;
         }
 
-        if (!doesAlignedDataMatch(dataRef.current, data)) {
-            chartRef.current.setData(data, resetScales);
+        chartRef.current.setData(data, resetScales);
 
-            if (!resetScales) {
-                chartRef.current.redraw();
-            }
+        if (!resetScales) {
+            chartRef.current.redraw();
         }
 
         dataRef.current = data;
@@ -967,86 +899,6 @@ const areDrawnBarRectsEqual = (a: DrawnBarRect[], b: DrawnBarRect[]) => {
     }
 
     return true;
-};
-
-const getDrawnBarRectKey = (
-    rect: Pick<DrawnBarRect, 'seriesKey' | 'stackId' | 'idx'>
-) => `${rect.idx}__${rect.stackId ?? '__single__'}__${rect.seriesKey}`;
-
-const interpolateNumber = (from: number, to: number, progress: number) =>
-    from + (to - from) * progress;
-
-const collapseDrawnBarRect = (
-    rect: DrawnBarRect,
-    zeroLine: number
-): DrawnBarRect => ({
-    ...rect,
-    left: rect.left + rect.width / 2,
-    top: zeroLine,
-    width: 0,
-    height: 0,
-});
-
-const interpolateDrawnBarRect = (
-    from: DrawnBarRect,
-    to: DrawnBarRect,
-    progress: number
-): DrawnBarRect => ({
-    ...to,
-    left: interpolateNumber(from.left, to.left, progress),
-    top: interpolateNumber(from.top, to.top, progress),
-    width: interpolateNumber(from.width, to.width, progress),
-    height: interpolateNumber(from.height, to.height, progress),
-});
-
-const buildAnimatedBarRects = ({
-    previousRects,
-    nextRects,
-    progress,
-    zeroLine,
-}: {
-    previousRects: DrawnBarRect[];
-    nextRects: DrawnBarRect[];
-    progress: number;
-    zeroLine: number;
-}) => {
-    if (progress >= 1 || previousRects.length === 0) {
-        return nextRects;
-    }
-
-    const previousRectByKey = new Map(
-        previousRects.map((item) => [getDrawnBarRectKey(item), item] as const)
-    );
-    const nextRectByKey = new Map(
-        nextRects.map((item) => [getDrawnBarRectKey(item), item] as const)
-    );
-    const orderedKeys = [
-        ...nextRects.map((item) => getDrawnBarRectKey(item)),
-        ...previousRects
-            .map((item) => getDrawnBarRectKey(item))
-            .filter((key) => !nextRectByKey.has(key)),
-    ];
-
-    return orderedKeys.flatMap((key) => {
-        const previousRect = previousRectByKey.get(key);
-        const nextRect = nextRectByKey.get(key);
-
-        if (previousRect && nextRect) {
-            return [interpolateDrawnBarRect(previousRect, nextRect, progress)];
-        }
-
-        if (nextRect) {
-            const collapsedRect = collapseDrawnBarRect(nextRect, zeroLine);
-            return [interpolateDrawnBarRect(collapsedRect, nextRect, progress)];
-        }
-
-        if (previousRect) {
-            const collapsedRect = collapseDrawnBarRect(previousRect, zeroLine);
-            return [interpolateDrawnBarRect(previousRect, collapsedRect, progress)];
-        }
-
-        return [];
-    });
 };
 
 const useElementSize = (element: HTMLElement | null) => {
@@ -1739,7 +1591,6 @@ const UplotBarChart = ({
 }) => {
     const [chart, setChart] = useState<uPlot | null>(null);
     const [avatarAnchors, setAvatarAnchors] = useState<AvatarAnchor[]>([]);
-    const previousBarRectsRef = useRef<DrawnBarRect[]>([]);
     const targetBarRectsRef = useRef<DrawnBarRect[]>([]);
     const renderedBarRectsRef = useRef<DrawnBarRect[]>([]);
     const isGroupedStackBar = barPresentation === 'groupedStack';
@@ -1774,18 +1625,13 @@ const UplotBarChart = ({
         ],
         [barData, barSeries, xData]
     );
+    const metricBarMin = metricBarDomain?.[0] ?? 0;
+    const metricBarMax = metricBarDomain?.[1] ?? 1;
 
-    const animationProgress = useChartAnimation(alignedData);
-    const animationProgressRef = useLatestRef(animationProgress);
     const avatarAnchorsRef = useRef<AvatarAnchor[]>([]);
-    const chartInstanceRef = useRef<uPlot | null>(null);
 
     const syncBarGeometry = useCallback((nextRects: DrawnBarRect[], nextAvatars: AvatarAnchor[]) => {
         if (!areDrawnBarRectsEqual(targetBarRectsRef.current, nextRects)) {
-            previousBarRectsRef.current =
-                renderedBarRectsRef.current.length > 0
-                    ? renderedBarRectsRef.current
-                    : targetBarRectsRef.current;
             targetBarRectsRef.current = nextRects;
         }
         setAvatarAnchors((prev) => (areAvatarAnchorsEqual(prev, nextAvatars) ? prev : nextAvatars));
@@ -1796,8 +1642,13 @@ const UplotBarChart = ({
     }, [avatarAnchors]);
 
     useEffect(() => {
-        chartInstanceRef.current?.redraw();
-    }, [animationProgress]);
+        if (!chart) return;
+
+        chart.setScale('y', {
+            min: metricBarMin,
+            max: metricBarMax,
+        });
+    }, [chart, metricBarMax, metricBarMin]);
 
     const xAxis = useMemo(
         () =>
@@ -1899,15 +1750,7 @@ const UplotBarChart = ({
 
                             const ctx = instance.ctx;
                             const pxRatio = uPlot.pxRatio || 1;
-                            const zeroLine = frame.top + instance.valToPos(0, 'y');
-                            const animatedRects = buildAnimatedBarRects({
-                                previousRects: previousBarRectsRef.current,
-                                nextRects: rects,
-                                progress: animationProgressRef.current,
-                                zeroLine,
-                            });
-
-                            renderedBarRectsRef.current = animatedRects;
+                            renderedBarRectsRef.current = rects;
 
                             ctx.save();
                             ctx.beginPath();
@@ -1915,14 +1758,14 @@ const UplotBarChart = ({
                             ctx.clip();
 
                             const stackMinTopMap = new Map<string, number>();
-                            animatedRects.forEach((rect) => {
+                            rects.forEach((rect) => {
                                 if (rect.width <= 0 || rect.height <= 0) return;
                                 const stackKey = `${rect.idx}__${rect.stackId ?? '__single__'}`;
                                 const prev = stackMinTopMap.get(stackKey);
                                 if (prev === undefined || rect.top < prev) stackMinTopMap.set(stackKey, rect.top);
                             });
 
-                            animatedRects.forEach((rect) => {
+                            rects.forEach((rect) => {
                                 if (rect.width <= 0 || rect.height <= 0) return;
 
                                 const series = barSeriesRef.current.find((item) => item.key === rect.seriesKey);
@@ -2071,11 +1914,9 @@ const UplotBarChart = ({
                 options={options}
                 data={alignedData}
                 onCreate={(newChart) => {
-                    chartInstanceRef.current = newChart;
                     setChart(newChart);
                 }}
                 onDelete={() => {
-                    chartInstanceRef.current = null;
                     setChart(null);
                 }}
                 resetScales
@@ -2090,9 +1931,6 @@ const UplotBarChart = ({
                                 left: item.left,
                                 top: item.top,
                                 transform: 'translateX(-50%)',
-                                transition:
-                                    `left ${BAR_GEOMETRY_ANIMATION_DURATION_MS}ms ${BAR_GEOMETRY_ANIMATION_CSS_EASING}, ` +
-                                    `top ${BAR_GEOMETRY_ANIMATION_DURATION_MS}ms ${BAR_GEOMETRY_ANIMATION_CSS_EASING}`,
                             }}
                         >
                             {renderChartAvatar({
