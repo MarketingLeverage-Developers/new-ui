@@ -1,0 +1,221 @@
+.Strip {
+    display: flex;
+    align-items: stretch;
+    justify-content: flex-start;
+    width: 100%;
+    min-width: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.Strip::-webkit-scrollbar {
+    display: none;
+}
+
+.Item {
+    display: flex;
+    flex: 0 0 auto;
+    flex-direction: column;
+    align-items: flex-start;
+    min-width: 0;
+    position: relative;
+    padding: 0;
+    background: none;
+    border: 0;
+    border-radius: 8px;
+    color: inherit;
+    text-align: left;
+    appearance: none;
+    transition: color 0.15s ease;
+}
+
+.Item[data-clickable='true'] {
+    cursor: pointer;
+}
+
+.Item[data-clickable='true']:hover {
+    background-color: var(--granter-gray-100);
+}
+
+.Item[data-layout='split'] {
+    border: 0;
+    border-radius: 14px;
+    background-color: var(--granter-white);
+}
+
+.Item[data-layout='split'][data-clickable='true']:hover {
+    background-color: var(--granter-gray-50);
+}
+
+.Item[data-selected='true']::before {
+    content: '✓';
+    position: absolute;
+    top: 7px;
+    right: 12px;
+    z-index: 1;
+    color: var(--granter-white);
+    font-size: 10px;
+    line-height: 1;
+    font-weight: 700;
+}
+
+.Item[data-selected='true']::after {
+    content: '';
+    position: absolute;
+    top: 4px;
+    right: 8px;
+    width: 16px;
+    height: 16px;
+    border: 0;
+    border-radius: 999px;
+    background-color: var(--granter-blue-500);
+    box-sizing: border-box;
+}
+
+.Item[data-clickable='true']:focus-visible {
+    outline: 2px solid var(--granter-sky-500);
+    outline-offset: 2px;
+    border-radius: 8px;
+}
+
+.Label {
+    font-size: 12px;
+    line-height: 16px;
+    font-weight: 400;
+    white-space: nowrap;
+}
+
+.Value {
+    margin-top: 4px;
+    color: var(--granter-gray-900);
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 32px;
+    letter-spacing: -0.03em;
+    white-space: nowrap;
+    font-variant-numeric: lining-nums proportional-nums;
+}
+
+.TopValue {
+    margin-top: 2px;
+    color: var(--granter-gray-500);
+    font-size: 12px;
+    line-height: 16px;
+    white-space: nowrap;
+}
+
+.TopValue + .Value {
+    margin-top: 2px;
+}
+
+.SubValue {
+    margin-top: 2px;
+    color: var(--granter-gray-600);
+    font-size: 13px;
+    line-height: 18px;
+    white-space: nowrap;
+}
+
+@keyframes splitMetricsEnter {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.SplitMetrics {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    width: 100%;
+    min-width: 0;
+    margin-top: 10px;
+    animation: splitMetricsEnter 0.22s ease-out both;
+}
+
+.SplitColumn {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    min-width: 0;
+    color: inherit;
+    --split-main-color: var(--granter-gray-900);
+    --split-sub-color: var(--granter-gray-600);
+}
+
+.SplitColumn + .SplitColumn {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid var(--granter-gray-300);
+}
+
+.SplitMainRow {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 2px;
+    min-width: 0;
+    flex-wrap: wrap;
+}
+
+.SplitIcon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 10px;
+    height: 10px;
+    font-size: 9px;
+    line-height: 10px;
+    color: var(--granter-gray-500);
+}
+
+.SplitMainValue {
+    margin: 0;
+    color: var(--split-main-color);
+    font-size: 22px;
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: -0.03em;
+    white-space: nowrap;
+    font-variant-numeric: lining-nums proportional-nums;
+}
+
+.SplitSubValue {
+    margin: 0;
+    margin-left: 4px;
+    padding-left: 8px;
+    border-left: 1px solid var(--granter-gray-300);
+    color: var(--split-sub-color);
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 1.1;
+    white-space: nowrap;
+    font-variant-numeric: lining-nums proportional-nums;
+}
+
+.SplitSubValueBelow {
+    margin: 4px 0 0;
+    color: var(--split-sub-color);
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 1.1;
+    white-space: nowrap;
+    font-variant-numeric: lining-nums proportional-nums;
+}
+
+.SplitColumn[data-tone='positive'] .SplitMainValue {
+    color: var(--split-main-color);
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 1.1;
+}
+
+.SplitColumn[data-tone='positive'] .SplitSubValue {
+    color: var(--split-sub-color);
+}

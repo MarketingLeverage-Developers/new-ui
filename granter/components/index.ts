@@ -124,6 +124,11 @@ export type { MetricValueCardProps, MetricValueCardVariant, MetricValueTone } fr
 
 export { default as MetricStatusCard } from './MetricStatusCard/MetricStatusCard';
 export type { MetricStatusCardProps } from './MetricStatusCard/MetricStatusCard';
+export { default as MetricSummaryStrip } from './MetricSummaryStrip/MetricSummaryStrip';
+export type {
+    MetricSummaryStripItem,
+    MetricSummaryStripProps,
+} from './MetricSummaryStrip/MetricSummaryStrip';
 export { default as MediaSelectCard } from './MediaSelectCard/MediaSelectCard';
 export type { MediaSelectCardProps, MediaSelectCardStatusTone } from './MediaSelectCard/MediaSelectCard';
 

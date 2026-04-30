@@ -23,6 +23,7 @@ export { default as MobileOnboardingFormRow } from './components/MobileOnboardin
 export { default as InsightPanel } from './components/InsightPanel/InsightPanel';
 export { default as SummaryStatList } from './components/SummaryStatList/SummaryStatList';
 export { default as RankedMetricList } from './components/RankedMetricList/RankedMetricList';
+export { default as MetricSummaryStrip } from './components/MetricSummaryStrip/MetricSummaryStrip';
 export { default as SidebarDrawerLayout } from './components/SidebarDrawerLayout/SidebarDrawerLayout';
 export { default as SectionIntro } from './components/SectionIntro/SectionIntro';
 export { default as SectionFormDrawerContent } from './components/SectionFormDrawerContent/SectionFormDrawerContent';
@@ -202,6 +203,10 @@ export type { MobileOnboardingFormRowProps } from './components/MobileOnboarding
 export type { InsightPanelProps } from './components/InsightPanel/InsightPanel';
 export type { SummaryStatListProps, SummaryStatListItem } from './components/SummaryStatList/SummaryStatList';
 export type { RankedMetricListProps, RankedMetricListItem } from './components/RankedMetricList/RankedMetricList';
+export type {
+    MetricSummaryStripItem,
+    MetricSummaryStripProps,
+} from './components/MetricSummaryStrip/MetricSummaryStrip';
 export type { SectionIntroProps } from './components/SectionIntro/SectionIntro';
 export type { SectionFormDrawerContentProps } from './components/SectionFormDrawerContent/SectionFormDrawerContent';
 export type { SectionFieldRowProps, SectionFieldRowSubFieldProps } from './components/SectionFieldRow/SectionFieldRow';
