@@ -6,7 +6,7 @@ export const useColumnResize = ({
     getXInGrid,
     resizeColumn,
 }: {
-    resizeRef: React.MutableRefObject<{ key: string; startX: number; startWidth: number } | null>;
+    resizeRef: React.MutableRefObject<{ key: string; startX: number; startWidth: number; minWidth?: number } | null>;
     getXInGrid: (clientX: number) => number;
     resizeColumn: (colKey: string, width: number) => void;
 }) => {
@@ -17,7 +17,8 @@ export const useColumnResize = ({
 
             const x = getXInGrid(ev.clientX);
             const diff = x - r.startX;
-            const nextWidth = Math.max(MIN_COL_WIDTH, r.startWidth + diff);
+            const minWidth = Math.max(MIN_COL_WIDTH, r.minWidth ?? MIN_COL_WIDTH);
+            const nextWidth = Math.max(minWidth, r.startWidth + diff);
 
             resizeColumn(r.key, nextWidth);
         };

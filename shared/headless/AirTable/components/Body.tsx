@@ -1,5 +1,5 @@
 import React, { memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import type { CellRenderMeta } from '../AirTable';
+import type { CellAlign, CellRenderMeta } from '../AirTable';
 import { useAirTableContext } from '../AirTable';
 import styles from './Body.module.scss';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -33,6 +33,7 @@ type BodyRowData<T> = {
     level: number;
     cells: Array<{
         key: string;
+        cellAlign?: CellAlign;
         render: (it: T, idx: number, meta: CellRenderMeta<T>) => React.ReactElement;
     }>;
 };
@@ -109,6 +110,13 @@ const TRANSITION_MS = 260;
 const APPEAR_DELAY_MS = 40;
 const INDENT_PX = 24;
 const AIRTABLE_ANIMATION_DISABLED = true;
+
+const getCellJustifyContent = (cellAlign?: CellAlign): React.CSSProperties['justifyContent'] | undefined => {
+    if (cellAlign === 'left') return 'flex-start';
+    if (cellAlign === 'right') return 'flex-end';
+    if (cellAlign === 'center') return 'center';
+    return undefined;
+};
 
 const ExpandableDetailRow = ({
     expanded,
@@ -333,6 +341,7 @@ const BodyRowInner = <T,>({
                     const isRightEdge = selected && rangeRight !== null && ci === rangeRight;
                     const isIndentTarget = colKey === indentTargetKey;
                     const indentPadding = isChild ? row.level * INDENT_PX : 0;
+                    const justifyContent = getCellJustifyContent(cell.cellAlign);
 
                     return (
                         <div
@@ -399,6 +408,7 @@ const BodyRowInner = <T,>({
                             style={{
                                 backgroundColor: cellBg,
                                 color: rowStyleRaw.color,
+                                ...(justifyContent ? { justifyContent } : {}),
                                 ...getShiftStyle(colKey),
                                 ...getPinnedStyle(colKey, cellBg ?? getThemeColor('White1')),
                                 ...(isIndentTarget ? { paddingLeft: indentPadding } : {}),
@@ -748,6 +758,7 @@ export const Body = <T,>({
                                                 const isRightEdge = selected && range !== null && ci === range.right;
                                                 const isIndentTarget = colKey === indentTargetKey;
                                                 const indentPadding = isChild ? row.level * INDENT_PX : 0;
+                                                const justifyContent = getCellJustifyContent(cell.cellAlign);
                                                 const cellKey = `c-${rowKey}-${colKey}`;
                                                 const cellProps = {
                                                     id: `__cell_${row.key}_${colKey}`,
@@ -810,6 +821,7 @@ export const Body = <T,>({
                                                     style: {
                                                         backgroundColor: cellBg,
                                                         color: rowStyleRaw.color,
+                                                        ...(justifyContent ? { justifyContent } : {}),
                                                         ...getShiftStyle(colKey),
                                                         ...getPinnedStyle(colKey, cellBg ?? getThemeColor('White1')),
                                                         ...(isIndentTarget ? { paddingLeft: indentPadding } : {}),

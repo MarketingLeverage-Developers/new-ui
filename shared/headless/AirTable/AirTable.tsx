@@ -40,6 +40,7 @@ export type SortValue = string | number | boolean | Date | null | undefined;
 export type SortValueGetter<T> = (row: T) => SortValue;
 export type Sorter<T> = (a: T, b: T) => number;
 export type FilterState = Record<string, { included?: string[]; excluded?: string[] }>;
+export type CellAlign = 'left' | 'center' | 'right';
 
 export interface ColumnType<T> {
     key: string;
@@ -47,6 +48,8 @@ export interface ColumnType<T> {
     render: (item: T, index: number, meta: CellRenderMeta<T>) => React.ReactElement;
     header: (key: string, data: T[]) => React.ReactElement;
     width?: number | string;
+    minWidth?: number | string;
+    cellAlign?: CellAlign;
     autoFitContent?: boolean;
     autoFitPadding?: number;
     defaultHidden?: boolean;
@@ -65,6 +68,8 @@ export type Column<T> = {
     header: (key: string, data: T[]) => React.ReactElement;
     render: (item: T, index: number, meta: CellRenderMeta<T>) => React.ReactElement;
     width?: number | string;
+    minWidth?: number | string;
+    cellAlign?: CellAlign;
     autoFitContent?: boolean;
     autoFitPadding?: number;
     defaultHidden?: boolean;
@@ -150,7 +155,7 @@ export type SelectionState = {
     isSelecting: boolean;
 };
 
-export const MIN_COL_WIDTH = 80;
+export const MIN_COL_WIDTH = 1;
 
 /* =========================
    useTable (기존 유지 + flatten 지원)
@@ -195,6 +200,7 @@ export type UseTableResult<T> = {
         level: number;
         cells: {
             key: string;
+            cellAlign?: CellAlign;
             render: (item: T, rowIndex: number, meta: CellRenderMeta<T>) => React.ReactElement;
         }[];
     }[];
@@ -437,7 +443,13 @@ const toNumberPx = (w: number | string | undefined, fallback: number, containerW
     return fallback;
 };
 
-const AUTO_FIT_BASE_PADDING_PX = 36;
+const hasSizeValue = (value: number | string | undefined): boolean => {
+    if (typeof value === 'number') return Number.isFinite(value);
+    if (typeof value === 'string') return value.trim().length > 0;
+    return false;
+};
+
+const AUTO_FIT_BASE_PADDING_PX = 12;
 const AUTO_FIT_TEXT_FALLBACK_PX = 8;
 let textMeasureCanvas: HTMLCanvasElement | null = null;
 
@@ -477,6 +489,73 @@ const measureTextWidthPx = (text: string) => {
     return Math.ceil(ctx.measureText(normalized).width);
 };
 
+const parseSizePx = (value: unknown): number => {
+    if (typeof value === 'number' && Number.isFinite(value)) return value;
+    if (typeof value !== 'string') return 0;
+
+    const normalized = value.trim();
+    if (!normalized) return 0;
+    if (normalized.endsWith('%')) return 0;
+    if (normalized === 'auto' || normalized === 'fit-content' || normalized === 'max-content') return 0;
+
+    const parsed = parseFloat(normalized.endsWith('px') ? normalized.slice(0, -2) : normalized);
+    return Number.isFinite(parsed) ? parsed : 0;
+};
+
+const getPaddingInlinePx = (style: React.CSSProperties | undefined): number => {
+    if (!style) return 0;
+
+    const explicit =
+        parseSizePx(style.paddingLeft) +
+        parseSizePx(style.paddingRight) +
+        parseSizePx(style.paddingInline) * 2 +
+        parseSizePx(style.paddingInlineStart) +
+        parseSizePx(style.paddingInlineEnd);
+    if (explicit > 0) return explicit;
+
+    if (typeof style.padding !== 'string') return 0;
+
+    const parts = style.padding.trim().split(/\s+/);
+    if (parts.length === 1) return parseSizePx(parts[0]) * 2;
+    if (parts.length === 2) return parseSizePx(parts[1]) * 2;
+    if (parts.length === 3) return parseSizePx(parts[1]) * 2;
+    return parseSizePx(parts[1]) + parseSizePx(parts[3]);
+};
+
+const measureNodeWidthPx = (node: React.ReactNode): number => {
+    if (node === null || node === undefined || typeof node === 'boolean') return 0;
+    if (typeof node === 'string' || typeof node === 'number') return measureTextWidthPx(String(node));
+
+    if (Array.isArray(node)) {
+        return node.reduce((sum, child) => sum + measureNodeWidthPx(child), 0);
+    }
+
+    if (!React.isValidElement(node)) return 0;
+
+    const props = node.props as {
+        children?: React.ReactNode;
+        autoFitWidth?: unknown;
+        'data-auto-fit-width'?: unknown;
+        width?: unknown;
+        size?: unknown;
+        style?: React.CSSProperties;
+    };
+    const children = React.Children.toArray(props.children);
+    const gap = children.length > 1 ? parseSizePx(props.style?.gap ?? props.style?.columnGap) : 0;
+    const childrenWidth =
+        children.reduce((sum, child) => sum + measureNodeWidthPx(child), 0) +
+        Math.max(0, children.length - 1) * gap;
+    const ownWidth = Math.max(
+        parseSizePx(props.autoFitWidth),
+        parseSizePx(props['data-auto-fit-width']),
+        parseSizePx(props.style?.width),
+        parseSizePx(props.width),
+        parseSizePx(props.size)
+    );
+
+    return Math.max(ownWidth, childrenWidth + getPaddingInlinePx(props.style));
+};
+
 const measureAutoFitColumnWidth = <T,>(column: ColumnType<T>, data: T[]) => {
     const baseMeta: CellRenderMeta<T> = {
         rowKey: '',
@@ -486,17 +565,17 @@ const measureAutoFitColumnWidth = <T,>(column: ColumnType<T>, data: T[]) => {
         isRowExpanded: () => false,
     };
 
-    let maxWidth = measureTextWidthPx(extractTextFromNode(column.header(column.key, data)));
+    let maxWidth = measureNodeWidthPx(column.header(column.key, data));
 
     data.forEach((item, index) => {
-        const text = extractTextFromNode(
+        const width = measureNodeWidthPx(
             column.render(item, index, {
                 ...baseMeta,
                 rowKey: `auto-fit-${column.key}-${index}`,
                 ri: index,
             })
         );
-        maxWidth = Math.max(maxWidth, measureTextWidthPx(text));
+        maxWidth = Math.max(maxWidth, width);
     });
 
     return maxWidth + AUTO_FIT_BASE_PADDING_PX + (column.autoFitPadding ?? 0);
@@ -615,6 +694,8 @@ const useTable = <T,>({
                     return col.children.map((ch) => ({
                         ...ch,
                         key: String(ch.key),
+                        minWidth: ch.minWidth,
+                        cellAlign: ch.cellAlign,
                         autoFitContent: ch.autoFitContent,
                         autoFitPadding: ch.autoFitPadding,
                         defaultHidden: ch.defaultHidden,
@@ -639,6 +720,8 @@ const useTable = <T,>({
                         render,
                         header: col.header,
                         width: col.width,
+                        minWidth: col.minWidth,
+                        cellAlign: col.cellAlign,
                         autoFitContent: col.autoFitContent,
                         autoFitPadding: col.autoFitPadding,
                         defaultHidden: col.defaultHidden,
@@ -718,16 +801,46 @@ const useTable = <T,>({
 
     const innerWidth = Math.max(0, containerWidth - containerPaddingPx);
 
+    const autoFitLeafWidthByKey = useMemo(() => {
+        const map = new Map<string, number>();
+        leafColumns.forEach((c) => {
+            if (map.has(c.key)) return;
+            map.set(c.key, c.autoFitContent ? measureAutoFitColumnWidth(c, data) : 0);
+        });
+        return map;
+    }, [leafColumns, data]);
+
+    const minLeafWidthByKey = useMemo(() => {
+        const map = new Map<string, number>();
+        leafColumns.forEach((c) => {
+            if (map.has(c.key)) return;
+
+            const explicitMinWidth = hasSizeValue(c.minWidth)
+                ? toNumberPx(c.minWidth, MIN_COL_WIDTH, innerWidth)
+                : MIN_COL_WIDTH;
+            const autoFitWidth = c.autoFitContent ? (autoFitLeafWidthByKey.get(c.key) ?? 0) : 0;
+
+            map.set(c.key, Math.max(MIN_COL_WIDTH, explicitMinWidth, autoFitWidth));
+        });
+        return map;
+    }, [leafColumns, innerWidth, autoFitLeafWidthByKey]);
+
     const baseLeafWidthByKey = useMemo(() => {
         const map = new Map<string, number>();
         leafColumns.forEach((c) => {
             if (map.has(c.key)) return;
-            const configuredWidth = toNumberPx(c.width, defaultColWidth, innerWidth);
-            const autoFitWidth = c.autoFitContent ? measureAutoFitColumnWidth(c, data) : 0;
-            map.set(c.key, Math.max(configuredWidth, autoFitWidth));
+
+            const autoFitWidth = autoFitLeafWidthByKey.get(c.key) ?? 0;
+            const fallbackWidth = c.autoFitContent && !hasSizeValue(c.width) && autoFitWidth > 0
+                ? autoFitWidth
+                : defaultColWidth;
+            const configuredWidth = toNumberPx(c.width, fallbackWidth, innerWidth);
+            const minWidth = minLeafWidthByKey.get(c.key) ?? MIN_COL_WIDTH;
+
+            map.set(c.key, Math.max(minWidth, configuredWidth));
         });
         return map;
-    }, [leafColumns, defaultColWidth, innerWidth, data]);
+    }, [leafColumns, defaultColWidth, innerWidth, autoFitLeafWidthByKey, minLeafWidthByKey]);
 
     const [persisted, setPersisted] = useState<PersistedTableState | null>(() => loadPersistedTableState(storageKey));
 
@@ -929,9 +1042,13 @@ const useTable = <T,>({
 
             leafKeys.forEach((k) => {
                 const existing = next[k];
+                const minWidth = minLeafWidthByKey.get(k) ?? MIN_COL_WIDTH;
                 if (typeof existing !== 'number' || existing <= 0) {
                     const base = baseLeafWidthByKey.get(k) ?? defaultColWidth;
-                    next[k] = Math.max(MIN_COL_WIDTH, Number.isFinite(base) ? base : defaultColWidth);
+                    next[k] = Math.max(minWidth, Number.isFinite(base) ? base : defaultColWidth);
+                    changed = true;
+                } else if (existing < minWidth) {
+                    next[k] = minWidth;
                     changed = true;
                 }
             });
@@ -968,7 +1085,15 @@ const useTable = <T,>({
             const next = normalizePinnedColumnKeys(prevPinned);
             return areStringArraysEqual(prevPinned, next) ? prevPinned : next;
         });
-    }, [leafKeys, leafKeySet, baseLeafWidthByKey, defaultColWidth, defaultVisibleLeafKeys, normalizePinnedColumnKeys]);
+    }, [
+        leafKeys,
+        leafKeySet,
+        baseLeafWidthByKey,
+        minLeafWidthByKey,
+        defaultColWidth,
+        defaultVisibleLeafKeys,
+        normalizePinnedColumnKeys,
+    ]);
 
     const resizeColumn = useCallback(
         (colKey: string, width: number) => {
@@ -976,7 +1101,8 @@ const useTable = <T,>({
 
             setColumnWidths((prev) => {
                 const next = { ...prev };
-                next[key] = Math.max(MIN_COL_WIDTH, width);
+                const minWidth = minLeafWidthByKey.get(key) ?? MIN_COL_WIDTH;
+                next[key] = Math.max(minWidth, width);
 
                 stateRef.current = { ...stateRef.current, columnWidths: next };
                 persistNow();
@@ -984,7 +1110,7 @@ const useTable = <T,>({
                 return next;
             });
         },
-        [persistNow]
+        [minLeafWidthByKey, persistNow]
     );
 
     const commitColumnOrder = useCallback(
@@ -1078,17 +1204,14 @@ const useTable = <T,>({
             if (!visibleColumnKeys.includes(col.key)) return acc;
 
             const base = baseLeafWidthByKey.get(col.key) ?? defaultColWidth;
+            const minWidth = minLeafWidthByKey.get(col.key) ?? MIN_COL_WIDTH;
             const stored = columnWidths[col.key];
-            const w = col.autoFitContent
-                ? Math.max(typeof stored === 'number' && stored > 0 ? stored : 0, base)
-                : typeof stored === 'number' && stored > 0
-                  ? stored
-                  : base;
+            const w = typeof stored === 'number' && stored > 0 ? stored : base;
 
             acc.push({
                 key: col.key,
                 render: () => col.header(col.key, data),
-                width: Math.round(Math.max(MIN_COL_WIDTH, w)),
+                width: Math.round(Math.max(minWidth, w)),
                 filter: col.filter,
             });
 
@@ -1096,7 +1219,15 @@ const useTable = <T,>({
         }, []);
 
         return { key: 'column', columns: headerColumns };
-    }, [orderedLeafColumns, visibleColumnKeys, baseLeafWidthByKey, defaultColWidth, columnWidths, data]);
+    }, [
+        orderedLeafColumns,
+        visibleColumnKeys,
+        baseLeafWidthByKey,
+        minLeafWidthByKey,
+        defaultColWidth,
+        columnWidths,
+        data,
+    ]);
 
     const expandedRowsDependency = getExpandedRows ? expandedRowKeys : null;
     const groupColumnRow = useMemo(() => {
@@ -1172,6 +1303,7 @@ const useTable = <T,>({
                 .filter((leaf) => visibleColumnKeys.includes(leaf.key))
                 .map((leaf) => ({
                     key: leaf.key,
+                    cellAlign: leaf.cellAlign,
                     render: (it: T, idx: number, meta: CellRenderMeta<T>) => leaf.render(it, idx, meta),
                 }));
 
@@ -1254,7 +1386,7 @@ type AirTableContextValue<T> = {
     selection: SelectionState;
     setSelection: React.Dispatch<React.SetStateAction<SelectionState>>;
 
-    resizeRef: React.MutableRefObject<{ key: string; startX: number; startWidth: number } | null>;
+    resizeRef: React.MutableRefObject<{ key: string; startX: number; startWidth: number; minWidth?: number } | null>;
     lastMouseClientRef: React.MutableRefObject<{ x: string; y: string } | null>;
     disableShiftAnimationRef: React.MutableRefObject<boolean>;
 
@@ -1629,7 +1761,7 @@ const AirTableInner = <T,>({
     const [headerScrollLeft, setHeaderScrollLeft] = useState(0);
 
     const disableShiftAnimationRef = useRef(false);
-    const resizeRef = useRef<{ key: string; startX: number; startWidth: number } | null>(null);
+    const resizeRef = useRef<{ key: string; startX: number; startWidth: number; minWidth?: number } | null>(null);
 
     const [selection, setSelection] = useState<SelectionState>({
         start: null,
