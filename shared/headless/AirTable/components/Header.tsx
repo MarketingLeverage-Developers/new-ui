@@ -1033,7 +1033,7 @@ export const Header = <T,>({ className, headerCellClassName, resizeHandleClassNa
                                         display: 'flex',
                                         flex: '1 1 auto',
                                         alignItems: 'center',
-                                        gap: 8,
+                                        gap: 0,
                                         width: '100%',
                                         minWidth: 0,
                                         overflow: 'hidden',
