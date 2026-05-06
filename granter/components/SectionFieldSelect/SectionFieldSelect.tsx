@@ -23,8 +23,9 @@ export type SectionFieldSelectProps<T extends string = string> = {
     className?: string;
     menuClassName?: string;
     menuMaxHeight?: number | string;
+    matchTriggerWidth?: boolean;
     disabled?: boolean;
-    size?: 'md' | 'sm';
+    size?: 'md' | 'sm' | 'xs';
     variant?: 'default' | 'ghost';
     searchable?: boolean;
     searchPlaceholder?: string;
@@ -78,8 +79,9 @@ type SectionFieldSelectViewProps<T extends string = string> = {
     className?: string;
     menuClassName?: string;
     menuMaxHeight: number | string;
+    matchTriggerWidth: boolean;
     disabled?: boolean;
-    size?: 'md' | 'sm';
+    size?: 'md' | 'sm' | 'xs';
     variant?: 'default' | 'ghost';
     searchable?: boolean;
     searchPlaceholder: string;
@@ -92,6 +94,7 @@ const SectionFieldSelectView = <T extends string>({
     className,
     menuClassName,
     menuMaxHeight,
+    matchTriggerWidth,
     disabled = false,
     size = 'md',
     variant = 'default',
@@ -136,8 +139,9 @@ const SectionFieldSelectView = <T extends string>({
             {options.length > 0 ? (
                 <Dropdown.Content
                     className={classNames(styles.Menu, menuClassName)}
+                    data-size={size}
                     placement="bottom-start"
-                    matchTriggerWidth
+                    matchTriggerWidth={matchTriggerWidth}
                     keepMounted={false}
                     style={{ maxHeight: menuMaxHeight }}
                 >
@@ -178,6 +182,7 @@ const SectionFieldSelect = (<T extends string = string>({
     className,
     menuClassName,
     menuMaxHeight = 240,
+    matchTriggerWidth = true,
     disabled = false,
     size = 'md',
     variant = 'default',
@@ -193,6 +198,7 @@ const SectionFieldSelect = (<T extends string = string>({
                 className={className}
                 menuClassName={menuClassName}
                 menuMaxHeight={menuMaxHeight}
+                matchTriggerWidth={matchTriggerWidth}
                 disabled={disabled}
                 size={size}
                 variant={variant}

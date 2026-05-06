@@ -15,7 +15,25 @@
     line-height: 18px;
 }
 
+.Root[data-size='xs'] .Trigger {
+    height: 28px;
+    padding: 0 8px;
+    border-radius: 6px;
+}
+
+.Root[data-size='xs'] .Label {
+    font-size: 12px;
+    line-height: 16px;
+}
+
+.Root[data-size='xs'] .Icon svg {
+    width: 14px;
+    height: 14px;
+}
+
 .Root[data-variant='ghost'] .Trigger {
+    padding-right: 0;
+    padding-left: 0;
     border: 0;
     background-color: transparent;
     box-shadow: none;
@@ -134,6 +152,14 @@
     box-shadow:
         0 8px 20px rgb(17 24 39 / 12%),
         0 1px 2px rgb(17 24 39 / 4%);
+}
+
+.Menu[data-size='xs'] .Option {
+    min-height: 28px;
+    padding: 5px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    line-height: 16px;
 }
 
 .SearchWrap {
