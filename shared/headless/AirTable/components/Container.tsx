@@ -15,7 +15,7 @@ type TopScrollbarState = {
     scrollLeft: number;
 };
 
-const TOP_SCROLLBAR_TRACK_HEIGHT = 10;
+const TOP_SCROLLBAR_TRACK_HEIGHT = 8;
 const TOP_SCROLLBAR_THUMB_MIN_WIDTH = 40;
 const TOP_SCROLLBAR_GAP = 8;
 const BOTTOM_SCROLLBAR_MASK_HEIGHT = 12;
@@ -368,8 +368,7 @@ export const Container = ({
                                 position: 'relative',
                                 height: `${TOP_SCROLLBAR_TRACK_HEIGHT}px`,
                                 borderRadius: 999,
-                                background: 'var(--ScrollbarTrack, rgba(148, 163, 184, 0.12))',
-                                boxShadow: 'inset 0 0 0 1px rgba(148, 163, 184, 0.18)',
+                                background: 'transparent',
                                 cursor: 'pointer',
                                 overflow: 'hidden',
                             }}
@@ -384,8 +383,7 @@ export const Container = ({
                                     width: `${topScrollbarMetrics.thumbWidth}px`,
                                     height: '100%',
                                     borderRadius: 999,
-                                    background: 'var(--ScrollbarThumb, var(--Gray5))',
-                                    boxShadow: '0 1px 2px rgba(15, 23, 42, 0.12)',
+                                    background: 'var(--Gray4)',
                                     cursor: 'grab',
                                 }}
                             />

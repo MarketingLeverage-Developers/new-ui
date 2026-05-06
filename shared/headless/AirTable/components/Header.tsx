@@ -2,8 +2,7 @@ import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useSta
 import { createPortal } from 'react-dom';
 import { MIN_COL_WIDTH, useAirTableContext } from '../AirTable';
 import type { CellRenderMeta, FilterState, SortConfig, SortDirection, SortValue } from '../AirTable';
-import { FaArrowDown, FaArrowUp } from 'react-icons/fa';
-import { VscFilter, VscFilterFilled } from 'react-icons/vsc';
+import { FiArrowDown, FiArrowUp, FiFilter } from 'react-icons/fi';
 import { getThemeColor } from '../../../utils/css/getThemeColor';
 import { motion } from 'framer-motion';
 
@@ -146,11 +145,11 @@ const SortIcon = ({
     activeColor: string;
 }) => {
     if (direction === 'asc') {
-        return <FaArrowUp size={12} color={activeColor} aria-hidden="true" />;
+        return <FiArrowUp size={15} color={activeColor} aria-hidden="true" />;
     }
 
     if (direction === 'desc') {
-        return <FaArrowDown size={12} color={activeColor} aria-hidden="true" />;
+        return <FiArrowDown size={15} color={activeColor} aria-hidden="true" />;
     }
 
     return null;
@@ -805,7 +804,9 @@ export const Header = <T,>({ className, headerCellClassName, resizeHandleClassNa
         [sortState, setSortState, sortConfigByKey]
     );
 
-    const sortActiveColor = getThemeColor('Primary1');
+    const sortActiveColor = getThemeColor('Gray2');
+    const filterActiveColor = getThemeColor('Blue1');
+    const filterActiveBgColor = getThemeColor('Blue2');
 
     const handleResizeMouseDown = useCallback(
         (colKey: string) => (e: React.MouseEvent<HTMLDivElement>) => {
@@ -992,6 +993,13 @@ export const Header = <T,>({ className, headerCellClassName, resizeHandleClassNa
                         const sortDirection = sortState?.key === colKey ? sortState.direction : null;
                         const hasFilterButton = !columnByKey.get(colKey)?.disableFiltering && (!!col.filter || !!sortConfig?.sortValue);
                         const isFilterActive = hasActiveFilter(filterState[colKey]);
+                        const filterActiveShadow = isFilterActive ? `inset 0 -1px 0 ${filterActiveColor}` : undefined;
+                        const filterActiveStyle: React.CSSProperties = isFilterActive
+                            ? {
+                                  background: filterActiveBgColor,
+                                  color: filterActiveColor,
+                              }
+                            : {};
                         const pinnedStyle: React.CSSProperties = isPinned
                             ? {
                                   ...getPinnedStyle(colKey, pinnedHeaderBg ?? getThemeColor('Primary1'), {
@@ -1000,7 +1008,7 @@ export const Header = <T,>({ className, headerCellClassName, resizeHandleClassNa
                                   ...(pinnedHeaderTextColor ? { color: pinnedHeaderTextColor } : {}),
                               }
                             : {};
-                        const combinedBoxShadow = [pinnedStyle.boxShadow, underlineShadow]
+                        const combinedBoxShadow = [pinnedStyle.boxShadow, underlineShadow, filterActiveShadow]
                             .filter((shadow): shadow is string => typeof shadow === 'string' && shadow.length > 0)
                             .join(', ');
 
@@ -1022,6 +1030,7 @@ export const Header = <T,>({ className, headerCellClassName, resizeHandleClassNa
                                     userSelect: 'none',
                                     ...(isDragging ? getShiftStyle(colKey) : {}),
                                     ...pinnedStyle,
+                                    ...filterActiveStyle,
                                     ...(combinedBoxShadow ? { boxShadow: combinedBoxShadow } : {}),
                                 }}
                                 onMouseDown={handleHeaderMouseDown(colKey)}
@@ -1119,11 +1128,10 @@ export const Header = <T,>({ className, headerCellClassName, resizeHandleClassNa
                                                     }}
                                                     title="Filter"
                                                 >
-                                                    {isFilterActive ? (
-                                                        <VscFilterFilled size={14} color={getThemeColor('Primary1')} />
-                                                    ) : (
-                                                        <VscFilter size={14} color={getThemeColor('Gray2')} />
-                                                    )}
+                                                    <FiFilter
+                                                        size={13}
+                                                        color={isFilterActive ? filterActiveColor : getThemeColor('Gray2')}
+                                                    />
                                                 </button>
                                             )}
                                         </div>
