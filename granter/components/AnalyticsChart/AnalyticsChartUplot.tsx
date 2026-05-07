@@ -131,6 +131,7 @@ const MIN_VERTICAL_CHART_PADDING = 12;
 const DEFAULT_BAR_Y_AXIS_MAX_TICK_COUNT = 6;
 const DASHBOARD_BAR_Y_AXIS_MAX_TICK_COUNT = 5;
 const BAR_BORDER_RADIUS = 3;
+const LINE_CHART_REVEAL_DURATION_MS = 650;
 const INTEGER_AXIS_INCREMENTS = [
     1, 2, 5, 10, 20, 25, 50, 100, 200, 250, 500, 1000, 2000, 2500, 5000, 10000,
 ] as const;
@@ -277,6 +278,8 @@ const renderChartAvatar = ({
     }) ?? null;
 
 const clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max);
+
+const easeOutCubic = (value: number) => 1 - (1 - value) ** 3;
 
 const toAlphaColor = (color: string, alpha: number) => {
     const normalized = color.trim().replace(/^#/, '');
@@ -2036,6 +2039,8 @@ const UplotLineChart = ({
         () => createLocalStore<CursorState>({ idx: null, left: 0, top: 0 }, areCursorStatesEqual),
         []
     );
+    const revealProgressRef = useRef(0);
+    const revealAnimationFrameRef = useRef<number | null>(null);
     const emptyBarRectsRef = useRef<DrawnBarRect[]>([]);
     const labelsRef = useLatestRef(labels);
     const strideRef = useLatestRef(dashboardBarXAxisLabelStride);
@@ -2052,7 +2057,16 @@ const UplotLineChart = ({
             xData,
             ...lineSeries.map((seriesItem) =>
                 lineData.map((datum) => {
-                    const value = Number(datum[seriesItem.key] ?? 0);
+                    if (datum.isMissingData) {
+                        return null;
+                    }
+
+                    const rawValue = datum[seriesItem.key];
+                    if (rawValue === undefined) {
+                        return null;
+                    }
+
+                    const value = Number(rawValue);
                     return Number.isFinite(value) ? value : null;
                 })
             ),
@@ -2061,6 +2075,18 @@ const UplotLineChart = ({
     );
     const metricLineMin = metricLineDomain?.[0] ?? 0;
     const metricLineMax = metricLineDomain?.[1] ?? 1;
+    const lineDataSignature = useMemo(
+        () =>
+            lineData
+                .map((datum) =>
+                    [
+                        datum.periodLabel,
+                        ...lineSeries.map((seriesItem) => datum[seriesItem.key] ?? ''),
+                    ].join(':')
+                )
+                .join('|'),
+        [lineData, lineSeries]
+    );
 
     useEffect(() => {
         if (!chart) return;
@@ -2070,6 +2096,57 @@ const UplotLineChart = ({
             max: metricLineMax,
         });
     }, [chart, metricLineMax, metricLineMin]);
+
+    useEffect(() => {
+        if (!chart) {
+            return undefined;
+        }
+
+        if (revealAnimationFrameRef.current !== null) {
+            window.cancelAnimationFrame(revealAnimationFrameRef.current);
+            revealAnimationFrameRef.current = null;
+        }
+
+        const shouldReduceMotion =
+            typeof window !== 'undefined' &&
+            window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+
+        if (shouldReduceMotion || lineData.length <= 1 || lineSeries.length === 0) {
+            revealProgressRef.current = 1;
+            chart.redraw(false, false);
+            return undefined;
+        }
+
+        revealProgressRef.current = 0;
+        let startedAt: number | null = null;
+
+        const tick = (timestamp: number) => {
+            if (startedAt === null) {
+                startedAt = timestamp;
+            }
+
+            const elapsed = timestamp - startedAt;
+            const rawProgress = clamp(elapsed / LINE_CHART_REVEAL_DURATION_MS, 0, 1);
+            revealProgressRef.current = easeOutCubic(rawProgress);
+            chart.redraw(false, false);
+
+            if (rawProgress < 1) {
+                revealAnimationFrameRef.current = window.requestAnimationFrame(tick);
+                return;
+            }
+
+            revealAnimationFrameRef.current = null;
+        };
+
+        revealAnimationFrameRef.current = window.requestAnimationFrame(tick);
+
+        return () => {
+            if (revealAnimationFrameRef.current !== null) {
+                window.cancelAnimationFrame(revealAnimationFrameRef.current);
+                revealAnimationFrameRef.current = null;
+            }
+        };
+    }, [chart, lineData.length, lineDataSignature, lineSeries.length]);
 
     useEffect(() => {
         if (!chart || !onBarClick) {
@@ -2103,7 +2180,7 @@ const UplotLineChart = ({
             }
 
             const datum = lineDataRef.current[nextIdx];
-            if (!datum) {
+            if (!datum || datum.isMissingData) {
                 return;
             }
 
@@ -2172,29 +2249,56 @@ const UplotLineChart = ({
                                 return;
                             }
 
-                            instance.root.style.cursor = onBarClick ? 'pointer' : '';
+                            const activeDatum = lineDataRef.current[nextIdx];
+                            instance.root.style.cursor =
+                                onBarClick && !activeDatum?.isMissingData ? 'pointer' : '';
                             cursorStore.set({ idx: nextIdx, left, top });
                         },
                     ],
                     draw: [
                         (instance) => {
                             const frame = getPlotFrame(instance);
-                            const selectedIdx = lineDataRef.current.findIndex((datum) =>
-                                Boolean(datum.isSelectedData)
-                            );
-
-                            if (!frame || selectedIdx < 0) {
-                                return;
-                            }
-
-                            const selectedDatum = lineDataRef.current[selectedIdx];
-                            if (!selectedDatum) {
+                            if (!frame) {
                                 return;
                             }
 
                             const ctx = instance.ctx;
                             const pxRatio = uPlot.pxRatio || 1;
+                            const revealProgress = revealProgressRef.current;
+                            const revealedRight = frame.left + frame.width * revealProgress;
+
+                            if (revealProgress < 1) {
+                                ctx.save();
+                                ctx.beginPath();
+                                ctx.fillStyle = '#FFFFFF';
+                                ctx.rect(
+                                    revealedRight * pxRatio,
+                                    frame.top * pxRatio,
+                                    Math.max(frame.left + frame.width - revealedRight, 0) * pxRatio,
+                                    frame.height * pxRatio
+                                );
+                                ctx.fill();
+                                ctx.restore();
+                            }
+
+                            const selectedIdx = lineDataRef.current.findIndex((datum) =>
+                                Boolean(datum.isSelectedData)
+                            );
+
+                            if (selectedIdx < 0) {
+                                return;
+                            }
+
+                            const selectedDatum = lineDataRef.current[selectedIdx];
+                            if (!selectedDatum || selectedDatum.isMissingData) {
+                                return;
+                            }
+
                             const x = frame.left + instance.valToPos(selectedIdx, 'x');
+                            if (x > revealedRight + 1) {
+                                return;
+                            }
+
                             const selectedGuideColor = toAlphaColor(
                                 lineSeriesRef.current[0]?.color ?? '#109BE6',
                                 0.24
@@ -2278,7 +2382,7 @@ const UplotLineChart = ({
                 show: true,
                 stroke: seriesItem.color,
                 width: 2,
-                spanGaps: true,
+                spanGaps: false,
                 points: {
                     show: true,
                     size: 7,
