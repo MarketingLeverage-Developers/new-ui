@@ -84,7 +84,7 @@ export type AnalyticsChartBarClickPayload = {
     stackId?: string;
 };
 
-export type AnalyticsChartBarPresentation = 'single' | 'grouped' | 'groupedStack';
+export type AnalyticsChartBarPresentation = 'single' | 'grouped' | 'groupedStack' | 'line';
 
 export type AnalyticsChartBarModel = {
     data: AnalyticsChartDatum[];

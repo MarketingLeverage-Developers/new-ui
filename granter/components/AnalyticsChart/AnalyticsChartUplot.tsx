@@ -278,6 +278,25 @@ const renderChartAvatar = ({
 
 const clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max);
 
+const toAlphaColor = (color: string, alpha: number) => {
+    const normalized = color.trim().replace(/^#/, '');
+    const clampedAlpha = clamp(alpha, 0, 1);
+
+    if (/^[0-9a-f]{3}$/i.test(normalized)) {
+        const [r, g, b] = normalized.split('').map((part) => parseInt(part + part, 16));
+        return `rgba(${r}, ${g}, ${b}, ${clampedAlpha})`;
+    }
+
+    if (/^[0-9a-f]{6}$/i.test(normalized)) {
+        const r = parseInt(normalized.slice(0, 2), 16);
+        const g = parseInt(normalized.slice(2, 4), 16);
+        const b = parseInt(normalized.slice(4, 6), 16);
+        return `rgba(${r}, ${g}, ${b}, ${clampedAlpha})`;
+    }
+
+    return color;
+};
+
 const areCursorStatesEqual = (left: CursorState, right: CursorState) =>
     left.idx === right.idx &&
     left.left === right.left &&
@@ -1973,6 +1992,354 @@ const UplotBarChart = ({
     );
 };
 
+const UplotLineChart = ({
+    size,
+    labels,
+    lineData,
+    lineSeries,
+    tooltipSeriesMeta,
+    isDashboardMetricPreset,
+    tooltipMode,
+    lineYAxisWidth,
+    lineYAxisIntegerOnly,
+    metricLineDomain,
+    lineTickFormatter,
+    lineTooltipValueFormatter,
+    countFormatter,
+    tooltipCountDivider,
+    noDataLabel,
+    dashboardBarXAxisLabelStride,
+    avatarRenderer,
+    onBarClick,
+}: {
+    size: ChartAreaSize;
+    labels: string[];
+    lineData: LineChartDatum[];
+    lineSeries: AnalyticsChartSeries[];
+    tooltipSeriesMeta: LineSeriesMeta[];
+    isDashboardMetricPreset: boolean;
+    tooltipMode: AnalyticsChartTooltipMode;
+    lineYAxisWidth: number;
+    lineYAxisIntegerOnly?: boolean;
+    metricLineDomain?: [number, number];
+    lineTickFormatter: (value: number) => string;
+    lineTooltipValueFormatter: (value: number) => string;
+    countFormatter: (value: number) => string;
+    tooltipCountDivider?: boolean;
+    noDataLabel: string;
+    dashboardBarXAxisLabelStride: number;
+    avatarRenderer?: AnalyticsChartAvatarRenderer;
+    onBarClick?: (payload: AnalyticsChartBarClickPayload) => void;
+}) => {
+    const [chart, setChart] = useState<uPlot | null>(null);
+    const cursorStore = useMemo(
+        () => createLocalStore<CursorState>({ idx: null, left: 0, top: 0 }, areCursorStatesEqual),
+        []
+    );
+    const emptyBarRectsRef = useRef<DrawnBarRect[]>([]);
+    const labelsRef = useLatestRef(labels);
+    const strideRef = useLatestRef(dashboardBarXAxisLabelStride);
+    const condensedRef = useLatestRef(isDashboardMetricPreset);
+    const lineDataRef = useLatestRef(lineData);
+    const lineSeriesRef = useLatestRef(lineSeries);
+    const metricLineDomainRef = useLatestRef(metricLineDomain ?? [0, 1] as [number, number]);
+    const lineTickFormatterRef = useLatestRef(lineTickFormatter);
+    const onBarClickRef = useLatestRef(onBarClick);
+
+    const xData = useMemo(() => labels.map((_, index) => index), [labels]);
+    const alignedData = useMemo<uPlot.AlignedData>(
+        () => [
+            xData,
+            ...lineSeries.map((seriesItem) =>
+                lineData.map((datum) => {
+                    const value = Number(datum[seriesItem.key] ?? 0);
+                    return Number.isFinite(value) ? value : null;
+                })
+            ),
+        ],
+        [lineData, lineSeries, xData]
+    );
+    const metricLineMin = metricLineDomain?.[0] ?? 0;
+    const metricLineMax = metricLineDomain?.[1] ?? 1;
+
+    useEffect(() => {
+        if (!chart) return;
+
+        chart.setScale('y', {
+            min: metricLineMin,
+            max: metricLineMax,
+        });
+    }, [chart, metricLineMax, metricLineMin]);
+
+    useEffect(() => {
+        if (!chart || !onBarClick) {
+            return;
+        }
+
+        const handleClick = (event: MouseEvent) => {
+            const frame = getPlotFrame(chart);
+
+            if (!frame) {
+                return;
+            }
+
+            const rootRect = chart.root.getBoundingClientRect();
+            const clickLeft = event.clientX - rootRect.left;
+            const clickTop = event.clientY - rootRect.top;
+
+            if (
+                clickLeft < frame.left ||
+                clickLeft > frame.left + frame.width ||
+                clickTop < frame.top ||
+                clickTop > frame.top + frame.height
+            ) {
+                return;
+            }
+
+            const nextIdx = chart.cursor.idx ?? null;
+
+            if (nextIdx === null || nextIdx < 0 || nextIdx >= lineDataRef.current.length) {
+                return;
+            }
+
+            const datum = lineDataRef.current[nextIdx];
+            if (!datum) {
+                return;
+            }
+
+            onBarClickRef.current?.({
+                index: nextIdx,
+                periodLabel: String(datum.periodLabel ?? ''),
+                datum,
+                seriesKey: lineSeries[0]?.key,
+            });
+        };
+
+        chart.root.addEventListener('click', handleClick);
+        return () => {
+            chart.root.removeEventListener('click', handleClick);
+        };
+    }, [chart, lineDataRef, lineSeries, onBarClick, onBarClickRef]);
+
+    const xAxis = useMemo(
+        () =>
+            buildNumericXAxis({
+                labelsRef,
+                strideRef,
+                condensedRef,
+                axisLineColor: isDashboardMetricPreset ? 'transparent' : '#E5E7EB',
+                size: isDashboardMetricPreset ? 40 : 36,
+                gap: isDashboardMetricPreset ? 0 : 8,
+            }),
+        [condensedRef, isDashboardMetricPreset, labelsRef, strideRef]
+    );
+    const yAxis = useMemo(
+        () =>
+            buildNumericYAxis({
+                width: lineYAxisWidth,
+                formatterRef: lineTickFormatterRef,
+                showGrid: !isDashboardMetricPreset,
+                integerOnly: Boolean(lineYAxisIntegerOnly),
+                maxTickCount: isDashboardMetricPreset
+                    ? DASHBOARD_BAR_Y_AXIS_MAX_TICK_COUNT
+                    : DEFAULT_BAR_Y_AXIS_MAX_TICK_COUNT,
+            }),
+        [
+            isDashboardMetricPreset,
+            lineTickFormatterRef,
+            lineYAxisIntegerOnly,
+            lineYAxisWidth,
+        ]
+    );
+
+    const plugins = useMemo<uPlot.Plugin[]>(
+        () => [
+            {
+                hooks: {
+                    setCursor: [
+                        (instance) => {
+                            const nextIdx = instance.cursor.idx ?? null;
+                            const left = instance.cursor.left ?? 0;
+                            const top = instance.cursor.top ?? 0;
+
+                            if (
+                                nextIdx === null ||
+                                nextIdx < 0 ||
+                                nextIdx >= lineDataRef.current.length
+                            ) {
+                                instance.root.style.cursor = '';
+                                cursorStore.set({ idx: null, left: 0, top: 0 });
+                                return;
+                            }
+
+                            instance.root.style.cursor = onBarClick ? 'pointer' : '';
+                            cursorStore.set({ idx: nextIdx, left, top });
+                        },
+                    ],
+                    draw: [
+                        (instance) => {
+                            const frame = getPlotFrame(instance);
+                            const selectedIdx = lineDataRef.current.findIndex((datum) =>
+                                Boolean(datum.isSelectedData)
+                            );
+
+                            if (!frame || selectedIdx < 0) {
+                                return;
+                            }
+
+                            const selectedDatum = lineDataRef.current[selectedIdx];
+                            if (!selectedDatum) {
+                                return;
+                            }
+
+                            const ctx = instance.ctx;
+                            const pxRatio = uPlot.pxRatio || 1;
+                            const x = frame.left + instance.valToPos(selectedIdx, 'x');
+                            const selectedGuideColor = toAlphaColor(
+                                lineSeriesRef.current[0]?.color ?? '#109BE6',
+                                0.24
+                            );
+
+                            ctx.save();
+                            ctx.beginPath();
+                            ctx.strokeStyle = selectedGuideColor;
+                            ctx.lineWidth = 1 * pxRatio;
+                            ctx.moveTo(x * pxRatio, frame.top * pxRatio);
+                            ctx.lineTo(x * pxRatio, (frame.top + frame.height) * pxRatio);
+                            ctx.stroke();
+
+                            lineSeriesRef.current.forEach((seriesItem) => {
+                                const value = Number(selectedDatum[seriesItem.key] ?? Number.NaN);
+
+                                if (!Number.isFinite(value)) {
+                                    return;
+                                }
+
+                                const y = frame.top + instance.valToPos(value, 'y');
+
+                                ctx.beginPath();
+                                ctx.strokeStyle = toAlphaColor(seriesItem.color, 0.24);
+                                ctx.lineWidth = 6 * pxRatio;
+                                ctx.arc(x * pxRatio, y * pxRatio, 7 * pxRatio, 0, Math.PI * 2);
+                                ctx.stroke();
+
+                                ctx.beginPath();
+                                ctx.fillStyle = '#FFFFFF';
+                                ctx.strokeStyle = seriesItem.color;
+                                ctx.lineWidth = 2 * pxRatio;
+                                ctx.arc(x * pxRatio, y * pxRatio, 5 * pxRatio, 0, Math.PI * 2);
+                                ctx.fill();
+                                ctx.stroke();
+                            });
+
+                            ctx.restore();
+                        },
+                    ],
+                },
+            },
+        ],
+        [cursorStore, lineDataRef, lineSeriesRef, onBarClick]
+    );
+
+    const options = useMemo<uPlot.Options>(() => ({
+        width: Math.max(size.width, 1),
+        height: Math.max(size.height, 1),
+        padding: isDashboardMetricPreset
+            ? [
+                  MIN_VERTICAL_CHART_PADDING,
+                  Math.max(lineYAxisWidth - 40, 0),
+                  MIN_VERTICAL_CHART_PADDING,
+                  0,
+              ]
+            : [8, 12, MIN_VERTICAL_CHART_PADDING, 0],
+        legend: { show: false },
+        plugins,
+        scales: {
+            x: {
+                time: false,
+                range: () => (labelsRef.current.length > 0 ? [-0.5, labelsRef.current.length - 0.5] : [0, 1]),
+            },
+            y: {
+                auto: false,
+                range: () => metricLineDomainRef.current,
+            },
+        },
+        axes: [xAxis, yAxis],
+        cursor: {
+            y: false,
+            x: true,
+            drag: { setScale: false, x: false, y: false },
+            points: { show: false },
+        },
+        series: [
+            {},
+            ...lineSeries.map((seriesItem) => ({
+                label: seriesItem.label,
+                show: true,
+                stroke: seriesItem.color,
+                width: 2,
+                spanGaps: true,
+                points: {
+                    show: true,
+                    size: 7,
+                    width: 2,
+                    stroke: seriesItem.color,
+                    fill: '#FFFFFF',
+                    space: 0,
+                },
+            })),
+        ],
+    }), [
+        isDashboardMetricPreset,
+        labelsRef,
+        lineSeries,
+        lineYAxisWidth,
+        metricLineDomainRef,
+        plugins,
+        size.height,
+        size.width,
+        xAxis,
+        yAxis,
+    ]);
+
+    if (size.width <= 0 || size.height <= 0) return null;
+
+    return (
+        <div className={styles.UplotRoot}>
+            <ManagedUplot
+                options={options}
+                data={alignedData}
+                onCreate={(newChart) => {
+                    setChart(newChart);
+                }}
+                onDelete={() => {
+                    setChart(null);
+                }}
+                resetScales
+            />
+            <div className={styles.OverlayLayer}>
+                <UplotBarTooltipOverlay
+                    chart={chart}
+                    cursorStore={cursorStore}
+                    size={size}
+                    labels={labels}
+                    barData={lineData}
+                    barSeries={lineSeries}
+                    tooltipSeriesMeta={tooltipSeriesMeta}
+                    groupedStackSeries={lineSeries}
+                    tooltipMode={tooltipMode}
+                    barTooltipValueFormatter={lineTooltipValueFormatter}
+                    countFormatter={countFormatter}
+                    tooltipCountDivider={tooltipCountDivider}
+                    noDataLabel={noDataLabel}
+                    barRectsRef={emptyBarRectsRef}
+                    avatarRenderer={avatarRenderer}
+                />
+            </div>
+        </div>
+    );
+};
+
 const UplotBarTooltipOverlay = memo(({
     chart,
     cursorStore,
@@ -2362,33 +2729,56 @@ const AnalyticsChart = ({
                 <div className={styles.ContentMotion}>
                     <div className={styles.ChartMotion}>
                         <div ref={setChartAreaElement} style={chartAreaStyle}>
-                            <UplotBarChart
-                                size={chartAreaSize}
-                                labels={barLabels}
-                                barData={resolvedBarData}
-                                barSeries={barSeries}
-                                tooltipSeriesMeta={barSeries}
-                                shouldShowGroupedAmountAvatars={shouldShowGroupedAmountAvatars}
-                                shouldShowGroupedStackAvatars={shouldShowGroupedStackAvatars}
-                                isDashboardMetricPreset={isDashboardMetricPreset}
-                                barPresentation={barPresentation}
-                                tooltipMode={barTooltipMode}
-                                barYAxisWidth={barYAxisWidth}
-                                barYAxisIntegerOnly={barYAxisIntegerOnly}
-                                metricBarDomain={metricBarDomain}
-                                barTickFormatter={barTickFormatter}
-                                barTooltipValueFormatter={barTooltipValueFormatter}
-                                countFormatter={barCountFormatter}
-                                tooltipCountDivider={barTooltipCountDivider}
-                                noDataLabel={noDataLabel}
-                                dashboardBarCategoryGap={dashboardBarLayout.categoryGap}
-                                dashboardBarGap={barChart.dashboardBarGap ?? dashboardBarLayout.barGap}
-                                dashboardBarMaxWidth={barChart.dashboardBarMaxWidth}
-                                dashboardBarXAxisLabelStride={dashboardBarXAxisLabelStride}
-                                groupedStackSeries={barSeries}
-                                avatarRenderer={avatarRenderer}
-                                onBarClick={onBarClick}
-                            />
+                            {barPresentation === 'line' ? (
+                                <UplotLineChart
+                                    size={chartAreaSize}
+                                    labels={barLabels}
+                                    lineData={resolvedBarData}
+                                    lineSeries={barSeries}
+                                    tooltipSeriesMeta={barSeries}
+                                    isDashboardMetricPreset={isDashboardMetricPreset}
+                                    tooltipMode={barTooltipMode}
+                                    lineYAxisWidth={barYAxisWidth}
+                                    lineYAxisIntegerOnly={barYAxisIntegerOnly}
+                                    metricLineDomain={metricBarDomain}
+                                    lineTickFormatter={barTickFormatter}
+                                    lineTooltipValueFormatter={barTooltipValueFormatter}
+                                    countFormatter={barCountFormatter}
+                                    tooltipCountDivider={barTooltipCountDivider}
+                                    noDataLabel={noDataLabel}
+                                    dashboardBarXAxisLabelStride={dashboardBarXAxisLabelStride}
+                                    avatarRenderer={avatarRenderer}
+                                    onBarClick={onBarClick}
+                                />
+                            ) : (
+                                <UplotBarChart
+                                    size={chartAreaSize}
+                                    labels={barLabels}
+                                    barData={resolvedBarData}
+                                    barSeries={barSeries}
+                                    tooltipSeriesMeta={barSeries}
+                                    shouldShowGroupedAmountAvatars={shouldShowGroupedAmountAvatars}
+                                    shouldShowGroupedStackAvatars={shouldShowGroupedStackAvatars}
+                                    isDashboardMetricPreset={isDashboardMetricPreset}
+                                    barPresentation={barPresentation}
+                                    tooltipMode={barTooltipMode}
+                                    barYAxisWidth={barYAxisWidth}
+                                    barYAxisIntegerOnly={barYAxisIntegerOnly}
+                                    metricBarDomain={metricBarDomain}
+                                    barTickFormatter={barTickFormatter}
+                                    barTooltipValueFormatter={barTooltipValueFormatter}
+                                    countFormatter={barCountFormatter}
+                                    tooltipCountDivider={barTooltipCountDivider}
+                                    noDataLabel={noDataLabel}
+                                    dashboardBarCategoryGap={dashboardBarLayout.categoryGap}
+                                    dashboardBarGap={barChart.dashboardBarGap ?? dashboardBarLayout.barGap}
+                                    dashboardBarMaxWidth={barChart.dashboardBarMaxWidth}
+                                    dashboardBarXAxisLabelStride={dashboardBarXAxisLabelStride}
+                                    groupedStackSeries={barSeries}
+                                    avatarRenderer={avatarRenderer}
+                                    onBarClick={onBarClick}
+                                />
+                            )}
                         </div>
                     </div>
 
