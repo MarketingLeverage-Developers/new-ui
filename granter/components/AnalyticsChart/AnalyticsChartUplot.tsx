@@ -43,7 +43,6 @@ type LineTooltipContentProps = {
     label?: string | number;
     seriesMeta: LineSeriesMeta[];
     valueFormatter: (value: number) => string;
-    avatarRenderer?: AnalyticsChartAvatarRenderer;
 };
 
 type BarTooltipContentProps = {
@@ -229,6 +228,13 @@ const tooltipItemStyle: React.CSSProperties = {
     gridTemplateColumns: '20px auto max-content',
     alignItems: 'center',
     gap: 8,
+};
+
+const lineTooltipItemStyle: React.CSSProperties = {
+    display: 'grid',
+    gridTemplateColumns: 'max-content max-content max-content',
+    alignItems: 'center',
+    columnGap: 8,
 };
 
 const legendDotStyle = (color: string): React.CSSProperties => ({
@@ -1058,7 +1064,6 @@ const LineTooltipContent = ({
     label,
     seriesMeta,
     valueFormatter,
-    avatarRenderer,
 }: LineTooltipContentProps) => {
     if (!active || !payload || payload.length === 0) return null;
 
@@ -1101,20 +1106,12 @@ const LineTooltipContent = ({
             ) : null}
             <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                 {sortedItems.map((item) => (
-                    <div key={item.key} style={tooltipItemStyle}>
-                        {renderChartAvatar({
-                            avatarRenderer,
-                            label: item.label,
-                            profileSrc: item.profileSrc,
-                            seed: item.avatarSeed ?? item.key,
-                            avatarKind: item.avatarKind ?? 'user',
-                            size: 20,
-                            fontSize: 11,
-                        })}
-                        <Text size={13} style={{ minWidth: 0, wordBreak: 'break-word' }}>
+                    <div key={item.key} style={lineTooltipItemStyle}>
+                        {renderTooltipMarker(item.markerKind, item.color)}
+                        <Text size={13} style={{ whiteSpace: 'nowrap' }}>
                             {item.label}
                         </Text>
-                        <Text size={13} weight={'semibold'}>
+                        <Text size={13} weight={'semibold'} style={{ whiteSpace: 'nowrap' }}>
                             {(item.tooltipValueFormatter ?? valueFormatter)(item.tooltipValue)}
                         </Text>
                     </div>
@@ -2567,7 +2564,6 @@ const UplotBarTooltipOverlay = memo(({
                     label={labels[cursorState.idx] ?? ''}
                     seriesMeta={tooltipSeriesMeta}
                     valueFormatter={barTooltipValueFormatter}
-                    avatarRenderer={avatarRenderer}
                 />
             ) : isMissingPeriod ? (
                 <NoDataTooltipContent
