@@ -59,6 +59,7 @@ const SingleDatePicker = ({ date, onChangeDate, className, ...props }: SingleDat
                 mode="single"
                 month={currentMonth}
                 showOutsideDays
+                fixedWeeks
                 selected={safeDate}
                 onSelect={(next) => {
                     if (!next) return;

@@ -14,9 +14,18 @@
             --rdp-cell-size: 32px;
         }
 
+        .rdp-months {
+            min-height: 242px;
+        }
+
+        .rdp-month_grid {
+            height: 242px;
+        }
+
         .rdp-nav,
         .rdp-caption,
-        .rdp-caption_label {
+        .rdp-caption_label,
+        .rdp-month_caption {
             display: none;
         }
 

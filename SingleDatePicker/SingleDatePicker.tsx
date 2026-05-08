@@ -52,6 +52,7 @@ const SingleDatePicker = ({ date, onChangeDate, ...props }: SingleDatePickerProp
                 mode="single"
                 month={currentMonth}
                 showOutsideDays
+                fixedWeeks
                 selected={date}
                 onSelect={(d?: Date) => d && onChangeDate(d)}
                 required={true as const}
