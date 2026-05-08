@@ -1063,17 +1063,33 @@ const LineTooltipContent = ({
     if (!active || !payload || payload.length === 0) return null;
 
     const valueByKey = new Map<string, number>();
+    const payloadByKey = new Map<string, TooltipPayloadItem>();
 
     payload.forEach((item: TooltipPayloadItem) => {
         const key = String(item.dataKey ?? '').trim();
         const value = Number(item.value);
         if (key.length > 0 && Number.isFinite(value)) {
             valueByKey.set(key, value);
+            payloadByKey.set(key, item);
         }
     });
 
     const sortedItems = seriesMeta
-        .map((item) => ({ ...item, value: valueByKey.get(item.key) ?? 0 }))
+        .map((item) => {
+            const payloadDatum = payloadByKey.get(item.key)?.payload as LineChartDatum | undefined;
+            const tooltipValueKey = item.tooltipValueKey?.trim();
+            const tooltipValue = tooltipValueKey && payloadDatum
+                ? Number(payloadDatum[tooltipValueKey])
+                : valueByKey.get(item.key) ?? 0;
+
+            return {
+                ...item,
+                value: valueByKey.get(item.key) ?? 0,
+                tooltipValue: Number.isFinite(tooltipValue)
+                    ? tooltipValue
+                    : valueByKey.get(item.key) ?? 0,
+            };
+        })
         .sort((a, b) => b.value - a.value || a.label.localeCompare(b.label, 'ko-KR'));
 
     return (
@@ -1099,7 +1115,7 @@ const LineTooltipContent = ({
                             {item.label}
                         </Text>
                         <Text size={13} weight={'semibold'}>
-                            {valueFormatter(item.value)}
+                            {(item.tooltipValueFormatter ?? valueFormatter)(item.tooltipValue)}
                         </Text>
                     </div>
                 ))}
