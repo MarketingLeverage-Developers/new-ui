@@ -2054,6 +2054,7 @@ const UplotLineChart = ({
     );
     const revealProgressRef = useRef(0);
     const revealAnimationFrameRef = useRef<number | null>(null);
+    const lastRevealSignatureRef = useRef<string | null>(null);
     const emptyBarRectsRef = useRef<DrawnBarRect[]>([]);
     const labelsRef = useLatestRef(labels);
     const strideRef = useLatestRef(dashboardBarXAxisLabelStride);
@@ -2123,12 +2124,22 @@ const UplotLineChart = ({
         const shouldReduceMotion =
             typeof window !== 'undefined' &&
             window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+        const revealSignature = `${lineSeries.length}:${lineData.length}:${lineDataSignature}`;
 
         if (shouldReduceMotion || lineData.length <= 1 || lineSeries.length === 0) {
+            lastRevealSignatureRef.current = revealSignature;
             revealProgressRef.current = 1;
             chart.redraw(false, false);
             return undefined;
         }
+
+        if (lastRevealSignatureRef.current === revealSignature) {
+            revealProgressRef.current = 1;
+            chart.redraw(false, false);
+            return undefined;
+        }
+
+        lastRevealSignatureRef.current = revealSignature;
 
         revealProgressRef.current = 0;
         let startedAt: number | null = null;
