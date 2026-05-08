@@ -4,6 +4,7 @@ import RoundedBox from '../../../RoundedBox/RoundedBox';
 import Confirm from '../../../Confirm/Confirm';
 import { useToast } from '@/shared/headless/ToastProvider/ToastProvider';
 import type { Result } from '@/shared/types';
+import type { ReactNode } from 'react';
 
 type Props<T> = {
     open: boolean;
@@ -14,7 +15,7 @@ type Props<T> = {
     showToast?: boolean;
     boldText?: string;
     descriptionText?: string;
-    subDescriptionText?: string;
+    subDescriptionText?: ReactNode;
 };
 
 export const ConfirmModal = <T,>({
