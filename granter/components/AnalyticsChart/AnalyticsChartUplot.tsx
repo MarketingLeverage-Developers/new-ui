@@ -1678,6 +1678,37 @@ const UplotBarChart = ({
         setAvatarAnchors((prev) => (areAvatarAnchorsEqual(prev, nextAvatars) ? prev : nextAvatars));
     }, []);
 
+    const buildCurrentBarGeometry = useCallback((instance: uPlot) => buildBarGeometry({
+        chart: instance,
+        data: barDataRef.current,
+        seriesMeta: barSeriesRef.current,
+        isGroupedAmountBar: barPresentationRef.current === 'grouped',
+        isGroupedStackBar: barPresentationRef.current === 'groupedStack',
+        dashboardCategoryGap: categoryGapRef.current,
+        dashboardBarGap: barGapRef.current,
+        isDashboardMetricPreset: dashboardPresetRef.current,
+        barPresentation: barPresentationRef.current,
+        dashboardBarMaxWidth: dashboardBarMaxWidthRef.current,
+    }), [
+        barDataRef,
+        barGapRef,
+        barPresentationRef,
+        barSeriesRef,
+        categoryGapRef,
+        dashboardBarMaxWidthRef,
+        dashboardPresetRef,
+    ]);
+
+    const getCurrentBarRects = useCallback((instance: uPlot) => {
+        const { rects } = buildCurrentBarGeometry(instance);
+
+        if (!areDrawnBarRectsEqual(renderedBarRectsRef.current, rects)) {
+            renderedBarRectsRef.current = rects;
+        }
+
+        return rects;
+    }, [buildCurrentBarGeometry]);
+
     useEffect(() => {
         avatarAnchorsRef.current = avatarAnchors;
     }, [avatarAnchors]);
@@ -1741,7 +1772,7 @@ const UplotBarChart = ({
                             const frame = getPlotFrame(instance);
                             const plotLeft = frame?.left ?? 0;
                             const plotTop = frame?.top ?? 0;
-                            const hoveredRect = renderedBarRectsRef.current.find(
+                            const hoveredRect = getCurrentBarRects(instance).find(
                                 (rect) =>
                                     rect.idx === nextIdx &&
                                     left + plotLeft >= rect.left &&
@@ -1749,7 +1780,7 @@ const UplotBarChart = ({
                                     top + plotTop >= rect.top &&
                                     top + plotTop <= rect.top + rect.height
                             );
-                            instance.root.style.cursor = onBarClick && hoveredRect ? 'pointer' : '';
+                            instance.root.style.cursor = onBarClickRef.current && hoveredRect ? 'pointer' : '';
 
                             if (isGroupedStackBar) {
                                 cursorStore.set({
@@ -1769,18 +1800,7 @@ const UplotBarChart = ({
                             const frame = getPlotFrame(instance);
                             if (!frame) return;
 
-                            const { rects, avatars } = buildBarGeometry({
-                                chart: instance,
-                                data: barDataRef.current,
-                                seriesMeta: barSeriesRef.current,
-                                isGroupedAmountBar: barPresentation === 'grouped',
-                                isGroupedStackBar: barPresentation === 'groupedStack',
-                                dashboardCategoryGap: categoryGapRef.current,
-                                dashboardBarGap: barGapRef.current,
-                                isDashboardMetricPreset: dashboardPresetRef.current,
-                                barPresentation: barPresentationRef.current,
-                                dashboardBarMaxWidth: dashboardBarMaxWidthRef.current,
-                            });
+                            const { rects, avatars } = buildCurrentBarGeometry(instance);
 
                             if (
                                 !areDrawnBarRectsEqual(targetBarRectsRef.current, rects) ||
@@ -1834,30 +1854,30 @@ const UplotBarChart = ({
         ],
         [
             cursorStore,
-            barDataRef,
-            barGapRef,
-            barPresentationRef,
             barSeriesRef,
-            categoryGapRef,
-            dashboardBarMaxWidthRef,
-            dashboardPresetRef,
-            barPresentation,
+            buildCurrentBarGeometry,
+            getCurrentBarRects,
             isGroupedStackBar,
-            onBarClick,
+            onBarClickRef,
             syncBarGeometry,
         ]
     );
 
     useEffect(() => {
-        if (!chart || !onBarClick) {
+        if (!chart) {
             return;
         }
 
         const handleClick = (event: MouseEvent) => {
+            const latestOnBarClick = onBarClickRef.current;
+            if (!latestOnBarClick) {
+                return;
+            }
+
             const rootRect = chart.root.getBoundingClientRect();
             const clickLeft = event.clientX - rootRect.left;
             const clickTop = event.clientY - rootRect.top;
-            const hoveredRect = renderedBarRectsRef.current.find(
+            const hoveredRect = getCurrentBarRects(chart).find(
                 (rect) =>
                     clickLeft >= rect.left &&
                     clickLeft <= rect.left + rect.width &&
@@ -1874,7 +1894,7 @@ const UplotBarChart = ({
                 return;
             }
 
-            onBarClickRef.current?.({
+            latestOnBarClick({
                 index: hoveredRect.idx,
                 periodLabel: String(datum.periodLabel ?? ''),
                 datum,
@@ -1887,7 +1907,7 @@ const UplotBarChart = ({
         return () => {
             chart.root.removeEventListener('click', handleClick);
         };
-    }, [barDataRef, chart, onBarClick, onBarClickRef]);
+    }, [barDataRef, chart, getCurrentBarRects, onBarClickRef]);
 
     const options = useMemo<uPlot.Options>(() => ({
         width: Math.max(size.width, 1),
