@@ -146,9 +146,9 @@ const getMonthNavigationRange = (range: DateRange | undefined, direction: -1 | 1
     return nextRange;
 };
 
-const buildMonthRange = (targetMonth: Date, today: Date): DateRange => ({
+const buildMonthRange = (targetMonth: Date): DateRange => ({
     from: startOfMonth(targetMonth),
-    to: isSameMonth(targetMonth, today) ? today : endOfMonth(targetMonth),
+    to: endOfMonth(targetMonth),
 });
 
 const buildRollingMonthRange = (targetEndMonth: Date, monthCount: number, today: Date): DateRange => ({
@@ -190,7 +190,7 @@ const getPresetNavigationRange = (
         case 'LAST_MONTH': {
             const targetMonth = addMonths(startOfMonth(range.from), direction);
             if (direction > 0 && isAfterMonth(targetMonth, today)) return undefined;
-            return buildMonthRange(targetMonth, today);
+            return buildMonthRange(targetMonth);
         }
         case 'LAST_3_MONTHS':
         case 'LAST_6_MONTHS':
