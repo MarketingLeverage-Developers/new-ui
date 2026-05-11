@@ -105,6 +105,13 @@ export type { TextIconButtonProps, TextIconButtonVariant } from './TextIconButto
 export { default as AlertText } from './AlertText/AlertText';
 export type { AlertTextProps } from './AlertText/AlertText';
 
+export { default as FloatingStatusAlert } from './FloatingStatusAlert/FloatingStatusAlert';
+export type {
+    FloatingStatusAlertProps,
+    FloatingStatusAlertStatus,
+    FloatingStatusAlertTriggerProps,
+} from './FloatingStatusAlert/FloatingStatusAlert';
+
 export { default as InlineTextButton } from './InlineTextButton/InlineTextButton';
 export type { InlineTextButtonProps } from './InlineTextButton/InlineTextButton';
 

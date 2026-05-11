@@ -82,6 +82,7 @@ export { default as RoundedTextInput } from './components/RoundedTextInput/Round
 export { default as SearchInput } from './components/SearchInput/SearchInput';
 export { default as Text } from './components/Text/Text';
 export { default as Tooltip } from './components/Tooltip/Tooltip';
+export { default as FloatingStatusAlert } from './components/FloatingStatusAlert/FloatingStatusAlert';
 
 export type { HeaderProps } from './components/PageTemplate/components/Header/Header';
 export type { MainProps } from './components/PageTemplate/components/Main/Main';
@@ -274,6 +275,11 @@ export type { TimeSlotSelectorProps, TimeSlotSelectorOption } from './components
 export type { DividerProps } from './components/Divider/Divider';
 export type { TooltipProps, TooltipAlign, TooltipSide } from './components/Tooltip/Tooltip';
 export type { HelpTooltipProps } from './components/HelpTooltip/HelpTooltip';
+export type {
+    FloatingStatusAlertProps,
+    FloatingStatusAlertStatus,
+    FloatingStatusAlertTriggerProps,
+} from './components/FloatingStatusAlert/FloatingStatusAlert';
 export type { CheckboxTextToggleProps } from './components/CheckboxTextToggle/CheckboxTextToggle';
 export type { LabeledSwitchProps } from './components/LabeledSwitch/LabeledSwitch';
 export type { SearchToggleInputProps } from './components/SearchToggleInput/SearchToggleInput';
