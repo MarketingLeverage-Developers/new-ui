@@ -1,4 +1,4 @@
-// src/shared/headless/AirTable/AirTable.tsx
+// AirTable/AirTable.tsx
 
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { Container } from './components/Container';
@@ -90,7 +90,7 @@ export type HeaderUnderlineConfig = {
     width?: number;
 };
 
-// src/shared/headless/AirTable/AirTable.tsx
+// AirTable/AirTable.tsx
 
 export type AirTableProps<T> = {
     data: T[];

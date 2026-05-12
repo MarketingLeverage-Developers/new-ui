@@ -1,4 +1,4 @@
-// src/shared/headless/AirTable/hooks/useColumnVisibilityControl.ts
+// AirTable/hooks/useColumnVisibilityControl.ts
 
 import { useAirTableContext } from '../AirTable';
 import { useCallback } from 'react';

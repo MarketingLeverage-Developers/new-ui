@@ -1,4 +1,4 @@
-import BottomSheet from '@/shared/headless/BottomSheet/BottomSheet';
+import BottomSheet from '@/components/common/shared/headless/BottomSheet/BottomSheet';
 import type { ReactNode } from 'react';
 
 export type SheetModalProps = {

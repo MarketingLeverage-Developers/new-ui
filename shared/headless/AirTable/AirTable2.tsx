@@ -1,4 +1,4 @@
-// src/shared/headless/AirTable/AirTable2.tsx
+// AirTable/AirTable2.tsx
 
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { Container2 as Container } from './components/Container2';

@@ -6,8 +6,10 @@ import interactionPlugin from '@fullcalendar/interaction';
 import type {
     DateSelectArg,
     DatesSetArg,
+    EventClickArg,
     EventDropArg,
     EventContentArg,
+    EventInput,
     MoreLinkArg,
     MoreLinkSimpleAction,
 } from '@fullcalendar/core';
@@ -94,7 +96,7 @@ export const ScheduleCalendarCalendar = ({
     const calRef = useRef<FullCalendar | null>(null);
     const viewRef = useRef<HTMLDivElement | null>(null);
 
-    const [draftEvent, setDraftEvent] = useState<any | null>(null);
+    const [draftEvent, setDraftEvent] = useState<EventInput | null>(null);
 
     /** ctx->FC 동기화로 유발된 datesSet 무시용 */
     const syncingRef = useRef(false);
@@ -307,6 +309,7 @@ export const ScheduleCalendarCalendar = ({
     );
 
     const externalMoreLinkClick = calendarProps?.moreLinkClick;
+    const externalEventClick = calendarProps?.eventClick;
     const handleMoreLinkClick = useCallback(
         (arg: MoreLinkArg): MoreLinkSimpleAction | void => {
             let result: MoreLinkSimpleAction | void;
@@ -329,7 +332,35 @@ export const ScheduleCalendarCalendar = ({
         [externalMoreLinkClick, scheduleMorePopoverAdjust]
     );
 
-    const { moreLinkClick: _ignoredMoreLinkClick, ...restCalendarProps } = calendarProps ?? {};
+    const handleEventClick = useCallback(
+        (arg: EventClickArg) => {
+            if (typeof externalEventClick === 'function') {
+                externalEventClick(arg);
+            }
+
+            const matchedEvent = ctx.events.find((event) => event.id === arg.event.id);
+            ctx.selectEvent(
+                matchedEvent ?? {
+                    id: arg.event.id,
+                    title: arg.event.title,
+                    start: arg.event.start ?? '',
+                    end: arg.event.end ?? undefined,
+                    allDay: arg.event.allDay,
+                    backgroundColor: arg.event.backgroundColor,
+                    borderColor: arg.event.borderColor,
+                    textColor: arg.event.textColor,
+                    extendedProps: arg.event.extendedProps,
+                }
+            );
+        },
+        [ctx, externalEventClick]
+    );
+
+    const {
+        moreLinkClick: _ignoredMoreLinkClick,
+        eventClick: _ignoredEventClick,
+        ...restCalendarProps
+    } = calendarProps ?? {};
 
     return (
         <div className={styles.fcViewAnim} ref={viewRef}>
@@ -358,6 +389,7 @@ export const ScheduleCalendarCalendar = ({
                     return group ? [`cat-${group}`] : [];
                 }}
                 eventDrop={handleEventDrop}
+                eventClick={handleEventClick}
                 eventContent={(arg) => (renderEventItem ? renderEventItem(arg) : <CalendarEventItem arg={arg} />)}
                 dayMaxEvents={3}
                 dayPopoverFormat={{

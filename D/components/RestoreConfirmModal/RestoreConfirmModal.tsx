@@ -3,7 +3,7 @@ import Portal from '../../../shared/headless/Portal/Portal';
 import RoundedBox from '../../../RoundedBox/RoundedBox';
 import Confirm from '../../../Confirm/Confirm';
 import type { Result } from '@/shared/types';
-import { useToast } from '@/shared/headless/ToastProvider/ToastProvider';
+import { useToast } from '@/components/common/shared/headless/ToastProvider/ToastProvider';
 
 type Props<T> = {
     open: boolean;

@@ -1,7 +1,7 @@
 // src/shared/primitives/BasicTable/BasicTable.tsx
 
 import React, { useState, useCallback, useMemo } from 'react';
-import type { FilterState as ExternalFilterState } from '@/shared/headless/AirTable/AirTable';
+import type { FilterState as ExternalFilterState } from '@/components/common/shared/headless/AirTable/AirTable';
 import AirTable from '../shared/headless/AirTable/AirTable';
 import styles from './BasicTable.module.scss';
 import RowToggle from './components/RowToggle/RowToggle';

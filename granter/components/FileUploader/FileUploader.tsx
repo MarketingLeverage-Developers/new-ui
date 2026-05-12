@@ -5,7 +5,7 @@ import ImageUploader, {
     type ImageItem,
     type ImageItemInput,
     useImageUploader,
-} from '@/shared/headless/ImageUploader/ImageUploader';
+} from '@/components/common/shared/headless/ImageUploader/ImageUploader';
 import styles from './FileUploader.module.scss';
 
 type LegacyImageItem = {

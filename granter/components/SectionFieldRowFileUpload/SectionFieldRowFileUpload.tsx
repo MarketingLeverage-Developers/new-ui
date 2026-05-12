@@ -1,7 +1,7 @@
 import React from 'react';
 import { FiX } from 'react-icons/fi';
 import FileUploader, { type FileUploaderProps } from '../FileUploader/FileUploader';
-import { useImageUploader } from '@/shared/headless/ImageUploader/ImageUploader';
+import { useImageUploader } from '@/components/common/shared/headless/ImageUploader/ImageUploader';
 import Modal from '../../../shared/headless/Modal/Modal';
 import Portal from '../../../shared/headless/Portal/Portal';
 import styles from './SectionFieldRowFileUpload.module.scss';

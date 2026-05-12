@@ -2,7 +2,7 @@
 
 import React from 'react';
 import type { Column, SortState } from '../../../shared/headless/AirTable/AirTable';
-import type { FilterState } from '@/shared/headless/AirTable/AirTable';
+import type { FilterState } from '@/components/common/shared/headless/AirTable/AirTable';
 import { BasicTable, type AirTableComponentLike, type TableFilterItem } from '../../../BasicTable/BasicTable';
 
 type ListTableProps<T> = {

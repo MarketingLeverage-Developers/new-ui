@@ -1,4 +1,4 @@
-// src/shared/headless/AirTable/hooks/usePinnedColumnControl.ts
+// AirTable/hooks/usePinnedColumnControl.ts
 
 import { useAirTableContext } from '../AirTable';
 import { useCallback } from 'react';

@@ -141,8 +141,8 @@ const FooterNavBase = ({ className }: { className?: string }) => {
             key: 'inquiry',
             icon: <FiHome />,
             text: '홈',
-            // active: isActivePath(ROUTES.INQUIRY_HISTORY.PATH),
-            // onClick: () => navigate(ROUTES.INQUIRY_HISTORY.PATH),
+            active: isActivePath(ROUTES.MAIN.PATH),
+            onClick: () => navigate(ROUTES.MAIN.PATH),
         },
         {
             key: 'menu',
