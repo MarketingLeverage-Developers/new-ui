@@ -19,6 +19,7 @@ export type FloatingIssueNoticeIssue = {
 export type FloatingIssueNoticeProps = {
     open: boolean;
     title?: React.ReactNode;
+    subtitle?: React.ReactNode;
     issues: FloatingIssueNoticeIssue[];
     onClose?: () => void;
     closeAriaLabel?: string;
@@ -34,8 +35,9 @@ export type FloatingIssueNoticeTriggerProps = {
 };
 
 const DEFAULT_TITLE = '확인 필요';
-const DEFAULT_TRIGGER_LABEL = '운영 이슈';
-const DEFAULT_TRIGGER_ARIA_LABEL = '운영 이슈 안내 다시 열기';
+const DEFAULT_SUBTITLE = '아래 항목을 확인해주세요.';
+const DEFAULT_TRIGGER_LABEL = '확인 필요';
+const DEFAULT_TRIGGER_ARIA_LABEL = '확인 필요 안내 다시 열기';
 
 const hasIssueDetail = (issue: FloatingIssueNoticeIssue) =>
     Boolean(
@@ -81,6 +83,7 @@ const FloatingIssueNotice = React.memo(
     ({
         open,
         title = DEFAULT_TITLE,
+        subtitle = DEFAULT_SUBTITLE,
         issues,
         onClose,
         closeAriaLabel,
@@ -109,14 +112,16 @@ const FloatingIssueNotice = React.memo(
 
         const isDetailMode = Boolean(selectedIssue);
         const resolvedTitle = selectedIssue?.detailTitle ?? selectedIssue?.label ?? title;
+        const resolvedSubtitle = isDetailMode ? null : subtitle;
 
         return (
             <aside
                 className={classNames(styles.Root, className)}
+                data-detail-mode={isDetailMode ? 'true' : 'false'}
                 role="alert"
                 aria-live="polite"
             >
-                <div className={styles.Card}>
+                <div className={styles.Card} data-detail-mode={isDetailMode ? 'true' : 'false'}>
                     <div className={styles.Header} data-detail-mode={isDetailMode ? 'true' : 'false'}>
                         {isDetailMode ? (
                             <button
@@ -133,7 +138,12 @@ const FloatingIssueNotice = React.memo(
                             </span>
                         )}
 
-                        <h2 className={styles.Title}>{resolvedTitle}</h2>
+                        <span className={styles.TitleGroup}>
+                            <h2 className={styles.Title}>{resolvedTitle}</h2>
+                            {resolvedSubtitle ? (
+                                <p className={styles.Subtitle}>{resolvedSubtitle}</p>
+                            ) : null}
+                        </span>
 
                         {onClose ? (
                             <button

@@ -3,55 +3,74 @@
     top: 50%;
     left: 50%;
     z-index: 80;
-    width: min(306px, calc(100vw - 32px));
+    width: min(360px, calc(100vw - 32px));
     transform: translate(-50%, -50%);
     pointer-events: auto;
+}
+
+.Root[data-detail-mode='true'] {
+    width: min(360px, calc(100vw - 32px));
 }
 
 .Card {
     display: flex;
     flex-direction: column;
-    gap: 14px;
-    padding: 18px 16px 16px;
+    gap: 0;
+    overflow: hidden;
+    padding: 0;
     border: 0;
-    border-radius: 8px;
+    border-radius: 12px;
     background: rgba(255, 255, 255, 0.98);
-    box-shadow: 0 12px 32px rgba(15, 23, 42, 0.16);
+    box-shadow: 0 14px 34px rgba(15, 23, 42, 0.14);
     backdrop-filter: blur(10px);
     animation:
         floatingIssueNoticeIn 420ms cubic-bezier(0.16, 1, 0.3, 1),
         floatingIssueNoticeNudge 5s ease-in-out 360ms infinite;
 }
 
+.Card[data-detail-mode='true'] {
+    border-radius: 12px;
+}
+
 .Header {
     display: grid;
-    grid-template-columns: 22px minmax(0, 1fr) 24px;
+    grid-template-columns: 42px minmax(0, 1fr) 26px;
     align-items: center;
-    column-gap: 8px;
+    column-gap: 12px;
     min-width: 0;
+    padding: 18px 16px 16px;
+    border-bottom: 1px solid #edf0f4;
 }
 
 .Header[data-detail-mode='true'] {
-    grid-template-columns: 24px minmax(0, 1fr) 24px;
+    grid-template-columns: 28px minmax(0, 1fr) 26px;
+    padding: 15px 16px 14px;
 }
 
 .TitleIcon {
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 999px;
+    background: #fee2e2;
+    color: #ef4444;
+}
+
+.TitleIcon svg {
     width: 22px;
     height: 22px;
-    color: #ef4444;
 }
 
 .BackButton {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 24px;
-    height: 24px;
+    width: 28px;
+    height: 28px;
     border: 0;
-    border-radius: 6px;
+    border-radius: 8px;
     background: transparent;
     color: #374151;
     cursor: pointer;
@@ -65,13 +84,37 @@
     color: #111827;
 }
 
+.TitleGroup {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 2px;
+}
+
 .Title {
     overflow: hidden;
     margin: 0;
     color: #111827;
-    font-size: 16px;
+    font-size: 18px;
     font-weight: 800;
+    line-height: 24px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.Header[data-detail-mode='true'] .Title {
+    font-size: 16px;
     line-height: 22px;
+    text-align: center;
+}
+
+.Subtitle {
+    overflow: hidden;
+    margin: 0;
+    color: #6b7280;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 18px;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
@@ -80,12 +123,12 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 24px;
-    height: 24px;
+    width: 26px;
+    height: 26px;
     border: 0;
-    border-radius: 6px;
+    border-radius: 8px;
     background: transparent;
-    color: #374151;
+    color: #4b5563;
     cursor: pointer;
     transition:
         background-color 120ms ease,
@@ -97,22 +140,28 @@
     color: #111827;
 }
 
+.CloseButton svg {
+    width: 21px;
+    height: 21px;
+}
+
 .IssueList {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 0;
+    padding: 10px 12px 12px;
 }
 
 .IssueButton {
     display: grid;
-    grid-template-columns: 24px minmax(0, 1fr) 18px;
+    grid-template-columns: 34px minmax(0, 1fr) 18px;
     align-items: center;
-    column-gap: 8px;
+    column-gap: 10px;
     width: 100%;
-    min-height: 42px;
-    padding: 8px 10px;
+    min-height: 50px;
+    padding: 8px 8px;
     border: 0;
-    border-radius: 7px;
+    border-radius: 10px;
     background: #ffffff;
     color: #111827;
     cursor: pointer;
@@ -134,23 +183,30 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 24px;
-    height: 24px;
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+    background: #eff6ff;
     color: inherit;
+}
+
+.IssueIcon svg {
+    width: 18px;
+    height: 18px;
 }
 
 .IssueLabel {
     overflow: hidden;
     color: #111827;
     font-size: 13px;
-    font-weight: 700;
+    font-weight: 400;
     line-height: 18px;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 
 .IssueChevron {
-    color: #374151;
+    color: #4b5563;
 }
 
 .DetailContent {
@@ -158,15 +214,16 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 12px;
+    padding: 15px 16px 16px;
 }
 
 .DetailDescription {
     display: flex;
     flex-direction: column;
-    gap: 3px;
+    gap: 9px;
     color: #6b7280;
     font-size: 13px;
-    font-weight: 500;
+    font-weight: 400;
     line-height: 20px;
     word-break: keep-all;
 }
@@ -176,9 +233,8 @@
 }
 
 .ActionButton.ActionButton {
-    min-width: 112px;
-    height: 34px;
-    padding: 0 14px;
+    width: 100%;
+    min-width: 0;
 }
 
 .Trigger {
