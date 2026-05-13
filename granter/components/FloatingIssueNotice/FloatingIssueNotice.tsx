@@ -29,6 +29,7 @@ export type FloatingIssueNoticeProps = {
 export type FloatingIssueNoticeTriggerProps = {
     visible?: boolean;
     label?: React.ReactNode;
+    count?: number;
     ariaLabel?: string;
     onClick?: () => void;
     className?: string;
@@ -51,6 +52,7 @@ export const FloatingIssueNoticeTrigger = React.memo(
     ({
         visible = true,
         label,
+        count,
         ariaLabel,
         onClick,
         className,
@@ -72,6 +74,9 @@ export const FloatingIssueNoticeTrigger = React.memo(
                     <FiAlertTriangle size={14} strokeWidth={2.4} />
                 </span>
                 <span className={styles.TriggerLabel}>{resolvedLabel}</span>
+                {typeof count === 'number' && count > 0 ? (
+                    <span className={styles.TriggerCount}>{count}</span>
+                ) : null}
             </button>
         );
     }
