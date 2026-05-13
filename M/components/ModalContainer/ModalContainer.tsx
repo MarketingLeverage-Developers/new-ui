@@ -1,4 +1,3 @@
-import React from 'react';
 import BaseModalContainer, { type BaseModalContainerProps } from './components/BaseModalContainer/BaseModalContainer';
 import RightDrawerModalContainer, {
     type RightDrawerModalContainerProps,

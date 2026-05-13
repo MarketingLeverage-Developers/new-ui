@@ -1,7 +1,7 @@
 import Modal from '../../../../headless/Modal/Modal';
 import Portal from '../../../../headless/Portal/Portal';
-import Template from '@/components/Desktop/Template/Template';
-import React from 'react';
+import ModalTemplate from '@/components/common/D/components/Template/components/ModalTemplate/ModalTemplate';
+import type { ReactNode } from 'react';
 
 export const ModalContainer = ({
     title,
@@ -14,24 +14,24 @@ export const ModalContainer = ({
     open: boolean;
     onChange: () => void;
     // enterAction: () => void;
-    content: React.ReactNode;
+    content: ReactNode;
 }) => (
     <Modal
         value={open}
-        onChange={() => {
-            onChange();
+        onChange={(nextOpen) => {
+            if (!nextOpen) {
+                onChange();
+            }
         }}
         // enterAction={enterAction}
     >
         <Portal>
             <Modal.Backdrop />
-            <Modal.Content maxHeight={'80%'}>
-                <Template variant="modal" width={450}>
-                    <Template.Header title={title} />
-                    <Template.Content>
-                        <Template.ScrollerWrapper>{content}</Template.ScrollerWrapper>
-                    </Template.Content>
-                </Template>
+            <Modal.Content width={450} maxHeight="80%">
+                <ModalTemplate width="100%" padding={0}>
+                    <ModalTemplate.Header title={title} onClose={onChange} />
+                    <ModalTemplate.Main>{content}</ModalTemplate.Main>
+                </ModalTemplate>
             </Modal.Content>
         </Portal>
     </Modal>

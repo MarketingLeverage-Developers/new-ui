@@ -47,6 +47,7 @@ export { default as SectionFieldSelect } from './components/SectionFieldSelect/S
 export { default as SectionFieldVisualSelect } from './components/SectionFieldVisualSelect/SectionFieldVisualSelect';
 export { default as SectionFieldVisualSelectPair } from './components/SectionFieldVisualSelectPair/SectionFieldVisualSelectPair';
 export { default as SectionFieldMemberSelect } from './components/SectionFieldMemberSelect/SectionFieldMemberSelect';
+export { default as SectionFieldVisualMemberSelect } from './components/SectionFieldVisualMemberSelect/SectionFieldVisualMemberSelect';
 export { default as ButtonTabGroup } from './components/ButtonTabGroup/ButtonTabGroup';
 export { default as BookmarkTabs } from './components/BookmarkTabs/BookmarkTabs';
 export { default as HeaderBreadcrumb } from './components/HeaderBreadcrumb/HeaderBreadcrumb';
@@ -242,6 +243,10 @@ export type {
     SectionFieldMemberSelectProps,
     SectionFieldMemberSelectOption,
 } from './components/SectionFieldMemberSelect/SectionFieldMemberSelect';
+export type {
+    SectionFieldVisualMemberSelectProps,
+    SectionFieldVisualMemberSelectOption,
+} from './components/SectionFieldVisualMemberSelect/SectionFieldVisualMemberSelect';
 export type { ButtonTabGroupProps, ButtonTabGroupItem } from './components/ButtonTabGroup/ButtonTabGroup';
 export type { SectionFieldMultiValueInputProps } from './components/SectionFieldMultiValueInput/SectionFieldMultiValueInput';
 export type { ScrollHintProps } from './components/ScrollHint/ScrollHint';

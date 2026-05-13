@@ -245,6 +245,11 @@ export type {
     SectionFieldMemberSelectProps,
     SectionFieldMemberSelectOption,
 } from './SectionFieldMemberSelect/SectionFieldMemberSelect';
+export { default as SectionFieldVisualMemberSelect } from './SectionFieldVisualMemberSelect/SectionFieldVisualMemberSelect';
+export type {
+    SectionFieldVisualMemberSelectProps,
+    SectionFieldVisualMemberSelectOption,
+} from './SectionFieldVisualMemberSelect/SectionFieldVisualMemberSelect';
 export { default as SectionFieldMultiValueInput } from './SectionFieldMultiValueInput/SectionFieldMultiValueInput';
 export type { SectionFieldMultiValueInputProps } from './SectionFieldMultiValueInput/SectionFieldMultiValueInput';
 export { parseCommaSeparatedValues, joinCommaSeparatedValues } from './SectionFieldMultiValueInput/utils';
