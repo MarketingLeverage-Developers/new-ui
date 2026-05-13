@@ -1,5 +1,6 @@
 import bellIcon from './bellIcon.png';
 import danngnLogo from './danngn-icon.svg';
+import danngnSymbol from './danngn-symbol.svg';
 import defaultProfile from './default-profile.png';
 import googleLogo from './google-social-icon.svg';
 import kakaoIcon from './kakaoIcon.svg';
@@ -11,17 +12,28 @@ import smsIcon from './smsIcon.svg';
 import unBellIcon from './unBellIcon.png';
 
 export const getMediaLogoSrc = (name: string) => {
-    if (name === '네이버') return naverLogo;
-    if (name === '구글') return googleLogo;
-    if (name === '메타') return metaLogo;
-    if (name === '카카오') return kakaoLogo;
-    if (name === '당근') return danngnLogo;
+    const normalizedName = name.trim();
+
+    if (normalizedName.includes('네이버')) return naverLogo;
+    if (normalizedName.includes('구글')) return googleLogo;
+    if (normalizedName.includes('메타')) return metaLogo;
+    if (normalizedName.includes('카카오')) return kakaoLogo;
+    if (normalizedName.includes('당근')) return danngnLogo;
     return logo;
+};
+
+export const getMediaSymbolSrc = (name: string) => {
+    const normalizedName = name.trim();
+
+    if (normalizedName.includes('카카오')) return kakaoIcon;
+    if (normalizedName.includes('당근')) return danngnSymbol;
+    return getMediaLogoSrc(name);
 };
 
 export {
     bellIcon,
     danngnLogo,
+    danngnSymbol,
     defaultProfile,
     googleLogo,
     kakaoIcon,

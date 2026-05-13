@@ -82,6 +82,7 @@ export { default as RoundedTextInput } from './components/RoundedTextInput/Round
 export { default as SearchInput } from './components/SearchInput/SearchInput';
 export { default as Text } from './components/Text/Text';
 export { default as Tooltip } from './components/Tooltip/Tooltip';
+export { default as NoticeBanner } from './components/NoticeBanner/NoticeBanner';
 export { default as FloatingIssueNotice } from './components/FloatingIssueNotice/FloatingIssueNotice';
 
 export type { HeaderProps } from './components/PageTemplate/components/Header/Header';
@@ -275,6 +276,11 @@ export type { TimeSlotSelectorProps, TimeSlotSelectorOption } from './components
 export type { DividerProps } from './components/Divider/Divider';
 export type { TooltipProps, TooltipAlign, TooltipSide } from './components/Tooltip/Tooltip';
 export type { HelpTooltipProps } from './components/HelpTooltip/HelpTooltip';
+export type {
+    NoticeBannerChip,
+    NoticeBannerProps,
+    NoticeBannerTone,
+} from './components/NoticeBanner/NoticeBanner';
 export type {
     FloatingIssueNoticeIssue,
     FloatingIssueNoticeProps,

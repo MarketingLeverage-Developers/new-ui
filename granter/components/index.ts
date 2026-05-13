@@ -105,6 +105,13 @@ export type { TextIconButtonProps, TextIconButtonVariant } from './TextIconButto
 export { default as AlertText } from './AlertText/AlertText';
 export type { AlertTextProps } from './AlertText/AlertText';
 
+export { default as NoticeBanner } from './NoticeBanner/NoticeBanner';
+export type {
+    NoticeBannerChip,
+    NoticeBannerProps,
+    NoticeBannerTone,
+} from './NoticeBanner/NoticeBanner';
+
 export { default as FloatingIssueNotice } from './FloatingIssueNotice/FloatingIssueNotice';
 export type {
     FloatingIssueNoticeIssue,

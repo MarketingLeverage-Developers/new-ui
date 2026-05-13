@@ -1,0 +1,147 @@
+.Root {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    width: 100%;
+    min-width: 0;
+    min-height: 38px;
+    padding: 7px 12px;
+    border: 1px solid var(--notice-banner-border);
+    border-radius: 8px;
+    background: var(--notice-banner-bg);
+    color: var(--notice-banner-text);
+    box-sizing: border-box;
+    font-size: 12px;
+    line-height: 1.45;
+}
+
+.Info {
+    --notice-banner-bg: #eff6ff;
+    --notice-banner-border: #93c5fd;
+    --notice-banner-text: #334155;
+    --notice-banner-icon-color: #2563eb;
+    --notice-banner-chip-media-bg: #ffffff;
+    --notice-banner-chip-media-border: #e5e7eb;
+    --notice-banner-chip-media-text: #4b5563;
+    --notice-banner-chip-label-bg: #f3f4f6;
+    --notice-banner-chip-label-border: #e5e7eb;
+    --notice-banner-chip-label-text: #6b7280;
+}
+
+.Warning {
+    --notice-banner-bg: #fff7ed;
+    --notice-banner-border: #fed7aa;
+    --notice-banner-text: #334155;
+    --notice-banner-icon-color: #f97316;
+    --notice-banner-chip-media-bg: #ffffff;
+    --notice-banner-chip-media-border: #fed7aa;
+    --notice-banner-chip-media-text: #c2410c;
+    --notice-banner-chip-label-bg: #ffedd5;
+    --notice-banner-chip-label-border: #fed7aa;
+    --notice-banner-chip-label-text: #c2410c;
+}
+
+.Icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    width: 16px;
+    height: 16px;
+    color: var(--notice-banner-icon-color);
+    line-height: 0;
+}
+
+.Body {
+    display: flex;
+    align-items: center;
+    flex: 1 1 auto;
+    flex-wrap: wrap;
+    gap: 7px;
+    min-width: 0;
+}
+
+.Content {
+    min-width: 0;
+}
+
+.ChipList {
+    display: inline-flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 5px;
+    min-width: 0;
+}
+
+.Chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    min-width: 0;
+    height: 18px;
+    padding: 0 8px;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 16px;
+    white-space: nowrap;
+}
+
+.ChipLabel {
+    border-color: var(--notice-banner-chip-label-border);
+    border-radius: 4px;
+    background: var(--notice-banner-chip-label-bg);
+    color: var(--notice-banner-chip-label-text);
+    padding: 0 6px;
+    font-size: 10px;
+    font-weight: 400;
+}
+
+.ChipMedia {
+    border-color: transparent;
+    background: var(--notice-banner-chip-media-bg);
+    color: var(--notice-banner-chip-media-text);
+}
+
+.ChipIcon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    width: 11px;
+    height: 11px;
+    overflow: hidden;
+    line-height: 0;
+}
+
+.ChipIcon > img,
+.ChipIcon > svg {
+    display: block;
+    width: 11px;
+    height: 11px;
+    object-fit: contain;
+}
+
+.CloseButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    width: 24px;
+    height: 24px;
+    margin-left: auto;
+    padding: 0;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: #64748b;
+    cursor: pointer;
+    line-height: 0;
+}
+
+.CloseButton:hover {
+    background: rgba(15, 23, 42, 0.06);
+    color: #334155;
+}
