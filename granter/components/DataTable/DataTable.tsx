@@ -2,6 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 import type { Column, FilterState, SortState } from '../../../shared/headless/AirTable/AirTable';
 import AirTable from '../../../shared/headless/AirTable/AirTable';
+import type { AirTableComponentLike } from '../../../BasicTable/BasicTable';
 import { useSuppressPostResizeHeaderClick } from '../../../shared/hooks/client/useSuppressPostResizeHeaderClick';
 import Text from '../Text/Text';
 import styles from './DataTable.module.scss';
@@ -15,6 +16,7 @@ export type DataTablePersistedState = {
 };
 
 export type DataTableProps<T> = {
+    airTableComponent?: AirTableComponentLike;
     data: T[];
     columns: Column<T>[];
     rowKeyField: keyof T;
@@ -64,6 +66,7 @@ export type DataTableProps<T> = {
 };
 
 const DataTable = <T,>({
+    airTableComponent: AirTableComponent = AirTable,
     data,
     columns,
     rowKeyField,
@@ -119,7 +122,7 @@ const DataTable = <T,>({
             onMouseDownCapture={resizeClickGuard.onMouseDownCapture}
             onClickCapture={resizeClickGuard.onClickCapture}
         >
-            <AirTable<T>
+            <AirTableComponent
                 data={data}
                 columns={columns}
                 rowKeyField={rowKeyField}
@@ -153,14 +156,14 @@ const DataTable = <T,>({
                 pinnedHeaderTextColor={pinnedHeaderTextColor}
                 getRowStyle={getRowStyle}
             >
-                <AirTable.Container className={styles.Container} height={height} onScrollElReady={onScrollElReady}>
-                    <AirTable.Header
+                <AirTableComponent.Container className={styles.Container} height={height} onScrollElReady={onScrollElReady}>
+                    <AirTableComponent.Header
                         className={classNames(styles.Header, headerClassName)}
                         headerCellClassName={classNames(styles.HeaderCell, headerCellClassName)}
                     />
 
                     {data.length > 0 ? (
-                        <AirTable.Body
+                        <AirTableComponent.Body
                             className={classNames(styles.Body, bodyClassName)}
                             rowClassName={classNames(styles.Row, rowClassName)}
                             rowSelectedClassName={classNames(styles.RowSelected, rowSelectedClassName)}
@@ -180,9 +183,9 @@ const DataTable = <T,>({
                         </div>
                     )}
 
-                    <AirTable.Ghost className={classNames(styles.Ghost, ghostClassName)} />
-                </AirTable.Container>
-            </AirTable>
+                    <AirTableComponent.Ghost className={classNames(styles.Ghost, ghostClassName)} />
+                </AirTableComponent.Container>
+            </AirTableComponent>
         </div>
     );
 };

@@ -3,9 +3,12 @@ import classNames from 'classnames';
 import AirTable from '../../../shared/headless/AirTable/AirTable';
 import { useSuppressPostResizeHeaderClick } from '../../../shared/hooks/client/useSuppressPostResizeHeaderClick';
 import { ColumnVisibilityControlsPanel } from '@/components/common/BasicTable/components/ColumnVisibilityControlsPanel/ColumnVisibilityControlsPanel';
+import { ColumnVisibilityControlsPanel2 } from '@/components/common/BasicTable/components/ColumnVisibilityControlsPanel/ColumnVisibilityControlsPanel2';
 import { FilterControlsPanel } from '@/components/common/BasicTable/components/FilterControlsPanel/FilterControlsPanel';
 import { PinnedColumnControlsPanel } from '@/components/common/BasicTable/components/PinnedColumnControlsPanel/PinnedColumnControlsPanel';
+import { PinnedColumnControlsPanel2 } from '@/components/common/BasicTable/components/PinnedColumnControlsPanel/PinnedColumnControlsPanel2';
 import { TableSettingRail } from '@/components/common/BasicTable/components/TableSettingRail/TableSettingRail';
+import type { AirTableComponentLike } from '@/components/common/BasicTable/BasicTable';
 import type { DataTableProps } from './DataTable';
 import Text from '../Text/Text';
 import styles from './DataTable.module.scss';
@@ -27,6 +30,7 @@ export type DataTableWithSettingRailProps<T> = Omit<DataTableProps<T>, 'showColu
 };
 
 const DataTableWithSettingRail = <T,>({
+    airTableComponent: AirTableComponent = AirTable,
     data,
     columns,
     rowKeyField,
@@ -83,6 +87,7 @@ const DataTableWithSettingRail = <T,>({
     const showFilterTab = filterItems.length > 0;
     const effectiveSettingTab = showFilterTab || settingTab !== 'filters' ? settingTab : 'columns';
     const reservedRightSpace = isSettingOpen ? panelWidth + railWidth : 0;
+    const useOwnBasicTablePanels = Boolean((AirTableComponent as AirTableComponentLike).useOwnBasicTablePanels);
 
     return (
         <div
@@ -90,7 +95,7 @@ const DataTableWithSettingRail = <T,>({
             onMouseDownCapture={resizeClickGuard.onMouseDownCapture}
             onClickCapture={resizeClickGuard.onClickCapture}
         >
-            <AirTable<T>
+            <AirTableComponent
                 data={data}
                 columns={columns}
                 rowKeyField={rowKeyField}
@@ -133,14 +138,18 @@ const DataTableWithSettingRail = <T,>({
                             transition: 'padding-right 0.18s ease',
                         }}
                     >
-                        <AirTable.Container className={styles.Container} height={height} onScrollElReady={onScrollElReady}>
-                            <AirTable.Header
+                        <AirTableComponent.Container
+                            className={styles.Container}
+                            height={height}
+                            onScrollElReady={onScrollElReady}
+                        >
+                            <AirTableComponent.Header
                                 className={classNames(styles.Header, headerClassName)}
                                 headerCellClassName={classNames(styles.HeaderCell, headerCellClassName)}
                             />
 
                             {data.length > 0 ? (
-                                <AirTable.Body
+                                <AirTableComponent.Body
                                     className={classNames(styles.Body, bodyClassName)}
                                     rowClassName={classNames(styles.Row, rowClassName)}
                                     rowSelectedClassName={classNames(styles.RowSelected, rowSelectedClassName)}
@@ -160,8 +169,8 @@ const DataTableWithSettingRail = <T,>({
                                 </div>
                             )}
 
-                            <AirTable.Ghost className={classNames(styles.Ghost, ghostClassName)} />
-                        </AirTable.Container>
+                            <AirTableComponent.Ghost className={classNames(styles.Ghost, ghostClassName)} />
+                        </AirTableComponent.Container>
                     </div>
 
                     {isSettingOpen ? (
@@ -187,8 +196,20 @@ const DataTableWithSettingRail = <T,>({
                                     background: 'var(--granter-white)',
                                 }}
                             >
-                                {effectiveSettingTab === 'columns' ? <ColumnVisibilityControlsPanel<T> /> : null}
-                                {effectiveSettingTab === 'pinned' ? <PinnedColumnControlsPanel<T> /> : null}
+                                {effectiveSettingTab === 'columns' ? (
+                                    useOwnBasicTablePanels ? (
+                                        <ColumnVisibilityControlsPanel2<T> />
+                                    ) : (
+                                        <ColumnVisibilityControlsPanel<T> />
+                                    )
+                                ) : null}
+                                {effectiveSettingTab === 'pinned' ? (
+                                    useOwnBasicTablePanels ? (
+                                        <PinnedColumnControlsPanel2<T> />
+                                    ) : (
+                                        <PinnedColumnControlsPanel<T> />
+                                    )
+                                ) : null}
                                 {effectiveSettingTab === 'filters' && showFilterTab ? (
                                     <FilterControlsPanel items={filterItems} />
                                 ) : null}
@@ -212,7 +233,7 @@ const DataTableWithSettingRail = <T,>({
                         </div>
                     ) : null}
                 </div>
-            </AirTable>
+            </AirTableComponent>
         </div>
     );
 };
