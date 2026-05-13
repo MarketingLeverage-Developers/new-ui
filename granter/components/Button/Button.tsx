@@ -21,6 +21,8 @@ export type ButtonProps = Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 't
     size?: ButtonSize;
     leftIcon?: React.ReactNode;
     rightIcon?: React.ReactNode;
+    textColor?: string;
+    borderColor?: string;
     plain?: boolean;
     type?: 'button' | 'submit' | 'reset';
 };
@@ -33,12 +35,23 @@ const Button = ({
     size = 'md',
     leftIcon,
     rightIcon,
+    textColor,
+    borderColor,
     plain = false,
     children,
     type = 'button',
+    style,
     ...props
 }: ButtonProps) => {
     const iconOnly = !plain && !children && Boolean(leftIcon || rightIcon);
+    const customStyle =
+        textColor || borderColor
+            ? {
+                  ...style,
+                  ...(textColor ? { color: textColor } : {}),
+                  ...(borderColor ? { borderColor } : {}),
+              }
+            : style;
 
     return (
         <button
@@ -50,6 +63,7 @@ const Button = ({
                 className
             )}
             data-icon-only={iconOnly ? 'true' : 'false'}
+            style={customStyle}
             {...props}
         >
             {plain ? (
