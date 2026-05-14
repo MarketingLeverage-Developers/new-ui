@@ -39,6 +39,7 @@ export type SpreadsheetInputTableProps<Row> = {
     editableCells?: SpreadsheetInputTableEditableCell<Row>[];
     hint?: ReactNode;
     assistiveBadge?: ReactNode;
+    headerAction?: ReactNode;
     emptyContent?: ReactNode;
     minWidth?: number | string;
     edge?: 'default' | 'open';
@@ -100,6 +101,7 @@ const SpreadsheetInputTable = <Row,>({
     editableCells,
     hint,
     assistiveBadge,
+    headerAction,
     emptyContent,
     minWidth = 640,
     edge = 'default',
@@ -346,10 +348,14 @@ const SpreadsheetInputTable = <Row,>({
 
     return (
         <div className={rootClassName} style={style}>
-            {hint || assistiveBadge ? (
+            {hint || assistiveBadge || headerAction ? (
                 <div className={styles.Hint}>
                     {hint ? <div className={styles.HintContent}>{hint}</div> : <span />}
-                    {assistiveBadge ? <div className={styles.AssistiveBadge}>{assistiveBadge}</div> : null}
+                    {headerAction ? (
+                        <div className={styles.HeaderAction}>{headerAction}</div>
+                    ) : assistiveBadge ? (
+                        <div className={styles.AssistiveBadge}>{assistiveBadge}</div>
+                    ) : null}
                 </div>
             ) : null}
 
