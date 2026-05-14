@@ -258,6 +258,34 @@
     cursor: not-allowed;
 }
 
+.RemoveIconButton {
+    display: inline-flex;
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--granter-gray-500);
+    cursor: pointer;
+    transition:
+        background-color 0.15s ease,
+        color 0.15s ease,
+        opacity 0.15s ease;
+}
+
+.RemoveIconButton:hover:not(:disabled) {
+    background-color: var(--granter-gray-100);
+    color: var(--granter-gray-700);
+}
+
+.RemoveIconButton:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
 .CompactMenu {
     display: flex;
     min-width: 0;

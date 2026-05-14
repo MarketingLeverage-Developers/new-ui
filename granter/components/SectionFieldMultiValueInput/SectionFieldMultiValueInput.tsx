@@ -2,6 +2,7 @@ import React, { useCallback, useMemo, useState } from 'react';
 import classNames from 'classnames';
 import { FiPlus, FiX } from 'react-icons/fi';
 import { HiOutlineChevronDown } from 'react-icons/hi2';
+import { IoCloseOutline } from 'react-icons/io5';
 import BlackButton from '../Button/BlackButton';
 import WhiteButton from '../Button/WhiteButton';
 import SectionFieldInput from '../SectionFieldInput/SectionFieldInput';
@@ -13,6 +14,8 @@ import { joinCommaSeparatedValues, parseCommaSeparatedValues } from './utils';
 export type SectionFieldMultiValueInputProps = {
     value: string;
     onChange: (nextValue: string) => void;
+    itemClassName?: string;
+    removeButtonVariant?: 'text' | 'icon';
     inputPlaceholder?: string;
     emptyText?: string;
     addButtonText?: string;
@@ -160,6 +163,8 @@ const CompactDropdownField = ({
 const SectionFieldMultiValueInput = ({
     value,
     onChange,
+    itemClassName,
+    removeButtonVariant = 'text',
     inputPlaceholder = '값을 입력하세요',
     emptyText = '추가된 항목이 없습니다.',
     addButtonText = '추가',
@@ -275,7 +280,8 @@ const SectionFieldMultiValueInput = ({
                             className={classNames(
                                 styles.Item,
                                 isCompact && styles.ItemCompact,
-                                isCompactStack && styles.ItemCompactStack
+                                isCompactStack && styles.ItemCompactStack,
+                                itemClassName
                             )}
                         >
                             <Text size="sm" weight="medium" className={styles.ItemText}>
@@ -290,6 +296,16 @@ const SectionFieldMultiValueInput = ({
                                     aria-label={`${item} ${removeButtonText}`}
                                 >
                                     <FiX size={18} />
+                                </button>
+                            ) : removeButtonVariant === 'icon' ? (
+                                <button
+                                    type="button"
+                                    className={styles.RemoveIconButton}
+                                    disabled={disabled}
+                                    onClick={() => removeValue(item)}
+                                    aria-label={`${item} ${removeButtonText}`}
+                                >
+                                    <IoCloseOutline size={18} />
                                 </button>
                             ) : (
                                 <WhiteButton size="sm" disabled={disabled} onClick={() => removeValue(item)}>
