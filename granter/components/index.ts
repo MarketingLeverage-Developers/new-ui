@@ -112,6 +112,13 @@ export type {
     NoticeBannerTone,
 } from './NoticeBanner/NoticeBanner';
 
+export { default as SpreadsheetInputTable } from './SpreadsheetInputTable/SpreadsheetInputTable';
+export type {
+    SpreadsheetInputTableColumn,
+    SpreadsheetInputTableEditableCell,
+    SpreadsheetInputTableProps,
+} from './SpreadsheetInputTable/SpreadsheetInputTable';
+
 export { default as FloatingIssueNotice } from './FloatingIssueNotice/FloatingIssueNotice';
 export type {
     FloatingIssueNoticeIssue,

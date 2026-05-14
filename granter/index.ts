@@ -84,6 +84,7 @@ export { default as Text } from './components/Text/Text';
 export { default as Tooltip } from './components/Tooltip/Tooltip';
 export { default as NoticeBanner } from './components/NoticeBanner/NoticeBanner';
 export { default as FloatingIssueNotice } from './components/FloatingIssueNotice/FloatingIssueNotice';
+export { default as SpreadsheetInputTable } from './components/SpreadsheetInputTable/SpreadsheetInputTable';
 
 export type { HeaderProps } from './components/PageTemplate/components/Header/Header';
 export type { MainProps } from './components/PageTemplate/components/Main/Main';
@@ -281,6 +282,11 @@ export type {
     NoticeBannerProps,
     NoticeBannerTone,
 } from './components/NoticeBanner/NoticeBanner';
+export type {
+    SpreadsheetInputTableColumn,
+    SpreadsheetInputTableEditableCell,
+    SpreadsheetInputTableProps,
+} from './components/SpreadsheetInputTable/SpreadsheetInputTable';
 export type {
     FloatingIssueNoticeIssue,
     FloatingIssueNoticeProps,
