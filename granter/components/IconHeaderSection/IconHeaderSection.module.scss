@@ -1,0 +1,70 @@
+.Root {
+    display: flex;
+    width: 100%;
+    min-width: 0;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.Header {
+    display: flex;
+    min-width: 0;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.HeaderMain {
+    display: flex;
+    min-width: 0;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.Icon {
+    display: inline-flex;
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    color: var(--granter-gray-900);
+    font-size: 22px;
+}
+
+.HeaderText {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.Title {
+    margin: 0;
+    color: var(--granter-gray-900);
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 24px;
+}
+
+.Description {
+    margin: 0;
+    color: var(--granter-gray-500);
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 18px;
+}
+
+.HeaderSide {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.Body {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 16px;
+}

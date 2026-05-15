@@ -26,6 +26,11 @@ export { default as RankedMetricList } from './components/RankedMetricList/Ranke
 export { default as MetricSummaryStrip } from './components/MetricSummaryStrip/MetricSummaryStrip';
 export { default as SidebarDrawerLayout } from './components/SidebarDrawerLayout/SidebarDrawerLayout';
 export { default as SectionIntro } from './components/SectionIntro/SectionIntro';
+export { default as IconHeaderSection } from './components/IconHeaderSection/IconHeaderSection';
+export { default as IconLabelField } from './components/IconLabelField/IconLabelField';
+export { default as DashedDropzoneUploader } from './components/DashedDropzoneUploader/DashedDropzoneUploader';
+export { default as InlineFileInputUploader } from './components/InlineFileInputUploader/InlineFileInputUploader';
+export { default as EditableUnderlineTabs } from './components/EditableUnderlineTabs/EditableUnderlineTabs';
 export { default as SectionFormDrawerContent } from './components/SectionFormDrawerContent/SectionFormDrawerContent';
 export { default as SectionFieldRow } from './components/SectionFieldRow/SectionFieldRow';
 export { default as SectionFieldInput } from './components/SectionFieldInput/SectionFieldInput';
@@ -71,6 +76,7 @@ export { default as DetailSceneHeader } from './components/DetailSceneHeader/Det
 export { default as Flex } from './components/Flex/Flex';
 export { default as FileUploader } from './components/FileUploader/FileUploader';
 export { default as RichTextEditor } from './components/RichTextEditor/RichTextEditor';
+export { default as FullWidthSingleDatePicker } from './components/FullWidthSingleDatePicker/FullWidthSingleDatePicker';
 export { default as RoundedSegmentTab } from './components/RoundedSegmentTab/RoundedSegmentTab';
 export { default as RoundedTextInput } from './components/RoundedTextInput/RoundedTextInput';
 export { default as SearchInput } from './components/SearchInput/SearchInput';
@@ -209,6 +215,20 @@ export type {
     MetricSummaryStripProps,
 } from './components/MetricSummaryStrip/MetricSummaryStrip';
 export type { SectionIntroProps } from './components/SectionIntro/SectionIntro';
+export type { IconHeaderSectionProps } from './components/IconHeaderSection/IconHeaderSection';
+export type { IconLabelFieldProps } from './components/IconLabelField/IconLabelField';
+export type {
+    DashedDropzoneUploaderProps,
+    DashedDropzoneUploaderVariant,
+} from './components/DashedDropzoneUploader/DashedDropzoneUploader';
+export type {
+    InlineFileInputUploaderProps,
+    InlineFileInputUploaderType,
+} from './components/InlineFileInputUploader/InlineFileInputUploader';
+export type {
+    EditableUnderlineTabsItem,
+    EditableUnderlineTabsProps,
+} from './components/EditableUnderlineTabs/EditableUnderlineTabs';
 export type { SectionFormDrawerContentProps } from './components/SectionFormDrawerContent/SectionFormDrawerContent';
 export type { SectionFieldRowProps, SectionFieldRowSubFieldProps } from './components/SectionFieldRow/SectionFieldRow';
 export type { SectionFieldInputProps } from './components/SectionFieldInput/SectionFieldInput';
@@ -284,6 +304,9 @@ export type {
 } from './components/FileUploader/FileUploader';
 export type { RichTextEditorProps, RichTextEditorUploadedImage } from './components/RichTextEditor/RichTextEditor';
 export type { SingleDatePickerProps } from './components/SingleDatePicker/SingleDatePicker';
+export type {
+    FullWidthSingleDatePickerProps,
+} from './components/FullWidthSingleDatePicker/FullWidthSingleDatePicker';
 export type { ThemeModeToggleProps, ThemeModeToggleTheme } from './components/ThemeModeToggle/ThemeModeToggle';
 export type { UnderlineTabProps, UnderlineTabItemProps } from './components/UnderlineTab/UnderlineTab';
 export type {

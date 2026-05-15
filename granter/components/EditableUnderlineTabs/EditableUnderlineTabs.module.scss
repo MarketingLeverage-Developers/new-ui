@@ -1,0 +1,88 @@
+.Root {
+    display: flex;
+    width: 100%;
+    min-width: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+.Root > * {
+    flex-shrink: 0;
+}
+
+.Item {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 14px;
+    border: 0;
+    border-bottom: 2px solid var(--granter-gray-200);
+    background: transparent;
+    color: var(--granter-gray-400);
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 20px;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.ItemButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    white-space: inherit;
+    cursor: inherit;
+}
+
+.Item[data-disabled='true'],
+.Add:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+}
+
+.Label {
+    display: inline-flex;
+    min-width: 0;
+    align-items: center;
+}
+
+.DeleteButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    line-height: 0;
+    opacity: 0.6;
+    cursor: pointer;
+    transition: opacity 150ms ease;
+}
+
+.DeleteButton:hover {
+    opacity: 1;
+}
+
+.DeleteButton:disabled {
+    cursor: not-allowed;
+}
+
+.Active {
+    border-color: var(--granter-gray-900);
+    color: var(--granter-gray-900);
+}
+
+.Add {
+    border-bottom-color: var(--granter-gray-200);
+    background: var(--granter-gray-100);
+    color: var(--granter-gray-400);
+}

@@ -1,0 +1,89 @@
+.Root {
+    display: flex;
+    width: 100%;
+    min-width: 0;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.Input {
+    display: flex;
+    width: 100%;
+    min-width: 0;
+    height: 46px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 16px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    background: var(--granter-white);
+    color: var(--granter-gray-900);
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1;
+}
+
+.HiddenInput {
+    display: none;
+}
+
+.LeftText {
+    min-width: 0;
+    flex: 1 1 auto;
+    overflow: hidden;
+    color: #9ca3af;
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 1;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.AttachButton {
+    display: inline-flex;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    padding: 0 0 0 10px;
+    border: 0;
+    margin: 0;
+    background: transparent;
+    color: #2d6cdf;
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1;
+    cursor: pointer;
+    transition:
+        opacity 160ms ease,
+        text-decoration-color 160ms ease;
+}
+
+.AttachButton:hover {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+}
+
+.AttachButton:disabled {
+    cursor: default;
+    opacity: 0.45;
+    text-decoration: none;
+}
+
+.ClearButton {
+    color: #9ca3af;
+}
+
+.Disabled {
+    opacity: 0.8;
+}
+
+.Message {
+    padding: 0 2px;
+    color: #9ca3af;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 1.3;
+}

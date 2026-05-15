@@ -1,0 +1,53 @@
+.Root {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.Label {
+    display: inline-flex;
+    min-width: 0;
+    align-items: center;
+    gap: 6px;
+    color: var(--granter-gray-500);
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 20px;
+}
+
+.Icon {
+    display: inline-flex;
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    color: var(--granter-gray-500);
+    font-size: 18px;
+}
+
+.LabelText {
+    min-width: 0;
+    word-break: keep-all;
+    overflow-wrap: anywhere;
+}
+
+.RequiredMark {
+    color: var(--granter-red-500);
+    font-weight: 700;
+    line-height: 1;
+}
+
+.Content {
+    min-width: 0;
+    width: 100%;
+}
+
+.HelperText {
+    margin: 0;
+    color: var(--granter-gray-400);
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 18px;
+}

@@ -191,6 +191,26 @@ export type { RankedMetricListProps, RankedMetricListItem } from './RankedMetric
 export { default as SectionIntro } from './SectionIntro/SectionIntro';
 export type { SectionIntroProps } from './SectionIntro/SectionIntro';
 
+export { default as IconHeaderSection } from './IconHeaderSection/IconHeaderSection';
+export type { IconHeaderSectionProps } from './IconHeaderSection/IconHeaderSection';
+export { default as IconLabelField } from './IconLabelField/IconLabelField';
+export type { IconLabelFieldProps } from './IconLabelField/IconLabelField';
+export { default as DashedDropzoneUploader } from './DashedDropzoneUploader/DashedDropzoneUploader';
+export type {
+    DashedDropzoneUploaderProps,
+    DashedDropzoneUploaderVariant,
+} from './DashedDropzoneUploader/DashedDropzoneUploader';
+export { default as InlineFileInputUploader } from './InlineFileInputUploader/InlineFileInputUploader';
+export type {
+    InlineFileInputUploaderProps,
+    InlineFileInputUploaderType,
+} from './InlineFileInputUploader/InlineFileInputUploader';
+export { default as EditableUnderlineTabs } from './EditableUnderlineTabs/EditableUnderlineTabs';
+export type {
+    EditableUnderlineTabsItem,
+    EditableUnderlineTabsProps,
+} from './EditableUnderlineTabs/EditableUnderlineTabs';
+
 export { default as SectionFormDrawerContent } from './SectionFormDrawerContent/SectionFormDrawerContent';
 export type { SectionFormDrawerContentProps } from './SectionFormDrawerContent/SectionFormDrawerContent';
 
@@ -330,6 +350,10 @@ export type { RichTextEditorProps, RichTextEditorUploadedImage } from './RichTex
 
 export { default as SingleDatePicker } from './SingleDatePicker/SingleDatePicker';
 export type { SingleDatePickerProps } from './SingleDatePicker/SingleDatePicker';
+export { default as FullWidthSingleDatePicker } from './FullWidthSingleDatePicker/FullWidthSingleDatePicker';
+export type {
+    FullWidthSingleDatePickerProps,
+} from './FullWidthSingleDatePicker/FullWidthSingleDatePicker';
 
 export { default as ThemeModeToggle } from './ThemeModeToggle/ThemeModeToggle';
 export type { ThemeModeToggleProps, ThemeModeToggleTheme } from './ThemeModeToggle/ThemeModeToggle';
