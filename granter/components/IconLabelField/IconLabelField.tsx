@@ -8,6 +8,7 @@ export type IconLabelFieldProps = Omit<React.HTMLAttributes<HTMLDivElement>, 'ch
     children: React.ReactNode;
     required?: boolean;
     helperText?: React.ReactNode;
+    rightRender?: React.ReactNode;
     contentClassName?: string;
 };
 
@@ -17,15 +18,19 @@ const IconLabelField = ({
     children,
     required = false,
     helperText,
+    rightRender,
     className,
     contentClassName,
     ...props
 }: IconLabelFieldProps) => (
     <div className={classNames(styles.Root, className)} {...props}>
         <div className={styles.Label}>
-            {icon ? <span className={styles.Icon}>{icon}</span> : null}
-            <span className={styles.LabelText}>{label}</span>
-            {required ? <span className={styles.RequiredMark}>*</span> : null}
+            <span className={styles.LabelMain}>
+                {icon ? <span className={styles.Icon}>{icon}</span> : null}
+                <span className={styles.LabelText}>{label}</span>
+                {required ? <span className={styles.RequiredMark}>*</span> : null}
+            </span>
+            {rightRender ? <span className={styles.RightRender}>{rightRender}</span> : null}
         </div>
         <div className={classNames(styles.Content, contentClassName)}>{children}</div>
         {helperText ? <p className={styles.HelperText}>{helperText}</p> : null}

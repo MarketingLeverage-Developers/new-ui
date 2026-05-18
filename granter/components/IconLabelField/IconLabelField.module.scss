@@ -6,14 +6,23 @@
 }
 
 .Label {
-    display: inline-flex;
+    display: flex;
+    width: 100%;
     min-width: 0;
     align-items: center;
+    justify-content: space-between;
     gap: 6px;
     color: var(--granter-gray-500);
     font-size: 14px;
     font-weight: 600;
     line-height: 20px;
+}
+
+.LabelMain {
+    display: inline-flex;
+    min-width: 0;
+    align-items: center;
+    gap: 6px;
 }
 
 .Icon {
@@ -37,6 +46,14 @@
     color: var(--granter-red-500);
     font-weight: 700;
     line-height: 1;
+}
+
+.RightRender {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: flex-end;
+    margin-left: auto;
 }
 
 .Content {
