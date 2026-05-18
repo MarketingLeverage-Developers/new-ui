@@ -20,8 +20,9 @@
     padding: 0;
     border: 0;
     border-radius: 12px;
-    background: rgba(255, 255, 255, 0.98);
-    box-shadow: 0 14px 34px rgba(15, 23, 42, 0.14);
+    background: var(--granter-white);
+    background: color-mix(in srgb, var(--granter-white) 98%, transparent);
+    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.18);
     backdrop-filter: blur(10px);
     animation:
         floatingIssueNoticeIn 420ms cubic-bezier(0.16, 1, 0.3, 1),
@@ -39,7 +40,7 @@
     column-gap: 12px;
     min-width: 0;
     padding: 18px 16px 16px;
-    border-bottom: 1px solid #edf0f4;
+    border-bottom: 1px solid var(--granter-gray-200);
 }
 
 .Header[data-detail-mode='true'] {
@@ -54,8 +55,8 @@
     width: 40px;
     height: 40px;
     border-radius: 999px;
-    background: #fee2e2;
-    color: #ef4444;
+    background: var(--granter-red-100);
+    color: var(--granter-red-500);
 }
 
 .TitleIcon svg {
@@ -72,7 +73,7 @@
     border: 0;
     border-radius: 8px;
     background: transparent;
-    color: #374151;
+    color: var(--granter-gray-700);
     cursor: pointer;
     transition:
         background-color 120ms ease,
@@ -80,8 +81,8 @@
 }
 
 .BackButton:hover {
-    background: rgba(107, 114, 128, 0.08);
-    color: #111827;
+    background: var(--granter-gray-100);
+    color: var(--granter-gray-900);
 }
 
 .TitleGroup {
@@ -94,7 +95,7 @@
 .Title {
     overflow: hidden;
     margin: 0;
-    color: #111827;
+    color: var(--granter-gray-900);
     font-size: 18px;
     font-weight: 800;
     line-height: 24px;
@@ -111,7 +112,7 @@
 .Subtitle {
     overflow: hidden;
     margin: 0;
-    color: #6b7280;
+    color: var(--granter-gray-500);
     font-size: 13px;
     font-weight: 400;
     line-height: 18px;
@@ -128,7 +129,7 @@
     border: 0;
     border-radius: 8px;
     background: transparent;
-    color: #4b5563;
+    color: var(--granter-gray-600);
     cursor: pointer;
     transition:
         background-color 120ms ease,
@@ -136,8 +137,8 @@
 }
 
 .CloseButton:hover {
-    background: rgba(107, 114, 128, 0.08);
-    color: #111827;
+    background: var(--granter-gray-100);
+    color: var(--granter-gray-900);
 }
 
 .CloseButton svg {
@@ -162,8 +163,8 @@
     padding: 8px 8px;
     border: 0;
     border-radius: 10px;
-    background: #ffffff;
-    color: #111827;
+    background: var(--granter-white);
+    color: var(--granter-gray-900);
     cursor: pointer;
     text-align: left;
     transition:
@@ -172,7 +173,7 @@
 }
 
 .IssueButton:hover {
-    background: #f9fafb;
+    background: var(--granter-gray-50);
 }
 
 .IssueButton:active {
@@ -186,7 +187,7 @@
     width: 32px;
     height: 32px;
     border-radius: 10px;
-    background: #eff6ff;
+    background: var(--granter-blue-100);
     color: inherit;
 }
 
@@ -197,7 +198,7 @@
 
 .IssueLabel {
     overflow: hidden;
-    color: #111827;
+    color: var(--granter-gray-900);
     font-size: 13px;
     font-weight: 400;
     line-height: 18px;
@@ -206,7 +207,7 @@
 }
 
 .IssueChevron {
-    color: #4b5563;
+    color: var(--granter-gray-600);
 }
 
 .DetailContent {
@@ -221,7 +222,7 @@
     display: flex;
     flex-direction: column;
     gap: 9px;
-    color: #6b7280;
+    color: var(--granter-gray-500);
     font-size: 13px;
     font-weight: 400;
     line-height: 20px;
@@ -270,7 +271,7 @@
     width: 12px;
     height: 12px;
     flex: 0 0 auto;
-    color: #ef4444;
+    color: var(--granter-red-500);
 }
 
 .TriggerLabel {
@@ -286,8 +287,8 @@
     height: 14px;
     padding: 0 4px;
     border-radius: 999px;
-    background: #ef4444;
-    color: #ffffff;
+    background: var(--granter-red-500);
+    color: var(--granter-white);
     font-size: 10px;
     font-weight: 600;
     line-height: 14px;
