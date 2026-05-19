@@ -276,6 +276,269 @@ button.FileItem {
     opacity: 0.45;
 }
 
+.ReadOnlyImageList {
+    display: flex;
+    width: 100%;
+    min-width: 0;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.ReadOnlyImageItem {
+    width: 137px;
+    min-width: 0;
+}
+
+.ReadOnlyImageThumbWrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    min-width: 0;
+    overflow: hidden;
+    border: 1px solid var(--granter-gray-200);
+    border-radius: 14px;
+    background: var(--granter-gray-100);
+    cursor: pointer;
+}
+
+.ReadOnlyImageThumbButton {
+    display: flex;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 0;
+    outline: none;
+    background: transparent;
+    color: var(--granter-gray-400);
+    cursor: pointer;
+}
+
+.ReadOnlyImageThumbButton:disabled {
+    cursor: default;
+}
+
+.ReadOnlyImageThumbButton img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.ReadOnlyImageThumbButton span {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    color: var(--granter-gray-400);
+    font-size: 13px;
+    font-weight: 400;
+}
+
+.ReadOnlyImageDim {
+    position: absolute;
+    inset: 0;
+    background: rgb(0 0 0 / 45%);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 150ms ease;
+}
+
+.ReadOnlyImageActions {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    opacity: 0;
+    pointer-events: none;
+    visibility: hidden;
+    transform: translateY(4px);
+    transition:
+        opacity 150ms ease,
+        transform 150ms ease,
+        visibility 150ms ease;
+}
+
+.ReadOnlyImageThumbWrap:hover .ReadOnlyImageDim,
+.ReadOnlyImageThumbWrap:focus-within .ReadOnlyImageDim {
+    opacity: 1;
+}
+
+.ReadOnlyImageThumbWrap:hover .ReadOnlyImageActions,
+.ReadOnlyImageThumbWrap:focus-within .ReadOnlyImageActions {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.ReadOnlyImageDownloadButton {
+    display: inline-flex;
+    width: 36px;
+    height: 36px;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--granter-white);
+    cursor: pointer;
+    pointer-events: auto;
+    transition: color 150ms ease, transform 150ms ease;
+}
+
+.ReadOnlyImageDownloadButton:hover:not(:disabled) {
+    transform: translateY(-1px);
+}
+
+.ReadOnlyImageDownloadButton:disabled {
+    opacity: 0.45;
+    cursor: default;
+}
+
+.ReadOnlyImageCaption {
+    margin-top: 8px;
+}
+
+.ReadOnlyImageName {
+    display: block;
+    min-width: 0;
+    overflow: hidden;
+    color: var(--granter-gray-600);
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 18px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ReadOnlyFileList {
+    display: flex;
+    width: 100%;
+    min-width: 0;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.ReadOnlyFileItem {
+    display: flex;
+    width: 100%;
+    min-width: 0;
+    min-height: 40px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 7px 16px;
+    border: 1px solid var(--granter-gray-200);
+    border-radius: 8px;
+    background: var(--granter-white);
+}
+
+.ReadOnlyFileMeta {
+    display: flex;
+    min-width: 0;
+    flex: 1;
+    align-items: center;
+    gap: 10px;
+}
+
+.ReadOnlyFileName {
+    min-width: 0;
+    flex: 1;
+    overflow: hidden;
+    color: var(--granter-gray-800);
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 18px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ReadOnlyFileType {
+    flex: none;
+    color: var(--granter-gray-500);
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 18px;
+    white-space: nowrap;
+}
+
+.ReadOnlyFileDownloadButton {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--granter-gray-500);
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 18px;
+    text-decoration: underline;
+    cursor: pointer;
+    transition: color 0.16s ease;
+}
+
+.ReadOnlyFileDownloadButton:hover:not(:disabled) {
+    color: var(--granter-gray-900);
+}
+
+.ReadOnlyFileDownloadButton:disabled {
+    opacity: 0.45;
+    cursor: default;
+}
+
+.ReadOnlyImagePreviewModalBackdrop {
+    z-index: 1300;
+}
+
+.ReadOnlyImagePreviewModalContent {
+    z-index: 1301;
+    min-width: min(320px, calc(100vw - 32px));
+    max-width: 60%;
+    display: block;
+    border: 0;
+    overflow: hidden;
+    background: transparent;
+    box-shadow: none;
+}
+
+.ReadOnlyImagePreviewViewport {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    padding: 0 10%;
+    cursor: pointer;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.ReadOnlyImagePreviewCanvas {
+    display: flex;
+    flex-shrink: 0;
+    justify-content: center;
+    margin: auto 0;
+    cursor: default;
+    transition: width 0.1s ease-out;
+}
+
+.ReadOnlyImagePreviewImage {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    max-height: 100%;
+    margin: 0 auto;
+    border-radius: 8px;
+    object-fit: contain;
+}
+
 @media (max-width: 720px) {
     .Dropzone {
         align-items: stretch;
@@ -284,5 +547,9 @@ button.FileItem {
 
     .UploadButton {
         width: 100%;
+    }
+
+    .ReadOnlyImagePreviewModalContent {
+        max-width: calc(100vw - 32px);
     }
 }

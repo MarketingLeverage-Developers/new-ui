@@ -1,18 +1,28 @@
-import React, { useId, useRef, useState } from 'react';
+import React, { useEffect, useId, useMemo, useRef, useState } from 'react';
 import classNames from 'classnames';
-import { FiFile, FiImage, FiUploadCloud, FiX } from 'react-icons/fi';
+import { FiDownload, FiFile, FiImage, FiUploadCloud, FiX } from 'react-icons/fi';
+import BasicModal from '../BasicModal/BasicModal';
+import { useToast } from '@/components/common/shared/headless/ToastProvider/ToastProvider';
+import { downloadFileFromUrl } from '@/components/common/shared/utils/download/download';
 import styles from './DashedDropzoneUploader.module.scss';
 
 export type DashedDropzoneUploaderVariant = 'image' | 'file';
+const MIN_PREVIEW_ZOOM = 1;
+const MAX_PREVIEW_ZOOM = 20;
+const PREVIEW_ZOOM_SENSITIVITY = 0.00045;
+
+const getNextPreviewZoom = (currentZoom: number, deltaY: number) =>
+    Math.min(MAX_PREVIEW_ZOOM, Math.max(MIN_PREVIEW_ZOOM, currentZoom * Math.exp(deltaY * -PREVIEW_ZOOM_SENSITIVITY)));
 
 export type DashedDropzoneUploaderProps<TItem extends object> = {
     variant: DashedDropzoneUploaderVariant;
     value?: TItem[];
     onChange?: (next: TItem[]) => void;
-    uploader: (args: { files: File[] }) => Promise<TItem[]>;
+    uploader?: (args: { files: File[] }) => Promise<TItem[]>;
     getItemKey?: (item: TItem, index: number) => string;
     getItemName?: (item: TItem, index: number) => string;
     getItemUrl?: (item: TItem, index: number) => string | undefined;
+    getItemMetaText?: (item: TItem, index: number) => string | undefined;
     onItemClick?: (item: TItem, index: number) => void;
     maxFiles?: number;
     multiple?: boolean;
@@ -23,7 +33,13 @@ export type DashedDropzoneUploaderProps<TItem extends object> = {
     guideText?: string;
     helperText?: string;
     emptyText?: string;
+    showEmpty?: boolean;
     className?: string;
+};
+
+type PreviewImage = {
+    name: string;
+    url: string;
 };
 
 const toRecord = (item: object): Record<string, unknown> => item as Record<string, unknown>;
@@ -55,13 +71,72 @@ const getDefaultItemName = (item: object, index: number) => {
 
 const getDefaultItemUrl = (item: object) => {
     const record = toRecord(item);
-    const url = firstString(record, ['imageUrl', 'filePath', 'url']);
+    const url = firstString(record, ['imageUrl', 'filePath', 'fileUrl', 'url']);
     if (!url || /^https?:\/\//i.test(url) || url.startsWith('blob:') || url.startsWith('data:')) return url;
 
     const baseUrl = String(import.meta.env.VITE_API_URL ?? '').replace(/\/$/, '');
     if (!baseUrl) return url;
 
     return url.startsWith('/') ? `${baseUrl}${url}` : `${baseUrl}/api/${url}`;
+};
+
+const getDefaultItemMetaText = (item: object) => {
+    const record = toRecord(item);
+    const explicitType = firstString(record, ['fileType', 'type']);
+    if (explicitType) return explicitType.toUpperCase();
+
+    const name = firstString(record, ['originalFileName', 'storedFileName', 'fileName', 'name', 'filePath', 'fileUrl', 'url']);
+    const sanitizedName = name?.split(/[?#]/)[0] ?? '';
+    const extension = sanitizedName.includes('.') ? sanitizedName.split('.').pop() : '';
+
+    return extension ? extension.toUpperCase() : 'FILE';
+};
+
+const ReadOnlyImagePreview = ({ preview, onClose }: { preview: PreviewImage; onClose: () => void }) => {
+    const [zoom, setZoom] = useState(MIN_PREVIEW_ZOOM);
+    const scrollRef = useRef<HTMLDivElement>(null);
+    const isZoomedIn = zoom > 1.001;
+
+    useEffect(() => {
+        const el = scrollRef.current;
+        if (!el) return;
+
+        const handleWheel = (event: WheelEvent) => {
+            if (!event.ctrlKey) return;
+
+            event.preventDefault();
+            setZoom((prevZoom) => getNextPreviewZoom(prevZoom, event.deltaY));
+        };
+
+        el.addEventListener('wheel', handleWheel, { passive: false });
+
+        return () => {
+            el.removeEventListener('wheel', handleWheel);
+        };
+    }, []);
+
+    return (
+        <div
+            ref={scrollRef}
+            className={styles.ReadOnlyImagePreviewViewport}
+            style={{
+                overflowX: isZoomedIn ? 'auto' : 'hidden',
+                overflowY: isZoomedIn ? 'auto' : 'hidden',
+            }}
+            onClick={onClose}
+        >
+            <div
+                className={styles.ReadOnlyImagePreviewCanvas}
+                style={{
+                    width: `${zoom * 100}%`,
+                    height: `${zoom * 100}%`,
+                }}
+                onClick={(event) => event.stopPropagation()}
+            >
+                <img className={styles.ReadOnlyImagePreviewImage} src={preview.url} alt={preview.name} />
+            </div>
+        </div>
+    );
 };
 
 const DashedDropzoneUploader = <TItem extends object>({
@@ -72,6 +147,7 @@ const DashedDropzoneUploader = <TItem extends object>({
     getItemKey = getDefaultItemKey,
     getItemName = getDefaultItemName,
     getItemUrl = getDefaultItemUrl,
+    getItemMetaText = getDefaultItemMetaText,
     onItemClick,
     maxFiles,
     multiple,
@@ -82,12 +158,15 @@ const DashedDropzoneUploader = <TItem extends object>({
     guideText,
     helperText,
     emptyText,
+    showEmpty = true,
     className,
 }: DashedDropzoneUploaderProps<TItem>) => {
+    const { addToast } = useToast();
     const inputId = useId();
     const inputRef = useRef<HTMLInputElement | null>(null);
     const [dragging, setDragging] = useState(false);
     const [uploading, setUploading] = useState(false);
+    const [preview, setPreview] = useState<PreviewImage | null>(null);
     const resolvedMaxFiles = maxFiles ?? (variant === 'image' ? 5 : 1);
     const resolvedMultiple = multiple ?? variant === 'image';
     const blocked = disabled || uploading || readOnly;
@@ -113,7 +192,7 @@ const DashedDropzoneUploader = <TItem extends object>({
     };
 
     const commitUpload = async (files: File[]) => {
-        if (blocked || files.length === 0 || !canAddMore) return;
+        if (blocked || files.length === 0 || !canAddMore || !uploader) return;
 
         const remainingCount = resolvedMultiple ? Math.max(resolvedMaxFiles - value.length, 0) : 1;
         const uploadFiles = files.slice(0, remainingCount);
@@ -166,6 +245,136 @@ const DashedDropzoneUploader = <TItem extends object>({
         setDragging(false);
         void commitUpload(Array.from(event.dataTransfer.files ?? []));
     };
+
+    const readOnlyItems = useMemo(
+        () =>
+            value.map((item, index) => ({
+                item,
+                index,
+                key: getItemKey(item, index),
+                name: getItemName(item, index),
+                url: getItemUrl(item, index) ?? '',
+                metaText: getItemMetaText(item, index),
+            })),
+        [getItemKey, getItemMetaText, getItemName, getItemUrl, value]
+    );
+
+    const downloadAttachment = async (url: string, fileName: string) => {
+        if (!url) {
+            addToast({
+                icon: '⚠️',
+                message: '다운로드할 파일이 없습니다.',
+                duration: 2000,
+                dismissible: true,
+            });
+            return;
+        }
+
+        await downloadFileFromUrl(url, fileName);
+    };
+
+    if (readOnly) {
+        return (
+            <div className={classNames(styles.Root, className)} data-variant={variant} data-readonly="true">
+                {value.length === 0 && showEmpty ? <p className={styles.EmptyText}>{resolvedEmptyText}</p> : null}
+
+                {variant === 'image' && value.length > 0 ? (
+                    <>
+                        <div className={styles.ReadOnlyImageList}>
+                            {readOnlyItems.map((image) => (
+                                <div key={image.key} className={styles.ReadOnlyImageItem}>
+                                    <div className={styles.ReadOnlyImageThumbWrap}>
+                                        <button
+                                            type="button"
+                                            className={styles.ReadOnlyImageThumbButton}
+                                            disabled={!image.url}
+                                            onClick={() => {
+                                                if (!image.url) return;
+                                                onItemClick?.(image.item, image.index);
+                                                setPreview({ name: image.name, url: image.url });
+                                            }}
+                                        >
+                                            {image.url ? (
+                                                <img src={image.url} alt={image.name} />
+                                            ) : (
+                                                <span>
+                                                    <FiImage size={18} />
+                                                    이미지
+                                                </span>
+                                            )}
+                                        </button>
+                                        <div className={styles.ReadOnlyImageDim} />
+                                        <div className={styles.ReadOnlyImageActions}>
+                                            <button
+                                                type="button"
+                                                className={styles.ReadOnlyImageDownloadButton}
+                                                aria-label={`${image.name} 다운로드`}
+                                                disabled={!image.url}
+                                                onClick={(event) => {
+                                                    event.stopPropagation();
+                                                    void downloadAttachment(image.url, image.name);
+                                                }}
+                                            >
+                                                <FiDownload size={24} />
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div className={styles.ReadOnlyImageCaption}>
+                                        <span className={styles.ReadOnlyImageName} title={image.name}>
+                                            {image.name}
+                                        </span>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+
+                        <BasicModal
+                            open={Boolean(preview)}
+                            onChange={() => setPreview(null)}
+                            width="100%"
+                            height="90%"
+                            maxHeight="90vh"
+                            contentClassName={styles.ReadOnlyImagePreviewModalContent}
+                            backdropClassName={styles.ReadOnlyImagePreviewModalBackdrop}
+                            content={
+                                preview ? (
+                                    <ReadOnlyImagePreview preview={preview} onClose={() => setPreview(null)} />
+                                ) : null
+                            }
+                        />
+                    </>
+                ) : null}
+
+                {variant === 'file' && value.length > 0 ? (
+                    <div className={styles.ReadOnlyFileList}>
+                        {readOnlyItems.map((file) => (
+                            <div key={file.key} className={styles.ReadOnlyFileItem}>
+                                <div className={styles.ReadOnlyFileMeta}>
+                                    <span className={styles.ReadOnlyFileName} title={file.name}>
+                                        {file.name}
+                                    </span>
+                                    {file.metaText ? (
+                                        <span className={styles.ReadOnlyFileType}>{file.metaText}</span>
+                                    ) : null}
+                                </div>
+                                <button
+                                    type="button"
+                                    className={styles.ReadOnlyFileDownloadButton}
+                                    disabled={!file.url}
+                                    onClick={() => {
+                                        onItemClick?.(file.item, file.index);
+                                        void downloadAttachment(file.url, file.name);
+                                    }}
+                                >
+                                    다운로드
+                                </button>
+                            </div>
+                        ))}
+                    </div>
+                ) : null}
+            </div>
+        );
+    }
 
     return (
         <div className={classNames(styles.Root, className)} data-variant={variant}>
