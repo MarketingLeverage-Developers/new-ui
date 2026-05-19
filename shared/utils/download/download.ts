@@ -8,6 +8,34 @@ export const downloadFilesAsZip = async (
     }
 };
 
+const saveBlob = (blob: Blob, fileName: string) => {
+    const blobUrl = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = blobUrl;
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    setTimeout(() => URL.revokeObjectURL(blobUrl), 1000);
+};
+
+const fetchDownloadBlob = async (fileUrl: string) => {
+    const requestOptions: RequestInit[] = [{}, { credentials: 'include' }];
+    let lastError: unknown;
+
+    for (const options of requestOptions) {
+        try {
+            const response = await fetch(fileUrl, options);
+            if (!response.ok) throw new Error('파일 요청 실패');
+            return await response.blob();
+        } catch (error) {
+            lastError = error;
+        }
+    }
+
+    throw lastError;
+};
+
 export const downloadFileFromUrl = async (fileUrl: string, fileName: string) => {
     const isCrossOriginUrl = (targetUrl: string) => {
         if (typeof window === 'undefined') return false;
@@ -19,40 +47,27 @@ export const downloadFileFromUrl = async (fileUrl: string, fileName: string) => 
         }
     };
 
-    const openByAnchor = (targetUrl: string, targetName?: string, useDownloadAttr: boolean = true) => {
+    const openByAnchor = (targetUrl: string, targetName?: string) => {
         const link = document.createElement('a');
         link.href = targetUrl;
         link.target = '_blank';
         link.rel = 'noopener noreferrer';
-        if (useDownloadAttr && targetName) link.download = targetName;
+        if (targetName) link.download = targetName;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
     };
 
     if (isCrossOriginUrl(fileUrl)) {
-        // Cross-origin 직접 fetch는 CORS에 막힐 수 있어 링크 네비게이션으로 처리한다.
-        openByAnchor(fileUrl, fileName, false);
+        openByAnchor(fileUrl, fileName);
         return;
     }
 
     try {
-        const response = await fetch(fileUrl);
-        if (!response.ok) throw new Error('파일 요청 실패');
-
-        const blob = await response.blob();
-        const blobUrl = URL.createObjectURL(blob);
-
-        const link = document.createElement('a');
-        link.href = blobUrl;
-        link.download = fileName;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-
-        URL.revokeObjectURL(blobUrl);
+        const blob = await fetchDownloadBlob(fileUrl);
+        saveBlob(blob, fileName);
     } catch (error) {
         console.error('파일 다운로드 실패:', error);
-        openByAnchor(fileUrl, fileName, false);
+        openByAnchor(fileUrl, fileName);
     }
 };
