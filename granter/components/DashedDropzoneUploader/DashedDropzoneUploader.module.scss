@@ -181,15 +181,29 @@
     opacity: 0.45;
 }
 
-.ImageName {
+.ImageName,
+.ItemNameButton {
     display: block;
+    width: 100%;
+    padding: 0;
     overflow: hidden;
+    border: 0;
+    background: transparent;
     color: var(--granter-gray-500);
     font-size: 12px;
     font-weight: 500;
     line-height: 18px;
+    text-align: left;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+
+.ItemNameButton:not(:disabled) {
+    cursor: pointer;
+}
+
+.ItemNameButton:disabled {
+    cursor: default;
 }
 
 .FileList {
@@ -211,6 +225,13 @@
     border: 1px solid var(--granter-gray-200);
     border-radius: 8px;
     background: var(--granter-white);
+    color: inherit;
+    font: inherit;
+    text-align: left;
+}
+
+button.FileItem {
+    cursor: pointer;
 }
 
 .FileIcon {

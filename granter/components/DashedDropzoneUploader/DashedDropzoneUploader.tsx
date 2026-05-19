@@ -13,10 +13,12 @@ export type DashedDropzoneUploaderProps<TItem extends object> = {
     getItemKey?: (item: TItem, index: number) => string;
     getItemName?: (item: TItem, index: number) => string;
     getItemUrl?: (item: TItem, index: number) => string | undefined;
+    onItemClick?: (item: TItem, index: number) => void;
     maxFiles?: number;
     multiple?: boolean;
     accept?: string;
     disabled?: boolean;
+    readOnly?: boolean;
     buttonText?: string;
     guideText?: string;
     helperText?: string;
@@ -70,10 +72,12 @@ const DashedDropzoneUploader = <TItem extends object>({
     getItemKey = getDefaultItemKey,
     getItemName = getDefaultItemName,
     getItemUrl = getDefaultItemUrl,
+    onItemClick,
     maxFiles,
     multiple,
     accept,
     disabled = false,
+    readOnly = false,
     buttonText = '파일첨부',
     guideText,
     helperText,
@@ -86,7 +90,7 @@ const DashedDropzoneUploader = <TItem extends object>({
     const [uploading, setUploading] = useState(false);
     const resolvedMaxFiles = maxFiles ?? (variant === 'image' ? 5 : 1);
     const resolvedMultiple = multiple ?? variant === 'image';
-    const blocked = disabled || uploading;
+    const blocked = disabled || uploading || readOnly;
     const canAddMore = !resolvedMultiple ? true : value.length < resolvedMaxFiles;
     const resolvedGuideText =
         guideText ??
@@ -165,44 +169,46 @@ const DashedDropzoneUploader = <TItem extends object>({
 
     return (
         <div className={classNames(styles.Root, className)} data-variant={variant}>
-            <div
-                className={styles.Dropzone}
-                data-dragging={dragging ? 'true' : 'false'}
-                data-disabled={blocked || !canAddMore ? 'true' : 'false'}
-                onDragEnter={handleDragEnter}
-                onDragOver={handleDragOver}
-                onDragLeave={handleDragLeave}
-                onDrop={handleDrop}
-            >
-                <div className={styles.DropzoneLeft}>
-                    <span className={styles.DropzoneIcon}>
-                        {variant === 'image' ? <FiImage size={30} /> : <FiFile size={30} />}
-                    </span>
-                    <div className={styles.DropzoneText}>
-                        <span className={styles.GuideText}>{resolvedGuideText}</span>
-                        <span className={styles.HelperText}>{resolvedHelperText}</span>
-                    </div>
-                </div>
-                <button
-                    type="button"
-                    className={styles.UploadButton}
-                    disabled={blocked || !canAddMore}
-                    onClick={openFileDialog}
+            {!readOnly ? (
+                <div
+                    className={styles.Dropzone}
+                    data-dragging={dragging ? 'true' : 'false'}
+                    data-disabled={blocked || !canAddMore ? 'true' : 'false'}
+                    onDragEnter={handleDragEnter}
+                    onDragOver={handleDragOver}
+                    onDragLeave={handleDragLeave}
+                    onDrop={handleDrop}
                 >
-                    <FiUploadCloud size={16} />
-                    {uploading ? '업로드 중' : buttonText}
-                </button>
-                <input
-                    ref={inputRef}
-                    id={inputId}
-                    className={styles.HiddenInput}
-                    type="file"
-                    accept={accept ?? (variant === 'image' ? 'image/*' : undefined)}
-                    multiple={resolvedMultiple}
-                    disabled={blocked || !canAddMore}
-                    onChange={handleInputChange}
-                />
-            </div>
+                    <div className={styles.DropzoneLeft}>
+                        <span className={styles.DropzoneIcon}>
+                            {variant === 'image' ? <FiImage size={30} /> : <FiFile size={30} />}
+                        </span>
+                        <div className={styles.DropzoneText}>
+                            <span className={styles.GuideText}>{resolvedGuideText}</span>
+                            <span className={styles.HelperText}>{resolvedHelperText}</span>
+                        </div>
+                    </div>
+                    <button
+                        type="button"
+                        className={styles.UploadButton}
+                        disabled={blocked || !canAddMore}
+                        onClick={openFileDialog}
+                    >
+                        <FiUploadCloud size={16} />
+                        {uploading ? '업로드 중' : buttonText}
+                    </button>
+                    <input
+                        ref={inputRef}
+                        id={inputId}
+                        className={styles.HiddenInput}
+                        type="file"
+                        accept={accept ?? (variant === 'image' ? 'image/*' : undefined)}
+                        multiple={resolvedMultiple}
+                        disabled={blocked || !canAddMore}
+                        onChange={handleInputChange}
+                    />
+                </div>
+            ) : null}
 
             {value.length === 0 ? <p className={styles.EmptyText}>{resolvedEmptyText}</p> : null}
 
@@ -216,19 +222,32 @@ const DashedDropzoneUploader = <TItem extends object>({
                             <div key={getItemKey(item, index)} className={styles.ImageItem}>
                                 <div className={styles.ImageThumb}>
                                     {url ? <img src={url} alt={name} /> : <span>이미지</span>}
+                                    {readOnly ? null : (
+                                        <button
+                                            type="button"
+                                            className={styles.RemoveImageButton}
+                                            disabled={blocked}
+                                            aria-label={`${name} 제거`}
+                                            onClick={() => removeItem(index)}
+                                        >
+                                            <FiX size={14} />
+                                        </button>
+                                    )}
+                                </div>
+                                {onItemClick ? (
                                     <button
                                         type="button"
-                                        className={styles.RemoveImageButton}
-                                        disabled={blocked}
-                                        aria-label={`${name} 제거`}
-                                        onClick={() => removeItem(index)}
+                                        className={styles.ItemNameButton}
+                                        title={name}
+                                        onClick={() => onItemClick(item, index)}
                                     >
-                                        <FiX size={14} />
+                                        {name}
                                     </button>
-                                </div>
-                                <span className={styles.ImageName} title={name}>
-                                    {name}
-                                </span>
+                                ) : (
+                                    <span className={styles.ImageName} title={name}>
+                                        {name}
+                                    </span>
+                                )}
                             </div>
                         );
                     })}
@@ -239,24 +258,43 @@ const DashedDropzoneUploader = <TItem extends object>({
                 <div className={styles.FileList}>
                     {value.map((item, index) => {
                         const name = getItemName(item, index);
-
-                        return (
-                            <div key={getItemKey(item, index)} className={styles.FileItem}>
+                        const fileContent = (
+                            <>
                                 <span className={styles.FileIcon}>
                                     <FiFile size={16} />
                                 </span>
                                 <span className={styles.FileName} title={name}>
                                     {name}
                                 </span>
-                                <button
-                                    type="button"
-                                    className={styles.RemoveFileButton}
-                                    disabled={blocked}
-                                    aria-label={`${name} 제거`}
-                                    onClick={() => removeItem(index)}
-                                >
-                                    <FiX size={14} />
-                                </button>
+                                {readOnly ? null : (
+                                    <button
+                                        type="button"
+                                        className={styles.RemoveFileButton}
+                                        disabled={blocked}
+                                        aria-label={`${name} 제거`}
+                                        onClick={(event) => {
+                                            event.stopPropagation();
+                                            removeItem(index);
+                                        }}
+                                    >
+                                        <FiX size={14} />
+                                    </button>
+                                )}
+                            </>
+                        );
+
+                        return onItemClick ? (
+                            <button
+                                type="button"
+                                key={getItemKey(item, index)}
+                                className={styles.FileItem}
+                                onClick={() => onItemClick?.(item, index)}
+                            >
+                                {fileContent}
+                            </button>
+                        ) : (
+                            <div key={getItemKey(item, index)} className={styles.FileItem}>
+                                {fileContent}
                             </div>
                         );
                     })}
