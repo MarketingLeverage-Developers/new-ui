@@ -26,6 +26,29 @@ type TriggerContentProps = {
     previewOnImageClick: boolean;
 };
 
+const IMAGE_FILE_EXTENSION_REGEX = /\.(avif|bmp|gif|jpe?g|png|svg|webp)(?:$|[?#])/i;
+const PDF_FILE_EXTENSION_REGEX = /\.pdf(?:$|[?#])/i;
+
+const isPreviewableImageFile = (file?: { name?: string; url?: string }) => {
+    if (!file?.url) return false;
+    if (file.url.startsWith('data:image/') || file.url.startsWith('blob:')) return true;
+
+    const fileName = file.name ?? '';
+    return IMAGE_FILE_EXTENSION_REGEX.test(fileName) || IMAGE_FILE_EXTENSION_REGEX.test(file.url);
+};
+
+const isPdfFile = (file?: { name?: string; url?: string }) => {
+    if (!file?.url) return false;
+
+    const fileName = file.name ?? '';
+    return PDF_FILE_EXTENSION_REGEX.test(fileName) || PDF_FILE_EXTENSION_REGEX.test(file.url);
+};
+
+const toPdfPreviewUrl = (url: string) => {
+    const [baseUrl] = url.split('#');
+    return `${baseUrl}#page=1&toolbar=0&navpanes=0&scrollbar=0&view=FitH`;
+};
+
 const TriggerContent = ({
     emptyText,
     buttonText,
@@ -46,8 +69,12 @@ const TriggerContent = ({
             : fileCount === 1
               ? firstFile?.name || firstFile?.url || emptyText
               : `${fileCount.toLocaleString('ko-KR')}개 파일 업로드됨`;
-    const hasSinglePreview = fileCount === 1 && Boolean(firstFile?.url);
+    const hasSingleImagePreview = fileCount === 1 && isPreviewableImageFile(firstFile);
+    const hasSinglePdfPreview = fileCount === 1 && isPdfFile(firstFile);
+    const hasSinglePreview = hasSingleImagePreview || hasSinglePdfPreview;
+    const hasSingleNonPreviewFile = fileCount === 1 && Boolean(firstFile) && !hasSinglePreview;
     const previewAlt = firstFile?.name || '업로드 이미지 원본';
+    const pdfPreviewUrl = hasSinglePdfPreview && firstFile?.url ? toPdfPreviewUrl(firstFile.url) : '';
 
     React.useEffect(() => {
         if (!hasSinglePreview && previewOpen) {
@@ -75,7 +102,17 @@ const TriggerContent = ({
                         onClick={handlePreviewButtonClick}
                         title={helperText ? `${titleText}\n${helperText}` : titleText}
                     >
-                        <img src={firstFile.url} alt={firstFile.name || '업로드 이미지'} />
+                        {hasSinglePdfPreview ? (
+                            <span className={styles.PdfPreview}>
+                                <object data={pdfPreviewUrl} type="application/pdf" aria-label={titleText}>
+                                    <span className={styles.PdfFallback}>
+                                        <span className={styles.PdfFallbackName}>{firstFile.name || 'PDF 파일'}</span>
+                                    </span>
+                                </object>
+                            </span>
+                        ) : (
+                            <img src={firstFile.url} alt={firstFile.name || '업로드 이미지'} />
+                        )}
                     </button>
                     {removable ? (
                         <button
@@ -114,7 +151,11 @@ const TriggerContent = ({
                                     >
                                         <FiX />
                                     </button>
-                                    <img src={firstFile.url} alt={previewAlt} />
+                                    {hasSinglePdfPreview ? (
+                                        <iframe className={styles.PreviewModalPdfFrame} src={pdfPreviewUrl} title={titleText} />
+                                    ) : (
+                                        <img src={firstFile.url} alt={previewAlt} />
+                                    )}
                                 </div>
                             </Modal.Content>
                         </Portal>
@@ -135,6 +176,7 @@ const TriggerContent = ({
             >
                 {buttonLabel}
             </button>
+            {hasSingleNonPreviewFile ? <span className={styles.FileName}>{titleText}</span> : null}
             {removable && fileCount > 0 ? (
                 <button type="button" className={styles.RemoveButton} onClick={clear}>
                     {removeButtonText}

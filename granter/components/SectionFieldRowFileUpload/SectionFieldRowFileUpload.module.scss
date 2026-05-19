@@ -27,6 +27,13 @@
         display: block;
     }
 
+    object {
+        width: 100%;
+        height: 100%;
+        border: 0;
+        pointer-events: none;
+    }
+
     &:hover {
         border-color: var(--granter-gray-300, var(--Gray4));
         box-shadow: 0 8px 18px rgb(15 23 42 / 8%);
@@ -61,6 +68,47 @@
 .UploadButton[data-dragging='true'] {
     background: #e7eefb;
     box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--granter-primary-500, var(--Primary1)) 22%, transparent);
+}
+
+.FileName {
+    max-width: 260px;
+    overflow: hidden;
+    color: var(--granter-gray-700, var(--Gray2));
+    font-size: 14px;
+    line-height: 1.4;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.PdfPreview {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: var(--granter-white, var(--White1));
+}
+
+.PdfFallback {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    padding: 14px;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-end;
+    gap: 8px;
+    background: linear-gradient(180deg, #ffffff 0%, #f3f4f6 100%);
+}
+
+.PdfFallbackName {
+    display: -webkit-box;
+    overflow: hidden;
+    color: var(--granter-gray-700, var(--Gray2));
+    font-size: 12px;
+    line-height: 1.35;
+    text-align: left;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
 }
 
 .RemoveButton {
@@ -125,6 +173,15 @@
     display: inline-flex;
     max-width: 100%;
     max-height: 100%;
+}
+
+.PreviewModalPdfFrame {
+    width: min(90vw, 1050px);
+    height: min(90vh, 930px);
+    border: 0;
+    border-radius: 12px;
+    background: var(--granter-white, var(--White1));
+    box-shadow: 0 22px 48px -20px rgb(15 23 42 / 48%);
 }
 
 .PreviewModalCloseButton {

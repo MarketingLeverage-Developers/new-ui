@@ -5,7 +5,6 @@ import { useFileUploader } from '../../../../FileUploader';
 import { Common } from '../../../../../../../C/Common';
 import Modal, { useModal } from '../../../../../../../shared/headless/Modal/Modal';
 import Portal from '../../../../../../../shared/headless/Portal/Portal';
-import { downloadFileFromUrl } from '../../../../../../../shared/utils/download/download';
 
 type FileType = 'IMAGE' | 'ZIP' | 'VIDEO' | 'ETC';
 const MIN_PREVIEW_ZOOM = 1;
@@ -34,6 +33,38 @@ const isFileType = (value: unknown): value is FileType =>
     value === 'IMAGE' || value === 'ZIP' || value === 'VIDEO' || value === 'ETC';
 
 const isMp4Preview = (name?: string, url?: string) => /\.mp4(?:$|[?#])/i.test(name ?? '') || /\.mp4(?:$|[?#])/i.test(url ?? '');
+const isPdfPreview = (name?: string, url?: string, metaText?: string) =>
+    /\.pdf(?:$|[?#])/i.test(name ?? '') ||
+    /\.pdf(?:$|[?#])/i.test(url ?? '') ||
+    /pdf/i.test(metaText ?? '');
+
+const appendPdfViewerParams = (url: string, params: Record<string, string | number>) => {
+    const [baseUrl, rawHash = ''] = url.split('#');
+    const searchParams = new URLSearchParams(rawHash);
+    Object.entries(params).forEach(([key, value]) => searchParams.set(key, String(value)));
+    return `${baseUrl}#${searchParams.toString()}`;
+};
+
+const getPdfPreviewUrl = (url: string) =>
+    appendPdfViewerParams(url, {
+        page: 1,
+        zoom: 'page-fit',
+        view: 'Fit',
+        toolbar: 1,
+        navpanes: 0,
+    });
+
+const getPdfThumbnailUrl = (url: string) =>
+    appendPdfViewerParams(url, {
+        page: 1,
+        zoom: 'page-fit',
+        view: 'Fit',
+        toolbar: 0,
+        navpanes: 0,
+        scrollbar: 0,
+    });
+
+const getPdfDownloadFileName = (name: string) => (/\.pdf$/i.test(name) ? name : `${name || 'file'}.pdf`);
 
 const ImagePreviewContent = ({ src, name, prefix }: { src: string; name: string; prefix?: string }) => {
     const { closeModal } = useModal();
@@ -103,6 +134,24 @@ const VideoPreviewContent = ({ src, name }: { src: string; name: string }) => {
     );
 };
 
+const PdfPreviewContent = ({ src, name }: { src: string; name: string }) => {
+    const { closeModal } = useModal();
+
+    return (
+        <div className={styles.PdfPreviewFrame}>
+            <div className={styles.PdfPreviewHeader}>
+                <span className={styles.PdfPreviewTitle} title={name}>
+                    {name}
+                </span>
+                <button type="button" className={styles.PdfPreviewClose} onClick={() => closeModal()}>
+                    닫기
+                </button>
+            </div>
+            <iframe className={styles.PdfPreviewIframe} src={getPdfPreviewUrl(src)} title={name} />
+        </div>
+    );
+};
+
 const BaseFileUploaderList: React.FC = () => {
     const { type, serverItems, removeItem, getItemKey, showRemove } = useFileUploader();
     const apiPrefix = import.meta.env.VITE_API_URL ? `${import.meta.env.VITE_API_URL}/api` : undefined;
@@ -146,6 +195,7 @@ const BaseFileUploaderList: React.FC = () => {
         const mapped: PreviewItem[] = items
             .filter((it) => Boolean(it?.fileUUID))
             .map((it) => {
+                const rawFileTypeText = it.fileType ? String(it.fileType) : '';
                 const safeFileType: FileType = isFileType(it.fileType) ? it.fileType : 'ETC';
 
                 return {
@@ -158,7 +208,7 @@ const BaseFileUploaderList: React.FC = () => {
                         fileType: safeFileType,
                     }),
                     name: it.originalFileName || it.storedFileName || 'file',
-                    metaText: safeFileType ? String(safeFileType) : undefined,
+                    metaText: rawFileTypeText || (safeFileType ? String(safeFileType) : undefined),
                     url: it.filePath || undefined,
                 };
             });
@@ -181,11 +231,6 @@ const BaseFileUploaderList: React.FC = () => {
         return encodeUrlBrackets(url);
     };
 
-    const handleFileDownload = async (url: string, fileName: string) => {
-        const downloadUrl = resolveDownloadUrl(url);
-        await downloadFileFromUrl(downloadUrl, fileName);
-    };
-
     if (type === 'file') {
         return (
             <div className={styles.FileList}>
@@ -193,6 +238,68 @@ const BaseFileUploaderList: React.FC = () => {
                     if (p.kind !== 'file') return null;
 
                     const downloadUrl = p.url ? resolveDownloadUrl(p.url) : undefined;
+                    const isPdfFile = isPdfPreview(p.name, p.url, p.metaText);
+                    const downloadFileName = isPdfFile ? getPdfDownloadFileName(p.name) : p.name;
+
+                    if (downloadUrl && isPdfFile) {
+                        return (
+                            <div key={p.key} className={styles.PdfItem}>
+                                <Modal>
+                                    <Modal.Trigger className={styles.PdfTrigger}>
+                                        <div className={styles.PdfThumb}>
+                                            <iframe
+                                                className={styles.PdfThumbIframe}
+                                                src={getPdfThumbnailUrl(downloadUrl)}
+                                                title={`${p.name} thumbnail`}
+                                                tabIndex={-1}
+                                            />
+                                            <div className={styles.ImageDim} />
+                                            <div className={styles.ImageActions}>
+                                                <a
+                                                    className={styles.ImageDownload}
+                                                    href={downloadUrl}
+                                                    download={downloadFileName}
+                                                    target="_blank"
+                                                    rel="noreferrer"
+                                                    aria-label={`download ${downloadFileName}`}
+                                                    onClick={(event) => {
+                                                        event.stopPropagation();
+                                                    }}
+                                                >
+                                                    <RiDownload2Fill />
+                                                </a>
+                                            </div>
+                                            {showRemove ? (
+                                                <button
+                                                    type="button"
+                                                    className={styles.ImageRemove}
+                                                    onClick={(event) => {
+                                                        event.stopPropagation();
+                                                        handleRemove(p.key);
+                                                    }}
+                                                    aria-label="remove file"
+                                                >
+                                                    <span className={styles.RemoveIcon}>×</span>
+                                                </button>
+                                            ) : null}
+                                        </div>
+                                    </Modal.Trigger>
+                                    <Portal>
+                                        <Modal.Backdrop className={styles.ImageModalBackdrop} />
+                                        <Modal.Content className={styles.PdfModalContent}>
+                                            <PdfPreviewContent src={downloadUrl} name={p.name} />
+                                        </Modal.Content>
+                                    </Portal>
+                                </Modal>
+
+                                <div className={styles.ImageCaption}>
+                                    <span className={styles.ImageName} title={p.name}>
+                                        {p.name}
+                                    </span>
+                                </div>
+                            </div>
+                        );
+                    }
 
                     return (
                         <div key={p.key} className={styles.FileBar}>
@@ -207,15 +314,15 @@ const BaseFileUploaderList: React.FC = () => {
 
                             <div className={styles.FileBarRight}>
                                 {downloadUrl ? (
-                                    <button
-                                        type="button"
+                                    <a
                                         className={styles.FileBarLink}
-                                        onClick={() => {
-                                            void handleFileDownload(downloadUrl, p.name);
-                                        }}
+                                        href={downloadUrl}
+                                        download={downloadFileName}
+                                        target="_blank"
+                                        rel="noreferrer"
                                     >
                                         다운로드
-                                    </button>
+                                    </a>
                                 ) : null}
 
                                 {showRemove ? (
@@ -265,11 +372,13 @@ const BaseFileUploaderList: React.FC = () => {
                                         <a
                                             className={styles.ImageDownload}
                                             href={downloadUrl}
-                                            download
+                                            download={p.name}
                                             target="_blank"
                                             rel="noreferrer"
                                             aria-label={`download ${p.name}`}
-                                            onClick={(event) => event.stopPropagation()}
+                                            onClick={(event) => {
+                                                event.stopPropagation();
+                                            }}
                                         >
                                             <RiDownload2Fill />
                                         </a>
