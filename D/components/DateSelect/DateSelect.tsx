@@ -1,10 +1,8 @@
-import DoubleDatePicker from '../../../DoubleDatePicker/DoubleDatePicker';
 import RoundedSelect from '../../../RoundedSelect/RoundedSelect';
-import React, { useEffect, useRef, useState } from 'react';
+import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import Flex from '../../../Flex/Flex';
 import { formatDate } from '../../../shared/utils/utils';
 import type { DateRange } from 'react-day-picker';
-import RangeDatePicker, { type RangeDatePickerPresetKey } from '../../../RangeDatePicker/RangeDatePicker';
 import BasicDropDown from '../../../BasicDropDown/BasicDropDown';
 import { addMonths, endOfMonth, moveDayRange, moveMonth, startOfMonth } from '../../../shared/utils/dateFilter/dateFilter';
 import { BaseTooltip } from '../../../BaseTooltip/BaseTooltip';
@@ -21,6 +19,25 @@ type Props = {
     onChange: (range: DateRange | undefined, period?: string) => void;
     type?: 'basic' | 'preset';
 };
+
+type RangeDatePickerPresetKey =
+    | 'YESTERDAY'
+    | 'TODAY'
+    | 'THIS_MONTH'
+    | 'LAST_MONTH'
+    | 'LAST_7_DAYS'
+    | 'LAST_3_MONTHS'
+    | 'LAST_6_MONTHS'
+    | 'LAST_12_MONTHS'
+    | 'THIS_YEAR'
+    | 'LAST_YEAR'
+    | 'Q1'
+    | 'Q2'
+    | 'Q3'
+    | 'Q4';
+
+const DoubleDatePicker = lazy(() => import('../../../DoubleDatePicker/DoubleDatePicker'));
+const RangeDatePicker = lazy(() => import('../../../RangeDatePicker/RangeDatePicker'));
 
 const presetKeys: RangeDatePickerPresetKey[] = [
     'YESTERDAY',
@@ -345,19 +362,21 @@ export const DateSelect = ({ startDate, endDate, onChange, type = 'basic' }: Pro
                     </BasicDropDown.Trigger>
                 </BaseTooltip>
 
-                <BasicDropDown.Content placement="bottom-center">
-                    {type === 'basic' ? (
-                        <DoubleDatePicker
-                            range={dateRange ?? { from: new Date(), to: new Date() }}
-                            onChange={handleDateRangeChange}
-                        />
-                    ) : (
-                        <RangeDatePicker
-                            range={dateRange ?? { from: new Date(), to: new Date() }}
-                            onChange={handleDateRangeChange}
-                            onPresetSelect={setNavigationPreset}
-                        />
-                    )}
+                <BasicDropDown.Content placement="bottom-center" keepMounted={false}>
+                    <Suspense fallback={null}>
+                        {type === 'basic' ? (
+                            <DoubleDatePicker
+                                range={dateRange ?? { from: new Date(), to: new Date() }}
+                                onChange={handleDateRangeChange}
+                            />
+                        ) : (
+                            <RangeDatePicker
+                                range={dateRange ?? { from: new Date(), to: new Date() }}
+                                onChange={handleDateRangeChange}
+                                onPresetSelect={setNavigationPreset}
+                            />
+                        )}
+                    </Suspense>
                 </BasicDropDown.Content>
             </BasicDropDown>
         </>
