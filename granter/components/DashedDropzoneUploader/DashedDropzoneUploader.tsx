@@ -53,6 +53,25 @@ const firstString = (record: Record<string, unknown>, keys: string[]) => {
     return undefined;
 };
 
+const resolveItemUrl = (url?: string) => {
+    const trimmedUrl = url?.trim() ?? '';
+    if (!trimmedUrl) return '';
+    if (/^([a-z][a-z0-9+.-]*:)?\/\//i.test(trimmedUrl) || /^(data|blob):/i.test(trimmedUrl)) return trimmedUrl;
+
+    const apiOrigin = String(
+        typeof window !== 'undefined' && window.runtimeConfig?.VITE_API_URL
+            ? window.runtimeConfig.VITE_API_URL
+            : import.meta.env.VITE_API_URL ?? ''
+    ).replace(/\/+$/, '');
+
+    if (!apiOrigin) return trimmedUrl;
+
+    const path = trimmedUrl.startsWith('/') ? trimmedUrl : `/${trimmedUrl}`;
+    if (apiOrigin.endsWith('/api') && path.startsWith('/api/')) return `${apiOrigin}${path.slice(4)}`;
+    if (apiOrigin.endsWith('/api') || path.startsWith('/api/')) return `${apiOrigin}${path}`;
+    return `${apiOrigin}/api${path}`;
+};
+
 const getDefaultItemKey = (item: object, index: number) => {
     const record = toRecord(item);
     return (
@@ -72,12 +91,7 @@ const getDefaultItemName = (item: object, index: number) => {
 const getDefaultItemUrl = (item: object) => {
     const record = toRecord(item);
     const url = firstString(record, ['imageUrl', 'filePath', 'fileUrl', 'url']);
-    if (!url || /^https?:\/\//i.test(url) || url.startsWith('blob:') || url.startsWith('data:')) return url;
-
-    const baseUrl = String(import.meta.env.VITE_API_URL ?? '').replace(/\/$/, '');
-    if (!baseUrl) return url;
-
-    return url.startsWith('/') ? `${baseUrl}${url}` : `${baseUrl}/api/${url}`;
+    return resolveItemUrl(url);
 };
 
 const getDefaultItemMetaText = (item: object) => {
