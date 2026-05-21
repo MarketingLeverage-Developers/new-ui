@@ -2,7 +2,7 @@ import Modal from '../../../shared/headless/Modal/Modal';
 import Portal from '../../../shared/headless/Portal/Portal';
 import RoundedBox from '../../../RoundedBox/RoundedBox';
 import Confirm from '../../../Confirm/Confirm';
-import { useToast } from '@/shared/headless/ToastProvider/ToastProvider';
+import { useToast } from '@/components/common/shared/headless/ToastProvider/ToastProvider';
 import type { Result } from '@/shared/types';
 import type { ReactNode } from 'react';
 
@@ -95,7 +95,7 @@ export const ConfirmModal = <T,>({
                                     {descriptionText} <span>{boldText}</span>하시겠습니까?
                                 </>
                             }
-                            description={ subDescriptionText ? <>{subDescriptionText}</> : <></>}
+                            description={subDescriptionText ? <>{subDescriptionText}</> : <></>}
                         />
                     </RoundedBox>
                 </Modal.Content>
