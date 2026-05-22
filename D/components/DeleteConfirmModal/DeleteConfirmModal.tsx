@@ -1,8 +1,8 @@
-import Modal from '@/shared/headless/Modal/Modal';
-import Portal from '@/shared/headless/Portal/Portal';
-import { useToast } from '@/shared/headless/ToastProvider/ToastProvider';
-import Confirm from '@/shared/primitives/Confirm/Confirm';
-import RoundedBox from '@/shared/primitives/RoundedBox/RoundedBox';
+import Confirm from '@/components/common/Confirm/Confirm';
+import RoundedBox from '@/components/common/RoundedBox/RoundedBox';
+import Modal from '@/components/common/shared/headless/Modal/Modal';
+import Portal from '@/components/common/shared/headless/Portal/Portal';
+import { useToast } from '@/components/common/shared/headless/ToastProvider/ToastProvider';
 import type { Result } from '@/shared/types';
 
 type Props<T> = {
