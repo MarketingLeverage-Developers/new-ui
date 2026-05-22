@@ -33,6 +33,7 @@ export type CellRenderMeta<T> = {
     level?: number; // ✅ flatten 용 level
     toggleRowExpanded: (rowKey: string) => void;
     isRowExpanded: (rowKey: string) => boolean;
+    readonly __rowType?: T;
 };
 
 export type SortDirection = 'asc' | 'desc';
@@ -442,7 +443,10 @@ const extractTextFromNode = (node: React.ReactNode): string => {
     if (node === null || node === undefined || typeof node === 'boolean') return '';
     if (typeof node === 'string' || typeof node === 'number') return String(node);
     if (Array.isArray(node)) return node.map(extractTextFromNode).join('');
-    if (React.isValidElement(node)) return extractTextFromNode(node.props?.children);
+    if (React.isValidElement(node)) {
+        const props = node.props as { children?: React.ReactNode };
+        return extractTextFromNode(props.children);
+    }
     return '';
 };
 

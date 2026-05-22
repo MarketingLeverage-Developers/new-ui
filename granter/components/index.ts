@@ -221,6 +221,8 @@ export type {
     DashedDropzoneUploaderProps,
     DashedDropzoneUploaderVariant,
 } from './DashedDropzoneUploader/DashedDropzoneUploader';
+export { default as ImagePreviewBox } from './ImagePreviewBox/ImagePreviewBox';
+export type { ImagePreviewBoxProps } from './ImagePreviewBox/ImagePreviewBox';
 export { default as InlineFileInputUploader } from './InlineFileInputUploader/InlineFileInputUploader';
 export type {
     InlineFileInputUploaderProps,

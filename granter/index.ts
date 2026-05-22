@@ -29,6 +29,7 @@ export { default as SectionIntro } from './components/SectionIntro/SectionIntro'
 export { default as IconHeaderSection } from './components/IconHeaderSection/IconHeaderSection';
 export { default as IconLabelField } from './components/IconLabelField/IconLabelField';
 export { default as DashedDropzoneUploader } from './components/DashedDropzoneUploader/DashedDropzoneUploader';
+export { default as ImagePreviewBox } from './components/ImagePreviewBox/ImagePreviewBox';
 export { default as InlineFileInputUploader } from './components/InlineFileInputUploader/InlineFileInputUploader';
 export { default as EditableUnderlineTabs } from './components/EditableUnderlineTabs/EditableUnderlineTabs';
 export { default as SectionFormDrawerContent } from './components/SectionFormDrawerContent/SectionFormDrawerContent';
@@ -224,6 +225,7 @@ export type {
     DashedDropzoneUploaderProps,
     DashedDropzoneUploaderVariant,
 } from './components/DashedDropzoneUploader/DashedDropzoneUploader';
+export type { ImagePreviewBoxProps } from './components/ImagePreviewBox/ImagePreviewBox';
 export type {
     InlineFileInputUploaderProps,
     InlineFileInputUploaderType,

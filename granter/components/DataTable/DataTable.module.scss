@@ -1,6 +1,10 @@
 .Shell {
     --AirTableScrollCoverBg: var(--granter-white);
 
+    width: 100%;
+    min-width: 0;
+    height: 100%;
+    min-height: 0;
     border-top: 1px solid var(--granter-gray-200);
     border-left: 0;
     border-right: 0;
