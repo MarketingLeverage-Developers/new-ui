@@ -24,6 +24,7 @@ export { default as InsightPanel } from './components/InsightPanel/InsightPanel'
 export { default as SummaryStatList } from './components/SummaryStatList/SummaryStatList';
 export { default as RankedMetricList } from './components/RankedMetricList/RankedMetricList';
 export { default as MetricSummaryStrip } from './components/MetricSummaryStrip/MetricSummaryStrip';
+export { default as PanelHeader } from './components/PanelHeader/PanelHeader';
 export { default as SidebarDrawerLayout } from './components/SidebarDrawerLayout/SidebarDrawerLayout';
 export { default as SectionIntro } from './components/SectionIntro/SectionIntro';
 export { default as IconHeaderSection } from './components/IconHeaderSection/IconHeaderSection';
@@ -197,6 +198,7 @@ export type { BoxLength, BoxProps } from './components/Box/Box';
 export type { FlexProps } from './components/Flex/Flex';
 export type { GridProps } from './components/Grid/Grid';
 export type { SurfacePanelProps } from './components/SurfacePanel/SurfacePanel';
+export type { PanelHeaderProps } from './components/PanelHeader/PanelHeader';
 export type { SectionBlockProps } from './components/SectionBlock/SectionBlock';
 export type { SheetModalProps } from './components/SheetModal/SheetModal';
 export type { CompactPageShellProps } from './components/CompactPageShell/CompactPageShell';

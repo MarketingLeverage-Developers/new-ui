@@ -1,0 +1,39 @@
+.PanelHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    width: 100%;
+    min-width: 0;
+}
+
+.Content {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+}
+
+.Title,
+.Description {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.Separator {
+    flex: 0 0 auto;
+    width: 3px;
+    height: 3px;
+    border-radius: 999px;
+    background-color: var(--granter-gray-300);
+}
+
+.RightSlot {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex: 0 0 auto;
+    min-width: 0;
+}

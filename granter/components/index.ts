@@ -174,6 +174,8 @@ export type { GridProps } from './Grid/Grid';
 
 export { default as SurfacePanel } from './SurfacePanel/SurfacePanel';
 export type { SurfacePanelProps } from './SurfacePanel/SurfacePanel';
+export { default as PanelHeader } from './PanelHeader/PanelHeader';
+export type { PanelHeaderProps } from './PanelHeader/PanelHeader';
 
 export { default as SectionBlock } from './SectionBlock/SectionBlock';
 export type { SectionBlockProps } from './SectionBlock/SectionBlock';
