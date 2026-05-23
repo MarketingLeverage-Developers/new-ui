@@ -102,6 +102,8 @@ export type AnalyticsChartBarModel = {
     noDataLabel?: string;
     dashboardBarMaxWidth?: number;
     dashboardBarGap?: number;
+    dashboardXAxisGap?: number;
+    dashboardXAxisSize?: number;
     legendItems?: AnalyticsChartLegendItem[];
 };
 

@@ -1588,6 +1588,8 @@ const UplotBarChart = ({
     dashboardBarCategoryGap,
     dashboardBarGap,
     dashboardBarXAxisLabelStride,
+    dashboardXAxisGap = 0,
+    dashboardXAxisSize = 40,
     groupedStackSeries,
     avatarRenderer,
     onBarClick,
@@ -1626,6 +1628,8 @@ const UplotBarChart = ({
     dashboardBarGap?: number;
     dashboardBarMaxWidth?: number;
     dashboardBarXAxisLabelStride: number;
+    dashboardXAxisGap?: number;
+    dashboardXAxisSize?: number;
     groupedStackSeries: AnalyticsChartSeries[];
     avatarRenderer?: AnalyticsChartAvatarRenderer;
     onBarClick?: (payload: AnalyticsChartBarClickPayload) => void;
@@ -1729,10 +1733,10 @@ const UplotBarChart = ({
                 strideRef,
                 condensedRef,
                 axisLineColor: isDashboardMetricPreset ? 'transparent' : '#E5E7EB',
-                size: isDashboardMetricPreset ? 40 : 36,
-                gap: isDashboardMetricPreset ? 0 : 8,
+                size: isDashboardMetricPreset ? dashboardXAxisSize : 36,
+                gap: isDashboardMetricPreset ? dashboardXAxisGap : 8,
             }),
-        [condensedRef, isDashboardMetricPreset, labelsRef, strideRef]
+        [condensedRef, dashboardXAxisGap, dashboardXAxisSize, isDashboardMetricPreset, labelsRef, strideRef]
     );
     const yAxis = useMemo(
         () =>
@@ -2921,6 +2925,8 @@ const AnalyticsChart = ({
                                     dashboardBarGap={barChart.dashboardBarGap ?? dashboardBarLayout.barGap}
                                     dashboardBarMaxWidth={barChart.dashboardBarMaxWidth}
                                     dashboardBarXAxisLabelStride={dashboardBarXAxisLabelStride}
+                                    dashboardXAxisGap={barChart.dashboardXAxisGap}
+                                    dashboardXAxisSize={barChart.dashboardXAxisSize}
                                     groupedStackSeries={barSeries}
                                     avatarRenderer={avatarRenderer}
                                     onBarClick={onBarClick}
