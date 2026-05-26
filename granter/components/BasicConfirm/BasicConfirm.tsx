@@ -5,6 +5,7 @@ import styles from './BasicConfirm.module.scss';
 export type BasicConfirmProps = {
     title: React.ReactNode;
     description?: React.ReactNode;
+    subText?: React.ReactNode;
     onCancel: () => unknown | Promise<unknown>;
     onConfirm: () => unknown | Promise<unknown>;
     icon?: React.ReactNode;
@@ -17,6 +18,7 @@ export type BasicConfirmProps = {
 const BasicConfirm = ({
     title,
     description,
+    subText,
     onCancel,
     onConfirm,
     icon,
@@ -44,6 +46,7 @@ const BasicConfirm = ({
             <div className={styles.Texts}>
                 <h3 className={styles.Title}>{title}</h3>
                 {description ? <p className={styles.Description}>{description}</p> : null}
+                {subText ? <p className={styles.SubText}>{subText}</p> : null}
             </div>
 
             <div className={classNames(styles.Actions, actionsClassName)}>

@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 import Trigger from './components/Trigger/Trigger';
 
 type ToggleContextType = {
@@ -35,10 +35,6 @@ const Toggle = (({ children, defaultValue = false, value, onChange }: ToggleProp
         }
         return next;
     };
-
-    useEffect(() => {
-        console.log('toggleValue', toggleValue);
-    }, [toggleValue]);
 
     return <ToggleContext.Provider value={{ toggleValue, changeToggle }}>{children}</ToggleContext.Provider>;
 }) as ToggleComponent;
