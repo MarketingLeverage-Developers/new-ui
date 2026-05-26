@@ -1,0 +1,162 @@
+.Root {
+    display: flex;
+    width: 100%;
+    min-width: 0;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.HelperText {
+    margin: 0;
+    color: var(--granter-gray-500, #64748b);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+}
+
+.List {
+    display: flex;
+    width: 100%;
+    min-width: 0;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.Option {
+    display: flex;
+    width: 100%;
+    min-width: 0;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border: 1px solid transparent;
+    border-radius: 9px;
+    background: transparent;
+    color: var(--granter-gray-800, #1f2937);
+    cursor: pointer;
+    font: inherit;
+    letter-spacing: 0;
+    text-align: left;
+    transition:
+        background-color 140ms ease,
+        border-color 140ms ease,
+        color 140ms ease;
+}
+
+.Option:hover:not(:disabled) {
+    background: #f8fafc;
+}
+
+.Option[data-selected='true'] {
+    border-color: transparent;
+    background: #f3f7ff;
+    color: #1d4ed8;
+}
+
+.Option:disabled {
+    cursor: not-allowed;
+    opacity: 0.62;
+}
+
+.Indicator {
+    box-sizing: border-box;
+    flex: 0 0 18px;
+    width: 18px;
+    min-width: 18px;
+    height: 18px;
+    min-height: 18px;
+    aspect-ratio: 1 / 1;
+    display: block;
+    overflow: visible;
+}
+
+.IndicatorHalo {
+    fill: rgb(37 99 235 / 8%);
+    opacity: 0;
+    transition: opacity 140ms ease;
+}
+
+.IndicatorRing {
+    fill: #fff;
+    stroke: #cbd5e1;
+    stroke-width: 2;
+    vector-effect: non-scaling-stroke;
+    transition: stroke 140ms ease;
+}
+
+.IndicatorDot {
+    fill: #2563eb;
+    opacity: 0;
+    transform: scale(0.7);
+    transform-origin: center;
+    transition:
+        opacity 140ms ease,
+        transform 140ms ease;
+}
+
+.Option[data-selected='true'] .IndicatorRing {
+    stroke: #2563eb;
+}
+
+.Option[data-selected='true'] .IndicatorHalo {
+    opacity: 1;
+}
+
+.Option[data-selected='true'] .IndicatorDot {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.Copy {
+    display: flex;
+    min-width: 0;
+    flex: 1 1 auto;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.Label {
+    min-width: 0;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+    overflow-wrap: anywhere;
+}
+
+.Description {
+    color: var(--granter-gray-500, #64748b);
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 18px;
+    overflow-wrap: anywhere;
+}
+
+.Right {
+    flex: none;
+    margin-left: auto;
+    color: var(--granter-gray-700, #374151);
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 18px;
+    white-space: nowrap;
+}
+
+.Option[data-selected='true'] .Right {
+    color: #1d4ed8;
+}
+
+@media (max-width: 720px) {
+    .Option {
+        gap: 9px;
+        padding: 9px 11px;
+    }
+
+    .Indicator {
+        flex-basis: 18px;
+        width: 18px;
+        min-width: 18px;
+        height: 18px;
+        min-height: 18px;
+    }
+
+}
