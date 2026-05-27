@@ -1,5 +1,6 @@
 .ImageTrigger img {
     width: var(--width, 100%);
+    height: var(--height, auto);
     aspect-ratio: 1/1;
     border-radius: 3%;
     object-fit: cover;

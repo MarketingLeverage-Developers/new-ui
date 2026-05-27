@@ -16,20 +16,29 @@ type Props = {
     showName?: boolean;
     name?: string;
 };
+
+const resolveImageUrl = (image: string) => {
+    if (/^(?:https?:)?\/\//i.test(image) || image.startsWith('blob:') || image.startsWith('data:')) return image;
+
+    const apiBaseUrl = import.meta.env.VITE_API_URL ?? '';
+    const normalizedImage = image.startsWith('/api/') ? image.slice(4) : image;
+    return `${apiBaseUrl}/api${normalizedImage}`;
+};
+
 const ImageModalBox = ({ width, height, image, showName = false, name }: Props) => {
     const cssVariables: CSSVariables = {
         '--width': toCssUnit(width),
         '--height': toCssUnit(height),
     };
+    const imageUrl = image ? resolveImageUrl(image) : '';
+
     return (
         <Modal>
             <Modal.Trigger className={styles.ImageTrigger}>
                 <Flex direction="column" gap={4}>
-                    {image ? (
-                        <img src={`${import.meta.env.VITE_API_URL}/api${image}`} style={{ ...cssVariables }} />
-                    ) : null}
+                    {imageUrl ? <img src={imageUrl} alt={name ?? 'image preview'} style={{ ...cssVariables }} /> : null}
                     {showName && (
-                        <Text fontSize={13} color={getThemeColor('Gray2')} fontWeight={500}>
+                        <Text fontSize={13} textColor={getThemeColor('Gray2')} fontWeight={500}>
                             {name}
                         </Text>
                     )}
@@ -38,7 +47,7 @@ const ImageModalBox = ({ width, height, image, showName = false, name }: Props) 
             <Portal>
                 <Modal.Backdrop className={styles.ImageModalBackdrop} />
                 <Modal.Content className={styles.ImageModalContent}>
-                    <img src={`${import.meta.env.VITE_API_URL}/api${image}`} />
+                    <img src={imageUrl} alt={name ?? 'image preview'} />
                 </Modal.Content>
             </Portal>
         </Modal>

@@ -272,6 +272,14 @@ const DashedDropzoneUploader = <TItem extends object>({
             })),
         [getItemKey, getItemMetaText, getItemName, getItemUrl, value]
     );
+    const visibleReadOnlyItems = useMemo(() => {
+        if (variant !== 'file') return readOnlyItems;
+
+        return readOnlyItems.filter((file) => {
+            const fallbackName = `첨부 ${file.index + 1}`;
+            return Boolean(file.url || (file.name.trim() && file.name !== fallbackName));
+        });
+    }, [readOnlyItems, variant]);
 
     const downloadAttachment = async (url: string, fileName: string) => {
         if (!url) {
@@ -288,14 +296,18 @@ const DashedDropzoneUploader = <TItem extends object>({
     };
 
     if (readOnly) {
+        if (visibleReadOnlyItems.length === 0 && !showEmpty) return null;
+
         return (
             <div className={classNames(styles.Root, className)} data-variant={variant} data-readonly="true">
-                {value.length === 0 && showEmpty ? <p className={styles.EmptyText}>{resolvedEmptyText}</p> : null}
+                {visibleReadOnlyItems.length === 0 && showEmpty ? (
+                    <p className={styles.EmptyText}>{resolvedEmptyText}</p>
+                ) : null}
 
-                {variant === 'image' && value.length > 0 ? (
+                {variant === 'image' && visibleReadOnlyItems.length > 0 ? (
                     <>
                         <div className={styles.ReadOnlyImageList}>
-                            {readOnlyItems.map((image) => (
+                            {visibleReadOnlyItems.map((image) => (
                                 <div key={image.key} className={styles.ReadOnlyImageItem}>
                                     <div className={styles.ReadOnlyImageThumbWrap}>
                                         <button
@@ -359,9 +371,9 @@ const DashedDropzoneUploader = <TItem extends object>({
                     </>
                 ) : null}
 
-                {variant === 'file' && value.length > 0 ? (
+                {variant === 'file' && visibleReadOnlyItems.length > 0 ? (
                     <div className={styles.ReadOnlyFileList}>
-                        {readOnlyItems.map((file) => (
+                        {visibleReadOnlyItems.map((file) => (
                             <div key={file.key} className={styles.ReadOnlyFileItem}>
                                 <div className={styles.ReadOnlyFileMeta}>
                                     <span className={styles.ReadOnlyFileName} title={file.name}>

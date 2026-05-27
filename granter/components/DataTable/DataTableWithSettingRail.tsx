@@ -129,10 +129,12 @@ const DataTableWithSettingRail = <T,>({
                 pinnedHeaderTextColor={pinnedHeaderTextColor}
                 getRowStyle={getRowStyle}
             >
-                <div style={{ position: 'relative', width: '100%', minWidth: 0 }}>
+                <div style={{ position: 'relative', width: '100%', height: '100%', minWidth: 0, minHeight: 0 }}>
                     <div
                         style={{
                             minWidth: 0,
+                            minHeight: 0,
+                            height: '100%',
                             boxSizing: 'border-box',
                             paddingRight: reservedRightSpace,
                             transition: 'padding-right 0.18s ease',
