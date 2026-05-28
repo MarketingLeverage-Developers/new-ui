@@ -15,8 +15,8 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 6px;
-    padding: 10px 14px;
+    gap: 0;
+    padding: 0;
     border: 0;
     border-bottom: 2px solid var(--granter-gray-200);
     background: transparent;
@@ -33,7 +33,7 @@
     align-items: center;
     justify-content: center;
     min-width: 0;
-    padding: 0;
+    padding: 10px 14px;
     border: 0;
     background: transparent;
     color: inherit;
@@ -58,7 +58,8 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 2px;
+    align-self: stretch;
+    padding: 0 10px 0 2px;
     border: 0;
     background: transparent;
     color: inherit;
@@ -82,6 +83,7 @@
 }
 
 .Add {
+    padding: 10px 14px;
     border-bottom-color: var(--granter-gray-200);
     background: var(--granter-gray-100);
     color: var(--granter-gray-400);
