@@ -25,6 +25,8 @@ export type DashedDropzoneUploaderProps<TItem extends object> = {
     getItemMetaText?: (item: TItem, index: number) => string | undefined;
     onItemClick?: (item: TItem, index: number) => void;
     maxFiles?: number;
+    maxFileSizeBytes?: number;
+    maxFileSizeLabel?: string;
     multiple?: boolean;
     accept?: string;
     disabled?: boolean;
@@ -45,6 +47,11 @@ type PreviewImage = {
 
 const MP4_PATTERN = /\.mp4(?:$|[?#])/i;
 const isMp4Preview = (name?: string, url?: string) => MP4_PATTERN.test(name ?? '') || MP4_PATTERN.test(url ?? '');
+
+const formatFileSizeLimit = (bytes: number) => {
+    const mb = bytes / (1024 * 1024);
+    return `${Number.isInteger(mb) ? mb : mb.toFixed(1)}MB`;
+};
 
 const toRecord = (item: object): Record<string, unknown> => item as Record<string, unknown>;
 
@@ -184,6 +191,8 @@ const DashedDropzoneUploader = <TItem extends object>({
     getItemMetaText = getDefaultItemMetaText,
     onItemClick,
     maxFiles,
+    maxFileSizeBytes,
+    maxFileSizeLabel,
     multiple,
     accept,
     disabled = false,
@@ -225,12 +234,39 @@ const DashedDropzoneUploader = <TItem extends object>({
         inputRef.current?.click();
     };
 
+    const isOverMaxFileSize = (file: File) =>
+        typeof maxFileSizeBytes === 'number' && maxFileSizeBytes > 0 && file.size > maxFileSizeBytes;
+
+    const showFileSizeError = (files: File[]) => {
+        if (!maxFileSizeBytes || files.length === 0) return;
+
+        const limitLabel = maxFileSizeLabel ?? formatFileSizeLimit(maxFileSizeBytes);
+        const message =
+            files.length === 1
+                ? `${files[0].name} 파일은 ${limitLabel} 이하만 업로드할 수 있습니다.`
+                : `${limitLabel} 이하 파일만 업로드할 수 있습니다. ${files.length}개 파일이 제외되었습니다.`;
+
+        addToast({
+            message,
+            type: 'error',
+            duration: 2400,
+            dismissible: true,
+        });
+    };
+
     const commitUpload = async (files: File[]) => {
         if (blocked || files.length === 0 || !canAddMore || !uploader) return;
 
+        const oversizedFiles = files.filter(isOverMaxFileSize);
+        showFileSizeError(oversizedFiles);
+
+        const sizeValidFiles = oversizedFiles.length ? files.filter((file) => !isOverMaxFileSize(file)) : files;
         const remainingCount = resolvedMultiple ? Math.max(resolvedMaxFiles - value.length, 0) : 1;
-        const uploadFiles = files.slice(0, remainingCount);
-        if (uploadFiles.length === 0) return;
+        const uploadFiles = sizeValidFiles.slice(0, remainingCount);
+        if (uploadFiles.length === 0) {
+            if (inputRef.current) inputRef.current.value = '';
+            return;
+        }
 
         setUploading(true);
         try {
