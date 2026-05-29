@@ -1,6 +1,6 @@
 import React, { useEffect, useId, useMemo, useRef, useState } from 'react';
 import classNames from 'classnames';
-import { FiDownload, FiFile, FiImage, FiUploadCloud, FiX } from 'react-icons/fi';
+import { FiDownload, FiFile, FiImage, FiPlayCircle, FiUploadCloud, FiX } from 'react-icons/fi';
 import BasicModal from '../BasicModal/BasicModal';
 import { useToast } from '@/components/common/shared/headless/ToastProvider/ToastProvider';
 import { downloadFileFromUrl } from '@/components/common/shared/utils/download/download';
@@ -40,7 +40,11 @@ export type DashedDropzoneUploaderProps<TItem extends object> = {
 type PreviewImage = {
     name: string;
     url: string;
+    type: 'image' | 'video';
 };
+
+const MP4_PATTERN = /\.mp4(?:$|[?#])/i;
+const isMp4Preview = (name?: string, url?: string) => MP4_PATTERN.test(name ?? '') || MP4_PATTERN.test(url ?? '');
 
 const toRecord = (item: object): Record<string, unknown> => item as Record<string, unknown>;
 
@@ -152,6 +156,22 @@ const ReadOnlyImagePreview = ({ preview, onClose }: { preview: PreviewImage; onC
         </div>
     );
 };
+
+const ReadOnlyVideoPreview = ({ preview, onClose }: { preview: PreviewImage; onClose: () => void }) => (
+    <div className={styles.ReadOnlyVideoPreviewViewport} onClick={onClose}>
+        <div className={styles.ReadOnlyVideoPreviewCanvas} onClick={(event) => event.stopPropagation()}>
+            <video
+                className={styles.ReadOnlyVideoPreviewPlayer}
+                src={preview.url}
+                controls
+                autoPlay
+                playsInline
+                muted
+                aria-label={preview.name}
+            />
+        </div>
+    </div>
+);
 
 const DashedDropzoneUploader = <TItem extends object>({
     variant,
@@ -307,51 +327,68 @@ const DashedDropzoneUploader = <TItem extends object>({
                 {variant === 'image' && visibleReadOnlyItems.length > 0 ? (
                     <>
                         <div className={styles.ReadOnlyImageList}>
-                            {visibleReadOnlyItems.map((image) => (
-                                <div key={image.key} className={styles.ReadOnlyImageItem}>
-                                    <div className={styles.ReadOnlyImageThumbWrap}>
-                                        <button
-                                            type="button"
-                                            className={styles.ReadOnlyImageThumbButton}
-                                            disabled={!image.url}
-                                            onClick={() => {
-                                                if (!image.url) return;
-                                                onItemClick?.(image.item, image.index);
-                                                setPreview({ name: image.name, url: image.url });
-                                            }}
-                                        >
-                                            {image.url ? (
-                                                <img src={image.url} alt={image.name} />
-                                            ) : (
-                                                <span>
-                                                    <FiImage size={18} />
-                                                    이미지
-                                                </span>
-                                            )}
-                                        </button>
-                                        <div className={styles.ReadOnlyImageDim} />
-                                        <div className={styles.ReadOnlyImageActions}>
+                            {visibleReadOnlyItems.map((image) => {
+                                const isVideo = isMp4Preview(image.name, image.url);
+
+                                return (
+                                    <div key={image.key} className={styles.ReadOnlyImageItem}>
+                                        <div className={styles.ReadOnlyImageThumbWrap}>
                                             <button
                                                 type="button"
-                                                className={styles.ReadOnlyImageDownloadButton}
-                                                aria-label={`${image.name} 다운로드`}
+                                                className={styles.ReadOnlyImageThumbButton}
                                                 disabled={!image.url}
-                                                onClick={(event) => {
-                                                    event.stopPropagation();
-                                                    void downloadAttachment(image.url, image.name);
+                                                onClick={() => {
+                                                    if (!image.url) return;
+                                                    onItemClick?.(image.item, image.index);
+                                                    setPreview({
+                                                        name: image.name,
+                                                        url: image.url,
+                                                        type: isVideo ? 'video' : 'image',
+                                                    });
                                                 }}
                                             >
-                                                <FiDownload size={24} />
+                                                {image.url ? (
+                                                    isVideo ? (
+                                                        <video src={image.url} preload="metadata" muted playsInline />
+                                                    ) : (
+                                                        <img src={image.url} alt={image.name} />
+                                                    )
+                                                ) : (
+                                                    <span>
+                                                        <FiImage size={18} />
+                                                        이미지
+                                                    </span>
+                                                )}
                                             </button>
+                                            {isVideo ? (
+                                                <span className={styles.VideoBadge} aria-hidden="true">
+                                                    <FiPlayCircle />
+                                                </span>
+                                            ) : null}
+                                            <div className={styles.ReadOnlyImageDim} />
+                                            <div className={styles.ReadOnlyImageActions}>
+                                                <button
+                                                    type="button"
+                                                    className={styles.ReadOnlyImageDownloadButton}
+                                                    aria-label={`${image.name} 다운로드`}
+                                                    disabled={!image.url}
+                                                    onClick={(event) => {
+                                                        event.stopPropagation();
+                                                        void downloadAttachment(image.url, image.name);
+                                                    }}
+                                                >
+                                                    <FiDownload size={24} />
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div className={styles.ReadOnlyImageCaption}>
+                                            <span className={styles.ReadOnlyImageName} title={image.name}>
+                                                {image.name}
+                                            </span>
                                         </div>
                                     </div>
-                                    <div className={styles.ReadOnlyImageCaption}>
-                                        <span className={styles.ReadOnlyImageName} title={image.name}>
-                                            {image.name}
-                                        </span>
-                                    </div>
-                                </div>
-                            ))}
+                                );
+                            })}
                         </div>
 
                         <BasicModal
@@ -364,7 +401,11 @@ const DashedDropzoneUploader = <TItem extends object>({
                             backdropClassName={styles.ReadOnlyImagePreviewModalBackdrop}
                             content={
                                 preview ? (
-                                    <ReadOnlyImagePreview preview={preview} onClose={() => setPreview(null)} />
+                                    preview.type === 'video' ? (
+                                        <ReadOnlyVideoPreview preview={preview} onClose={() => setPreview(null)} />
+                                    ) : (
+                                        <ReadOnlyImagePreview preview={preview} onClose={() => setPreview(null)} />
+                                    )
                                 ) : null
                             }
                         />
@@ -452,11 +493,25 @@ const DashedDropzoneUploader = <TItem extends object>({
                     {value.map((item, index) => {
                         const url = getItemUrl(item, index);
                         const name = getItemName(item, index);
+                        const isVideo = isMp4Preview(name, url);
 
                         return (
                             <div key={getItemKey(item, index)} className={styles.ImageItem}>
                                 <div className={styles.ImageThumb}>
-                                    {url ? <img src={url} alt={name} /> : <span>이미지</span>}
+                                    {url ? (
+                                        isVideo ? (
+                                            <video src={url} preload="metadata" muted playsInline />
+                                        ) : (
+                                            <img src={url} alt={name} />
+                                        )
+                                    ) : (
+                                        <span>이미지</span>
+                                    )}
+                                    {isVideo ? (
+                                        <span className={styles.VideoBadge} aria-hidden="true">
+                                            <FiPlayCircle />
+                                        </span>
+                                    ) : null}
                                     {readOnly ? null : (
                                         <button
                                             type="button"
