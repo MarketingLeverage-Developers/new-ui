@@ -1,6 +1,7 @@
 import React, { useEffect, useId, useMemo, useRef, useState } from 'react';
 import classNames from 'classnames';
 import { FiDownload, FiFile, FiImage, FiPlayCircle, FiUploadCloud, FiX } from 'react-icons/fi';
+import { IoIosCloseCircle } from 'react-icons/io';
 import BasicModal from '../BasicModal/BasicModal';
 import { useToast } from '@/components/common/shared/headless/ToastProvider/ToastProvider';
 import { downloadFileFromUrl } from '@/components/common/shared/utils/download/download';
@@ -117,6 +118,20 @@ const getDefaultItemMetaText = (item: object) => {
     return extension ? extension.toUpperCase() : 'FILE';
 };
 
+const ReadOnlyPreviewCloseButton = ({ onClose }: { onClose: () => void }) => (
+    <button
+        type="button"
+        className={styles.ReadOnlyPreviewClose}
+        aria-label="미리보기 닫기"
+        onClick={(event) => {
+            event.stopPropagation();
+            onClose();
+        }}
+    >
+        <IoIosCloseCircle size={28} />
+    </button>
+);
+
 const ReadOnlyImagePreview = ({ preview, onClose }: { preview: PreviewImage; onClose: () => void }) => {
     const [zoom, setZoom] = useState(MIN_PREVIEW_ZOOM);
     const scrollRef = useRef<HTMLDivElement>(null);
@@ -141,41 +156,47 @@ const ReadOnlyImagePreview = ({ preview, onClose }: { preview: PreviewImage; onC
     }, []);
 
     return (
-        <div
-            ref={scrollRef}
-            className={styles.ReadOnlyImagePreviewViewport}
-            style={{
-                overflowX: isZoomedIn ? 'auto' : 'hidden',
-                overflowY: isZoomedIn ? 'auto' : 'hidden',
-            }}
-            onClick={onClose}
-        >
+        <div className={styles.ReadOnlyPreviewFrame}>
+            <ReadOnlyPreviewCloseButton onClose={onClose} />
             <div
-                className={styles.ReadOnlyImagePreviewCanvas}
+                ref={scrollRef}
+                className={styles.ReadOnlyImagePreviewViewport}
                 style={{
-                    width: `${zoom * 100}%`,
-                    height: `${zoom * 100}%`,
+                    overflowX: isZoomedIn ? 'auto' : 'hidden',
+                    overflowY: isZoomedIn ? 'auto' : 'hidden',
                 }}
-                onClick={(event) => event.stopPropagation()}
+                onClick={onClose}
             >
-                <img className={styles.ReadOnlyImagePreviewImage} src={preview.url} alt={preview.name} />
+                <div
+                    className={styles.ReadOnlyImagePreviewCanvas}
+                    style={{
+                        width: `${zoom * 100}%`,
+                        height: `${zoom * 100}%`,
+                    }}
+                    onClick={(event) => event.stopPropagation()}
+                >
+                    <img className={styles.ReadOnlyImagePreviewImage} src={preview.url} alt={preview.name} />
+                </div>
             </div>
         </div>
     );
 };
 
 const ReadOnlyVideoPreview = ({ preview, onClose }: { preview: PreviewImage; onClose: () => void }) => (
-    <div className={styles.ReadOnlyVideoPreviewViewport} onClick={onClose}>
-        <div className={styles.ReadOnlyVideoPreviewCanvas} onClick={(event) => event.stopPropagation()}>
-            <video
-                className={styles.ReadOnlyVideoPreviewPlayer}
-                src={preview.url}
-                controls
-                autoPlay
-                playsInline
-                muted
-                aria-label={preview.name}
-            />
+    <div className={styles.ReadOnlyPreviewFrame}>
+        <ReadOnlyPreviewCloseButton onClose={onClose} />
+        <div className={styles.ReadOnlyVideoPreviewViewport} onClick={onClose}>
+            <div className={styles.ReadOnlyVideoPreviewCanvas} onClick={(event) => event.stopPropagation()}>
+                <video
+                    className={styles.ReadOnlyVideoPreviewPlayer}
+                    src={preview.url}
+                    controls
+                    autoPlay
+                    playsInline
+                    muted
+                    aria-label={preview.name}
+                />
+            </div>
         </div>
     </div>
 );

@@ -532,6 +532,33 @@ button.FileItem {
     box-shadow: none;
 }
 
+.ReadOnlyPreviewFrame {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+}
+
+.ReadOnlyPreviewClose {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--granter-white);
+    cursor: pointer;
+    filter: drop-shadow(0 1px 2px rgb(0 0 0 / 45%));
+}
+
+.ReadOnlyPreviewClose svg {
+    display: block;
+}
+
 .ReadOnlyImagePreviewViewport {
     display: flex;
     width: 100%;
