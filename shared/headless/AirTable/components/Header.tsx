@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { MIN_COL_WIDTH, useAirTableContext } from '../AirTable';
 import type { CellRenderMeta, FilterState, SortConfig, SortDirection, SortValue } from '../AirTable';
@@ -18,7 +18,6 @@ const stopOnly = (e: React.SyntheticEvent) => {
 };
 
 const AIRTABLE_BODY_CELL_ATTR = 'data-airtable-body-cell';
-const AIRTABLE_HEADER_CELL_ATTR = 'data-airtable-header-cell';
 
 const escapeSelectorValue = (value: string) => {
     if (typeof CSS !== 'undefined' && typeof CSS.escape === 'function') {
@@ -98,43 +97,6 @@ const measureRenderedBodyColumnWidth = (tableAreaEl: HTMLDivElement | null, colK
     } finally {
         document.body.removeChild(host);
     }
-};
-
-const measureRenderedHeaderColumnWidth = (headerEl: HTMLDivElement | null, colKey: string) => {
-    if (!headerEl || typeof document === 'undefined') return 0;
-
-    const selector = `[${AIRTABLE_HEADER_CELL_ATTR}="true"][data-col-key="${escapeSelectorValue(colKey)}"]`;
-    const cell = headerEl.querySelector<HTMLElement>(selector);
-    if (!cell) return 0;
-
-    const host = document.createElement('div');
-    host.style.position = 'fixed';
-    host.style.left = '-99999px';
-    host.style.top = '0';
-    host.style.visibility = 'hidden';
-    host.style.pointerEvents = 'none';
-    host.style.width = 'max-content';
-    host.style.height = 'auto';
-    host.style.overflow = 'visible';
-    host.style.zIndex = '-1';
-
-    document.body.appendChild(host);
-
-    try {
-        const clone = cell.cloneNode(true) as HTMLElement;
-        prepareCloneForMeasurement(clone);
-        host.appendChild(clone);
-        return Math.ceil(clone.getBoundingClientRect().width);
-    } finally {
-        document.body.removeChild(host);
-    }
-};
-
-const areWidthRecordsEqual = (a: Record<string, number>, b: Record<string, number>) => {
-    const aKeys = Object.keys(a);
-    const bKeys = Object.keys(b);
-    if (aKeys.length !== bKeys.length) return false;
-    return aKeys.every((key) => a[key] === b[key]);
 };
 
 const SortIcon = ({
@@ -683,29 +645,7 @@ export const Header = <T,>({ className, headerCellClassName, resizeHandleClassNa
         y: number;
     }>({ open: false, colKey: null, x: 0, y: 0 });
 
-    const headerRootRef = useRef<HTMLDivElement | null>(null);
     const filterButtonRef = useRef<HTMLButtonElement | null>(null);
-    const [renderedHeaderMinWidthByKey, setRenderedHeaderMinWidthByKey] = useState<Record<string, number>>({});
-
-    useLayoutEffect(() => {
-        const next: Record<string, number> = {};
-
-        baseOrder.forEach((key) => {
-            const width = measureRenderedHeaderColumnWidth(headerRootRef.current, key);
-            if (width <= 0) return;
-            next[key] = Math.max(MIN_COL_WIDTH, width);
-        });
-
-        setRenderedHeaderMinWidthByKey((prev) => (areWidthRecordsEqual(prev, next) ? prev : next));
-    }, [baseOrder, columnRow.columns, data, gridTemplateColumns]);
-
-    useEffect(() => {
-        Object.entries(renderedHeaderMinWidthByKey).forEach(([key, minWidth]) => {
-            const currentWidth = widthByKey[key] ?? defaultColWidth;
-            if (currentWidth >= minWidth) return;
-            resizeColumn(key, minWidth);
-        });
-    }, [renderedHeaderMinWidthByKey, widthByKey, defaultColWidth, resizeColumn]);
 
     const openFilter = useCallback((colKey: string, e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
@@ -815,11 +755,10 @@ export const Header = <T,>({ className, headerCellClassName, resizeHandleClassNa
 
             const startX = getXInGrid(e.clientX);
             const startWidth = widthByKey[colKey] ?? defaultColWidth;
-            const minWidth = renderedHeaderMinWidthByKey[colKey] ?? MIN_COL_WIDTH;
 
-            resizeRef.current = { key: colKey, startX, startWidth, minWidth };
+            resizeRef.current = { key: colKey, startX, startWidth, minWidth: MIN_COL_WIDTH };
         },
-        [getXInGrid, widthByKey, defaultColWidth, renderedHeaderMinWidthByKey, resizeRef]
+        [getXInGrid, widthByKey, defaultColWidth, resizeRef]
     );
 
     const handleResizeDoubleClick = useCallback(
@@ -828,11 +767,11 @@ export const Header = <T,>({ className, headerCellClassName, resizeHandleClassNa
             e.stopPropagation();
 
             const contentWidth = measureRenderedBodyColumnWidth(tableAreaRef.current, colKey);
-            const fallbackWidth = renderedHeaderMinWidthByKey[colKey] ?? MIN_COL_WIDTH;
+            const fallbackWidth = MIN_COL_WIDTH;
 
             resizeColumn(colKey, Math.max(fallbackWidth, contentWidth || fallbackWidth));
         },
-        [renderedHeaderMinWidthByKey, resizeColumn, tableAreaRef]
+        [resizeColumn, tableAreaRef]
     );
 
     const handleHeaderMouseDown = (colKey: string) => (e: React.MouseEvent<HTMLDivElement>) => {
@@ -911,7 +850,6 @@ export const Header = <T,>({ className, headerCellClassName, resizeHandleClassNa
     return (
         <>
             <div
-                ref={headerRootRef}
                 className={className}
                 style={{
                     position: 'sticky',
