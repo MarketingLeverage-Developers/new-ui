@@ -47,7 +47,29 @@ type PreviewImage = {
 };
 
 const MP4_PATTERN = /\.mp4(?:$|[?#])/i;
+const IMAGE_PREVIEW_PATTERN = /\.(?:png|jpe?g|gif|webp|bmp|svg)(?:$|[?#])/i;
 const isMp4Preview = (name?: string, url?: string) => MP4_PATTERN.test(name ?? '') || MP4_PATTERN.test(url ?? '');
+const isImagePreview = (name?: string, url?: string, metaText?: string) => {
+    const normalizedMeta = metaText?.toLowerCase() ?? '';
+    return (
+        IMAGE_PREVIEW_PATTERN.test(name ?? '') ||
+        IMAGE_PREVIEW_PATTERN.test(url ?? '') ||
+        normalizedMeta.startsWith('image/') ||
+        ['png', 'jpg', 'jpeg', 'gif', 'webp', 'bmp', 'svg'].includes(normalizedMeta)
+    );
+};
+
+const getPreviewType = (
+    variant: DashedDropzoneUploaderVariant,
+    name?: string,
+    url?: string,
+    metaText?: string
+): PreviewImage['type'] | null => {
+    if (!url) return null;
+    if (isMp4Preview(name, url)) return 'video';
+    if (variant === 'image' || isImagePreview(name, url, metaText)) return 'image';
+    return null;
+};
 
 const formatFileSizeLimit = (bytes: number) => {
     const mb = bytes / (1024 * 1024);
@@ -372,6 +394,44 @@ const DashedDropzoneUploader = <TItem extends object>({
         await downloadFileFromUrl(url, fileName);
     };
 
+    const openPreview = (
+        item: TItem,
+        index: number,
+        name: string,
+        url: string,
+        type: PreviewImage['type'] | null
+    ) => {
+        if (!url || !type) return;
+
+        onItemClick?.(item, index);
+        setPreview({
+            name,
+            url,
+            type,
+        });
+    };
+
+    const previewModal = (
+        <BasicModal
+            open={Boolean(preview)}
+            onChange={() => setPreview(null)}
+            width="100%"
+            height="90%"
+            maxHeight="90vh"
+            contentClassName={styles.ReadOnlyImagePreviewModalContent}
+            backdropClassName={styles.ReadOnlyImagePreviewModalBackdrop}
+            content={
+                preview ? (
+                    preview.type === 'video' ? (
+                        <ReadOnlyVideoPreview preview={preview} onClose={() => setPreview(null)} />
+                    ) : (
+                        <ReadOnlyImagePreview preview={preview} onClose={() => setPreview(null)} />
+                    )
+                ) : null
+            }
+        />
+    );
+
     if (readOnly) {
         if (visibleReadOnlyItems.length === 0 && !showEmpty) return null;
 
@@ -385,7 +445,8 @@ const DashedDropzoneUploader = <TItem extends object>({
                     <>
                         <div className={styles.ReadOnlyImageList}>
                             {visibleReadOnlyItems.map((image) => {
-                                const isVideo = isMp4Preview(image.name, image.url);
+                                const previewType = getPreviewType(variant, image.name, image.url, image.metaText);
+                                const isVideo = previewType === 'video';
 
                                 return (
                                     <div key={image.key} className={styles.ReadOnlyImageItem}>
@@ -396,12 +457,7 @@ const DashedDropzoneUploader = <TItem extends object>({
                                                 disabled={!image.url}
                                                 onClick={() => {
                                                     if (!image.url) return;
-                                                    onItemClick?.(image.item, image.index);
-                                                    setPreview({
-                                                        name: image.name,
-                                                        url: image.url,
-                                                        type: isVideo ? 'video' : 'image',
-                                                    });
+                                                    openPreview(image.item, image.index, image.name, image.url, previewType);
                                                 }}
                                             >
                                                 {image.url ? (
@@ -448,24 +504,7 @@ const DashedDropzoneUploader = <TItem extends object>({
                             })}
                         </div>
 
-                        <BasicModal
-                            open={Boolean(preview)}
-                            onChange={() => setPreview(null)}
-                            width="100%"
-                            height="90%"
-                            maxHeight="90vh"
-                            contentClassName={styles.ReadOnlyImagePreviewModalContent}
-                            backdropClassName={styles.ReadOnlyImagePreviewModalBackdrop}
-                            content={
-                                preview ? (
-                                    preview.type === 'video' ? (
-                                        <ReadOnlyVideoPreview preview={preview} onClose={() => setPreview(null)} />
-                                    ) : (
-                                        <ReadOnlyImagePreview preview={preview} onClose={() => setPreview(null)} />
-                                    )
-                                ) : null
-                            }
-                        />
+                        {previewModal}
                     </>
                 ) : null}
 
@@ -550,20 +589,30 @@ const DashedDropzoneUploader = <TItem extends object>({
                     {value.map((item, index) => {
                         const url = getItemUrl(item, index);
                         const name = getItemName(item, index);
-                        const isVideo = isMp4Preview(name, url);
+                        const metaText = getItemMetaText(item, index);
+                        const previewType = getPreviewType(variant, name, url, metaText);
+                        const isVideo = previewType === 'video';
+                        const canPreview = Boolean(url && previewType);
 
                         return (
                             <div key={getItemKey(item, index)} className={styles.ImageItem}>
                                 <div className={styles.ImageThumb}>
-                                    {url ? (
-                                        isVideo ? (
-                                            <video src={url} preload="metadata" muted playsInline />
+                                    <button
+                                        type="button"
+                                        className={styles.ImageThumbPreviewButton}
+                                        disabled={!canPreview}
+                                        onClick={() => openPreview(item, index, name, url ?? '', previewType)}
+                                    >
+                                        {url ? (
+                                            isVideo ? (
+                                                <video src={url} preload="metadata" muted playsInline />
+                                            ) : (
+                                                <img src={url} alt={name} />
+                                            )
                                         ) : (
-                                            <img src={url} alt={name} />
-                                        )
-                                    ) : (
-                                        <span>이미지</span>
-                                    )}
+                                            <span>이미지</span>
+                                        )}
+                                    </button>
                                     {isVideo ? (
                                         <span className={styles.VideoBadge} aria-hidden="true">
                                             <FiPlayCircle />
@@ -581,12 +630,18 @@ const DashedDropzoneUploader = <TItem extends object>({
                                         </button>
                                     )}
                                 </div>
-                                {onItemClick ? (
+                                {canPreview || onItemClick ? (
                                     <button
                                         type="button"
                                         className={styles.ItemNameButton}
                                         title={name}
-                                        onClick={() => onItemClick(item, index)}
+                                        onClick={() => {
+                                            if (canPreview) {
+                                                openPreview(item, index, name, url ?? '', previewType);
+                                                return;
+                                            }
+                                            onItemClick?.(item, index);
+                                        }}
                                     >
                                         {name}
                                     </button>
@@ -605,10 +660,21 @@ const DashedDropzoneUploader = <TItem extends object>({
                 <div className={styles.FileList}>
                     {value.map((item, index) => {
                         const name = getItemName(item, index);
+                        const url = getItemUrl(item, index);
+                        const metaText = getItemMetaText(item, index);
+                        const previewType = getPreviewType(variant, name, url, metaText);
+                        const canPreview = Boolean(url && previewType);
+                        const clickable = canPreview || Boolean(onItemClick);
                         const fileContent = (
                             <>
                                 <span className={styles.FileIcon}>
-                                    <FiFile size={16} />
+                                    {previewType === 'video' ? (
+                                        <FiPlayCircle size={16} />
+                                    ) : previewType === 'image' ? (
+                                        <FiImage size={16} />
+                                    ) : (
+                                        <FiFile size={16} />
+                                    )}
                                 </span>
                                 <span className={styles.FileName} title={name}>
                                     {name}
@@ -630,12 +696,18 @@ const DashedDropzoneUploader = <TItem extends object>({
                             </>
                         );
 
-                        return onItemClick ? (
+                        return clickable ? (
                             <button
                                 type="button"
                                 key={getItemKey(item, index)}
                                 className={styles.FileItem}
-                                onClick={() => onItemClick?.(item, index)}
+                                onClick={() => {
+                                    if (canPreview) {
+                                        openPreview(item, index, name, url ?? '', previewType);
+                                        return;
+                                    }
+                                    onItemClick?.(item, index);
+                                }}
                             >
                                 {fileContent}
                             </button>
@@ -647,6 +719,8 @@ const DashedDropzoneUploader = <TItem extends object>({
                     })}
                 </div>
             ) : null}
+
+            {previewModal}
         </div>
     );
 };

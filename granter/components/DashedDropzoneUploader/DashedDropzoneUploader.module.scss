@@ -142,6 +142,24 @@
     background: var(--granter-gray-100);
 }
 
+.ImageThumbPreviewButton {
+    display: flex;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--granter-gray-400);
+    cursor: pointer;
+}
+
+.ImageThumbPreviewButton:disabled {
+    cursor: default;
+}
+
 .ImageThumb img,
 .ImageThumb video {
     display: block;
