@@ -353,10 +353,10 @@ const HeaderDateRangeControl = ({
     const nextRange = React.useMemo(() => shiftRangeBySelection(selectedRange, 1, mode), [mode, selectedRange]);
     const isNextDisabled = React.useMemo(() => {
         if (allowFutureDates) return false;
-        if (!nextRange?.to) return true;
+        if (!nextRange?.from) return true;
 
-        if (mode === 'month') return isAfterMonth(nextRange.to, today);
-        return startOfDay(nextRange.to).getTime() > startOfDay(today).getTime();
+        if (mode === 'month') return !nextRange.to || isAfterMonth(nextRange.to, today);
+        return startOfDay(nextRange.from).getTime() > startOfDay(today).getTime();
     }, [allowFutureDates, mode, nextRange, today]);
 
     return (
