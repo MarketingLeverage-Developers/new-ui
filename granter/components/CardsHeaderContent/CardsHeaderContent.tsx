@@ -150,6 +150,16 @@ const addMonthsClamped = (date: Date, diff: number) => {
 const isAfterMonth = (a: Date, b: Date) =>
     a.getFullYear() > b.getFullYear() || (a.getFullYear() === b.getFullYear() && a.getMonth() > b.getMonth());
 
+const isFullMonthRange = (value: DateRange | undefined) => {
+    const bounds = getRangeBounds(value);
+    if (!bounds) return false;
+
+    return (
+        bounds.from.getTime() === startOfMonth(bounds.from).getTime() &&
+        bounds.to.getTime() === endOfMonth(bounds.to).getTime()
+    );
+};
+
 const parseDateRangeLabel = (label: React.ReactNode): DateRange | undefined => {
     if (typeof label !== 'string') return undefined;
 
@@ -212,6 +222,17 @@ const shiftRangeBySelection = (value: DateRange | undefined, diff: number, mode:
     if (!bounds) return undefined;
 
     if (mode === 'month') {
+        const monthOffset = (getSelectedMonthCount(value) ?? 1) * diff;
+        const shiftedFrom = addMonthsClamped(bounds.from, monthOffset);
+        const shiftedTo = addMonthsClamped(bounds.to, monthOffset);
+
+        return {
+            from: startOfMonth(shiftedFrom),
+            to: endOfMonth(shiftedTo),
+        };
+    }
+
+    if (isFullMonthRange(value)) {
         const monthOffset = (getSelectedMonthCount(value) ?? 1) * diff;
         const shiftedFrom = addMonthsClamped(bounds.from, monthOffset);
         const shiftedTo = addMonthsClamped(bounds.to, monthOffset);
