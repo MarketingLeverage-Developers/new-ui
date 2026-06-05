@@ -116,5 +116,7 @@ export type AnalyticsChartProps = {
     showTitle?: boolean;
     showLegend?: boolean;
     headerMeta?: AnalyticsChartHeaderMeta | null;
+    reserveHeaderMetaSpace?: boolean;
+    showBarValueLabels?: boolean;
     onBarClick?: (payload: AnalyticsChartBarClickPayload) => void;
 };

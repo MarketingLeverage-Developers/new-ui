@@ -130,6 +130,8 @@ const MIN_VERTICAL_CHART_PADDING = 12;
 const DEFAULT_BAR_Y_AXIS_MAX_TICK_COUNT = 6;
 const DASHBOARD_BAR_Y_AXIS_MAX_TICK_COUNT = 5;
 const BAR_BORDER_RADIUS = 3;
+const BAR_VALUE_LABEL_MIN_WIDTH = 18;
+const BAR_VALUE_LABEL_MIN_HEIGHT = 14;
 const LINE_CHART_REVEAL_DURATION_MS = 650;
 const INTEGER_AXIS_INCREMENTS = [
     1, 2, 5, 10, 20, 25, 50, 100, 200, 250, 500, 1000, 2000, 2500, 5000, 10000,
@@ -1577,6 +1579,7 @@ const UplotBarChart = ({
     barPresentation,
     tooltipMode,
     dashboardBarMaxWidth,
+    showBarValueLabels,
     barYAxisWidth,
     barYAxisIntegerOnly,
     metricBarDomain,
@@ -1627,6 +1630,7 @@ const UplotBarChart = ({
     dashboardBarCategoryGap: number;
     dashboardBarGap?: number;
     dashboardBarMaxWidth?: number;
+    showBarValueLabels?: boolean;
     dashboardBarXAxisLabelStride: number;
     dashboardXAxisGap?: number;
     dashboardXAxisSize?: number;
@@ -1654,6 +1658,7 @@ const UplotBarChart = ({
     const barPresentationRef = useLatestRef(barPresentation);
     const dashboardPresetRef = useLatestRef(isDashboardMetricPreset);
     const dashboardBarMaxWidthRef = useLatestRef(dashboardBarMaxWidth);
+    const showBarValueLabelsRef = useLatestRef(Boolean(showBarValueLabels));
     const barTickFormatterRef = useLatestRef(barTickFormatter);
     const onBarClickRef = useLatestRef(onBarClick);
 
@@ -1850,6 +1855,34 @@ const UplotBarChart = ({
                                 ctx.fill();
                             });
 
+                            if (showBarValueLabelsRef.current) {
+                                ctx.textAlign = 'center';
+                                ctx.textBaseline = 'middle';
+                                ctx.font = `600 ${11 * pxRatio}px ${FONT_FAMILY}`;
+                                ctx.fillStyle = '#FFFFFF';
+                                ctx.shadowColor = 'rgba(15, 23, 42, 0.28)';
+                                ctx.shadowBlur = 2 * pxRatio;
+                                ctx.shadowOffsetY = 1 * pxRatio;
+
+                                rects.forEach((rect) => {
+                                    if (
+                                        rect.width < BAR_VALUE_LABEL_MIN_WIDTH ||
+                                        rect.height < BAR_VALUE_LABEL_MIN_HEIGHT
+                                    ) {
+                                        return;
+                                    }
+
+                                    const value = Number(barDataRef.current[rect.idx]?.[rect.seriesKey] ?? 0);
+                                    if (!Number.isFinite(value) || value === 0) return;
+
+                                    ctx.fillText(
+                                        formatNumericValue(Math.abs(value)),
+                                        (rect.left + rect.width / 2) * pxRatio,
+                                        (rect.top + rect.height / 2) * pxRatio
+                                    );
+                                });
+                            }
+
                             ctx.restore();
                         },
                     ],
@@ -1863,7 +1896,9 @@ const UplotBarChart = ({
             getCurrentBarRects,
             isGroupedStackBar,
             onBarClickRef,
+            showBarValueLabelsRef,
             syncBarGeometry,
+            barDataRef,
         ]
     );
 
@@ -2650,6 +2685,8 @@ const AnalyticsChart = ({
     showTitle = true,
     showLegend = true,
     headerMeta,
+    reserveHeaderMetaSpace = false,
+    showBarValueLabels = false,
     onBarClick,
 }: AnalyticsChartProps) => {
     const [chartAreaElement, setChartAreaElement] = useState<HTMLDivElement | null>(null);
@@ -2841,6 +2878,7 @@ const AnalyticsChart = ({
         [barChart.legendItems, barSeries]
     );
     const hasHeaderMeta = Boolean(headerMeta && headerMeta.items.length > 0);
+    const shouldRenderHeaderMetaSpace = hasHeaderMeta || reserveHeaderMetaSpace;
 
     return (
         <div style={containerStyle}>
@@ -2849,24 +2887,30 @@ const AnalyticsChart = ({
                     {title}
                 </Text>
             ) : null}
-            {hasHeaderMeta ? (
-                <div style={headerMetaStyle}>
-                    <span style={headerMetaTitleStyle}>{headerMeta?.title ?? '선택된 금액'}</span>
-                    {headerMeta?.items.map((item, index) => (
-                        <span
-                            key={`${item.label}-${index}`}
-                            style={{
-                                ...(item.tone === 'positive'
-                                    ? headerMetaItemPositiveStyle
-                                    : item.tone === 'negative'
-                                      ? headerMetaItemNegativeStyle
-                                      : headerMetaItemStyle),
-                                ...(item.color ? { color: item.color } : {}),
-                            }}
-                        >
-                            {item.label}: {item.value}
-                        </span>
-                    ))}
+            {shouldRenderHeaderMetaSpace ? (
+                <div style={{ ...headerMetaStyle, visibility: hasHeaderMeta ? 'visible' : 'hidden' }}>
+                    {hasHeaderMeta ? (
+                        <>
+                            <span style={headerMetaTitleStyle}>{headerMeta?.title ?? '선택된 금액'}</span>
+                            {headerMeta?.items.map((item, index) => (
+                                <span
+                                    key={`${item.label}-${index}`}
+                                    style={{
+                                        ...(item.tone === 'positive'
+                                            ? headerMetaItemPositiveStyle
+                                            : item.tone === 'negative'
+                                              ? headerMetaItemNegativeStyle
+                                              : headerMetaItemStyle),
+                                        ...(item.color ? { color: item.color } : {}),
+                                    }}
+                                >
+                                    {item.label}: {item.value}
+                                </span>
+                            ))}
+                        </>
+                    ) : (
+                        <span style={headerMetaTitleStyle}>선택된 기간</span>
+                    )}
                 </div>
             ) : null}
 
@@ -2924,6 +2968,7 @@ const AnalyticsChart = ({
                                     dashboardBarCategoryGap={dashboardBarLayout.categoryGap}
                                     dashboardBarGap={barChart.dashboardBarGap ?? dashboardBarLayout.barGap}
                                     dashboardBarMaxWidth={barChart.dashboardBarMaxWidth}
+                                    showBarValueLabels={showBarValueLabels}
                                     dashboardBarXAxisLabelStride={dashboardBarXAxisLabelStride}
                                     dashboardXAxisGap={barChart.dashboardXAxisGap}
                                     dashboardXAxisSize={barChart.dashboardXAxisSize}
