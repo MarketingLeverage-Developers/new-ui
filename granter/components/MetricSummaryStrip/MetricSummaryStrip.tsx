@@ -17,7 +17,7 @@ export type MetricSummaryStripItem = {
             tone?: 'default' | 'positive';
             color?: string;
         };
-        right: {
+        right?: {
             icon?: React.ReactNode;
             main: React.ReactNode;
             sub?: React.ReactNode;
@@ -35,6 +35,7 @@ export type MetricSummaryStripProps = {
     className?: string;
     itemClassName?: string;
     layoutKey?: string;
+    reserveMissingSplitRight?: boolean;
 };
 
 const MetricSummaryStrip = React.memo(({
@@ -42,6 +43,7 @@ const MetricSummaryStrip = React.memo(({
     className,
     itemClassName,
     layoutKey,
+    reserveMissingSplitRight = false,
 }: MetricSummaryStripProps) => (
     <div className={classNames(styles.Strip, className)}>
         {items.map((item) => {
@@ -50,7 +52,12 @@ const MetricSummaryStrip = React.memo(({
                     <Text as="p" size="md" tone="muted" weight="regular" className={styles.Label}>
                         {item.label}
                     </Text>
-                    <div key={layoutKey != null ? `${item.key}-${layoutKey}` : undefined} className={styles.SplitMetrics}>
+                    <div
+                        key={layoutKey != null ? `${item.key}-${layoutKey}` : undefined}
+                        className={styles.SplitMetrics}
+                        data-has-right={item.splitMetrics.right ? 'true' : 'false'}
+                        data-reserve-missing-right={reserveMissingSplitRight ? 'true' : 'false'}
+                    >
                         <div className={styles.SplitColumn} data-tone={item.splitMetrics.left.tone ?? 'default'} style={item.splitMetrics.left.color ? { '--split-main-color': item.splitMetrics.left.color, '--split-sub-color': item.splitMetrics.left.color } as React.CSSProperties : undefined}>
                             <div className={styles.SplitMainRow}>
                                 {item.splitMetrics.left.icon ? (
@@ -66,21 +73,25 @@ const MetricSummaryStrip = React.memo(({
                                 </Text>
                             ) : null}
                         </div>
-                        <div className={styles.SplitColumn} data-tone={item.splitMetrics.right.tone ?? 'positive'} style={item.splitMetrics.right.color ? { '--split-main-color': item.splitMetrics.right.color, '--split-sub-color': item.splitMetrics.right.color } as React.CSSProperties : undefined}>
-                            <div className={styles.SplitMainRow}>
-                                {item.splitMetrics.right.icon ? (
-                                    <span className={styles.SplitIcon}>{item.splitMetrics.right.icon}</span>
-                                ) : null}
-                                <Text as="p" className={styles.SplitMainValue} tone="inherit">
-                                    {item.splitMetrics.right.main}
-                                </Text>
-                                {item.splitMetrics.right.sub != null ? (
-                                    <Text as="p" className={styles.SplitSubValue} tone="inherit">
-                                        {item.splitMetrics.right.sub}
+                        {item.splitMetrics.right ? (
+                            <div className={styles.SplitColumn} data-tone={item.splitMetrics.right.tone ?? 'positive'} style={item.splitMetrics.right.color ? { '--split-main-color': item.splitMetrics.right.color, '--split-sub-color': item.splitMetrics.right.color } as React.CSSProperties : undefined}>
+                                <div className={styles.SplitMainRow}>
+                                    {item.splitMetrics.right.icon ? (
+                                        <span className={styles.SplitIcon}>{item.splitMetrics.right.icon}</span>
+                                    ) : null}
+                                    <Text as="p" className={styles.SplitMainValue} tone="inherit">
+                                        {item.splitMetrics.right.main}
                                     </Text>
-                                ) : null}
+                                    {item.splitMetrics.right.sub != null ? (
+                                        <Text as="p" className={styles.SplitSubValue} tone="inherit">
+                                            {item.splitMetrics.right.sub}
+                                        </Text>
+                                    ) : null}
+                                </div>
                             </div>
-                        </div>
+                        ) : reserveMissingSplitRight ? (
+                            <div className={classNames(styles.SplitColumn, styles.SplitColumnPlaceholder)} aria-hidden />
+                        ) : null}
                     </div>
                 </>
             ) : (
