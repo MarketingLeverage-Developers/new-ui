@@ -5,6 +5,21 @@
     // flex-direction: column;
 }
 
+.toolbar {
+    min-width: 0;
+}
+
+.shell {
+    --AirTableScrollCoverBg: var(--granter-white);
+
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
+    border-top: 1px solid var(--granter-gray-200);
+    overflow: hidden;
+    background-color: var(--granter-white);
+}
+
 /* ✅ header + body를 column으로 쌓고, body만 스크롤로 만들기 */
 .container {
     width: 100%;
@@ -16,17 +31,20 @@
 
 .header {
     // flex: 0 0 auto;
-    background-color: var(--Gray6);
+    border-bottom: 1px solid var(--granter-gray-200);
+    background-color: var(--granter-gray-50);
 }
 
 .headerCell {
-    font-size: 15px;
+    font-size: 13px;
     font-weight: 400;
-    color: var(--Gray1);
-    height: 44px;
+    line-height: 20px;
+    color: var(--granter-gray-400);
+    min-height: 48px;
+    padding: 0 18px;
+    border-right: 0;
     display: flex;
     align-items: center;
-    justify-content: center;
     user-select: none;
 
     // &:first-child {
@@ -40,11 +58,11 @@
     // min-height: 0; /* ✅ 줄어들 수 있어야 overflow가 걸림 */
     // overflow: auto;
     max-height: var(--basic-table-body-max-height);
-    background-color: var(--basic-table-body-background-color, var(--White1));
+    background-color: var(--basic-table-body-background-color, var(--granter-white));
 
     /* Firefox */
     scrollbar-width: thin;
-    scrollbar-color: var(--ScrollbarThumb, var(--Gray5)) var(--ScrollbarTrack, transparent);
+    scrollbar-color: var(--ScrollbarThumb, var(--granter-gray-200)) var(--ScrollbarTrack, transparent);
 }
 
 .body::-webkit-scrollbar {
@@ -53,7 +71,7 @@
 }
 
 .body::-webkit-scrollbar-thumb {
-    background-color: var(--ScrollbarThumb, var(--Gray5));
+    background-color: var(--ScrollbarThumb, var(--granter-gray-200));
     border-radius: var(--RadiusPill, 9999px);
 }
 
@@ -66,26 +84,116 @@
 }
 
 .row {
-    // border-bottom: 1px solid var(--Gray5);
+    border-bottom: 1px solid var(--granter-gray-200);
+}
+
+.row:last-child {
+    border-bottom: 0;
+}
+
+.row:hover .cell {
+    background-color: var(--granter-gray-50);
 }
 
 .cell {
-    font-size: 15px;
-    height: 44px;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 20px;
+    min-height: 52px;
+    padding: 0 8px;
     border: none;
     display: flex;
     align-items: center;
-    justify-content: center;
-    color: var(--Black1);
-    border-bottom: 1px solid var(--Gray5);
+    color: var(--granter-gray-900);
+    border-right: 0;
+    position: relative;
 }
 
 .selected {
-    background: color-mix(in srgb, var(--Blue1) 12%, transparent) !important;
+    background: rgba(2, 132, 199, 0.08) !important;
+}
+
+.active {
+    background-color: rgba(2, 132, 199, 0.12) !important;
+    outline: 1px solid var(--granter-sky-500);
+    outline-offset: -1px;
+}
+
+.detailRow {
+    border-bottom: 1px solid var(--granter-gray-200);
+}
+
+.detailCell {
+    background-color: var(--granter-white);
 }
 
 .ghost {
     pointer-events: none;
+}
+
+.emptyState {
+    background-color: var(--granter-white);
+}
+
+.Trigger:hover {
+    background-color: var(--granter-gray-50) !important;
+}
+
+.shell :global([data-col-sort-btn='true']) {
+    right: 32px !important;
+    width: 16px !important;
+    height: 16px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    color: var(--granter-gray-400) !important;
+    opacity: 1 !important;
+    z-index: 70 !important;
+}
+
+.shell :global([data-col-sort-btn='true'] svg) {
+    display: block !important;
+}
+
+.shell :global(
+        .air-table-header-cell:has([data-col-sort-btn='true'], [data-col-menu-btn='true']) > [data-col-header-content='true']
+    ) {
+    padding-right: 0 !important;
+}
+
+.shell :global([data-col-menu-btn='true']) {
+    right: 12px !important;
+    width: 16px !important;
+    height: 16px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    z-index: 70 !important;
+}
+
+.shell :global([data-col-menu-btn='true'] svg) {
+    display: block !important;
+}
+
+.shell :global([data-col-resize-handle='true']) {
+    top: 32% !important;
+    height: 36% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.shell :global([data-col-resize-handle='true'] > div) {
+    width: 2px !important;
+    height: 100% !important;
+    border-radius: 999px !important;
+    background: rgba(148, 163, 184, 0.5) !important;
+}
+
+.shell :global(.air-table-header-cell:last-child) {
+    border-right: 0 !important;
 }
 /* =========================
    ✅ Table Setting Panel (공통)
