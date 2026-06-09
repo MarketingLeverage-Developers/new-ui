@@ -1,5 +1,7 @@
 import React, { useCallback, useMemo } from 'react';
 import classNames from 'classnames';
+import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
+import { useLabeledPillTabsScroll } from './useLabeledPillTabsScroll';
 import styles from './LabeledPillTabs.module.scss';
 
 export type LabeledPillTabsTone =
@@ -97,12 +99,17 @@ const LabeledPillTabs = <T extends string = string>({
             }),
         [carousel, carouselDirection, currentIndex, items]
     );
+
     const hasPrevVisible = displayedItems.some(
         ({ carouselRole, carouselSide }) => carouselRole === 'side' && carouselSide === 'prev'
     );
     const hasNextVisible = displayedItems.some(
         ({ carouselRole, carouselSide }) => carouselRole === 'side' && carouselSide === 'next'
     );
+    const { tabsRef, scrollState, shouldShowScrollButtons, getScrollButtonProps } = useLabeledPillTabsScroll({
+        disabled: carousel,
+        refreshKey: items,
+    });
 
     const handleItemSelect = useCallback(
         (itemValue: T, isActive: boolean) => {
@@ -124,6 +131,17 @@ const LabeledPillTabs = <T extends string = string>({
         >
             {label ? <span className={styles.Label}>{label}</span> : null}
             <div className={styles.Carousel} data-fill={fill ? 'true' : 'false'}>
+                {shouldShowScrollButtons ? (
+                    <button
+                        type="button"
+                        className={styles.NavButton}
+                        aria-label="이전 탭 보기"
+                        disabled={!scrollState.canScrollPrev}
+                        {...getScrollButtonProps('prev')}
+                    >
+                        <FiChevronLeft size={15} strokeWidth={2.2} aria-hidden />
+                    </button>
+                ) : null}
                 <div
                     className={styles.Viewport}
                     data-carousel={carousel ? 'true' : 'false'}
@@ -131,6 +149,7 @@ const LabeledPillTabs = <T extends string = string>({
                     data-fill={fill ? 'true' : 'false'}
                 >
                     <div
+                        ref={tabsRef}
                         className={classNames(styles.Tabs, tabsClassName)}
                         role="tablist"
                         data-carousel={carousel ? 'true' : 'false'}
@@ -177,6 +196,17 @@ const LabeledPillTabs = <T extends string = string>({
                         })}
                     </div>
                 </div>
+                {shouldShowScrollButtons ? (
+                    <button
+                        type="button"
+                        className={styles.NavButton}
+                        aria-label="다음 탭 보기"
+                        disabled={!scrollState.canScrollNext}
+                        {...getScrollButtonProps('next')}
+                    >
+                        <FiChevronRight size={15} strokeWidth={2.2} aria-hidden />
+                    </button>
+                ) : null}
             </div>
         </div>
     );
