@@ -33,6 +33,8 @@ export type PageTemplateProps = {
     onSubSidebarCollapsedChange?: (collapsed: boolean) => void;
     subSidebarCollapseAriaLabel?: string;
     subSidebarCollapseMode?: 'shrink' | 'overlay';
+    subSidebarExpandBehavior?: 'expand' | 'overlay';
+    subSidebarOverlayCloseKey?: React.Key;
     subSidebarCollapsedContent?: React.ReactNode;
 };
 
@@ -60,6 +62,8 @@ const PageTemplate = ({
     onSubSidebarCollapsedChange,
     subSidebarCollapseAriaLabel = '서브 사이드바 접기/펼치기',
     subSidebarCollapseMode = 'shrink',
+    subSidebarExpandBehavior = 'expand',
+    subSidebarOverlayCloseKey,
     subSidebarCollapsedContent,
 }: PageTemplateProps) => {
     const hasSubSidebar = Boolean(subSidebar);
@@ -129,6 +133,10 @@ const PageTemplate = ({
     };
     const handleSubSidebarExpand = () => {
         clearSubSidebarPreviewCloseTimer();
+        if (isSubSidebarOverlayMode && subSidebarExpandBehavior === 'overlay') {
+            setSubSidebarPreviewOpen(true);
+            return;
+        }
         setSubSidebarPreviewOpen(false);
         updateSubSidebarCollapsed(false);
     };
@@ -173,6 +181,11 @@ const PageTemplate = ({
             setSubSidebarPreviewOpen(false);
         }
     }, [resolvedSubSidebarCollapsed]);
+    React.useEffect(() => {
+        if (subSidebarOverlayCloseKey === undefined) return;
+        clearSubSidebarPreviewCloseTimer();
+        setSubSidebarPreviewOpen(false);
+    }, [subSidebarOverlayCloseKey]);
 
     React.useEffect(
         () => () => {
@@ -240,12 +253,13 @@ const PageTemplate = ({
                         : subSidebar}
                 </SubSidebar>
             ) : null}
-            {subSidebarCollapsible && hasSubSidebar && !resolvedSubSidebarCollapsed ? (
+            {subSidebarCollapsible && hasSubSidebar && (!resolvedSubSidebarCollapsed || showSubSidebarOverlay) ? (
                 <Tooltip content="서브 사이드바 닫기" side="right">
                     <button
                         type="button"
                         className={styles.SubSidebarToggle}
                         data-collapsed={resolvedSubSidebarCollapsed ? 'true' : 'false'}
+                        data-overlay-open={isSubSidebarPreviewOpen ? 'true' : 'false'}
                         onClick={handleSubSidebarCollapse}
                         aria-label={subSidebarCollapseAriaLabel}
                     >
@@ -277,7 +291,10 @@ const PageTemplate = ({
                         </button>
                     </Tooltip>
                 ) : null}
-                {subSidebarCollapsible && hasSubSidebar && resolvedSubSidebarCollapsed ? (
+                {subSidebarCollapsible &&
+                hasSubSidebar &&
+                resolvedSubSidebarCollapsed &&
+                !showSubSidebarOverlay ? (
                     <Tooltip content="서브 사이드바 열기" side="right" align="start">
                         <button
                             type="button"
