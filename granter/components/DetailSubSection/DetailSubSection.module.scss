@@ -1,0 +1,139 @@
+.Root {
+    display: grid;
+    min-width: 0;
+    overflow: visible;
+    border: 1px solid var(--granter-gray-200, #e5e7eb);
+    border-radius: 8px;
+    background: var(--granter-white, #fff);
+    box-shadow: none;
+}
+
+.Header {
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 14px;
+}
+
+.TitleWrap {
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    gap: 8px;
+}
+
+.IconBox {
+    display: inline-flex;
+    width: 16px;
+    height: 16px;
+    flex: 0 0 16px;
+    align-items: center;
+    justify-content: center;
+    color: var(--granter-blue-600, #2563eb);
+}
+
+.IconBox[data-tone='indigo'] {
+    color: var(--granter-indigo-600, #4f46e5);
+}
+
+.IconBox[data-tone='orange'] {
+    color: #f97316;
+}
+
+.IconBox[data-tone='violet'] {
+    color: #7c3aed;
+}
+
+.IconBox[data-tone='emerald'] {
+    color: #059669;
+}
+
+.IconBox[data-tone='amber'] {
+    color: #d97706;
+}
+
+.IconBox[data-tone='slate'] {
+    color: var(--granter-gray-600, #475569);
+}
+
+.IconBox svg {
+    width: 13px;
+    height: 13px;
+    stroke-width: 2;
+}
+
+.TitleText {
+    display: grid;
+    min-width: 0;
+    gap: 2px;
+}
+
+.Title,
+.Description {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.Title {
+    color: var(--granter-gray-900, #111827);
+}
+
+.Actions {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 6px;
+}
+
+.RightSlot {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.ToggleButton {
+    display: inline-flex;
+    width: 24px;
+    height: 24px;
+    flex: 0 0 24px;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    border-radius: 6px;
+    padding: 0;
+    background: transparent;
+    color: var(--granter-gray-500, #64748b);
+    cursor: pointer;
+}
+
+.ToggleButton:hover {
+    background: var(--granter-gray-50, #f8fafc);
+    color: var(--granter-gray-900, #111827);
+}
+
+.ToggleButton svg {
+    width: 14px;
+    height: 14px;
+    transition: transform 120ms ease;
+}
+
+.ToggleButton[data-collapsed='true'] svg {
+    transform: rotate(-90deg);
+}
+
+.Body {
+    display: grid;
+    min-width: 0;
+    gap: 10px;
+    padding: 14px;
+}
+
+.Body[hidden] {
+    display: none;
+}

@@ -8,8 +8,6 @@
 .Frame {
     position: relative;
     width: 100%;
-    min-height: 92px;
-    max-height: var(--region-preview-max-height, 220px);
     overflow: hidden;
     border: 1px solid var(--granter-gray-200);
     border-radius: 8px;

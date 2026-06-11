@@ -1,0 +1,93 @@
+.Root {
+    --request-status-color: #f97316;
+
+    display: grid;
+    width: max-content;
+    max-width: 100%;
+    min-width: 0;
+    align-content: center;
+    justify-items: center;
+    gap: 10px;
+    color: var(--granter-gray-900, #111827);
+}
+
+.Title {
+    color: var(--granter-gray-600, #475569);
+    font-size: 11px;
+    font-weight: 400;
+    line-height: 14px;
+}
+
+.Track {
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    justify-content: center;
+}
+
+.StatusPill {
+    display: inline-flex;
+    height: 34px;
+    min-width: 88px;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: 0;
+    border-radius: 999px;
+    padding: 0 16px;
+    background: transparent;
+    color: var(--request-status-color);
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 20px;
+    white-space: nowrap;
+}
+
+.StatusDot {
+    width: 12px;
+    height: 12px;
+    border: 4px solid var(--request-status-color);
+    border-radius: 50%;
+    background: var(--granter-white, #fff);
+}
+
+.HelperText {
+    margin: -2px 0 0;
+    color: var(--granter-gray-600, #475569);
+    font-size: 11px;
+    font-weight: 400;
+    line-height: 16px;
+    text-align: center;
+}
+
+.Footer {
+    display: inline-flex;
+    min-width: 0;
+    align-items: center;
+    justify-content: center;
+    justify-self: center;
+}
+
+.DotList {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+}
+
+.ProgressDot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--granter-gray-300, #cbd5e1);
+}
+
+.ProgressDot[data-active='true'] {
+    background: var(--request-status-color);
+}
+
+@media (max-width: 720px) {
+    .Track {
+        justify-content: center;
+    }
+}

@@ -30,6 +30,9 @@ export type AnnotatedImageViewerProps = {
     regions?: AnnotatedImageViewerRegion[];
     selectedRegionId?: string | number | null;
     onSelectRegion?: (id: string | number) => void;
+    onOpenFullView?: () => void;
+    showViewActionButton?: boolean;
+    displayMode?: 'canvas' | 'document';
     emptyText?: React.ReactNode;
     className?: string;
 };
@@ -66,6 +69,9 @@ const AnnotatedImageViewer = ({
     regions = [],
     selectedRegionId,
     onSelectRegion,
+    onOpenFullView,
+    showViewActionButton = true,
+    displayMode = 'canvas',
     emptyText = '연결된 참고 이미지가 없습니다.',
     className,
 }: AnnotatedImageViewerProps) => {
@@ -120,6 +126,15 @@ const AnnotatedImageViewer = ({
                 const regionNode = regionButtonRefs.current.get(regionKey);
                 if (!stage || !regionNode) return;
 
+                if (displayMode === 'document') {
+                    regionNode.scrollIntoView({
+                        behavior,
+                        block: 'center',
+                        inline: 'center',
+                    });
+                    return;
+                }
+
                 const stageRect = stage.getBoundingClientRect();
                 const regionRect = regionNode.getBoundingClientRect();
                 const targetLeft =
@@ -134,7 +149,7 @@ const AnnotatedImageViewer = ({
                 });
             });
         },
-        [selectedRegionId]
+        [displayMode, selectedRegionId]
     );
 
     React.useEffect(() => {
@@ -277,7 +292,7 @@ const AnnotatedImageViewer = ({
     }, []);
 
     return (
-        <section className={classNames(styles.Root, className)}>
+        <section className={classNames(styles.Root, className)} data-display-mode={displayMode}>
             {hasToolbar ? (
                 <div className={styles.Header}>
                     {hasAssetTabs ? (
@@ -305,6 +320,55 @@ const AnnotatedImageViewer = ({
             ) : null}
 
             <div className={styles.ViewerShell}>
+                {selectedAsset?.src ? (
+                    <div className={styles.FloatingOverlay}>
+                        <div className={styles.FloatingControlStack}>
+                            <div className={styles.ZoomControls}>
+                                <button
+                                    type="button"
+                                    aria-label="이미지 확대"
+                                    onClick={() => changeImageZoom(IMAGE_ZOOM_STEP)}
+                                    disabled={imageZoom >= IMAGE_ZOOM_MAX}
+                                >
+                                    <FiZoomIn size={15} />
+                                </button>
+                                <button
+                                    type="button"
+                                    aria-label="이미지 배율 100%로 초기화"
+                                    onClick={() => setImageZoom(1)}
+                                >
+                                    {Math.round(imageZoom * 100)}%
+                                </button>
+                                <button
+                                    type="button"
+                                    aria-label="이미지 축소"
+                                    onClick={() => changeImageZoom(-IMAGE_ZOOM_STEP)}
+                                    disabled={imageZoom <= IMAGE_ZOOM_MIN}
+                                >
+                                    <FiZoomOut size={15} />
+                                </button>
+                            </div>
+                            {showViewActionButton ? (
+                                <button
+                                    type="button"
+                                    className={styles.ResetViewButton}
+                                    aria-label={onOpenFullView ? '이미지 전체 보기' : '이미지 보기 초기화'}
+                                    onClick={() => {
+                                        if (onOpenFullView) {
+                                            onOpenFullView();
+                                            return;
+                                        }
+
+                                        setImageZoom(1);
+                                    }}
+                                >
+                                    <FiMaximize2 size={16} />
+                                </button>
+                            ) : null}
+                        </div>
+                    </div>
+                ) : null}
+
                 <div
                     ref={stageRef}
                     className={styles.Stage}
@@ -354,45 +418,6 @@ const AnnotatedImageViewer = ({
                     )}
                 </div>
 
-                {selectedAsset?.src ? (
-                    <div className={styles.FloatingOverlay}>
-                        <div className={styles.FloatingControlStack}>
-                            <div className={styles.ZoomControls}>
-                                <button
-                                    type="button"
-                                    aria-label="이미지 확대"
-                                    onClick={() => changeImageZoom(IMAGE_ZOOM_STEP)}
-                                    disabled={imageZoom >= IMAGE_ZOOM_MAX}
-                                >
-                                    <FiZoomIn size={15} />
-                                </button>
-                                <button
-                                    type="button"
-                                    aria-label="이미지 배율 100%로 초기화"
-                                    onClick={() => setImageZoom(1)}
-                                >
-                                    {Math.round(imageZoom * 100)}%
-                                </button>
-                                <button
-                                    type="button"
-                                    aria-label="이미지 축소"
-                                    onClick={() => changeImageZoom(-IMAGE_ZOOM_STEP)}
-                                    disabled={imageZoom <= IMAGE_ZOOM_MIN}
-                                >
-                                    <FiZoomOut size={15} />
-                                </button>
-                            </div>
-                            <button
-                                type="button"
-                                className={styles.ResetViewButton}
-                                aria-label="이미지 보기 초기화"
-                                onClick={() => setImageZoom(1)}
-                            >
-                                <FiMaximize2 size={16} />
-                            </button>
-                        </div>
-                    </div>
-                ) : null}
             </div>
         </section>
     );

@@ -242,6 +242,15 @@ export type { SectionIntroProps } from './SectionIntro/SectionIntro';
 
 export { default as IconHeaderSection } from './IconHeaderSection/IconHeaderSection';
 export type { IconHeaderSectionProps } from './IconHeaderSection/IconHeaderSection';
+export { default as DetailSubSection } from './DetailSubSection/DetailSubSection';
+export type { DetailSubSectionProps, DetailSubSectionTone } from './DetailSubSection/DetailSubSection';
+export { default as DetailSubField } from './DetailSubField/DetailSubField';
+export type { DetailSubFieldProps, DetailSubFieldTone } from './DetailSubField/DetailSubField';
+export { default as RequestStatusCompactProgress } from './RequestStatusCompactProgress/RequestStatusCompactProgress';
+export type {
+    RequestStatusCompactProgressProps,
+    RequestStatusCompactProgressStep,
+} from './RequestStatusCompactProgress/RequestStatusCompactProgress';
 export { default as IconLabelField } from './IconLabelField/IconLabelField';
 export type { IconLabelFieldProps } from './IconLabelField/IconLabelField';
 export { default as DashedDropzoneUploader } from './DashedDropzoneUploader/DashedDropzoneUploader';
@@ -256,6 +265,13 @@ export type {
     InlineFileInputUploaderProps,
     InlineFileInputUploaderType,
 } from './InlineFileInputUploader/InlineFileInputUploader';
+export { default as OutputAssetList } from './OutputAssetList/OutputAssetList';
+export type {
+    OutputAssetListItem,
+    OutputAssetListKind,
+    OutputAssetListProps,
+    OutputAssetListStatusTone,
+} from './OutputAssetList/OutputAssetList';
 export { default as EditableUnderlineTabs } from './EditableUnderlineTabs/EditableUnderlineTabs';
 export type {
     EditableUnderlineTabsItem,

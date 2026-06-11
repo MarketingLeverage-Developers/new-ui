@@ -80,11 +80,15 @@ export { default as AvatarStackButton } from './components/AvatarStackButton/Ava
 export { default as StatusBadge } from './components/StatusBadge/StatusBadge';
 export { default as DetailSceneHeader } from './components/DetailSceneHeader/DetailSceneHeader';
 export { default as CreativeRequestDetailScene } from './components/CreativeRequestDetailScene/CreativeRequestDetailScene';
+export { default as DetailSubField } from './components/DetailSubField/DetailSubField';
+export { default as DetailSubSection } from './components/DetailSubSection/DetailSubSection';
 export { default as RequestDescriptionBox } from './components/RequestDescriptionBox/RequestDescriptionBox';
 export { default as RequestScheduleInfoCard } from './components/RequestScheduleInfoCard/RequestScheduleInfoCard';
+export { default as RequestStatusCompactProgress } from './components/RequestStatusCompactProgress/RequestStatusCompactProgress';
 export { default as SelectableList } from './components/SelectableList/SelectableList';
 export { default as AnnotatedImageViewer } from './components/AnnotatedImageViewer/AnnotatedImageViewer';
 export { default as RegionPreview } from './components/RegionPreview/RegionPreview';
+export { default as OutputAssetList } from './components/OutputAssetList/OutputAssetList';
 export { default as Flex } from './components/Flex/Flex';
 export { default as FileUploader } from './components/FileUploader/FileUploader';
 export { default as RichTextEditor } from './components/RichTextEditor/RichTextEditor';

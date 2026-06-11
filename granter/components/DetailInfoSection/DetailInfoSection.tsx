@@ -24,6 +24,7 @@ export type DetailInfoSectionProps = Omit<React.HTMLAttributes<HTMLElement>, 'ti
     columns?: 1 | 2;
     className?: string;
     boxClassName?: string;
+    contentClassName?: string;
 };
 
 const getAutoTone = (title: React.ReactNode): DetailInfoSectionTone => {
@@ -51,6 +52,7 @@ const DetailInfoSection = ({
     columns = 1,
     className,
     boxClassName,
+    contentClassName,
     ...props
 }: DetailInfoSectionProps) => (
     <section className={classNames(styles.Root, className)} {...props}>
@@ -66,7 +68,7 @@ const DetailInfoSection = ({
                 </div>
                 {actions ? <div className={styles.Actions}>{actions}</div> : null}
             </div>
-            {children}
+            {contentClassName ? <div className={contentClassName}>{children}</div> : children}
         </div>
     </section>
 );

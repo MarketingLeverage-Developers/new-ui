@@ -7,6 +7,10 @@
     height: 100%;
 }
 
+.Root[data-display-mode='document'] {
+    height: auto;
+}
+
 .Header {
     display: flex;
     align-items: center;
@@ -31,9 +35,9 @@
     flex-direction: column;
     overflow: hidden;
     align-items: center;
-    border: 1px solid var(--granter-gray-200);
-    border-radius: 8px;
-    background-color: var(--granter-white);
+    border: 0;
+    border-radius: 0;
+    background-color: transparent;
     box-shadow: none;
 }
 
@@ -46,10 +50,10 @@
     justify-content: center;
     padding: 0;
     border: none;
-    border-bottom: 1px solid var(--granter-gray-200);
+    border-bottom: 1px solid rgb(255 255 255 / 18%);
     outline: none;
     background: transparent;
-    color: var(--granter-gray-700);
+    color: rgb(255 255 255 / 92%);
     font-size: 12px;
     font-weight: 900;
     cursor: pointer;
@@ -60,12 +64,12 @@
 }
 
 .ZoomControls button:disabled {
-    color: var(--granter-gray-300);
+    color: rgb(255 255 255 / 32%);
     cursor: not-allowed;
 }
 
 .ZoomControls button:focus-visible {
-    box-shadow: inset 0 0 0 2px rgb(37 99 235 / 35%);
+    box-shadow: inset 0 0 0 2px rgb(255 255 255 / 30%);
 }
 
 .ViewerShell {
@@ -76,8 +80,19 @@
     flex: 1;
     overflow: hidden;
     border: 0;
-    border-radius: 8px;
-    background-color: transparent;
+    border-radius: 10px;
+    background:
+        radial-gradient(circle at 30% 20%, rgb(255 255 255 / 6%), transparent 30%),
+        linear-gradient(135deg, #252a31 0%, #15191f 100%);
+    box-shadow: inset 0 0 0 1px rgb(255 255 255 / 8%);
+}
+
+.Root[data-display-mode='document'] .ViewerShell {
+    display: block;
+    min-height: 0;
+    height: auto;
+    flex: none;
+    overflow: visible;
 }
 
 .Stage {
@@ -88,10 +103,16 @@
     min-width: 0;
     flex: 1;
     overflow: auto;
-    padding: 18px;
+    padding: 40px 58px 40px 40px;
     background: transparent;
     cursor: grab;
     touch-action: none;
+}
+
+.Root[data-display-mode='document'] .Stage {
+    min-height: 0;
+    height: auto;
+    flex: none;
 }
 
 .Stage[data-panning='true'] {
@@ -103,7 +124,8 @@
     flex: none;
     width: max-content;
     height: max-content;
-    margin: 0 auto;
+    margin: auto;
+    box-shadow: 0 18px 34px rgb(0 0 0 / 26%);
 }
 
 .ImageFrame > img {
@@ -124,39 +146,71 @@
     min-width: 8px;
     min-height: 8px;
     padding: 0;
-    border: 2px solid var(--granter-blue-500);
-    border-radius: 0;
-    background-color: rgb(37 99 235 / 10%);
+    border: 1px solid rgb(124 58 237 / 82%);
+    border-radius: 4px;
+    background:
+        linear-gradient(135deg, rgb(124 58 237 / 10%), rgb(37 99 235 / 5%));
+    box-shadow:
+        inset 0 0 0 1px rgb(255 255 255 / 36%),
+        0 0 0 1px rgb(15 23 42 / 8%);
     cursor: pointer;
+    transition:
+        border-color 120ms ease,
+        background-color 120ms ease,
+        box-shadow 120ms ease;
+}
+
+.RegionBox:hover {
+    border-color: rgb(99 102 241 / 92%);
+    background:
+        linear-gradient(135deg, rgb(124 58 237 / 14%), rgb(37 99 235 / 7%));
+    box-shadow:
+        inset 0 0 0 1px rgb(255 255 255 / 44%),
+        0 0 0 2px rgb(124 58 237 / 12%),
+        0 8px 18px rgb(15 23 42 / 12%);
 }
 
 .RegionBox[data-active='true'] {
-    border-color: var(--granter-purple-500);
-    background-color: rgb(124 58 237 / 12%);
-    box-shadow: 0 0 0 2px rgb(124 58 237 / 18%);
+    border-color: rgb(124 58 237 / 96%);
+    background:
+        linear-gradient(135deg, rgb(124 58 237 / 16%), rgb(37 99 235 / 8%));
+    box-shadow:
+        inset 0 0 0 1px rgb(255 255 255 / 50%),
+        0 0 0 2px rgb(124 58 237 / 16%),
+        0 10px 24px rgb(15 23 42 / 14%);
+}
+
+.RegionBox[data-active='true']::before,
+.RegionBox[data-active='true']::after {
+    content: none;
 }
 
 .RegionBox span {
     position: absolute;
-    top: 4px;
-    left: 4px;
+    top: -12px;
+    left: -12px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     width: 22px;
     height: 22px;
-    border: 2px solid var(--granter-white);
+    border: 2px solid rgb(255 255 255 / 92%);
     border-radius: 999px;
-    background-color: var(--granter-blue-500);
+    background:
+        linear-gradient(135deg, #475569, #1f2937);
     color: var(--granter-white);
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 700;
     line-height: 1;
-    box-shadow: 0 6px 12px rgb(15 23 42 / 22%);
+    box-shadow:
+        0 5px 12px rgb(15 23 42 / 22%),
+        0 0 0 1px rgb(15 23 42 / 8%);
+    pointer-events: none;
 }
 
 .RegionBox[data-active='true'] span {
-    background-color: var(--granter-purple-500);
+    background:
+        linear-gradient(135deg, #8b5cf6, #6366f1);
 }
 
 .Empty {
@@ -167,25 +221,46 @@
     gap: 8px;
     width: 100%;
     min-height: 360px;
-    color: var(--granter-gray-500);
+    color: rgb(255 255 255 / 70%);
 }
 
 .FloatingOverlay {
     position: absolute;
     right: var(--annotated-image-viewer-control-offset, 14px);
+    top: auto;
     bottom: var(--annotated-image-viewer-control-offset, 14px);
     z-index: 10;
     display: flex;
     align-items: flex-end;
     gap: 10px;
+    transform: none;
     pointer-events: auto;
+}
+
+.Root[data-display-mode='document'] .FloatingOverlay {
+    position: sticky;
+    top: calc(100vh - 210px);
+    right: auto;
+    bottom: auto;
+    width: 100%;
+    height: 0;
+    justify-content: flex-end;
+    padding-right: var(--annotated-image-viewer-control-offset, 14px);
+    transform: none;
+    pointer-events: none;
 }
 
 .FloatingControlStack {
     display: flex;
     flex: none;
     flex-direction: column;
-    gap: var(--annotated-image-viewer-control-gap, 8px);
+    overflow: hidden;
+    gap: 0;
+    border: 1px solid rgb(255 255 255 / 42%);
+    border-radius: 10px;
+    background: rgb(15 23 42 / 42%);
+    box-shadow: 0 10px 24px rgb(0 0 0 / 28%);
+    backdrop-filter: blur(8px);
     pointer-events: auto;
 }
 
@@ -196,17 +271,23 @@
     align-items: center;
     justify-content: center;
     padding: 0;
-    border: 1px solid var(--granter-gray-200);
-    border-radius: 8px;
+    border: 0;
+    border-top: 1px solid rgb(255 255 255 / 18%);
+    border-radius: 0;
     outline: none;
-    background-color: var(--granter-white);
-    color: var(--granter-gray-700);
+    background-color: transparent;
+    color: rgb(255 255 255 / 92%);
     cursor: pointer;
     box-shadow: none;
 }
 
+.ZoomControls button:hover:not(:disabled),
+.ResetViewButton:hover {
+    background-color: rgb(255 255 255 / 10%);
+}
+
 .ResetViewButton:focus-visible {
-    box-shadow: 0 0 0 2px rgb(37 99 235 / 35%);
+    box-shadow: inset 0 0 0 2px rgb(255 255 255 / 30%);
 }
 
 @media (max-width: 960px) {
@@ -225,8 +306,10 @@
 
     .FloatingOverlay {
         right: 10px;
+        top: auto;
         bottom: 10px;
         gap: 8px;
+        transform: none;
     }
 
     .ZoomControls button,

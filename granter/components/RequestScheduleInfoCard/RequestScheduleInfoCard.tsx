@@ -9,6 +9,7 @@ export type RequestScheduleInfoCardProps = {
     className?: string;
     title?: React.ReactNode;
     icon?: React.ReactNode;
+    hideSchedule?: boolean;
     startDateTime?: string | Date | null;
     startLabel: React.ReactNode;
     startBadge?: React.ReactNode;
@@ -24,6 +25,20 @@ export type RequestScheduleInfoCardProps = {
     descriptionLineClamp?: number;
     moreLabel?: React.ReactNode;
     lessLabel?: React.ReactNode;
+};
+
+export type RequestScheduleTimelineProps = Pick<
+    RequestScheduleInfoCardProps,
+    | 'startDateTime'
+    | 'startLabel'
+    | 'startBadge'
+    | 'startValue'
+    | 'endDateTime'
+    | 'endLabel'
+    | 'endBadge'
+    | 'endValue'
+> & {
+    className?: string;
 };
 
 const isEmpty = (value: React.ReactNode) => value === null || value === undefined || value === '';
@@ -58,10 +73,8 @@ const getScheduleProgress = (startTime: number | null, endTime: number | null, n
     };
 };
 
-const RequestScheduleInfoCard = ({
+export const RequestScheduleTimeline = ({
     className,
-    title = '요청 정보',
-    icon,
     startDateTime,
     startLabel,
     startBadge,
@@ -70,14 +83,7 @@ const RequestScheduleInfoCard = ({
     endLabel,
     endBadge,
     endValue,
-    descriptionLabel = '설명',
-    descriptionIcon = <FiMessageSquare aria-hidden="true" />,
-    description,
-    collapsibleDescription = true,
-    descriptionLineClamp = 3,
-    moreLabel = '더보기',
-    lessLabel = '접기',
-}: RequestScheduleInfoCardProps) => {
+}: RequestScheduleTimelineProps) => {
     const [nowTime, setNowTime] = React.useState(() => Date.now());
     const startTime = React.useMemo(() => parseScheduleTime(startDateTime), [startDateTime]);
     const endTime = React.useMemo(() => parseScheduleTime(endDateTime), [endDateTime]);
@@ -94,62 +100,97 @@ const RequestScheduleInfoCard = ({
     }, [endTime, startTime]);
 
     return (
-        <section className={classNames(styles.Root, className)}>
-            <div className={styles.Header}>
-                {icon ? (
-                    <span className={styles.IconBox} aria-hidden="true">
-                        {icon}
-                    </span>
-                ) : null}
-                <Text size="lg" weight="medium">
-                    {title}
-                </Text>
+        <div className={classNames(styles.ScheduleRow, className)}>
+            <div className={styles.ScheduleEndpoint}>
+                <div className={styles.ScheduleLabelLine}>
+                    <span>{startLabel}</span>
+                    {startBadge ? <em>{startBadge}</em> : null}
+                </div>
+                <strong>{renderEmpty(startValue)}</strong>
             </div>
 
-            <div className={styles.ScheduleRow}>
-                <div className={styles.ScheduleEndpoint}>
-                    <div className={styles.ScheduleLabelLine}>
-                        <span>{startLabel}</span>
-                        {startBadge ? <em>{startBadge}</em> : null}
-                    </div>
-                    <strong>{renderEmpty(startValue)}</strong>
-                </div>
-
-                <div
-                    className={styles.Timeline}
-                    style={timelineStyle}
-                    data-state={scheduleProgress.state}
-                    aria-hidden="true"
-                >
-                    <span className={styles.TimelineEndpoint} />
-                    <span className={styles.TimelineTrack}>
-                        <i className={styles.TimelineFill} />
-                        <i className={styles.TimelineRest} />
-                        <i className={styles.TimelineCurrent} />
-                    </span>
-                    <span className={styles.TimelineEndpoint} />
-                </div>
-
-                <div className={classNames(styles.ScheduleEndpoint, styles.ScheduleEndpointEnd)}>
-                    <div className={styles.ScheduleLabelLine}>
-                        <span>{endLabel}</span>
-                        {endBadge ? <em>{endBadge}</em> : null}
-                    </div>
-                    <strong>{renderEmpty(endValue)}</strong>
-                </div>
+            <div
+                className={styles.Timeline}
+                style={timelineStyle}
+                data-state={scheduleProgress.state}
+                aria-hidden="true"
+            >
+                <span className={styles.TimelineEndpoint} />
+                <span className={styles.TimelineTrack}>
+                    <i className={styles.TimelineFill} />
+                    <i className={styles.TimelineRest} />
+                    <i className={styles.TimelineCurrent} />
+                </span>
+                <span className={styles.TimelineEndpoint} />
             </div>
 
-            <RequestDescriptionBox
-                label={descriptionLabel}
-                icon={descriptionIcon}
-                description={description}
-                collapsible={collapsibleDescription}
-                lineClamp={descriptionLineClamp}
-                moreLabel={moreLabel}
-                lessLabel={lessLabel}
-            />
-        </section>
+            <div className={classNames(styles.ScheduleEndpoint, styles.ScheduleEndpointEnd)}>
+                <div className={styles.ScheduleLabelLine}>
+                    <span>{endLabel}</span>
+                    {endBadge ? <em>{endBadge}</em> : null}
+                </div>
+                <strong>{renderEmpty(endValue)}</strong>
+            </div>
+        </div>
     );
 };
+
+const RequestScheduleInfoCard = ({
+    className,
+    title = '요청 정보',
+    icon,
+    hideSchedule = false,
+    startDateTime,
+    startLabel,
+    startBadge,
+    startValue,
+    endDateTime,
+    endLabel,
+    endBadge,
+    endValue,
+    descriptionLabel = '설명',
+    descriptionIcon = <FiMessageSquare aria-hidden="true" />,
+    description,
+    collapsibleDescription = true,
+    descriptionLineClamp = 3,
+    moreLabel = '더보기',
+    lessLabel = '접기',
+}: RequestScheduleInfoCardProps) => (
+    <section className={classNames(styles.Root, className)}>
+        <div className={styles.Header}>
+            {icon ? (
+                <span className={styles.IconBox} aria-hidden="true">
+                    {icon}
+                </span>
+            ) : null}
+            <Text size="lg" weight="medium">
+                {title}
+            </Text>
+        </div>
+
+        {hideSchedule ? null : (
+            <RequestScheduleTimeline
+                startDateTime={startDateTime}
+                startLabel={startLabel}
+                startBadge={startBadge}
+                startValue={startValue}
+                endDateTime={endDateTime}
+                endLabel={endLabel}
+                endBadge={endBadge}
+                endValue={endValue}
+            />
+        )}
+
+        <RequestDescriptionBox
+            label={descriptionLabel}
+            icon={descriptionIcon}
+            description={description}
+            collapsible={collapsibleDescription}
+            lineClamp={descriptionLineClamp}
+            moreLabel={moreLabel}
+            lessLabel={lessLabel}
+        />
+    </section>
+);
 
 export default RequestScheduleInfoCard;

@@ -5,9 +5,9 @@
     gap: 16px;
     padding: 18px 20px;
     border: 0;
-    border-radius: 10px;
-    background: #f9fafb;
-    box-shadow: none;
+    border-radius: 12px;
+    background: var(--granter-white, #fff);
+    box-shadow: 0 2px 8px rgb(15 23 42 / 12%);
 }
 
 .Header {
