@@ -1,0 +1,237 @@
+.Root {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 0;
+    min-height: 0;
+    height: 100%;
+}
+
+.Header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    min-width: 0;
+    flex-shrink: 0;
+}
+
+.AssetTabs {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    flex-shrink: 0;
+}
+
+.ZoomControls {
+    display: flex;
+    flex: none;
+    flex-direction: column;
+    overflow: hidden;
+    align-items: center;
+    border: 1px solid var(--granter-gray-200);
+    border-radius: 8px;
+    background-color: var(--granter-white);
+    box-shadow: none;
+}
+
+.ZoomControls button {
+    display: inline-flex;
+    width: var(--annotated-image-viewer-control-size, 42px);
+    min-width: var(--annotated-image-viewer-control-size, 42px);
+    height: var(--annotated-image-viewer-zoom-button-height, 36px);
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: none;
+    border-bottom: 1px solid var(--granter-gray-200);
+    outline: none;
+    background: transparent;
+    color: var(--granter-gray-700);
+    font-size: 12px;
+    font-weight: 900;
+    cursor: pointer;
+}
+
+.ZoomControls button:last-child {
+    border-bottom: none;
+}
+
+.ZoomControls button:disabled {
+    color: var(--granter-gray-300);
+    cursor: not-allowed;
+}
+
+.ZoomControls button:focus-visible {
+    box-shadow: inset 0 0 0 2px rgb(37 99 235 / 35%);
+}
+
+.ViewerShell {
+    position: relative;
+    display: flex;
+    min-width: 0;
+    min-height: var(--annotated-image-viewer-min-height, 420px);
+    flex: 1;
+    overflow: hidden;
+    border: 0;
+    border-radius: 8px;
+    background-color: transparent;
+}
+
+.Stage {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    min-width: 0;
+    flex: 1;
+    overflow: auto;
+    padding: 18px;
+    background: transparent;
+    cursor: grab;
+    touch-action: none;
+}
+
+.Stage[data-panning='true'] {
+    cursor: grabbing;
+}
+
+.ImageFrame {
+    position: relative;
+    flex: none;
+    width: max-content;
+    height: max-content;
+    margin: 0 auto;
+}
+
+.ImageFrame > img {
+    display: block;
+    width: 100%;
+    max-width: none;
+    height: auto;
+    max-height: none;
+    object-fit: contain;
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+.RegionBox {
+    position: absolute;
+    z-index: 2;
+    display: block;
+    min-width: 8px;
+    min-height: 8px;
+    padding: 0;
+    border: 2px solid var(--granter-blue-500);
+    border-radius: 0;
+    background-color: rgb(37 99 235 / 10%);
+    cursor: pointer;
+}
+
+.RegionBox[data-active='true'] {
+    border-color: var(--granter-purple-500);
+    background-color: rgb(124 58 237 / 12%);
+    box-shadow: 0 0 0 2px rgb(124 58 237 / 18%);
+}
+
+.RegionBox span {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border: 2px solid var(--granter-white);
+    border-radius: 999px;
+    background-color: var(--granter-blue-500);
+    color: var(--granter-white);
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1;
+    box-shadow: 0 6px 12px rgb(15 23 42 / 22%);
+}
+
+.RegionBox[data-active='true'] span {
+    background-color: var(--granter-purple-500);
+}
+
+.Empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    min-height: 360px;
+    color: var(--granter-gray-500);
+}
+
+.FloatingOverlay {
+    position: absolute;
+    right: var(--annotated-image-viewer-control-offset, 14px);
+    bottom: var(--annotated-image-viewer-control-offset, 14px);
+    z-index: 10;
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+    pointer-events: auto;
+}
+
+.FloatingControlStack {
+    display: flex;
+    flex: none;
+    flex-direction: column;
+    gap: var(--annotated-image-viewer-control-gap, 8px);
+    pointer-events: auto;
+}
+
+.ResetViewButton {
+    display: inline-flex;
+    width: var(--annotated-image-viewer-control-size, 42px);
+    height: var(--annotated-image-viewer-control-size, 42px);
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 1px solid var(--granter-gray-200);
+    border-radius: 8px;
+    outline: none;
+    background-color: var(--granter-white);
+    color: var(--granter-gray-700);
+    cursor: pointer;
+    box-shadow: none;
+}
+
+.ResetViewButton:focus-visible {
+    box-shadow: 0 0 0 2px rgb(37 99 235 / 35%);
+}
+
+@media (max-width: 960px) {
+    .Root {
+        height: auto;
+    }
+
+    .AssetTabs {
+        justify-content: flex-start;
+    }
+
+    .Header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .FloatingOverlay {
+        right: 10px;
+        bottom: 10px;
+        gap: 8px;
+    }
+
+    .ZoomControls button,
+    .ResetViewButton {
+        width: 38px;
+        min-width: 38px;
+    }
+}

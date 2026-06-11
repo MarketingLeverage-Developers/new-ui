@@ -1,0 +1,120 @@
+.Root {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.Box {
+    display: grid;
+    min-width: 0;
+    align-content: start;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px 12px;
+    padding: 20px;
+    border-radius: 12px;
+    background: var(--granter-gray-50, #f8fafc);
+}
+
+.Box[data-columns='2'] {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.Header {
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    grid-column: 1 / -1;
+    margin-bottom: 2px;
+}
+
+.Title {
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    gap: 10px;
+    color: var(--granter-gray-900, #111827);
+}
+
+.IconBox {
+    display: inline-flex;
+    flex: none;
+    width: 30px;
+    height: 30px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+    color: #2563eb;
+    line-height: 1;
+}
+
+.IconBox[data-tone='sky'] {
+    background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+    color: #0284c7;
+}
+
+.IconBox[data-tone='violet'] {
+    background: linear-gradient(135deg, #f3e8ff 0%, #ddd6fe 100%);
+    color: #7c3aed;
+}
+
+.IconBox[data-tone='amber'] {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    color: #d97706;
+}
+
+.IconBox[data-tone='orange'] {
+    background: #ffedd5;
+    color: #f97316;
+}
+
+.IconBox[data-tone='emerald'] {
+    background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+    color: #059669;
+}
+
+.IconBox[data-tone='indigo'] {
+    background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%);
+    color: #4f46e5;
+}
+
+.IconBox[data-tone='rose'] {
+    background: linear-gradient(135deg, #ffe4e6 0%, #fecdd3 100%);
+    color: #e11d48;
+}
+
+.IconBox[data-tone='pink'] {
+    background: linear-gradient(135deg, #fce7f3 0%, #fbcfe8 100%);
+    color: #db2777;
+}
+
+.IconBox[data-tone='cyan'] {
+    background: linear-gradient(135deg, #cffafe 0%, #a5f3fc 100%);
+    color: #0891b2;
+}
+
+.IconBox svg {
+    flex: none;
+    width: 16px;
+    height: 16px;
+    color: currentcolor;
+    font-size: 16px;
+    stroke-width: 2.2;
+}
+
+.Actions {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+@media (max-width: 720px) {
+    .Box[data-columns='2'] {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}

@@ -1,0 +1,214 @@
+.Root {
+    display: grid;
+    min-width: 0;
+    align-content: start;
+    gap: 16px;
+    padding: 18px 20px;
+    border: 0;
+    border-radius: 10px;
+    background: #f9fafb;
+    box-shadow: none;
+}
+
+.Header {
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    gap: 10px;
+    color: var(--granter-gray-900, #111827);
+}
+
+.IconBox {
+    display: inline-flex;
+    width: 30px;
+    height: 30px;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%);
+    color: #4f46e5;
+}
+
+.IconBox svg {
+    width: 16px;
+    height: 16px;
+    stroke-width: 2.2;
+}
+
+.ScheduleRow {
+    display: grid;
+    min-width: 0;
+    grid-template-columns: minmax(142px, 0.45fr) minmax(140px, 1fr) minmax(142px, 0.45fr);
+    align-items: end;
+    gap: 18px;
+    padding: 0 26px;
+}
+
+.ScheduleEndpoint {
+    display: grid;
+    min-width: 0;
+    gap: 8px;
+}
+
+.ScheduleEndpointEnd {
+    text-align: right;
+}
+
+.ScheduleLabelLine {
+    display: inline-flex;
+    min-width: 0;
+    align-items: center;
+    gap: 6px;
+    color: var(--granter-gray-500, #64748b);
+    font-size: 11px;
+    font-weight: 400;
+    line-height: 15px;
+}
+
+.ScheduleEndpointEnd .ScheduleLabelLine {
+    justify-content: flex-end;
+}
+
+.ScheduleLabelLine em {
+    display: inline-flex;
+    height: 18px;
+    align-items: center;
+    border-radius: 5px;
+    padding: 0 6px;
+    background: #ede9fe;
+    color: #7c3aed;
+    font-size: 10px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 18px;
+}
+
+.ScheduleEndpoint strong {
+    min-width: 0;
+    overflow: hidden;
+    color: var(--granter-gray-900, #111827);
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 20px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.Timeline {
+    position: relative;
+    display: grid;
+    height: 20px;
+    min-width: 0;
+    grid-template-columns: 10px minmax(0, 1fr) 10px;
+    align-items: center;
+}
+
+.TimelineEndpoint {
+    position: relative;
+    z-index: 1;
+    display: block;
+    width: 10px;
+    height: 10px;
+    border: 2px solid #c7d2fe;
+    border-radius: 999px;
+    background: var(--granter-white, #fff);
+}
+
+.TimelineEndpoint:first-child {
+    border-color: #a78bfa;
+}
+
+.Timeline[data-state='empty'] .TimelineEndpoint:first-child,
+.Timeline[data-state='before'] .TimelineEndpoint:first-child {
+    border-color: #a78bfa;
+}
+
+.Timeline[data-state='after'] .TimelineEndpoint:last-child,
+.Timeline[data-state='active'] .TimelineEndpoint:last-child {
+    border-color: #a78bfa;
+}
+
+.TimelineTrack {
+    position: relative;
+    display: block;
+    height: 12px;
+    min-width: 0;
+}
+
+.TimelineFill,
+.TimelineRest {
+    position: absolute;
+    top: 5px;
+    height: 2px;
+}
+
+.TimelineFill {
+    left: 0;
+    width: var(--request-schedule-progress-percent, 0%);
+    background: #a78bfa;
+}
+
+.TimelineRest {
+    right: 0;
+    left: var(--request-schedule-progress-percent, 0%);
+    border-top: 2px dashed #c7d2fe;
+}
+
+.TimelineCurrent {
+    position: absolute;
+    z-index: 1;
+    top: 1px;
+    left: var(--request-schedule-progress-percent, 0%);
+    display: block;
+    width: 10px;
+    height: 10px;
+    transform: translateX(-50%);
+    border: 2px solid #a78bfa;
+    border-radius: 999px;
+    background: var(--granter-white, #fff);
+}
+
+.Timeline[data-state='empty'] .TimelineFill,
+.Timeline[data-state='before'] .TimelineFill {
+    display: none;
+}
+
+.Timeline[data-state='empty'] .TimelineRest,
+.Timeline[data-state='before'] .TimelineRest {
+    left: 0;
+}
+
+.Timeline[data-state='empty'] .TimelineCurrent,
+.Timeline[data-state='before'] .TimelineCurrent,
+.Timeline[data-state='after'] .TimelineCurrent {
+    display: none;
+}
+
+.Timeline[data-state='after'] .TimelineRest {
+    display: none;
+}
+
+.Timeline[data-state='after'] .TimelineFill {
+    width: 100%;
+}
+
+@media (max-width: 720px) {
+    .ScheduleRow {
+        grid-template-columns: 1fr;
+        gap: 10px;
+        padding: 0;
+    }
+
+    .Timeline {
+        display: none;
+    }
+
+    .ScheduleEndpointEnd {
+        text-align: left;
+    }
+
+    .ScheduleEndpointEnd .ScheduleLabelLine {
+        justify-content: flex-start;
+    }
+}

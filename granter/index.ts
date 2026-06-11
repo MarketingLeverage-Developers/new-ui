@@ -26,6 +26,8 @@ export { default as SummaryStatList } from './components/SummaryStatList/Summary
 export { default as RankedMetricList } from './components/RankedMetricList/RankedMetricList';
 export { default as MetricSummaryStrip } from './components/MetricSummaryStrip/MetricSummaryStrip';
 export { default as PanelHeader } from './components/PanelHeader/PanelHeader';
+export { default as DetailInfoSection } from './components/DetailInfoSection/DetailInfoSection';
+export { default as DetailInfoRow } from './components/DetailInfoRow/DetailInfoRow';
 export { default as SidebarDrawerLayout } from './components/SidebarDrawerLayout/SidebarDrawerLayout';
 export { default as SectionIntro } from './components/SectionIntro/SectionIntro';
 export { default as IconHeaderSection } from './components/IconHeaderSection/IconHeaderSection';
@@ -77,6 +79,12 @@ export { default as Header } from './components/CardsHeaderContent/CardsHeaderCo
 export { default as AvatarStackButton } from './components/AvatarStackButton/AvatarStackButton';
 export { default as StatusBadge } from './components/StatusBadge/StatusBadge';
 export { default as DetailSceneHeader } from './components/DetailSceneHeader/DetailSceneHeader';
+export { default as CreativeRequestDetailScene } from './components/CreativeRequestDetailScene/CreativeRequestDetailScene';
+export { default as RequestDescriptionBox } from './components/RequestDescriptionBox/RequestDescriptionBox';
+export { default as RequestScheduleInfoCard } from './components/RequestScheduleInfoCard/RequestScheduleInfoCard';
+export { default as SelectableList } from './components/SelectableList/SelectableList';
+export { default as AnnotatedImageViewer } from './components/AnnotatedImageViewer/AnnotatedImageViewer';
+export { default as RegionPreview } from './components/RegionPreview/RegionPreview';
 export { default as Flex } from './components/Flex/Flex';
 export { default as FileUploader } from './components/FileUploader/FileUploader';
 export { default as RichTextEditor } from './components/RichTextEditor/RichTextEditor';
@@ -345,6 +353,15 @@ export type {
 export type { TextProps, TextSize, TextTone, TextWeight } from './components/Text/Text';
 export type { StatusBadgeProps } from './components/StatusBadge/StatusBadge';
 export type { DetailSceneHeaderProps, DetailSceneHeaderTone } from './components/DetailSceneHeader/DetailSceneHeader';
+export type {
+    CreativeRequestDetailSceneMaterial,
+    CreativeRequestDetailScenePerson,
+    CreativeRequestDetailScenePointItem,
+    CreativeRequestDetailSceneProps,
+    CreativeRequestDetailSceneRow,
+} from './components/CreativeRequestDetailScene/CreativeRequestDetailScene';
+export type { RequestDescriptionBoxProps } from './components/RequestDescriptionBox/RequestDescriptionBox';
+export type { RequestScheduleInfoCardProps } from './components/RequestScheduleInfoCard/RequestScheduleInfoCard';
 export type { StatusChipProps, StatusChipSize, StatusChipTone } from './components/StatusChip/StatusChip';
 export type {
     SnapshotSummaryCardProps,

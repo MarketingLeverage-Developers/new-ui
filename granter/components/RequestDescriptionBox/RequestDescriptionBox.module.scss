@@ -1,0 +1,62 @@
+.Root {
+    display: grid;
+    min-width: 0;
+    gap: 10px;
+    border-radius: 8px;
+    padding: 14px 16px;
+    background: var(--granter-white, #fff);
+}
+
+.Header {
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    gap: 8px;
+    color: var(--granter-gray-700, #334155);
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 18px;
+}
+
+.Icon {
+    display: inline-flex;
+    flex: none;
+    color: var(--granter-gray-500, #64748b);
+}
+
+.Icon svg {
+    width: 14px;
+    height: 14px;
+}
+
+.Text {
+    min-width: 0;
+    overflow: hidden;
+    color: var(--granter-gray-700, #334155);
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 22px;
+    white-space: pre-wrap;
+}
+
+.Text[data-expanded='false'] {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: var(--request-description-lines, 3);
+}
+
+.ToggleButton {
+    justify-self: end;
+    border: 0;
+    padding: 0;
+    background: transparent;
+    color: var(--granter-gray-500, #64748b);
+    font-size: 11px;
+    font-weight: 400;
+    line-height: 16px;
+    cursor: pointer;
+}
+
+.ToggleButton:hover {
+    color: var(--granter-gray-900, #111827);
+}

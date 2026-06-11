@@ -1,0 +1,73 @@
+.Root {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 0;
+}
+
+.Item {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    min-width: 0;
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--granter-gray-200);
+    border-radius: 8px;
+    background-color: var(--granter-white);
+    color: inherit;
+    text-align: left;
+    cursor: pointer;
+    transition:
+        border-color 0.16s ease,
+        background-color 0.16s ease,
+        box-shadow 0.16s ease;
+}
+
+.Item:hover:not(:disabled) {
+    border-color: var(--granter-blue-300);
+    background-color: var(--granter-slate-100);
+}
+
+.Item[data-active='true'] {
+    border-color: var(--granter-blue-500);
+    background-color: var(--granter-blue-50);
+    box-shadow: 0 0 0 1px var(--granter-blue-500);
+}
+
+.Item:disabled {
+    cursor: not-allowed;
+    opacity: 0.56;
+}
+
+.ItemText {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+}
+
+.Title,
+.Description {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.Meta {
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+.Empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 96px;
+    border: 1px dashed var(--granter-gray-300);
+    border-radius: 8px;
+    background-color: var(--granter-gray-50);
+    text-align: center;
+}

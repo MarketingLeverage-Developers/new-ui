@@ -1,0 +1,49 @@
+.Root {
+    display: grid;
+    min-width: 0;
+    align-items: center;
+    grid-template-columns: 20px minmax(76px, 0.35fr) minmax(0, 1fr);
+    gap: 8px;
+    color: var(--granter-gray-900, #111827);
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 1.45;
+}
+
+.Wide {
+    grid-column: 1 / -1;
+    align-items: start;
+    grid-template-columns: 20px 118px minmax(0, 1fr);
+}
+
+.Icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--granter-gray-500, #64748b);
+    font-size: 16px;
+    line-height: 1;
+}
+
+.Label {
+    min-width: 0;
+    overflow: hidden;
+    color: var(--granter-gray-500, #64748b);
+    font-weight: 400;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.Value {
+    min-width: 0;
+    align-self: center;
+    color: var(--granter-gray-900, #111827);
+    font-weight: 400;
+    word-break: break-word;
+}
+
+.Wide .Value {
+    align-self: start;
+    max-height: 140px;
+    overflow: auto;
+}

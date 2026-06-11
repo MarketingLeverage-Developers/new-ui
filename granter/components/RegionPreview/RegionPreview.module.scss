@@ -1,0 +1,36 @@
+.Root {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 0;
+}
+
+.Frame {
+    position: relative;
+    width: 100%;
+    min-height: 92px;
+    max-height: var(--region-preview-max-height, 220px);
+    overflow: hidden;
+    border: 1px solid var(--granter-gray-200);
+    border-radius: 8px;
+    background-color: var(--granter-gray-50);
+}
+
+.Frame img {
+    position: absolute;
+    display: block;
+    max-width: none;
+    max-height: none;
+    object-fit: fill;
+}
+
+.Empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: var(--region-preview-empty-min-height, 120px);
+    border: 1px dashed var(--granter-gray-300);
+    border-radius: 8px;
+    background-color: var(--granter-gray-50);
+    text-align: center;
+}

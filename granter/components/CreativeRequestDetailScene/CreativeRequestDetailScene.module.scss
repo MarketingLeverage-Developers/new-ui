@@ -1,0 +1,642 @@
+.Root {
+    position: relative;
+    display: flex;
+    min-width: 0;
+    min-height: 0;
+    height: 100%;
+    flex-direction: column;
+    gap: 12px;
+    padding: 10px;
+    overflow: hidden;
+    background: var(--granter-white, #fff);
+    color: var(--granter-gray-900, #111827);
+}
+
+.CloseButton {
+    position: absolute;
+    z-index: 4;
+    top: 16px;
+    right: 16px;
+    display: inline-flex;
+    width: 32px;
+    height: 32px;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--granter-gray-200, #e5e7eb);
+    border-radius: 10px;
+    background: var(--granter-white, #fff);
+    color: var(--granter-gray-500, #64748b);
+    box-shadow: none;
+    cursor: pointer;
+}
+
+.CloseButton:hover {
+    color: var(--granter-gray-900, #111827);
+}
+
+.TopCard {
+    border: 0;
+    border-radius: 10px;
+    background: #f9fafb;
+    box-shadow: none;
+}
+
+.TopCard {
+    display: grid;
+    flex: 0 0 auto;
+    grid-template-columns: minmax(180px, 0.72fr) minmax(180px, 0.72fr) minmax(250px, 0.9fr) minmax(360px, 1.45fr);
+    min-height: 104px;
+    padding: 14px 48px 14px 22px;
+}
+
+.PersonSummary {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    gap: 6px;
+    padding-right: 22px;
+    border-right: 1px solid var(--granter-gray-200, #e5e7eb);
+}
+
+.PersonSummary + .PersonSummary {
+    padding-left: 22px;
+}
+
+.PersonCopy {
+    display: flex;
+    min-width: 0;
+    width: 100%;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.PersonHeaderLine {
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.PersonLabel {
+    color: var(--granter-gray-500, #64748b);
+    font-size: 11px;
+    font-weight: 400;
+    line-height: 14px;
+}
+
+.PersonHeaderActions {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+}
+
+.PersonBody {
+    display: flex;
+    min-width: 0;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.PersonAvatar {
+    display: inline-flex;
+    width: 32px;
+    height: 32px;
+    flex: 0 0 32px;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border: 1px solid var(--granter-gray-200, #e5e7eb);
+    border-radius: 50%;
+    background: var(--granter-gray-50, #f9fafb);
+    color: var(--granter-gray-600, #475569);
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1;
+}
+
+.PersonAvatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.PersonNameLine {
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    gap: 0;
+    min-height: 20px;
+}
+
+.PersonNameLine strong {
+    min-width: 0;
+    overflow: hidden;
+    color: var(--granter-gray-900, #111827);
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 20px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.PersonMetaLine {
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    gap: 8px;
+    color: var(--granter-gray-500, #64748b);
+    font-size: 11px;
+    font-weight: 400;
+    line-height: 16px;
+}
+
+.PersonMetaLine > span:last-child {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.PersonContactLine {
+    display: grid;
+    min-width: 0;
+    gap: 3px;
+    color: var(--granter-gray-500, #64748b);
+    font-size: 11px;
+    font-weight: 400;
+    line-height: 16px;
+}
+
+.PersonContactLine span {
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    gap: 4px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.PersonContactLine svg {
+    width: 12px;
+    height: 12px;
+    flex: 0 0 auto;
+}
+
+.PersonTag {
+    display: inline-flex;
+    height: 18px;
+    align-items: center;
+    border-radius: 5px;
+    padding: 0 6px;
+    background: var(--granter-blue-50, #eff6ff);
+    color: var(--granter-blue-600, #2563eb);
+    font-size: 10px;
+    font-weight: 400;
+    flex: 0 0 auto;
+}
+
+.ProgressSlot {
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    padding: 0 4px 0 28px;
+}
+
+.ProgressSlot > * {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.MainGrid {
+    display: grid;
+    flex: 1 1 auto;
+    min-height: 0;
+    grid-template-columns: minmax(560px, 1.7fr) minmax(340px, 0.92fr);
+    gap: 12px;
+}
+
+.InfoGrid {
+    display: grid;
+    flex: 0 0 auto;
+    min-height: 0;
+    grid-template-columns: minmax(0, 1.55fr) minmax(260px, 0.7fr);
+    gap: 12px;
+}
+
+.RequestScheduleCard,
+.RequestExtraCard {
+    min-width: 0;
+}
+
+.RequestExtraBox {
+    min-height: 100%;
+    padding: 18px 20px;
+    background: #f9fafb;
+}
+
+.InfoGrid > *,
+.ViewerCard,
+.MaterialRequestDetailCard {
+    min-width: 0;
+    min-height: 0;
+}
+
+.ViewerCard {
+    overflow: hidden;
+}
+
+.MaterialRequestDetailCard {
+    overflow: hidden;
+}
+
+.ViewerBox {
+    height: 100%;
+    min-height: 0;
+    align-content: stretch;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    overflow: hidden;
+}
+
+.MaterialRequestDetailBox {
+    flex: 1 1 auto;
+    height: 100%;
+    min-height: 0;
+    max-height: 100%;
+    align-content: start;
+    overflow: auto;
+}
+
+.RightColumn {
+    display: flex;
+    min-width: 0;
+    min-height: 0;
+    flex-direction: column;
+    gap: 12px;
+    overflow: hidden;
+}
+
+.RightColumn > .MaterialRequestDetailCard {
+    flex: 1 1 auto;
+}
+
+.DetailGroup {
+    display: grid;
+    min-width: 0;
+    gap: 10px;
+}
+
+.DetailGroup + .DetailGroup {
+    margin-top: 4px;
+    padding-top: 14px;
+    border-top: 1px solid var(--granter-gray-200, #e5e7eb);
+}
+
+.DetailRows {
+    display: grid;
+    min-width: 0;
+    gap: 10px;
+}
+
+.ViewerWorkspace {
+    display: grid;
+    min-width: 0;
+    min-height: 0;
+    grid-template-columns: minmax(0, 1fr) 176px;
+    gap: 10px;
+}
+
+.ViewerSlot {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.ViewerSlot > * {
+    height: 100%;
+}
+
+.ViewerPointPanel {
+    display: flex;
+    min-width: 0;
+    min-height: 0;
+    flex-direction: column;
+    overflow: hidden;
+    border: 0;
+    border-radius: 9px;
+    background: #f9fafb;
+}
+
+.ViewerPointPanelHeader {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 10px 10px 6px;
+    color: var(--granter-gray-500, #64748b);
+    font-size: 11px;
+    font-weight: 400;
+    line-height: 16px;
+}
+
+.ViewerPointPanelHeader strong {
+    color: var(--granter-gray-700, #334155);
+    font-weight: 400;
+}
+
+.ViewerPointList {
+    display: flex;
+    min-height: 0;
+    flex: 1 1 auto;
+    flex-direction: column;
+    gap: 6px;
+    overflow: auto;
+    padding: 4px 8px 10px;
+}
+
+.ViewerPointButton {
+    display: grid;
+    min-width: 0;
+    grid-template-columns: 24px minmax(0, 1fr);
+    align-items: start;
+    gap: 8px;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    padding: 8px;
+    background: transparent;
+    color: var(--granter-gray-700, #334155);
+    text-align: left;
+    cursor: pointer;
+}
+
+.ViewerPointButton:hover {
+    background: var(--granter-white, #fff);
+}
+
+.ViewerPointButton[data-selected='true'] {
+    border-color: var(--granter-blue-500, #3b82f6);
+    background: var(--granter-white, #fff);
+}
+
+.ViewerPointIndex {
+    display: inline-flex;
+    width: 24px;
+    height: 24px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    background: var(--granter-blue-500, #3b82f6);
+    color: var(--granter-white, #fff);
+    font-size: 11px;
+    font-weight: 400;
+    line-height: 1;
+}
+
+.ViewerPointButton[data-selected='true'] .ViewerPointIndex {
+    background: var(--granter-purple-500, #8b5cf6);
+}
+
+.ViewerPointText {
+    display: grid;
+    min-width: 0;
+    gap: 2px;
+}
+
+.ViewerPointText strong,
+.ViewerPointText small {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ViewerPointText strong {
+    color: var(--granter-gray-900, #111827);
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 17px;
+}
+
+.ViewerPointText small {
+    color: var(--granter-gray-500, #64748b);
+    font-size: 11px;
+    font-weight: 400;
+    line-height: 15px;
+}
+
+.ViewerPointEmpty {
+    display: flex;
+    min-height: 96px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    color: var(--granter-gray-500, #64748b);
+    font-size: 12px;
+    line-height: 18px;
+    text-align: center;
+}
+
+.MaterialTray {
+    flex: 0 0 auto;
+    min-height: 0;
+    margin: 0;
+    border: 0;
+    border-radius: 9px;
+    background: #f9fafb;
+    box-shadow: none;
+}
+
+.MaterialTrayHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 9px 12px 4px;
+    color: var(--granter-gray-500, #64748b);
+    font-size: 11px;
+    font-weight: 400;
+    line-height: 16px;
+}
+
+.MaterialTrayHeader strong {
+    margin-left: 4px;
+    color: var(--granter-gray-700, #334155);
+}
+
+.AddMaterialButton {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    height: 28px;
+    border: 1px solid var(--granter-blue-200, #bfdbfe);
+    border-radius: 7px;
+    padding: 0 9px;
+    background: var(--granter-white, #fff);
+    color: var(--granter-blue-600, #2563eb);
+    font-size: 11px;
+    font-weight: 400;
+    cursor: pointer;
+}
+
+.MaterialList {
+    display: grid;
+    grid-auto-columns: minmax(76px, 82px);
+    grid-auto-flow: column;
+    gap: 12px;
+    overflow-x: auto;
+    padding: 7px 12px 12px;
+}
+
+.MaterialButton,
+.MoreMaterialTile {
+    display: flex;
+    min-width: 0;
+    height: 72px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    padding: 5px;
+    background: transparent;
+    color: var(--granter-gray-600, #475569);
+}
+
+.MaterialButton {
+    cursor: pointer;
+}
+
+.MaterialButton[data-selected='true'] {
+    border-color: var(--granter-blue-500, #3b82f6);
+    box-shadow: none;
+}
+
+.MaterialThumb {
+    display: block;
+    width: 54px;
+    height: 38px;
+    border: 1px solid var(--granter-gray-200, #e5e7eb);
+    border-radius: 4px;
+    background: var(--granter-gray-100, #f1f5f9);
+    overflow: hidden;
+}
+
+.MaterialThumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.MaterialButton strong {
+    width: 100%;
+    margin-top: 4px;
+    overflow: hidden;
+    color: var(--granter-gray-900, #111827);
+    font-size: 11px;
+    font-weight: 400;
+    line-height: 14px;
+    text-align: center;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.MaterialButton span:last-child:not(.MaterialThumb) {
+    display: none;
+}
+
+.MoreMaterialTile {
+    background: var(--granter-gray-700, #334155);
+    color: var(--granter-white, #fff);
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.PointPreviewSlot {
+    --region-preview-empty-min-height: 96px;
+    --region-preview-max-height: 150px;
+
+    min-height: 0;
+    margin: 0 0 2px;
+}
+
+.PointPreviewSlot > * {
+    height: auto;
+}
+
+.PointRows {
+    display: grid;
+    min-width: 0;
+    gap: 10px;
+}
+
+.RowValue {
+    min-width: 0;
+    overflow-wrap: anywhere;
+    color: var(--granter-gray-900, #111827);
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 18px;
+}
+
+.RowValue[data-tone='muted'] {
+    color: var(--granter-gray-500, #64748b);
+}
+
+.RowValue[data-tone='accent'] {
+    color: var(--granter-blue-600, #2563eb);
+}
+
+.RowValue[data-tone='danger'] {
+    color: var(--granter-red-500, #ef4444);
+}
+
+.BottomGrid {
+    display: grid;
+    flex: 0 0 auto;
+    min-height: 112px;
+    grid-template-columns: 1fr;
+    gap: 12px;
+}
+
+@media (max-width: 1100px) {
+    .Root {
+        overflow-y: auto;
+    }
+
+    .TopCard,
+    .InfoGrid,
+    .MainGrid,
+    .BottomGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .TopCard {
+        padding-right: 54px;
+    }
+
+    .PersonSummary,
+    .PersonSummary + .PersonSummary {
+        padding: 0;
+        border-right: 0;
+    }
+
+    .ProgressSlot {
+        padding-left: 0;
+    }
+
+    .ViewerWorkspace {
+        grid-template-columns: 1fr;
+    }
+
+    .ViewerPointPanel {
+        max-height: 180px;
+    }
+
+    .MainGrid {
+        min-height: 720px;
+    }
+}
