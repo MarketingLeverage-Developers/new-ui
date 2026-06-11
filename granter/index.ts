@@ -80,6 +80,7 @@ export { default as AvatarStackButton } from './components/AvatarStackButton/Ava
 export { default as StatusBadge } from './components/StatusBadge/StatusBadge';
 export { default as DetailSceneHeader } from './components/DetailSceneHeader/DetailSceneHeader';
 export { default as CreativeRequestDetailScene } from './components/CreativeRequestDetailScene/CreativeRequestDetailScene';
+export { default as DetailInputField } from './components/DetailInputField/DetailInputField';
 export { default as DetailSubField } from './components/DetailSubField/DetailSubField';
 export { default as DetailSubSection } from './components/DetailSubSection/DetailSubSection';
 export { default as RequestDescriptionBox } from './components/RequestDescriptionBox/RequestDescriptionBox';

@@ -26,6 +26,7 @@ export type OutputAssetListProps = {
     emptyText?: React.ReactNode;
     className?: string;
     variant?: 'card' | 'table';
+    showHeader?: boolean;
     showFilters?: boolean;
     showSort?: boolean;
     onPreview?: (item: OutputAssetListItem) => void;
@@ -111,6 +112,7 @@ const OutputAssetList = ({
     emptyText = '등록된 작업물이 없습니다.',
     className,
     variant = 'card',
+    showHeader = true,
     showFilters = true,
     showSort = true,
     onPreview,
@@ -144,48 +146,46 @@ const OutputAssetList = ({
 
     return (
         <div className={classNames(styles.Root, className)} data-variant={variant}>
-            <div className={styles.Header}>
-                <div className={styles.TitleWrap}>
-                    {variant === 'table' ? (
-                        <span className={styles.TitleIcon} aria-hidden="true">
-                            <FiDownload />
+            {showHeader ? (
+                <div className={styles.Header}>
+                    <div className={styles.TitleWrap}>
+                        {variant === 'table' ? (
+                            <span className={styles.TitleIcon} aria-hidden="true">
+                                <FiDownload />
+                            </span>
+                        ) : null}
+                        <span className={styles.TitleCopy}>
+                            <strong>{title}</strong>
+                            {description ? <small>{description}</small> : null}
                         </span>
-                    ) : null}
-                    <span className={styles.TitleCopy}>
-                        <strong>{title}</strong>
-                        {description ? <small>{description}</small> : null}
-                    </span>
+                    </div>
+                    <div className={styles.HeaderActions}>
+                        {variant === 'table' ? null : <em className={styles.TotalBadge}>총 {items.length}개</em>}
+                        {showSort ? (
+                            <select
+                                className={styles.SortSelect}
+                                value={sortKind}
+                                aria-label="작업물 정렬"
+                                onChange={(event) => setSortKind(event.target.value as SortKind)}
+                            >
+                                <option value="latest">최신순</option>
+                                <option value="name">이름순</option>
+                            </select>
+                        ) : null}
+                        {variant === 'table' ? (
+                            <button
+                                type="button"
+                                className={styles.DownloadAllButton}
+                                disabled={downloadableItems.length === 0}
+                                onClick={() => downloadAssets(downloadableItems, onDownloadAll, onDownload)}
+                            >
+                                <FiDownload aria-hidden="true" />
+                                전체 다운로드
+                            </button>
+                        ) : null}
+                    </div>
                 </div>
-                <div className={styles.HeaderActions}>
-                    {variant === 'table' ? (
-                        null
-                    ) : (
-                        <em className={styles.TotalBadge}>총 {items.length}개</em>
-                    )}
-                    {showSort ? (
-                        <select
-                            className={styles.SortSelect}
-                            value={sortKind}
-                            aria-label="작업물 정렬"
-                            onChange={(event) => setSortKind(event.target.value as SortKind)}
-                        >
-                            <option value="latest">최신순</option>
-                            <option value="name">이름순</option>
-                        </select>
-                    ) : null}
-                    {variant === 'table' ? (
-                        <button
-                            type="button"
-                            className={styles.DownloadAllButton}
-                            disabled={downloadableItems.length === 0}
-                            onClick={() => downloadAssets(downloadableItems, onDownloadAll, onDownload)}
-                        >
-                            <FiDownload aria-hidden="true" />
-                            전체 다운로드
-                        </button>
-                    ) : null}
-                </div>
-            </div>
+            ) : null}
 
             {showFilters ? (
                 <div className={styles.FilterTabs} role="tablist" aria-label="작업물 유형 필터">

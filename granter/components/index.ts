@@ -160,6 +160,8 @@ export type { StatusBadgeProps } from './StatusBadge/StatusBadge';
 export { default as DetailSceneHeader } from './DetailSceneHeader/DetailSceneHeader';
 export type { DetailSceneHeaderProps, DetailSceneHeaderTone } from './DetailSceneHeader/DetailSceneHeader';
 export { default as CreativeRequestDetailScene } from './CreativeRequestDetailScene/CreativeRequestDetailScene';
+export { default as DetailInputField } from './DetailInputField/DetailInputField';
+export type { DetailInputFieldProps } from './DetailInputField/DetailInputField';
 export type {
     CreativeRequestDetailSceneMaterial,
     CreativeRequestDetailScenePerson,

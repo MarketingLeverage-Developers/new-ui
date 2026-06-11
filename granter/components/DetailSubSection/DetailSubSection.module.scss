@@ -2,9 +2,9 @@
     display: grid;
     min-width: 0;
     overflow: visible;
-    border: 1px solid var(--granter-gray-200, #e5e7eb);
+    border: 0;
     border-radius: 8px;
-    background: var(--granter-white, #fff);
+    background: var(--granter-gray-50, #f9fafb);
     box-shadow: none;
 }
 

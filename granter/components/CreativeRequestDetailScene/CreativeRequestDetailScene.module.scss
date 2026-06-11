@@ -204,7 +204,7 @@
 .TopStatusSchedule {
     display: grid;
     min-width: 0;
-    grid-template-columns: max-content minmax(260px, 1fr);
+    grid-template-columns: max-content max-content;
     align-items: center;
     gap: 16px;
     padding: 0 4px 0 28px;
@@ -225,7 +225,7 @@
 
 .TopScheduleTimeline {
     min-width: 0;
-    grid-template-columns: minmax(112px, 0.44fr) minmax(82px, 1fr) minmax(112px, 0.44fr);
+    grid-template-columns: minmax(112px, max-content) 86px minmax(112px, max-content);
     align-items: center;
     gap: 12px;
     padding: 0;
