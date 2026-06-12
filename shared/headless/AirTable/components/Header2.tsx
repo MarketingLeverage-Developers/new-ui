@@ -915,7 +915,8 @@ export const Header2 = <T,>({ className, headerCellClassName, resizeHandleClassN
                                         }}
                                         style={{
                                             position: 'absolute',
-                                            top: 0,
+                                            top: '50%',
+                                            transform: 'translateY(-50%)',
                                             right: sortButtonRight,
                                             width: 20,
                                             height: '100%',
