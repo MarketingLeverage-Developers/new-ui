@@ -223,6 +223,8 @@ export type {
     DashedDropzoneUploaderProps,
     DashedDropzoneUploaderVariant,
 } from './DashedDropzoneUploader/DashedDropzoneUploader';
+export { default as SingleImageDropzonePicker } from './SingleImageDropzonePicker/SingleImageDropzonePicker';
+export type { SingleImageDropzonePickerProps } from './SingleImageDropzonePicker/SingleImageDropzonePicker';
 export { default as ImagePreviewBox } from './ImagePreviewBox/ImagePreviewBox';
 export type { ImagePreviewBoxProps } from './ImagePreviewBox/ImagePreviewBox';
 export { default as InlineFileInputUploader } from './InlineFileInputUploader/InlineFileInputUploader';
