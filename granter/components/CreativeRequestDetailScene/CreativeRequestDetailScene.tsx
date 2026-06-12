@@ -49,6 +49,21 @@ export type CreativeRequestDetailSceneRow = {
     wide?: boolean;
 };
 
+export type CreativeRequestDetailSceneLabels = {
+    reviewTitle?: React.ReactNode;
+    primaryListTitle?: React.ReactNode;
+    primaryListAriaLabel?: string;
+    primaryFallbackLabel?: string;
+    secondaryListTitle?: React.ReactNode;
+    secondaryListAriaLabel?: string;
+    secondaryFallbackLabel?: string;
+    imageListTitle?: React.ReactNode;
+    imageListAriaLabel?: string;
+    pointListTitle?: React.ReactNode;
+    materialDetailTitle?: React.ReactNode;
+    outputTitle?: React.ReactNode;
+};
+
 export type CreativeRequestDetailSceneProps = {
     className?: string;
     layoutMode?: 'standard' | 'immersive';
@@ -62,6 +77,9 @@ export type CreativeRequestDetailSceneProps = {
     materials: CreativeRequestDetailSceneMaterial[];
     selectedMaterialId?: string | number | null;
     onSelectMaterial?: (id: string | number) => void;
+    secondaryMaterials?: CreativeRequestDetailSceneMaterial[];
+    selectedSecondaryMaterialId?: string | number | null;
+    onSelectSecondaryMaterial?: (id: string | number) => void;
     imageItems?: CreativeRequestDetailSceneImageItem[];
     selectedImageId?: string | number | null;
     onSelectImage?: (id: string | number) => void;
@@ -76,6 +94,7 @@ export type CreativeRequestDetailSceneProps = {
     materialRequestRows: CreativeRequestDetailSceneRow[];
     pointRows: CreativeRequestDetailSceneRow[];
     requestScheduleInfo: RequestScheduleInfoCardProps;
+    labels?: CreativeRequestDetailSceneLabels;
 };
 
 const renderEmpty = (value: React.ReactNode) => {
@@ -154,6 +173,9 @@ const CreativeRequestDetailScene = ({
     materials,
     selectedMaterialId,
     onSelectMaterial,
+    secondaryMaterials = [],
+    selectedSecondaryMaterialId,
+    onSelectSecondaryMaterial,
     imageItems = [],
     selectedImageId,
     onSelectImage,
@@ -168,9 +190,27 @@ const CreativeRequestDetailScene = ({
     materialRequestRows,
     pointRows,
     requestScheduleInfo,
+    labels,
 }: CreativeRequestDetailSceneProps) => {
+    const sceneLabels = {
+        reviewTitle: '소재 검토',
+        primaryListTitle: '소재',
+        primaryListAriaLabel: '소재 목록',
+        primaryFallbackLabel: '소재',
+        secondaryListTitle: '섹션',
+        secondaryListAriaLabel: '섹션 목록',
+        secondaryFallbackLabel: '섹션',
+        imageListTitle: '이미지',
+        imageListAriaLabel: '이미지 목록',
+        pointListTitle: '포인트',
+        materialDetailTitle: '소재 설명',
+        outputTitle: '작업물',
+        ...labels,
+    };
     const visibleMaterials = materials.slice(0, 7);
     const hiddenMaterialCount = Math.max(materials.length - visibleMaterials.length, 0);
+    const visibleSecondaryMaterials = secondaryMaterials.slice(0, 7);
+    const hiddenSecondaryMaterialCount = Math.max(secondaryMaterials.length - visibleSecondaryMaterials.length, 0);
     const visibleImages = imageItems.slice(0, 7);
     const hiddenImageCount = Math.max(imageItems.length - visibleImages.length, 0);
     const materialDescriptionRow = materialRequestRows[0] ?? null;
@@ -178,9 +218,52 @@ const CreativeRequestDetailScene = ({
     const selectedPointIndex = pointItems.findIndex((point) => String(point.id) === String(selectedPointId));
     const selectedPoint = selectedPointIndex >= 0 ? pointItems[selectedPointIndex] : pointItems[0] ?? null;
     const selectedPointNumber = selectedPointIndex >= 0 ? selectedPointIndex + 1 : selectedPoint ? 1 : null;
+    const renderMaterialList = ({
+        items,
+        selectedId,
+        onSelect,
+        hiddenCount,
+        ariaLabel,
+        fallbackLabel,
+    }: {
+        items: CreativeRequestDetailSceneMaterial[];
+        selectedId?: string | number | null;
+        onSelect?: (id: string | number) => void;
+        hiddenCount: number;
+        ariaLabel: string;
+        fallbackLabel: string;
+    }) => (
+        <div className={styles.MaterialList} aria-label={ariaLabel}>
+            {items.map((material, index) => {
+                const selected = String(material.id) === String(selectedId);
+
+                return (
+                    <button
+                        key={material.id}
+                        type="button"
+                        className={styles.MaterialButton}
+                        data-selected={selected ? 'true' : 'false'}
+                        onClick={() => onSelect?.(material.id)}
+                    >
+                        <span className={styles.MaterialThumb}>{material.imageSrc ? <img src={material.imageSrc} alt="" /> : null}</span>
+                        <span className={styles.MaterialCopy}>
+                            <strong>{material.title}</strong>
+                            <span>{material.meta ?? `${fallbackLabel} ${index + 1}`}</span>
+                        </span>
+                        {selected ? (
+                            <span className={styles.MaterialSelectedIcon} aria-hidden="true">
+                                <FiCheck />
+                            </span>
+                        ) : null}
+                    </button>
+                );
+            })}
+            {hiddenCount > 0 ? <span className={styles.MoreMaterialTile}>+{hiddenCount}</span> : null}
+        </div>
+    );
     const pointListPanel = (
         <DetailSubSection
-            title="포인트"
+            title={sceneLabels.pointListTitle}
             icon={<FiTarget />}
             tone="orange"
             className={styles.PointListCard}
@@ -215,7 +298,7 @@ const CreativeRequestDetailScene = ({
     );
     const materialTray = (
         <DetailSubSection
-            title="소재"
+            title={sceneLabels.primaryListTitle}
             icon={<FiImage />}
             tone="indigo"
             className={styles.MaterialTray}
@@ -230,45 +313,52 @@ const CreativeRequestDetailScene = ({
                 ) : null
             }
         >
-            <div className={styles.MaterialList} aria-label="소재 목록">
-                {visibleMaterials.map((material, index) => {
-                    const selected = String(material.id) === String(selectedMaterialId);
-
-                    return (
-                        <button
-                            key={material.id}
-                            type="button"
-                            className={styles.MaterialButton}
-                            data-selected={selected ? 'true' : 'false'}
-                            onClick={() => onSelectMaterial?.(material.id)}
-                        >
-                            <span className={styles.MaterialThumb}>{material.imageSrc ? <img src={material.imageSrc} alt="" /> : null}</span>
-                            <span className={styles.MaterialCopy}>
-                                <strong>{material.title}</strong>
-                                <span>{material.meta ?? `소재 ${index + 1}`}</span>
-                            </span>
-                            {selected ? (
-                                <span className={styles.MaterialSelectedIcon} aria-hidden="true">
-                                    <FiCheck />
-                                </span>
-                            ) : null}
-                        </button>
-                    );
-                })}
-                {hiddenMaterialCount > 0 ? <span className={styles.MoreMaterialTile}>+{hiddenMaterialCount}</span> : null}
-            </div>
+            {renderMaterialList({
+                items: visibleMaterials,
+                selectedId: selectedMaterialId,
+                onSelect: onSelectMaterial,
+                hiddenCount: hiddenMaterialCount,
+                ariaLabel: sceneLabels.primaryListAriaLabel,
+                fallbackLabel: sceneLabels.primaryFallbackLabel,
+            })}
         </DetailSubSection>
+    );
+    const secondaryMaterialTray =
+        secondaryMaterials.length > 0 ? (
+            <DetailSubSection
+                title={sceneLabels.secondaryListTitle}
+                icon={<FiImage />}
+                tone="indigo"
+                className={styles.MaterialTray}
+                bodyClassName={styles.MaterialTrayBox}
+                collapsible
+            >
+                {renderMaterialList({
+                    items: visibleSecondaryMaterials,
+                    selectedId: selectedSecondaryMaterialId,
+                    onSelect: onSelectSecondaryMaterial,
+                    hiddenCount: hiddenSecondaryMaterialCount,
+                    ariaLabel: sceneLabels.secondaryListAriaLabel,
+                    fallbackLabel: sceneLabels.secondaryFallbackLabel,
+                })}
+            </DetailSubSection>
+        ) : null;
+    const materialNavigationPanels = (
+        <>
+            {materialTray}
+            {secondaryMaterialTray}
+        </>
     );
     const imageListPanel = (
         <DetailSubSection
-            title="이미지"
+            title={sceneLabels.imageListTitle}
             icon={<FiImage />}
             tone="indigo"
             className={styles.ImageListCard}
             bodyClassName={styles.ImageListBox}
             collapsible
         >
-            <div className={styles.ImageList} aria-label="이미지 목록">
+            <div className={styles.ImageList} aria-label={sceneLabels.imageListAriaLabel}>
                 {visibleImages.length > 0 ? (
                     visibleImages.map((image, index) => {
                         const selected = String(image.id) === String(selectedImageId);
@@ -304,20 +394,20 @@ const CreativeRequestDetailScene = ({
     const reviewPanel = (
         <DetailInfoSection
             icon={<FiEdit3 />}
-            title="소재 검토"
+            title={sceneLabels.reviewTitle}
             tone="violet"
             className={styles.ReviewPanel}
             boxClassName={styles.ReviewPanelBox}
             contentClassName={styles.ReviewPanelScrollBody}
         >
-            {materialTray}
+            {materialNavigationPanels}
             {imageListPanel}
             {pointListPanel}
         </DetailInfoSection>
     );
     const materialDetailPanel = (
         <div className={styles.ViewerDetailPanel}>
-            <DetailSubSection title="소재 설명" icon={<FiMessageSquare />} tone="indigo">
+            <DetailSubSection title={sceneLabels.materialDetailTitle} icon={<FiMessageSquare />} tone="indigo">
                 {materialDescriptionRow ? (
                     <p className={styles.MaterialDescriptionText}>{renderEmpty(materialDescriptionRow.value)}</p>
                 ) : null}
@@ -342,7 +432,7 @@ const CreativeRequestDetailScene = ({
             </DetailSubSection>
 
             {outputContent ? (
-                <DetailSubSection title="작업물" icon={<FiImage />} tone="slate">
+                <DetailSubSection title={sceneLabels.outputTitle} icon={<FiImage />} tone="slate">
                     {outputContent}
                 </DetailSubSection>
             ) : null}
@@ -403,7 +493,7 @@ const CreativeRequestDetailScene = ({
                     <div className={styles.ViewerWorkspace}>
                         {layoutMode === 'immersive' ? (
                             <div className={styles.ViewerOverlayLayer}>
-                                {materialTray}
+                                {materialNavigationPanels}
                             </div>
                         ) : null}
                         <div className={styles.ViewerSlot}>{viewer}</div>
