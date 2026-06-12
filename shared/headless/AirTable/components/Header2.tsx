@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { MIN_COL_WIDTH, useAirTableContext } from '../AirTable2';
 import type { CellRenderMeta, FilterState, SortConfig, SortDirection, SortValue } from '../AirTable2';
-import { FaArrowDown, FaArrowUp } from 'react-icons/fa';
+import { FaArrowDown, FaArrowUp, FaSort } from 'react-icons/fa';
 import { VscFilter, VscFilterFilled } from 'react-icons/vsc';
 import { getThemeColor } from '../../../utils/css/getThemeColor';
 import { motion } from 'framer-motion';
@@ -83,7 +83,7 @@ const SortIcon = ({
         return <FaArrowDown size={12} color={activeColor} aria-hidden="true" />;
     }
 
-    return null;
+    return <FaSort size={13} color="var(--granter-gray-400, #94a3b8)" aria-hidden="true" />;
 };
 
 const DefaultColumnFilter = <T,>({
@@ -923,7 +923,9 @@ export const Header2 = <T,>({ className, headerCellClassName, resizeHandleClassN
                                             borderRadius: 0,
                                             border: 'none',
                                             background: 'transparent',
-                                            color: getThemeColor('Black1'),
+                                            color: sortDirection
+                                                ? getThemeColor('Black1')
+                                                : 'var(--granter-gray-200, #94a3b8)',
                                             cursor: 'pointer',
                                             display: 'flex',
                                             alignItems: 'center',
