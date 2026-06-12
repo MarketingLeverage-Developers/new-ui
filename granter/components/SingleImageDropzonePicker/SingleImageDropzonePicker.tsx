@@ -1,5 +1,7 @@
 import { useRef, useState, type DragEventHandler } from 'react';
+import classNames from 'classnames';
 import { FiX } from 'react-icons/fi';
+import styles from './SingleImageDropzonePicker.module.scss';
 
 export type SingleImageDropzonePickerProps = {
     imageSrc?: string | null;
@@ -80,7 +82,7 @@ const SingleImageDropzonePicker = ({
 
     return (
         <div
-            className={className}
+            className={classNames(styles.Root, className)}
             data-dragging={dragging ? 'true' : 'false'}
             data-disabled={disabled ? 'true' : 'false'}
             onDragEnter={handleDragEnter}
@@ -90,7 +92,7 @@ const SingleImageDropzonePicker = ({
         >
             <button
                 type="button"
-                className={buttonClassName}
+                className={classNames(styles.Button, buttonClassName)}
                 disabled={disabled}
                 data-dragging={dragging ? 'true' : 'false'}
                 data-disabled={disabled ? 'true' : 'false'}

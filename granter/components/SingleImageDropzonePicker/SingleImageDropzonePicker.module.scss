@@ -1,0 +1,22 @@
+.Root {
+    position: relative;
+}
+
+.Button {
+    transition:
+        background-color 0.15s ease,
+        border-color 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+.Button[data-dragging='true'] {
+    border-color: var(--granter-gray-500);
+    background-color: var(--granter-gray-50);
+    box-shadow: 0 0 0 3px rgb(17 24 39 / 4%);
+}
+
+.Button[data-disabled='true'] {
+    border-color: var(--granter-gray-200);
+    background-color: var(--granter-gray-50);
+    cursor: not-allowed;
+}
