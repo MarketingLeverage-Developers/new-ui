@@ -10,6 +10,7 @@ export type SearchInputWidthPreset = 'auto' | 'coupang';
 export type SearchInputProps = {
     value: string;
     onValueChange: (next: string) => void;
+    onSearch?: (value: string) => void;
     placeholder: string;
     ariaLabel?: string;
     widthPreset?: SearchInputWidthPreset;
@@ -20,6 +21,7 @@ export type SearchInputProps = {
 const SearchInput = ({
     value,
     onValueChange,
+    onSearch,
     placeholder,
     ariaLabel = placeholder,
     widthPreset = 'auto',
@@ -58,6 +60,13 @@ const SearchInput = ({
         onValueChange('');
     };
 
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key !== 'Enter') return;
+        if (event.nativeEvent.isComposing || isComposingRef.current) return;
+
+        onSearch?.(draftValue);
+    };
+
     return (
         <div
             className={classNames(styles.SearchInput, className)}
@@ -71,6 +80,7 @@ const SearchInput = ({
                 placeholder={placeholder}
                 aria-label={ariaLabel}
                 onChange={handleChange}
+                onKeyDown={handleKeyDown}
                 onCompositionStart={handleCompositionStart}
                 onCompositionEnd={handleCompositionEnd}
             />
