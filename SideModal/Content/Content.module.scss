@@ -34,3 +34,8 @@
     pointer-events: none;
     visibility: hidden;
 }
+
+.BackdropBlurDisabled.BackdropBlurDisabled {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+}

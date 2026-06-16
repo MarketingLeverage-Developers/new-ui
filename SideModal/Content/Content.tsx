@@ -12,13 +12,18 @@ import { toCssUnit } from '../../shared/utils';
 type ContentProps = {
     children: React.ReactNode;
     width?: CSSLength;
+    backdropClassName?: string;
+    backdropBlurDisabled?: boolean;
 };
 
-const Content = ({ children, width }: ContentProps) => {
+const Content = ({ children, width, backdropClassName, backdropBlurDisabled }: ContentProps) => {
     const { modalValue } = useModal();
     const classnames = classNames(styles.SideModalContent, {
         [styles.Open]: modalValue,
         [styles.Closed]: !modalValue,
+    });
+    const backdropClassNames = classNames(backdropClassName, {
+        [styles.BackdropBlurDisabled]: backdropBlurDisabled,
     });
 
     const cssVariables: CSSVariables = {
@@ -27,7 +32,7 @@ const Content = ({ children, width }: ContentProps) => {
 
     return (
         <Portal>
-            <Modal.Backdrop />
+            <Modal.Backdrop className={backdropClassNames} />
             <Modal.Content
                 className={classnames}
                 height="100vh"
