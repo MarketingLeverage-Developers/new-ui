@@ -1,0 +1,89 @@
+.Root {
+    flex: 0 0 auto;
+    overflow-x: auto;
+    padding: 0 80px;
+}
+
+.Progress {
+    position: relative;
+    display: grid;
+    width: min(680px, 100%);
+    min-width: min(560px, 100%);
+    margin: 0 auto;
+    align-items: start;
+}
+
+.Progress::before {
+    position: absolute;
+    top: 16px;
+    left: calc(50% / var(--step-progress-count, 1));
+    right: calc(50% / var(--step-progress-count, 1));
+    height: 1px;
+    border-radius: 999px;
+    background: var(--granter-gray-300, #cbd5e1);
+    content: '';
+}
+
+.Fill {
+    position: absolute;
+    top: 16px;
+    left: calc(50% / var(--step-progress-count, 1));
+    width: calc((100% - (100% / var(--step-progress-count, 1))) * var(--step-progress-ratio, 0));
+    height: 1px;
+    border-radius: 999px;
+    background: var(--step-progress-color);
+}
+
+.Step {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    min-width: 0;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    color: var(--granter-gray-600, #475569);
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 18px;
+    white-space: nowrap;
+}
+
+.Step[data-active='true'] {
+    color: var(--step-progress-color);
+}
+
+.Dot {
+    display: inline-flex;
+    width: 34px;
+    height: 34px;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--granter-gray-300, #cbd5e1);
+    border-radius: 999px;
+    background: var(--granter-white, #fff);
+    color: var(--granter-gray-700, #334155);
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1;
+    box-shadow: none;
+}
+
+.Step[data-active='true'] .Dot {
+    border-color: transparent;
+    background: var(--step-progress-color);
+    color: var(--granter-white, #fff);
+    box-shadow: none;
+}
+
+.Label {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+@media (max-width: 900px) {
+    .Root {
+        padding: 0 24px;
+    }
+}

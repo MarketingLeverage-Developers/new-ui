@@ -50,10 +50,10 @@
     justify-content: center;
     padding: 0;
     border: none;
-    border-bottom: 1px solid rgb(255 255 255 / 18%);
+    border-bottom: 1px solid rgb(226 232 240 / 82%);
     outline: none;
     background: transparent;
-    color: rgb(255 255 255 / 92%);
+    color: var(--granter-gray-700, #334155);
     font-size: 12px;
     font-weight: 900;
     cursor: pointer;
@@ -64,12 +64,12 @@
 }
 
 .ZoomControls button:disabled {
-    color: rgb(255 255 255 / 32%);
+    color: var(--granter-gray-300, #cbd5e1);
     cursor: not-allowed;
 }
 
 .ZoomControls button:focus-visible {
-    box-shadow: inset 0 0 0 2px rgb(255 255 255 / 30%);
+    box-shadow: inset 0 0 0 2px rgb(14 165 233 / 28%);
 }
 
 .ViewerShell {
@@ -80,11 +80,20 @@
     flex: 1;
     overflow: hidden;
     border: 0;
-    border-radius: 10px;
+    border-radius: var(--annotated-image-viewer-radius, 10px);
     background:
-        radial-gradient(circle at 30% 20%, rgb(255 255 255 / 6%), transparent 30%),
-        linear-gradient(135deg, #252a31 0%, #15191f 100%);
-    box-shadow: inset 0 0 0 1px rgb(255 255 255 / 8%);
+        linear-gradient(45deg, #e2e8f0 25%, transparent 25%),
+        linear-gradient(-45deg, #e2e8f0 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, #e2e8f0 75%),
+        linear-gradient(-45deg, transparent 75%, #e2e8f0 75%);
+    background-color: #f8fafc;
+    background-position:
+        0 0,
+        0 10px,
+        10px -10px,
+        -10px 0;
+    background-size: 20px 20px;
+    box-shadow: inset 0 0 0 1px rgb(15 23 42 / 10%);
 }
 
 .Root[data-display-mode='document'] .ViewerShell {
@@ -103,8 +112,7 @@
     min-width: 0;
     flex: 1;
     overflow: auto;
-    padding: 40px 58px 40px 40px;
-    background: transparent;
+    padding: var(--annotated-image-viewer-stage-padding, 40px 58px 40px 40px);
     cursor: grab;
     touch-action: none;
 }
@@ -125,6 +133,18 @@
     width: max-content;
     height: max-content;
     margin: auto;
+    background:
+        linear-gradient(45deg, #e2e8f0 25%, transparent 25%),
+        linear-gradient(-45deg, #e2e8f0 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, #e2e8f0 75%),
+        linear-gradient(-45deg, transparent 75%, #e2e8f0 75%);
+    background-color: #f8fafc;
+    background-position:
+        0 0,
+        0 8px,
+        8px -8px,
+        -8px 0;
+    background-size: 16px 16px;
     box-shadow: 0 18px 34px rgb(0 0 0 / 26%);
 }
 
@@ -139,6 +159,23 @@
     -webkit-user-drag: none;
 }
 
+.DrawingOverlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    cursor: crosshair;
+    touch-action: none;
+}
+
+.DraftRegion {
+    fill: rgb(14 165 233 / 10%);
+    stroke: rgb(14 165 233 / 96%);
+    stroke-width: 0.004;
+    stroke-dasharray: 0.012 0.008;
+}
+
 .RegionBox {
     position: absolute;
     z-index: 2;
@@ -146,38 +183,35 @@
     min-width: 8px;
     min-height: 8px;
     padding: 0;
-    border: 1px solid rgb(124 58 237 / 82%);
-    border-radius: 4px;
-    background:
-        linear-gradient(135deg, rgb(124 58 237 / 10%), rgb(37 99 235 / 5%));
-    box-shadow:
-        inset 0 0 0 1px rgb(255 255 255 / 36%),
-        0 0 0 1px rgb(15 23 42 / 8%);
+    border: 1px solid var(--granter-gray-400, #94a3b8);
+    border-radius: 0;
+    background: rgb(148 163 184 / 10%);
+    box-shadow: none;
     cursor: pointer;
+    user-select: none;
     transition:
         border-color 120ms ease,
         background-color 120ms ease,
-        box-shadow 120ms ease;
+        opacity 120ms ease;
+}
+
+.RegionBox[data-draggable='true'] {
+    cursor: grab;
+}
+
+.RegionBox[data-dragging='true'] {
+    cursor: grabbing;
 }
 
 .RegionBox:hover {
-    border-color: rgb(99 102 241 / 92%);
-    background:
-        linear-gradient(135deg, rgb(124 58 237 / 14%), rgb(37 99 235 / 7%));
-    box-shadow:
-        inset 0 0 0 1px rgb(255 255 255 / 44%),
-        0 0 0 2px rgb(124 58 237 / 12%),
-        0 8px 18px rgb(15 23 42 / 12%);
+    border-color: var(--granter-gray-500, #64748b);
+    background: rgb(100 116 139 / 12%);
 }
 
 .RegionBox[data-active='true'] {
-    border-color: rgb(124 58 237 / 96%);
-    background:
-        linear-gradient(135deg, rgb(124 58 237 / 16%), rgb(37 99 235 / 8%));
-    box-shadow:
-        inset 0 0 0 1px rgb(255 255 255 / 50%),
-        0 0 0 2px rgb(124 58 237 / 16%),
-        0 10px 24px rgb(15 23 42 / 14%);
+    border-color: var(--granter-sky-500, #0ea5e9);
+    background: rgb(14 165 233 / 12%);
+    box-shadow: none;
 }
 
 .RegionBox[data-active='true']::before,
@@ -185,7 +219,7 @@
     content: none;
 }
 
-.RegionBox span {
+.RegionIndex {
     position: absolute;
     top: -12px;
     left: -12px;
@@ -194,23 +228,88 @@
     justify-content: center;
     width: 22px;
     height: 22px;
-    border: 2px solid rgb(255 255 255 / 92%);
+    border: 0;
     border-radius: 999px;
-    background:
-        linear-gradient(135deg, #475569, #1f2937);
+    background: var(--granter-gray-400, #94a3b8);
     color: var(--granter-white);
     font-size: 11px;
     font-weight: 700;
     line-height: 1;
-    box-shadow:
-        0 5px 12px rgb(15 23 42 / 22%),
-        0 0 0 1px rgb(15 23 42 / 8%);
+    box-shadow: none;
     pointer-events: none;
 }
 
-.RegionBox[data-active='true'] span {
-    background:
-        linear-gradient(135deg, #8b5cf6, #6366f1);
+.RegionBox[data-active='true'] .RegionIndex {
+    background: var(--granter-sky-500, #0ea5e9);
+}
+
+.RegionDeleteButton {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 3;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    height: 32px;
+    padding: 0 12px;
+    border: 0;
+    border-radius: 999px;
+    background: rgb(15 23 42 / 92%);
+    color: var(--granter-white, #fff);
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1;
+    white-space: nowrap;
+    opacity: 0;
+    box-shadow: 0 10px 24px rgb(15 23 42 / 28%);
+    transform: translate(-50%, -50%) scale(0.96);
+    transition:
+        opacity 120ms ease,
+        transform 120ms ease;
+    pointer-events: none;
+    cursor: pointer;
+}
+
+.RegionDeleteButton svg {
+    flex: 0 0 auto;
+}
+
+.RegionBox:hover .RegionDeleteButton,
+.RegionBox:focus-within .RegionDeleteButton {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+    pointer-events: auto;
+}
+
+.RegionResizeHandle {
+    position: absolute;
+    right: -5px;
+    bottom: -5px;
+    z-index: 4;
+    display: inline-flex;
+    box-sizing: border-box;
+    width: 10px;
+    min-width: 10px;
+    height: 10px;
+    min-height: 10px;
+    aspect-ratio: 1 / 1;
+    flex: 0 0 10px;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    appearance: none;
+    background: var(--granter-sky-500, #0ea5e9);
+    box-shadow: none;
+    cursor: nwse-resize;
+    touch-action: none;
+}
+
+.RegionResizeHandle::before {
+    content: none;
 }
 
 .Empty {
@@ -256,11 +355,11 @@
     flex-direction: column;
     overflow: hidden;
     gap: 0;
-    border: 1px solid rgb(255 255 255 / 42%);
-    border-radius: 10px;
-    background: rgb(15 23 42 / 42%);
-    box-shadow: 0 10px 24px rgb(0 0 0 / 28%);
-    backdrop-filter: blur(8px);
+    border: 1px solid rgb(226 232 240 / 78%);
+    border-radius: 14px;
+    background: rgb(255 255 255 / 94%);
+    box-shadow: 0 18px 42px rgb(15 23 42 / 16%);
+    backdrop-filter: blur(14px);
     pointer-events: auto;
 }
 
@@ -272,22 +371,23 @@
     justify-content: center;
     padding: 0;
     border: 0;
-    border-top: 1px solid rgb(255 255 255 / 18%);
+    border-top: 1px solid rgb(226 232 240 / 82%);
     border-radius: 0;
     outline: none;
     background-color: transparent;
-    color: rgb(255 255 255 / 92%);
+    color: var(--granter-gray-700, #334155);
     cursor: pointer;
     box-shadow: none;
 }
 
 .ZoomControls button:hover:not(:disabled),
 .ResetViewButton:hover {
-    background-color: rgb(255 255 255 / 10%);
+    background-color: var(--granter-gray-50, #f8fafc);
+    color: var(--granter-sky-600, #0284c7);
 }
 
 .ResetViewButton:focus-visible {
-    box-shadow: inset 0 0 0 2px rgb(255 255 255 / 30%);
+    box-shadow: inset 0 0 0 2px rgb(14 165 233 / 28%);
 }
 
 @media (max-width: 960px) {

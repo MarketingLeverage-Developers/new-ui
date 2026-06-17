@@ -3,10 +3,41 @@
     flex-direction: column;
 }
 
+.Header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--granter-gray-200);
+}
+
 .Title {
     padding-bottom: 10px;
     border-bottom: 1px solid var(--granter-gray-200);
     line-height: 24px;
+}
+
+.Header .Title {
+    min-width: 0;
+    padding-bottom: 0;
+    border-bottom: 0;
+}
+
+.Root[data-variant='plain'] .Title {
+    padding-bottom: 0;
+    border-bottom: 0;
+}
+
+.Root[data-variant='plain'] .Header {
+    padding-bottom: 0;
+    border-bottom: 0;
+}
+
+.Actions {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
 }
 
 .Rows > * + * {

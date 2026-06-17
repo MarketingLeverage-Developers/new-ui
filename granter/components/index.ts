@@ -75,11 +75,7 @@ export type {
     SidebarMenuMetaButtonProps,
 } from './SidebarMenu/SidebarMenu';
 export { default as LabeledPillTabs } from './LabeledPillTabs/LabeledPillTabs';
-export type {
-    LabeledPillTabsProps,
-    LabeledPillTabsItem,
-    LabeledPillTabsTone,
-} from './LabeledPillTabs/LabeledPillTabs';
+export type { LabeledPillTabsProps, LabeledPillTabsItem, LabeledPillTabsTone } from './LabeledPillTabs/LabeledPillTabs';
 
 export { default as MainTabLayout } from './MainTabLayout/MainTabLayout';
 export type { MainTabLayoutProps, MainTabLayoutItem } from './MainTabLayout/MainTabLayout';
@@ -106,11 +102,7 @@ export { default as AlertText } from './AlertText/AlertText';
 export type { AlertTextProps } from './AlertText/AlertText';
 
 export { default as NoticeBanner } from './NoticeBanner/NoticeBanner';
-export type {
-    NoticeBannerChip,
-    NoticeBannerProps,
-    NoticeBannerTone,
-} from './NoticeBanner/NoticeBanner';
+export type { NoticeBannerChip, NoticeBannerProps, NoticeBannerTone } from './NoticeBanner/NoticeBanner';
 
 export { default as SpreadsheetInputTable } from './SpreadsheetInputTable/SpreadsheetInputTable';
 export type {
@@ -146,10 +138,7 @@ export type { MetricValueCardProps, MetricValueCardVariant, MetricValueTone } fr
 export { default as MetricStatusCard } from './MetricStatusCard/MetricStatusCard';
 export type { MetricStatusCardProps } from './MetricStatusCard/MetricStatusCard';
 export { default as MetricSummaryStrip } from './MetricSummaryStrip/MetricSummaryStrip';
-export type {
-    MetricSummaryStripItem,
-    MetricSummaryStripProps,
-} from './MetricSummaryStrip/MetricSummaryStrip';
+export type { MetricSummaryStripItem, MetricSummaryStripProps } from './MetricSummaryStrip/MetricSummaryStrip';
 export { default as MediaSelectCard } from './MediaSelectCard/MediaSelectCard';
 export type { MediaSelectCardProps, MediaSelectCardStatusTone } from './MediaSelectCard/MediaSelectCard';
 
@@ -183,6 +172,7 @@ export type {
     AnnotatedImageViewerAsset,
     AnnotatedImageViewerProps,
     AnnotatedImageViewerRegion,
+    AnnotatedImageViewerRegionDraft,
 } from './AnnotatedImageViewer/AnnotatedImageViewer';
 export { default as RegionPreview } from './RegionPreview/RegionPreview';
 export type { RegionPreviewProps, RegionPreviewRegion } from './RegionPreview/RegionPreview';
@@ -204,6 +194,8 @@ export { default as DetailInfoSection } from './DetailInfoSection/DetailInfoSect
 export type { DetailInfoSectionProps, DetailInfoSectionTone } from './DetailInfoSection/DetailInfoSection';
 export { default as DetailInfoRow } from './DetailInfoRow/DetailInfoRow';
 export type { DetailInfoRowProps } from './DetailInfoRow/DetailInfoRow';
+export { default as EmptyGuideBox } from './EmptyGuideBox/EmptyGuideBox';
+export type { EmptyGuideBoxProps } from './EmptyGuideBox/EmptyGuideBox';
 
 export { default as SectionBlock } from './SectionBlock/SectionBlock';
 export type { SectionBlockProps } from './SectionBlock/SectionBlock';
@@ -226,10 +218,7 @@ export type {
     MobileOnboardingMemberCarouselProps,
 } from './MobileOnboardingMemberCarousel/MobileOnboardingMemberCarousel';
 export { default as OnboardingMemberList } from './OnboardingMemberList/OnboardingMemberList';
-export type {
-    OnboardingMemberListItem,
-    OnboardingMemberListProps,
-} from './OnboardingMemberList/OnboardingMemberList';
+export type { OnboardingMemberListItem, OnboardingMemberListProps } from './OnboardingMemberList/OnboardingMemberList';
 export { default as MobileOnboardingFormRow } from './MobileOnboardingFormRow/MobileOnboardingFormRow';
 export type { MobileOnboardingFormRowProps } from './MobileOnboardingFormRow/MobileOnboardingFormRow';
 export { default as InsightPanel } from './InsightPanel/InsightPanel';
@@ -253,6 +242,8 @@ export type {
     RequestStatusCompactProgressProps,
     RequestStatusCompactProgressStep,
 } from './RequestStatusCompactProgress/RequestStatusCompactProgress';
+export { default as StepProgress } from './StepProgress/StepProgress';
+export type { StepProgressItem, StepProgressProps } from './StepProgress/StepProgress';
 export { default as IconLabelField } from './IconLabelField/IconLabelField';
 export type { IconLabelFieldProps } from './IconLabelField/IconLabelField';
 export { default as DashedDropzoneUploader } from './DashedDropzoneUploader/DashedDropzoneUploader';
@@ -425,9 +416,7 @@ export type { RichTextEditorProps, RichTextEditorUploadedImage } from './RichTex
 export { default as SingleDatePicker } from './SingleDatePicker/SingleDatePicker';
 export type { SingleDatePickerProps } from './SingleDatePicker/SingleDatePicker';
 export { default as FullWidthSingleDatePicker } from './FullWidthSingleDatePicker/FullWidthSingleDatePicker';
-export type {
-    FullWidthSingleDatePickerProps,
-} from './FullWidthSingleDatePicker/FullWidthSingleDatePicker';
+export type { FullWidthSingleDatePickerProps } from './FullWidthSingleDatePicker/FullWidthSingleDatePicker';
 
 export { default as ThemeModeToggle } from './ThemeModeToggle/ThemeModeToggle';
 export type { ThemeModeToggleProps, ThemeModeToggleTheme } from './ThemeModeToggle/ThemeModeToggle';
