@@ -46,6 +46,8 @@ export interface ColumnType<T> {
     key: string;
     label?: string;
     render: (item: T, index: number, meta: CellRenderMeta<T>) => React.ReactElement;
+    copyValue?: (item: T, index: number, meta: CellRenderMeta<T>) => string | number | null | undefined;
+    copyColumnText?: () => string | null | undefined;
     header: (key: string, data: T[]) => React.ReactElement;
     width?: number | string;
     minWidth?: number | string;
@@ -67,6 +69,8 @@ export type Column<T> = {
     label?: string;
     header: (key: string, data: T[]) => React.ReactElement;
     render: (item: T, index: number, meta: CellRenderMeta<T>) => React.ReactElement;
+    copyValue?: (item: T, index: number, meta: CellRenderMeta<T>) => string | number | null | undefined;
+    copyColumnText?: () => string | null | undefined;
     width?: number | string;
     minWidth?: number | string;
     cellAlign?: CellAlign;
@@ -202,6 +206,7 @@ export type UseTableResult<T> = {
             key: string;
             cellAlign?: CellAlign;
             render: (item: T, rowIndex: number, meta: CellRenderMeta<T>) => React.ReactElement;
+            copyValue?: (item: T, rowIndex: number, meta: CellRenderMeta<T>) => string | number | null | undefined;
         }[];
     }[];
 
@@ -718,6 +723,8 @@ const useTable = <T,>({
                         key: String(col.key),
                         label: col.label,
                         render,
+                        copyValue: col.copyValue,
+                        copyColumnText: col.copyColumnText,
                         header: col.header,
                         width: col.width,
                         minWidth: col.minWidth,
@@ -1305,6 +1312,9 @@ const useTable = <T,>({
                     key: leaf.key,
                     cellAlign: leaf.cellAlign,
                     render: (it: T, idx: number, meta: CellRenderMeta<T>) => leaf.render(it, idx, meta),
+                    copyValue: leaf.copyValue
+                        ? (it: T, idx: number, meta: CellRenderMeta<T>) => leaf.copyValue?.(it, idx, meta)
+                        : undefined,
                 }));
 
             result.push({
@@ -1365,6 +1375,7 @@ const useTable = <T,>({
    ========================= */
 
 type AirTableContextValue<T> = {
+    tableId: string;
     props: AirTableProps<T>;
     wrapperRef: React.MutableRefObject<HTMLDivElement | null>;
     scrollRef: React.MutableRefObject<HTMLDivElement | null>;
@@ -1475,6 +1486,7 @@ const AirTableInner = <T,>({
     const wrapperRef = useRef<HTMLDivElement | null>(null);
     const scrollRef = useRef<HTMLDivElement | null>(null);
     const tableAreaRef = useRef<HTMLDivElement | null>(null);
+    const tableIdRef = useRef(`airtable-${Math.random().toString(36).slice(2)}`);
 
     const sortConfigByKey = useMemo(() => collectSortConfig(columns), [columns]);
 
@@ -1852,6 +1864,7 @@ const AirTableInner = <T,>({
     });
 
     const value = {
+        tableId: tableIdRef.current,
         props: {
             data: sortedData,
             columns,

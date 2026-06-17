@@ -47,6 +47,8 @@ export interface ColumnType<T> {
     key: string;
     label?: string;
     render: (item: T, index: number, meta: CellRenderMeta<T>) => React.ReactElement;
+    copyValue?: (item: T, index: number, meta: CellRenderMeta<T>) => string | number | null | undefined;
+    copyColumnText?: () => string | null | undefined;
     header: (key: string, data: T[]) => React.ReactElement;
     width?: number | string;
     autoFitContent?: boolean;
@@ -65,6 +67,8 @@ export type Column<T> = {
     label?: string;
     header: (key: string, data: T[]) => React.ReactElement;
     render: (item: T, index: number, meta: CellRenderMeta<T>) => React.ReactElement;
+    copyValue?: (item: T, index: number, meta: CellRenderMeta<T>) => string | number | null | undefined;
+    copyColumnText?: () => string | null | undefined;
     width?: number | string;
     autoFitContent?: boolean;
     autoFitPadding?: number;
@@ -194,6 +198,7 @@ export type UseTableResult<T> = {
         cells: {
             key: string;
             render: (item: T, rowIndex: number, meta: CellRenderMeta<T>) => React.ReactElement;
+            copyValue?: (item: T, rowIndex: number, meta: CellRenderMeta<T>) => string | number | null | undefined;
         }[];
     }[];
 
@@ -638,6 +643,8 @@ const useTable = <T,>({
                         key: String(col.key),
                         label: col.label,
                         render,
+                        copyValue: col.copyValue,
+                        copyColumnText: col.copyColumnText,
                         header: col.header,
                         width: col.width,
                         autoFitContent: col.autoFitContent,
@@ -1151,6 +1158,9 @@ const useTable = <T,>({
                 .map((leaf) => ({
                     key: leaf.key,
                     render: (it: T, idx: number, meta: CellRenderMeta<T>) => leaf.render(it, idx, meta),
+                    copyValue: leaf.copyValue
+                        ? (it: T, idx: number, meta: CellRenderMeta<T>) => leaf.copyValue?.(it, idx, meta)
+                        : undefined,
                 }));
 
             result.push({
