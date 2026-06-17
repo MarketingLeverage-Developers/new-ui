@@ -21,7 +21,9 @@
         box-sizing: border-box;
         display: flex;
         flex-direction: column;
-        min-height: 100%;
+        // TODO : main content 가 길어지면 해당 content 를 다 담지 못함 
+        // ex) 매체충전 비고가 길어질시 footer 에 짤림
+        // min-height: 100%;
         padding: 10px 28px;
     }
 }
