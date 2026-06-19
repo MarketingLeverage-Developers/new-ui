@@ -1,15 +1,29 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import classNames from 'classnames';
 import { HiOutlineChevronDown } from 'react-icons/hi2';
+import MemberProfileAvatar from '@/components/common/MemberProfileAvatar/MemberProfileAvatar';
 import Dropdown, { useDropdown } from '../../../shared/headless/Dropdown/Dropdown';
 import Select, { useSelect } from '../../../shared/headless/Select/Select';
 import styles from './SectionFieldSelect.module.scss';
 
 const noop = () => undefined;
 
+type SectionFieldSelectProfile = {
+    imageSrc?: string | null;
+    imageAlt?: string;
+    fallbackText?: string | null;
+    title?: React.ReactNode;
+    description?: React.ReactNode;
+    meta?: React.ReactNode[];
+    metaIconSrc?: string | null;
+    metaIconAlt?: string;
+};
+
 export type SectionFieldSelectOption<T extends string = string> = {
     value: T;
     label: React.ReactNode;
+    displayLabel?: React.ReactNode;
+    profile?: SectionFieldSelectProfile;
     disabled?: boolean;
     searchText?: string;
 };
@@ -28,6 +42,7 @@ export type SectionFieldSelectProps<T extends string = string> = {
     size?: 'md' | 'sm' | 'xs';
     variant?: 'default' | 'ghost';
     searchable?: boolean;
+    triggerProfileVariant?: 'default' | 'compact';
     searchPlaceholder?: string;
     searchEmptyText?: React.ReactNode;
 };
@@ -46,6 +61,56 @@ const getOptionSearchText = <T extends string>(option: SectionFieldSelectOption<
     return String(option.value);
 };
 
+const renderOptionContent = <T extends string>(
+    option: SectionFieldSelectOption<T>,
+    variant: 'default' | 'compact' = 'default',
+    isTrigger = false
+) => {
+    if (!option.profile) return option.displayLabel ?? option.label;
+
+    const profile = option.profile;
+    const title = profile.title ?? option.displayLabel ?? option.label;
+    const meta = (profile.meta ?? []).filter(Boolean);
+    const avatarSize = isTrigger && variant === 'compact' ? 22 : 34;
+    const avatarFontSize = isTrigger && variant === 'compact' ? 10 : 12;
+
+    return (
+        <>
+            <MemberProfileAvatar
+                className={isTrigger ? styles.TriggerProfileAvatar : styles.ProfileAvatar}
+                name={typeof title === 'string' ? title : String(option.value)}
+                src={profile.imageSrc}
+                fallbackText={profile.fallbackText}
+                alt={profile.imageAlt}
+                size={avatarSize}
+                fontSize={avatarFontSize}
+            />
+            <span className={styles.ProfileContent} data-compact={variant === 'compact' ? 'true' : 'false'}>
+                <span className={styles.ProfileTitle}>{title}</span>
+                {variant === 'compact' ? null : profile.description ? (
+                    <span className={styles.ProfileDescription}>{profile.description}</span>
+                ) : null}
+                {meta.length > 0 ? (
+                    <span className={styles.ProfileMeta}>
+                        {profile.metaIconSrc ? (
+                            <img
+                                src={profile.metaIconSrc}
+                                alt={profile.metaIconAlt ?? ''}
+                                className={styles.ProfileMetaIcon}
+                            />
+                        ) : null}
+                        {meta.map((item, index) => (
+                            <span key={index} className={styles.ProfileMetaItem}>
+                                {item}
+                            </span>
+                        ))}
+                    </span>
+                ) : null}
+            </span>
+        </>
+    );
+};
+
 type SectionFieldSelectItemProps<T extends string = string> = {
     option: SectionFieldSelectOption<T>;
     disabled?: boolean;
@@ -61,6 +126,7 @@ const SectionFieldSelectItem = <T extends string>({ option, disabled = false }: 
             type="button"
             className={styles.Option}
             data-active={isActive(option.value) ? 'true' : 'false'}
+            data-profile={option.profile ? 'true' : 'false'}
             disabled={isDisabled}
             onClick={() => {
                 if (isDisabled) return;
@@ -68,7 +134,7 @@ const SectionFieldSelectItem = <T extends string>({ option, disabled = false }: 
                 close();
             }}
         >
-            {option.label}
+            {renderOptionContent(option)}
         </button>
     );
 };
@@ -84,6 +150,7 @@ type SectionFieldSelectViewProps<T extends string = string> = {
     size?: 'md' | 'sm' | 'xs';
     variant?: 'default' | 'ghost';
     searchable?: boolean;
+    triggerProfileVariant: 'default' | 'compact';
     searchPlaceholder: string;
     searchEmptyText: React.ReactNode;
 };
@@ -99,6 +166,7 @@ const SectionFieldSelectView = <T extends string>({
     size = 'md',
     variant = 'default',
     searchable = false,
+    triggerProfileVariant,
     searchPlaceholder,
     searchEmptyText,
 }: SectionFieldSelectViewProps<T>) => {
@@ -125,9 +193,20 @@ const SectionFieldSelectView = <T extends string>({
     return (
         <div className={classNames(styles.Root, className)} data-size={size} data-variant={variant}>
             <Dropdown.Trigger className={styles.TriggerWrap} disabled={disabled}>
-                <button type="button" className={styles.Trigger} disabled={disabled}>
-                    <span className={styles.Label} data-placeholder={selectedOption ? 'false' : 'true'}>
-                        {selectedOption?.label ?? placeholder}
+                <button
+                    type="button"
+                    className={styles.Trigger}
+                    data-profile={selectedOption?.profile ? 'true' : 'false'}
+                    data-profile-variant={triggerProfileVariant}
+                    disabled={disabled}
+                >
+                    <span
+                        className={styles.Label}
+                        data-placeholder={selectedOption ? 'false' : 'true'}
+                        data-profile={selectedOption?.profile ? 'true' : 'false'}
+                        data-profile-variant={triggerProfileVariant}
+                    >
+                        {selectedOption ? renderOptionContent(selectedOption, triggerProfileVariant, true) : placeholder}
                     </span>
 
                     <span className={styles.Icon} data-open={isOpen ? 'true' : 'false'}>
@@ -187,6 +266,7 @@ const SectionFieldSelect = (<T extends string = string>({
     size = 'md',
     variant = 'default',
     searchable = false,
+    triggerProfileVariant = 'default',
     searchPlaceholder = '검색어를 입력해주세요.',
     searchEmptyText = '검색 결과가 없습니다.',
 }: SectionFieldSelectProps<T>) => (
@@ -203,6 +283,7 @@ const SectionFieldSelect = (<T extends string = string>({
                 size={size}
                 variant={variant}
                 searchable={searchable}
+                triggerProfileVariant={triggerProfileVariant}
                 searchPlaceholder={searchPlaceholder}
                 searchEmptyText={searchEmptyText}
             />

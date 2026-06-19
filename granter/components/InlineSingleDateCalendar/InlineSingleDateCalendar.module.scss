@@ -81,6 +81,13 @@
                 background: var(--granter-gray-100);
             }
 
+            .rdp-day_button:focus,
+            .rdp-day_button:focus-visible {
+                outline: 0;
+                border-color: transparent;
+                box-shadow: 0 0 0 3px color-mix(in srgb, var(--granter-sky-500, #0ea5e9) 18%, transparent);
+            }
+
             &.rdp-outside .rdp-day_button,
             &.rdp-disabled .rdp-day_button {
                 color: var(--granter-gray-300);
@@ -93,10 +100,15 @@
 
             &.rdp-selected .rdp-day_button {
                 border: 0;
-                background: var(--granter-blue-500);
+                background: var(--granter-sky-500, #0ea5e9);
                 color: var(--granter-white);
                 box-shadow: none;
                 outline: 0;
+            }
+
+            &.rdp-selected .rdp-day_button:focus,
+            &.rdp-selected .rdp-day_button:focus-visible {
+                box-shadow: none;
             }
         }
     }
