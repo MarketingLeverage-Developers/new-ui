@@ -1,0 +1,140 @@
+.Root {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    min-width: 0;
+    padding: 14px;
+    border: 1px solid var(--granter-gray-200);
+    border-radius: 12px;
+    background: var(--granter-white);
+
+    :global {
+        .rdp {
+            width: 100%;
+            margin: 0;
+            --rdp-cell-size: 34px;
+        }
+
+        .rdp-months {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .rdp-month {
+            width: 100%;
+        }
+
+        .rdp-month_grid {
+            width: 100%;
+            min-height: 238px;
+            table-layout: fixed;
+            border-collapse: collapse;
+        }
+
+        .rdp-nav,
+        .rdp-caption,
+        .rdp-caption_label,
+        .rdp-month_caption {
+            display: none;
+        }
+
+        .rdp-weekday,
+        .rdp-day {
+            width: calc(100% / 7);
+            text-align: center;
+        }
+
+        .rdp-weekday {
+            color: var(--granter-gray-400);
+            font-size: 13px;
+            font-weight: 500;
+            line-height: 18px;
+
+            &:first-child {
+                color: var(--granter-red-400);
+            }
+
+            &:last-child {
+                color: var(--granter-blue-500);
+            }
+        }
+
+        .rdp-day {
+            height: 34px;
+
+            .rdp-day_button {
+                width: 30px;
+                height: 30px;
+                padding: 0;
+                border: 0;
+                border-radius: 8px;
+                background: transparent;
+                color: var(--granter-gray-700);
+                font-size: 14px;
+                font-weight: 400;
+                line-height: 30px;
+                box-shadow: none;
+            }
+
+            .rdp-day_button:hover {
+                background: var(--granter-gray-100);
+            }
+
+            &.rdp-outside .rdp-day_button,
+            &.rdp-disabled .rdp-day_button {
+                color: var(--granter-gray-300);
+            }
+
+            &.rdp-today:not(.rdp-selected) .rdp-day_button {
+                background: var(--granter-sky-100);
+                color: var(--granter-blue-600);
+            }
+
+            &.rdp-selected .rdp-day_button {
+                border: 0;
+                background: var(--granter-blue-500);
+                color: var(--granter-white);
+                box-shadow: none;
+                outline: 0;
+            }
+        }
+    }
+}
+
+.NavRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.MonthText {
+    color: var(--granter-gray-900);
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.25;
+}
+
+.NavButtons {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.NavButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border: 1px solid var(--granter-gray-200);
+    border-radius: 8px;
+    background: var(--granter-white);
+    color: var(--granter-gray-600);
+    cursor: pointer;
+}
+
+.NavButton:hover {
+    background: var(--granter-gray-50);
+}

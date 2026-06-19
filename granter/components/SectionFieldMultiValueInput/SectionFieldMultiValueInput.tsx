@@ -22,6 +22,8 @@ export type SectionFieldMultiValueInputProps = {
     removeButtonText?: string;
     disabled?: boolean;
     variant?: 'default' | 'compact' | 'compact-dropdown' | 'compact-stack';
+    horizontalWheelScroll?: boolean;
+    validateValue?: (value: string) => string | null;
 };
 
 const CompactDropdownChevron = () => {
@@ -36,7 +38,7 @@ const CompactDropdownChevron = () => {
 
 type CompactDropdownFieldProps = {
     pendingValue: string;
-    setPendingValue: React.Dispatch<React.SetStateAction<string>>;
+    onPendingValueChange: (nextValue: string) => void;
     inputPlaceholder: string;
     addButtonText: string;
     emptyText: string;
@@ -49,7 +51,7 @@ type CompactDropdownFieldProps = {
 
 const CompactDropdownField = ({
     pendingValue,
-    setPendingValue,
+    onPendingValueChange,
     inputPlaceholder,
     addButtonText,
     emptyText,
@@ -70,7 +72,7 @@ const CompactDropdownField = ({
             >
                 <SectionFieldInput
                     value={pendingValue}
-                    onChange={(event) => setPendingValue(event.target.value)}
+                    onChange={(event) => onPendingValueChange(event.target.value)}
                     placeholder={inputPlaceholder}
                     disabled={disabled}
                     className={styles.InputCompact}
@@ -171,18 +173,35 @@ const SectionFieldMultiValueInput = ({
     removeButtonText = '제거',
     disabled = false,
     variant = 'default',
+    horizontalWheelScroll = false,
+    validateValue,
 }: SectionFieldMultiValueInputProps) => {
     const [pendingValue, setPendingValue] = useState('');
+    const [validationError, setValidationError] = useState<string | null>(null);
     const selectedValues = useMemo(() => parseCommaSeparatedValues(value), [value]);
     const isCompact = variant === 'compact';
     const isCompactStack = variant === 'compact-stack';
     const isCompactDropdown = variant === 'compact-dropdown';
     const isCompactControl = isCompact || isCompactDropdown || isCompactStack;
 
+    const handlePendingValueChange = useCallback((nextValue: string) => {
+        setPendingValue(nextValue);
+        setValidationError(null);
+    }, []);
+
     const addPendingValues = useCallback(() => {
         const nextCandidates = parseCommaSeparatedValues(pendingValue);
 
         if (nextCandidates.length === 0) return;
+
+        const invalidMessage = validateValue
+            ? nextCandidates.map((candidate) => validateValue(candidate)).find((message): message is string => Boolean(message))
+            : null;
+
+        if (invalidMessage) {
+            setValidationError(invalidMessage);
+            return;
+        }
 
         const nextValues = [...selectedValues];
 
@@ -194,7 +213,8 @@ const SectionFieldMultiValueInput = ({
 
         onChange(joinCommaSeparatedValues(nextValues));
         setPendingValue('');
-    }, [onChange, pendingValue, selectedValues]);
+        setValidationError(null);
+    }, [onChange, pendingValue, selectedValues, validateValue]);
 
     const removeValue = useCallback(
         (targetValue: string) => {
@@ -203,13 +223,33 @@ const SectionFieldMultiValueInput = ({
         [onChange, selectedValues]
     );
 
+    const handleCompactListWheel = useCallback(
+        (event: React.WheelEvent<HTMLDivElement>) => {
+            if (!horizontalWheelScroll || !isCompact) return;
+
+            const listElement = event.currentTarget;
+            const maxScrollLeft = listElement.scrollWidth - listElement.clientWidth;
+
+            if (maxScrollLeft <= 0) return;
+
+            const scrollDelta = Math.abs(event.deltaX) > Math.abs(event.deltaY) ? event.deltaX : event.deltaY;
+            const nextScrollLeft = Math.min(maxScrollLeft, Math.max(0, listElement.scrollLeft + scrollDelta));
+
+            if (nextScrollLeft === listElement.scrollLeft) return;
+
+            event.preventDefault();
+            listElement.scrollLeft = nextScrollLeft;
+        },
+        [horizontalWheelScroll, isCompact]
+    );
+
     return (
         <div className={styles.Root}>
             {isCompactDropdown ? (
                 <Dropdown>
                     <CompactDropdownField
                         pendingValue={pendingValue}
-                        setPendingValue={setPendingValue}
+                        onPendingValueChange={handlePendingValueChange}
                         inputPlaceholder={inputPlaceholder}
                         addButtonText={addButtonText}
                         emptyText={emptyText}
@@ -226,12 +266,14 @@ const SectionFieldMultiValueInput = ({
                 <div
                     className={classNames(styles.Form, isCompactControl && styles.FormCompact)}
                     data-disabled={disabled ? 'true' : 'false'}
+                    data-invalid={validationError ? 'true' : 'false'}
                 >
                     <SectionFieldInput
                         value={pendingValue}
-                        onChange={(event) => setPendingValue(event.target.value)}
+                        onChange={(event) => handlePendingValueChange(event.target.value)}
                         placeholder={inputPlaceholder}
                         disabled={disabled}
+                        aria-invalid={validationError ? 'true' : undefined}
                         className={classNames(isCompactControl && styles.InputCompact)}
                         onKeyDown={(event) => {
                             if (event.key !== 'Enter' && event.key !== ',') return;
@@ -262,7 +304,13 @@ const SectionFieldMultiValueInput = ({
                 </div>
             )}
 
-            {isCompactDropdown ? null : selectedValues.length === 0 ? (
+            {validationError ? (
+                <Text size="xs" tone="danger" className={styles.ValidationMessage}>
+                    {validationError}
+                </Text>
+            ) : null}
+
+            {isCompactDropdown ? null : selectedValues.length === 0 && !validationError ? (
                 <Text size="sm" tone="muted">
                     {emptyText}
                 </Text>
@@ -273,6 +321,7 @@ const SectionFieldMultiValueInput = ({
                         isCompact && styles.ListCompact,
                         isCompactStack && styles.ListCompactStack
                     )}
+                    onWheel={horizontalWheelScroll && isCompact ? handleCompactListWheel : undefined}
                 >
                     {selectedValues.map((item) => (
                         <div

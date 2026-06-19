@@ -38,6 +38,15 @@
     box-shadow: 0 0 0 4px rgb(14 165 233 / 12%);
 }
 
+.FormCompact[data-invalid='true'] {
+    border-color: var(--granter-red-500);
+}
+
+.FormCompact[data-invalid='true']:focus-within {
+    border-color: var(--granter-red-500);
+    box-shadow: 0 0 0 4px rgb(239 68 68 / 12%);
+}
+
 .FormCompact[data-disabled='true'] {
     background-color: var(--granter-gray-100);
 }
@@ -67,6 +76,10 @@
 .InputCompact:disabled {
     color: var(--granter-gray-500);
     cursor: not-allowed;
+}
+
+.ValidationMessage {
+    margin-top: -4px;
 }
 
 .CompactAddButton {

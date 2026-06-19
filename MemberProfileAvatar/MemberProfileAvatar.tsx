@@ -28,7 +28,7 @@ const getFallbackText = (name: string) => {
         .toUpperCase();
 };
 
-const getBackgroundColor = (name: string) => {
+const getAvatarPalette = (name: string) => {
     const seed = name || 'member';
     let hash = 0;
 
@@ -38,7 +38,11 @@ const getBackgroundColor = (name: string) => {
     }
 
     const hue = Math.abs(hash) % 360;
-    return `hsl(${hue} 65% 48%)`;
+
+    return {
+        backgroundColor: `hsl(${hue} 82% 91%)`,
+        textColor: `hsl(${hue} 54% 34%)`,
+    };
 };
 
 const MemberProfileAvatar = ({
@@ -62,7 +66,7 @@ const MemberProfileAvatar = ({
 
         return normalizedFallbackText || getFallbackText(normalizedName);
     }, [fallbackText, normalizedName]);
-    const backgroundColor = useMemo(() => getBackgroundColor(normalizedName), [normalizedName]);
+    const avatarPalette = useMemo(() => getAvatarPalette(normalizedName), [normalizedName]);
     const imageAlt = alt ?? `${normalizedName || 'member'} profile`;
 
     useEffect(() => {
@@ -72,7 +76,8 @@ const MemberProfileAvatar = ({
     const cssVariables: CSSVarStyle = {
         '--avatar-size': toCssUnit(size),
         '--avatar-font-size': toCssUnit(fontSize),
-        '--avatar-bg-color': backgroundColor,
+        '--avatar-bg-color': avatarPalette.backgroundColor,
+        '--avatar-text-color': avatarPalette.textColor,
     };
 
     return (

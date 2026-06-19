@@ -1,0 +1,171 @@
+.Trigger {
+    position: relative;
+    display: inline-flex;
+    height: 34px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 8px 12px;
+    border: 0;
+    border-radius: 7px;
+    background-color: var(--Gray6);
+    color: var(--Gray1);
+    font-size: 14px;
+    font-weight: 400;
+    cursor: pointer;
+}
+
+.Trigger:hover {
+    background-color: var(--granter-gray-100, #f1f5f9);
+}
+
+.Trigger[aria-expanded='true'] {
+    background-color: var(--granter-gray-100, #f1f5f9);
+}
+
+.Trigger[aria-disabled='true'],
+.Trigger:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.TriggerLabel {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.Count {
+    display: inline-flex;
+    min-width: 16px;
+    height: 16px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    background: var(--granter-sky-500, #0ea5e9);
+    color: var(--granter-white, #fff);
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.Arrow {
+    flex: none;
+    font-size: 14px;
+}
+
+.Menu {
+    width: 224px;
+    overflow: hidden;
+    border: 1px solid var(--Gray5);
+    border-radius: 8px;
+    background-color: var(--White1);
+    box-shadow: 0 18px 44px rgb(15 23 42 / 12%);
+    color: var(--Gray1);
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.MenuHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--granter-gray-100, #f1f5f9);
+}
+
+.MenuHeader strong {
+    min-width: 0;
+    overflow: hidden;
+    color: var(--granter-gray-900, #111827);
+    font-size: 13px;
+    font-weight: 700;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.MenuHeader button {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--granter-sky-600, #0284c7);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.MenuList {
+    display: flex;
+    max-height: 268px;
+    flex-direction: column;
+    gap: 2px;
+    padding: 6px;
+    overflow-y: auto;
+}
+
+.MenuItem {
+    display: flex;
+    width: 100%;
+    min-width: 0;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 7px;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--granter-gray-700, #334155);
+    font: inherit;
+    font-weight: 400;
+    text-align: left;
+    cursor: pointer;
+}
+
+.MenuItem:hover,
+.MenuItem[data-active='true'] {
+    background-color: var(--Primary2);
+    color: var(--Primary1);
+}
+
+.MenuItem:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.Checkbox {
+    position: relative;
+    display: inline-flex;
+    width: 18px;
+    height: 18px;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--granter-gray-300, #cbd5e1);
+    border-radius: 4px;
+    background: var(--granter-white, #fff);
+}
+
+.MenuItem[data-active='true'] .Checkbox {
+    border-color: var(--granter-sky-600, #0284c7);
+    background: var(--granter-sky-600, #0284c7);
+}
+
+.MenuItem[data-active='true'] .Checkbox::after {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 5px;
+    height: 9px;
+    border: solid var(--granter-white, #fff);
+    border-width: 0 2px 2px 0;
+    content: '';
+    transform: translate(-50%, -62%) rotate(45deg);
+}
+
+.Empty {
+    padding: 16px 8px;
+    color: var(--granter-gray-500, #64748b);
+    font-size: 13px;
+    text-align: center;
+}

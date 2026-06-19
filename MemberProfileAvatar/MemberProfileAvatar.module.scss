@@ -2,6 +2,7 @@
     --avatar-size: 24px;
     --avatar-font-size: 11px;
     --avatar-bg-color: var(--Gray3);
+    --avatar-text-color: var(--granter-gray-700);
 
     width: var(--avatar-size);
     height: var(--avatar-size);
@@ -13,7 +14,7 @@
     flex-shrink: 0;
     box-sizing: border-box;
     background-color: transparent;
-    color: var(--White1);
+    color: var(--avatar-text-color);
     font-size: var(--avatar-font-size);
     font-weight: 600;
     line-height: 1;

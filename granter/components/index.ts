@@ -88,6 +88,8 @@ export type {
     ButtonDropdownContentProps,
     ButtonDropdownItemProps,
 } from './ButtonDropdown/ButtonDropdown';
+export { default as FilterMultiSelect } from './FilterMultiSelect/FilterMultiSelect';
+export type { FilterMultiSelectItem, FilterMultiSelectProps } from './FilterMultiSelect/FilterMultiSelect';
 
 export { default as Text } from './Text/Text';
 export type { TextProps, TextSize, TextTone, TextWeight } from './Text/Text';
@@ -415,6 +417,8 @@ export type { RichTextEditorProps, RichTextEditorUploadedImage } from './RichTex
 
 export { default as SingleDatePicker } from './SingleDatePicker/SingleDatePicker';
 export type { SingleDatePickerProps } from './SingleDatePicker/SingleDatePicker';
+export { default as InlineSingleDateCalendar } from './InlineSingleDateCalendar/InlineSingleDateCalendar';
+export type { InlineSingleDateCalendarProps } from './InlineSingleDateCalendar/InlineSingleDateCalendar';
 export { default as FullWidthSingleDatePicker } from './FullWidthSingleDatePicker/FullWidthSingleDatePicker';
 export type { FullWidthSingleDatePickerProps } from './FullWidthSingleDatePicker/FullWidthSingleDatePicker';
 

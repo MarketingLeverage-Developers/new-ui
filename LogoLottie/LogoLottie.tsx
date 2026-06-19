@@ -6,7 +6,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     container: {
         display: 'flex',
         justifyContent: 'center',
-        alignItems: 'center',
+        alignSections: 'center',
         flexDirection: 'column', // 아이템을 세로로 정렬하기 위해 추가
         height: '100vh',
         width: '100vw',
