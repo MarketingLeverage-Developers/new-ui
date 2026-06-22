@@ -299,7 +299,7 @@ const OutputAssetList = ({
                         icon={emptyIcon}
                         title={emptyText}
                         description={emptyDescription}
-                        minHeight={160}
+                        minHeight={96}
                     />
                 )}
             </div>
