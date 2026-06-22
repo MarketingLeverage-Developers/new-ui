@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import classNames from 'classnames';
-import { FiDownload, FiEye, FiFile, FiMoreVertical, FiPlayCircle } from 'react-icons/fi';
+import { FiDownload, FiEye, FiFile, FiMoreVertical, FiPackage, FiPlayCircle } from 'react-icons/fi';
+import EmptyStatePanel from '../EmptyStatePanel/EmptyStatePanel';
 import styles from './OutputAssetList.module.scss';
 
 export type OutputAssetListKind = 'image' | 'video' | 'file';
@@ -24,6 +25,8 @@ export type OutputAssetListProps = {
     title?: React.ReactNode;
     description?: React.ReactNode;
     emptyText?: React.ReactNode;
+    emptyDescription?: React.ReactNode;
+    emptyIcon?: React.ReactNode;
     className?: string;
     variant?: 'card' | 'table';
     showHeader?: boolean;
@@ -110,6 +113,8 @@ const OutputAssetList = ({
     title = '작업물 목록',
     description,
     emptyText = '등록된 작업물이 없습니다.',
+    emptyDescription = '담당자가 아직 최종 작업물을 등록하지 않았습니다.',
+    emptyIcon = <FiPackage />,
     className,
     variant = 'card',
     showHeader = true,
@@ -290,7 +295,12 @@ const OutputAssetList = ({
                         );
                     })
                 ) : (
-                    <div className={styles.Empty}>{emptyText}</div>
+                    <EmptyStatePanel
+                        icon={emptyIcon}
+                        title={emptyText}
+                        description={emptyDescription}
+                        minHeight={160}
+                    />
                 )}
             </div>
         </div>

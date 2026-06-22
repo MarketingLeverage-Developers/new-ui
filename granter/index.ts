@@ -29,6 +29,8 @@ export { default as PanelHeader } from './components/PanelHeader/PanelHeader';
 export { default as DetailInfoSection } from './components/DetailInfoSection/DetailInfoSection';
 export { default as DetailInfoRow } from './components/DetailInfoRow/DetailInfoRow';
 export { default as EmptyGuideBox } from './components/EmptyGuideBox/EmptyGuideBox';
+export { default as EmptyStatePanel } from './components/EmptyStatePanel/EmptyStatePanel';
+export type { EmptyStatePanelProps } from './components/EmptyStatePanel/EmptyStatePanel';
 export { default as SidebarDrawerLayout } from './components/SidebarDrawerLayout/SidebarDrawerLayout';
 export { default as SectionIntro } from './components/SectionIntro/SectionIntro';
 export { default as IconHeaderSection } from './components/IconHeaderSection/IconHeaderSection';

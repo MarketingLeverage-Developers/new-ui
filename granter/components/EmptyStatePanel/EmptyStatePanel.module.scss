@@ -1,0 +1,89 @@
+.Root {
+    display: flex;
+    width: 100%;
+    min-width: 0;
+    height: var(--granter-empty-state-height, auto);
+    min-height: var(--granter-empty-state-min-height, 160px);
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 28px;
+    border: 1px dashed var(--granter-gray-300, #cbd5e1);
+    border-radius: 12px;
+    background: var(--granter-white, #fff);
+    color: var(--granter-gray-500, #64748b);
+    text-align: left;
+}
+
+.Icon {
+    display: inline-flex;
+    width: 36px;
+    height: 36px;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--granter-sky-500, #0ea5e9) 9%, var(--granter-white, #fff));
+    color: var(--granter-sky-600, #0284c7);
+    line-height: 0;
+}
+
+.Icon svg {
+    width: 18px;
+    height: 18px;
+    stroke-width: 2;
+}
+
+.Copy {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    text-align: left;
+}
+
+.Copy strong {
+    color: var(--granter-gray-950, #0f172a);
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0;
+    line-height: 20px;
+}
+
+.Copy small {
+    color: var(--granter-gray-500, #64748b);
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 0;
+    line-height: 20px;
+}
+
+@media (max-width: 720px) {
+    .Root {
+        min-height: min(var(--granter-empty-state-min-height, 160px), 220px);
+        gap: 10px;
+        padding: 22px 18px;
+    }
+
+    .Icon {
+        width: 34px;
+        height: 34px;
+    }
+
+    .Icon svg {
+        width: 17px;
+        height: 17px;
+    }
+
+    .Copy strong {
+        font-size: 14px;
+        line-height: 20px;
+    }
+
+    .Copy small {
+        font-size: 13px;
+        line-height: 20px;
+    }
+}

@@ -260,6 +260,8 @@ export type {
     InlineFileInputUploaderProps,
     InlineFileInputUploaderType,
 } from './InlineFileInputUploader/InlineFileInputUploader';
+export { default as EmptyStatePanel } from './EmptyStatePanel/EmptyStatePanel';
+export type { EmptyStatePanelProps } from './EmptyStatePanel/EmptyStatePanel';
 export { default as OutputAssetList } from './OutputAssetList/OutputAssetList';
 export type {
     OutputAssetListItem,
