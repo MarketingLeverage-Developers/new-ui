@@ -24,6 +24,8 @@ export type DashedDropzoneUploaderProps<TItem extends object> = {
     getItemName?: (item: TItem, index: number) => string;
     getItemUrl?: (item: TItem, index: number) => string | undefined;
     getItemMetaText?: (item: TItem, index: number) => string | undefined;
+    getItemDateText?: (item: TItem, index: number) => string | undefined;
+    getItemSizeText?: (item: TItem, index: number) => string | undefined;
     onItemClick?: (item: TItem, index: number) => void;
     maxFiles?: number;
     maxFileSizeBytes?: number;
@@ -46,14 +48,23 @@ type PreviewImage = {
     type: 'image' | 'video';
 };
 
-const MP4_PATTERN = /\.mp4(?:$|[?#])/i;
+const VIDEO_PREVIEW_PATTERN = /\.(?:mp4|mov|webm|m4v|avi|mkv)(?:$|[?#])/i;
 const IMAGE_PREVIEW_PATTERN = /\.(?:png|jpe?g|gif|webp|bmp|svg)(?:$|[?#])/i;
-const isMp4Preview = (name?: string, url?: string) => MP4_PATTERN.test(name ?? '') || MP4_PATTERN.test(url ?? '');
+const isVideoPreview = (name?: string, url?: string, metaText?: string) => {
+    const normalizedMeta = metaText?.toLowerCase() ?? '';
+    return (
+        VIDEO_PREVIEW_PATTERN.test(name ?? '') ||
+        VIDEO_PREVIEW_PATTERN.test(url ?? '') ||
+        normalizedMeta === 'video' ||
+        normalizedMeta.startsWith('video/')
+    );
+};
 const isImagePreview = (name?: string, url?: string, metaText?: string) => {
     const normalizedMeta = metaText?.toLowerCase() ?? '';
     return (
         IMAGE_PREVIEW_PATTERN.test(name ?? '') ||
         IMAGE_PREVIEW_PATTERN.test(url ?? '') ||
+        normalizedMeta === 'image' ||
         normalizedMeta.startsWith('image/') ||
         ['png', 'jpg', 'jpeg', 'gif', 'webp', 'bmp', 'svg'].includes(normalizedMeta)
     );
@@ -66,7 +77,7 @@ const getPreviewType = (
     metaText?: string
 ): PreviewImage['type'] | null => {
     if (!url) return null;
-    if (isMp4Preview(name, url)) return 'video';
+    if (isVideoPreview(name, url, metaText)) return 'video';
     if (variant === 'image' || isImagePreview(name, url, metaText)) return 'image';
     return null;
 };
@@ -139,6 +150,105 @@ const getDefaultItemMetaText = (item: object) => {
 
     return extension ? extension.toUpperCase() : 'FILE';
 };
+
+const formatDateText = (value: unknown) => {
+    if (value instanceof Date && !Number.isNaN(value.getTime())) {
+        const year = value.getFullYear();
+        const month = `${value.getMonth() + 1}`.padStart(2, '0');
+        const day = `${value.getDate()}`.padStart(2, '0');
+        return `${year}.${month}.${day}`;
+    }
+
+    if (typeof value !== 'string' && typeof value !== 'number') return undefined;
+
+    const rawValue = `${value}`.trim();
+    if (!rawValue) return undefined;
+
+    const dateLikeMatch = rawValue.match(/^(\d{4})[-./](\d{1,2})[-./](\d{1,2})/);
+    if (dateLikeMatch) {
+        const year = dateLikeMatch[1] ?? '';
+        const month = dateLikeMatch[2] ?? '';
+        const day = dateLikeMatch[3] ?? '';
+        if (year && month && day) return `${year}.${month.padStart(2, '0')}.${day.padStart(2, '0')}`;
+    }
+
+    const parsedDate = new Date(rawValue);
+    if (Number.isNaN(parsedDate.getTime())) return undefined;
+
+    const year = parsedDate.getFullYear();
+    const month = `${parsedDate.getMonth() + 1}`.padStart(2, '0');
+    const day = `${parsedDate.getDate()}`.padStart(2, '0');
+    return `${year}.${month}.${day}`;
+};
+
+const formatFileSizeText = (value: unknown) => {
+    if (typeof value === 'string') {
+        const trimmedValue = value.trim();
+        if (!trimmedValue) return undefined;
+        const numericValue = Number(trimmedValue);
+        if (Number.isFinite(numericValue)) return formatFileSizeText(numericValue);
+        return trimmedValue.replace(/\s+/g, '');
+    }
+
+    if (typeof value !== 'number' || !Number.isFinite(value) || value < 0) return undefined;
+
+    const units = ['B', 'KB', 'MB', 'GB'];
+    let size = value;
+    let unitIndex = 0;
+
+    while (size >= 1024 && unitIndex < units.length - 1) {
+        size /= 1024;
+        unitIndex += 1;
+    }
+
+    const fixedSize = size >= 10 || unitIndex === 0 ? Math.round(size).toString() : size.toFixed(1);
+    return `${fixedSize}${units[unitIndex] ?? ''}`;
+};
+
+const getDefaultItemDateText = (item: object) => {
+    const record = toRecord(item);
+    return formatDateText(
+        record.createdAt ??
+            record.created_at ??
+            record.createdDate ??
+            record.uploadedAt ??
+            record.uploaded_at ??
+            record.updatedAt ??
+            record.updated_at
+    );
+};
+
+const getDefaultItemSizeText = (item: object) => {
+    const record = toRecord(item);
+    return formatFileSizeText(
+        record.fileSize ?? record.fileSizeBytes ?? record.size ?? record.bytes ?? record.contentLength
+    );
+};
+
+const FileThumbnail = ({
+    name,
+    url,
+    previewType,
+}: {
+    name: string;
+    url?: string;
+    previewType: PreviewImage['type'] | null;
+}) => (
+    <span className={styles.FileThumbnail} data-preview-type={previewType ?? 'file'}>
+        {url && previewType === 'image' ? (
+            <img src={url} alt="" />
+        ) : url && previewType === 'video' ? (
+            <>
+                <video src={url} preload="metadata" muted playsInline aria-label={name} />
+                <span className={styles.FileThumbnailVideoBadge} aria-hidden="true">
+                    <FiPlayCircle size={18} />
+                </span>
+            </>
+        ) : (
+            <FiFile size={18} />
+        )}
+    </span>
+);
 
 const ReadOnlyPreviewCloseButton = ({ onClose }: { onClose: () => void }) => (
     <button
@@ -232,6 +342,8 @@ const DashedDropzoneUploader = <TItem extends object>({
     getItemName = getDefaultItemName,
     getItemUrl = getDefaultItemUrl,
     getItemMetaText = getDefaultItemMetaText,
+    getItemDateText = getDefaultItemDateText,
+    getItemSizeText = getDefaultItemSizeText,
     onItemClick,
     maxFiles,
     maxFileSizeBytes,
@@ -368,8 +480,10 @@ const DashedDropzoneUploader = <TItem extends object>({
                 name: getItemName(item, index),
                 url: getItemUrl(item, index) ?? '',
                 metaText: getItemMetaText(item, index),
+                dateText: getItemDateText(item, index),
+                sizeText: getItemSizeText(item, index),
             })),
-        [getItemKey, getItemMetaText, getItemName, getItemUrl, value]
+        [getItemDateText, getItemKey, getItemMetaText, getItemName, getItemSizeText, getItemUrl, value]
     );
     const visibleReadOnlyItems = useMemo(() => {
         if (variant !== 'file') return readOnlyItems;
@@ -510,29 +624,59 @@ const DashedDropzoneUploader = <TItem extends object>({
 
                 {variant === 'file' && visibleReadOnlyItems.length > 0 ? (
                     <div className={styles.ReadOnlyFileList}>
-                        {visibleReadOnlyItems.map((file) => (
-                            <div key={file.key} className={styles.ReadOnlyFileItem}>
-                                <div className={styles.ReadOnlyFileMeta}>
-                                    <span className={styles.ReadOnlyFileName} title={file.name}>
+                        {visibleReadOnlyItems.map((file) => {
+                            const previewType = getPreviewType(variant, file.name, file.url, file.metaText);
+                            const canPreview = Boolean(file.url && previewType);
+                            const clickable = canPreview || Boolean(onItemClick);
+                            const fileSummary = (
+                                <>
+                                    <FileThumbnail name={file.name} url={file.url} previewType={previewType} />
+                                    <span className={styles.FileName} title={file.name}>
                                         {file.name}
                                     </span>
-                                    {file.metaText ? (
-                                        <span className={styles.ReadOnlyFileType}>{file.metaText}</span>
+                                </>
+                            );
+
+                            return (
+                                <div key={file.key} className={styles.FileItem}>
+                                    {clickable ? (
+                                        <button
+                                            type="button"
+                                            className={styles.FilePrimaryButton}
+                                            onClick={() => {
+                                                if (canPreview) {
+                                                    openPreview(file.item, file.index, file.name, file.url, previewType);
+                                                    return;
+                                                }
+                                                onItemClick?.(file.item, file.index);
+                                            }}
+                                        >
+                                            {fileSummary}
+                                        </button>
+                                    ) : (
+                                        <div className={styles.FilePrimaryButton}>{fileSummary}</div>
+                                    )}
+                                    {file.dateText || file.sizeText ? (
+                                        <div className={styles.FileItemMetaGroup}>
+                                            {file.dateText ? <span>{file.dateText}</span> : null}
+                                            {file.sizeText ? <span>{file.sizeText}</span> : null}
+                                        </div>
                                     ) : null}
+                                    <button
+                                        type="button"
+                                        className={styles.FileDownloadIconButton}
+                                        aria-label={`${file.name} 다운로드`}
+                                        disabled={!file.url}
+                                        onClick={() => {
+                                            onItemClick?.(file.item, file.index);
+                                            void downloadAttachment(file.url, file.name);
+                                        }}
+                                    >
+                                        <FiDownload size={20} />
+                                    </button>
                                 </div>
-                                <button
-                                    type="button"
-                                    className={styles.ReadOnlyFileDownloadButton}
-                                    disabled={!file.url}
-                                    onClick={() => {
-                                        onItemClick?.(file.item, file.index);
-                                        void downloadAttachment(file.url, file.name);
-                                    }}
-                                >
-                                    다운로드
-                                </button>
-                            </div>
-                        ))}
+                            );
+                        })}
                     </div>
                 ) : null}
             </div>
@@ -662,58 +806,64 @@ const DashedDropzoneUploader = <TItem extends object>({
                         const name = getItemName(item, index);
                         const url = getItemUrl(item, index);
                         const metaText = getItemMetaText(item, index);
+                        const dateText = getItemDateText(item, index);
+                        const sizeText = getItemSizeText(item, index);
                         const previewType = getPreviewType(variant, name, url, metaText);
                         const canPreview = Boolean(url && previewType);
                         const clickable = canPreview || Boolean(onItemClick);
                         const fileContent = (
                             <>
-                                <span className={styles.FileIcon}>
-                                    {previewType === 'video' ? (
-                                        <FiPlayCircle size={16} />
-                                    ) : previewType === 'image' ? (
-                                        <FiImage size={16} />
-                                    ) : (
-                                        <FiFile size={16} />
-                                    )}
-                                </span>
+                                <FileThumbnail name={name} url={url} previewType={previewType} />
                                 <span className={styles.FileName} title={name}>
                                     {name}
                                 </span>
-                                {readOnly ? null : (
-                                    <button
-                                        type="button"
-                                        className={styles.RemoveFileButton}
-                                        disabled={blocked}
-                                        aria-label={`${name} 제거`}
-                                        onClick={(event) => {
-                                            event.stopPropagation();
-                                            removeItem(index);
-                                        }}
-                                    >
-                                        <FiX size={14} />
-                                    </button>
-                                )}
                             </>
                         );
 
-                        return clickable ? (
-                            <button
-                                type="button"
-                                key={getItemKey(item, index)}
-                                className={styles.FileItem}
-                                onClick={() => {
-                                    if (canPreview) {
-                                        openPreview(item, index, name, url ?? '', previewType);
-                                        return;
-                                    }
-                                    onItemClick?.(item, index);
-                                }}
-                            >
-                                {fileContent}
-                            </button>
-                        ) : (
+                        return (
                             <div key={getItemKey(item, index)} className={styles.FileItem}>
-                                {fileContent}
+                                {clickable ? (
+                                    <button
+                                        type="button"
+                                        className={styles.FilePrimaryButton}
+                                        onClick={() => {
+                                            if (canPreview) {
+                                                openPreview(item, index, name, url ?? '', previewType);
+                                                return;
+                                            }
+                                            onItemClick?.(item, index);
+                                        }}
+                                    >
+                                        {fileContent}
+                                    </button>
+                                ) : (
+                                    <div className={styles.FilePrimaryButton}>{fileContent}</div>
+                                )}
+                                {dateText || sizeText ? (
+                                    <div className={styles.FileItemMetaGroup}>
+                                        {dateText ? <span>{dateText}</span> : null}
+                                        {sizeText ? <span>{sizeText}</span> : null}
+                                    </div>
+                                ) : null}
+                                {url ? (
+                                    <button
+                                        type="button"
+                                        className={styles.FileDownloadIconButton}
+                                        aria-label={`${name} 다운로드`}
+                                        onClick={() => void downloadAttachment(url, name)}
+                                    >
+                                        <FiDownload size={20} />
+                                    </button>
+                                ) : null}
+                                <button
+                                    type="button"
+                                    className={styles.RemoveFileButton}
+                                    disabled={blocked}
+                                    aria-label={`${name} 제거`}
+                                    onClick={() => removeItem(index)}
+                                >
+                                    <FiX size={18} />
+                                </button>
                             </div>
                         );
                     })}
