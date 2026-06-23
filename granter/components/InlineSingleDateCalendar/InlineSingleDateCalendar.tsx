@@ -1,13 +1,15 @@
 import React from 'react';
 import classNames from 'classnames';
-import { DayPicker, type DayPickerProps } from 'react-day-picker';
+import { DayPicker, type DateRange, type DayPickerProps } from 'react-day-picker';
 import { ko } from 'react-day-picker/locale';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 import styles from './InlineSingleDateCalendar.module.scss';
 
 export type InlineSingleDateCalendarProps = {
-    date: Date;
-    onChangeDate: (value: Date) => void;
+    date?: Date;
+    onChangeDate?: (value: Date) => void;
+    range?: DateRange;
+    onChangeRange?: (value: DateRange | undefined) => void;
     className?: string;
 } & Omit<DayPickerProps, 'mode' | 'selected' | 'onSelect' | 'month'>;
 
@@ -16,9 +18,31 @@ const isValidDate = (value: Date | undefined): value is Date =>
 
 const toMonthStart = (date: Date) => new Date(date.getFullYear(), date.getMonth(), 1);
 
-const InlineSingleDateCalendar = ({ date, onChangeDate, className, ...props }: InlineSingleDateCalendarProps) => {
-    const safeDate = React.useMemo(() => (isValidDate(date) ? date : new Date()), [date]);
+const getRangeBaseDate = (range?: DateRange) => (isValidDate(range?.from) ? range.from : range?.to);
+
+const normalizeDateRange = (range?: DateRange): DateRange | undefined => {
+    if (!isValidDate(range?.from) && !isValidDate(range?.to)) return undefined;
+
+    const from = isValidDate(range?.from) ? range.from : range?.to;
+    const to = isValidDate(range?.to) ? range.to : range?.from;
+    if (!from || !to) return undefined;
+
+    return from.getTime() <= to.getTime() ? { from, to } : { from: to, to: from };
+};
+
+const InlineSingleDateCalendar = ({
+    date,
+    onChangeDate,
+    range,
+    onChangeRange,
+    className,
+    ...props
+}: InlineSingleDateCalendarProps) => {
+    const normalizedRange = React.useMemo(() => normalizeDateRange(range), [range]);
+    const baseDate = getRangeBaseDate(normalizedRange) ?? date;
+    const safeDate = React.useMemo(() => (isValidDate(baseDate) ? baseDate : new Date()), [baseDate]);
     const [currentMonth, setCurrentMonth] = React.useState<Date>(() => toMonthStart(safeDate));
+    const isRangeMode = Boolean(normalizedRange);
 
     React.useEffect(() => {
         setCurrentMonth((prev) => {
@@ -55,20 +79,33 @@ const InlineSingleDateCalendar = ({ date, onChangeDate, className, ...props }: I
                 </div>
             </div>
 
-            <DayPicker
-                locale={ko}
-                mode="single"
-                month={currentMonth}
-                showOutsideDays
-                fixedWeeks
-                selected={safeDate}
-                onSelect={(next) => {
-                    if (!next) return;
-                    onChangeDate(next);
-                }}
-                required={true as const}
-                {...props}
-            />
+            {isRangeMode ? (
+                <DayPicker
+                    locale={ko}
+                    mode="range"
+                    month={currentMonth}
+                    showOutsideDays
+                    fixedWeeks
+                    selected={normalizedRange}
+                    onSelect={(next) => onChangeRange?.(next)}
+                    {...props}
+                />
+            ) : (
+                <DayPicker
+                    locale={ko}
+                    mode="single"
+                    month={currentMonth}
+                    showOutsideDays
+                    fixedWeeks
+                    selected={safeDate}
+                    onSelect={(next) => {
+                        if (!next) return;
+                        onChangeDate?.(next);
+                    }}
+                    required={true as const}
+                    {...props}
+                />
+            )}
         </div>
     );
 };

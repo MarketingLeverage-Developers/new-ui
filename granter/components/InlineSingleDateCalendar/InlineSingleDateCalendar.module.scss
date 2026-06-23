@@ -37,7 +37,8 @@
             width: 100%;
             min-height: 238px;
             table-layout: fixed;
-            border-collapse: collapse;
+            border-collapse: separate;
+            border-spacing: 0;
         }
 
         .rdp-nav,
@@ -72,11 +73,15 @@
         }
 
         .rdp-day {
+            position: relative;
             height: 34px;
+            overflow: visible;
             font-size: 14px;
             font-weight: 400;
 
             .rdp-day_button {
+                position: relative;
+                z-index: 1;
                 display: inline-flex;
                 width: 30px;
                 height: 30px;
@@ -122,6 +127,61 @@
                 outline: 0;
             }
 
+            &.rdp-range_start,
+            &.rdp-range_middle,
+            &.rdp-range_end,
+            &.rdp-selected {
+                background: transparent !important;
+            }
+
+            &.rdp-range_start::before,
+            &.rdp-range_middle::before,
+            &.rdp-range_end::before {
+                position: absolute;
+                top: 50%;
+                z-index: 0;
+                height: 30px;
+                background: color-mix(
+                    in srgb,
+                    var(--granter-sky-500, #0ea5e9) 11%,
+                    var(--granter-sky-50, #f0f9ff)
+                );
+                content: '';
+                pointer-events: none;
+                transform: translateY(-50%);
+            }
+
+            &.rdp-range_start::before {
+                right: 0;
+                left: 50%;
+            }
+
+            &.rdp-range_middle::before {
+                right: 0;
+                left: 0;
+            }
+
+            &.rdp-range_end::before {
+                right: 50%;
+                left: 0;
+            }
+
+            &.rdp-range_start.rdp-range_end::before {
+                display: none;
+            }
+
+            &.rdp-range_middle.rdp-selected .rdp-day_button {
+                background: transparent;
+                color: var(--granter-sky-700, #0369a1);
+            }
+
+            &.rdp-range_start.rdp-selected .rdp-day_button,
+            &.rdp-range_end.rdp-selected .rdp-day_button {
+                border-radius: 8px;
+                background: var(--granter-sky-500, #0ea5e9);
+                color: var(--granter-white);
+            }
+
             &.rdp-selected {
                 font-size: 14px;
                 font-weight: 400;
@@ -131,6 +191,14 @@
             &.rdp-selected .rdp-day_button:focus-visible {
                 box-shadow: none;
             }
+        }
+
+        .rdp-week > .rdp-range_middle:first-child::before {
+            border-radius: 999px 0 0 999px;
+        }
+
+        .rdp-week > .rdp-range_middle:last-child::before {
+            border-radius: 0 999px 999px 0;
         }
     }
 }
