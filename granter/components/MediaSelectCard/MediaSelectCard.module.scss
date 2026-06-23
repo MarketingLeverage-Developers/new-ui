@@ -20,16 +20,26 @@
     background: var(--granter-gray-50);
 }
 
+.Card:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+}
+
+.Card:disabled:hover {
+    border-color: var(--granter-gray-200);
+    background: var(--granter-white);
+}
+
 .Card[data-selected='true'] {
-    border-color: var(--granter-blue-500);
-    background: color-mix(in srgb, var(--granter-blue-100) 28%, var(--granter-white));
+    border-color: var(--granter-sky-500);
+    background: color-mix(in srgb, var(--granter-sky-100) 28%, var(--granter-white));
 }
 
 .SelectedMark {
     width: 16px;
     height: 16px;
     border-radius: 999px;
-    background: var(--granter-blue-500);
+    background: var(--granter-sky-500);
     color: #ffffff;
     display: inline-flex;
     align-items: center;

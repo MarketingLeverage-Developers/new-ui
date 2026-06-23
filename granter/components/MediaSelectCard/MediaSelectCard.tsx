@@ -11,6 +11,7 @@ export type MediaSelectCardProps = {
     statusLabel: string;
     statusTone?: MediaSelectCardStatusTone;
     selected?: boolean;
+    disabled?: boolean;
     onClick?: () => void;
     onDelete?: () => void;
     className?: string;
@@ -22,6 +23,7 @@ const MediaSelectCard = ({
     statusLabel,
     statusTone = 'muted',
     selected = false,
+    disabled = false,
     onClick,
     onDelete,
     className,
@@ -30,6 +32,7 @@ const MediaSelectCard = ({
         type="button"
         className={classNames(styles.Card, className)}
         data-selected={selected ? 'true' : 'false'}
+        disabled={disabled}
         onClick={onClick}
         aria-pressed={selected}
     >
