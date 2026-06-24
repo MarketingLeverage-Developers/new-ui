@@ -77,8 +77,12 @@ const getPreviewType = (
     metaText?: string
 ): PreviewImage['type'] | null => {
     if (!url) return null;
-    if (isVideoPreview(name, url, metaText)) return 'video';
-    if (variant === 'image' || isImagePreview(name, url, metaText)) return 'image';
+
+    if (isImagePreview(undefined, url, metaText)) return 'image';
+    if (isVideoPreview(undefined, url, metaText)) return 'video';
+    if (isVideoPreview(name)) return 'video';
+    if (variant === 'image' || isImagePreview(name)) return 'image';
+
     return null;
 };
 
