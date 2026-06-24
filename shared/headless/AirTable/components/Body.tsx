@@ -39,6 +39,7 @@ type BodyRowData<T> = {
 };
 
 type BodyRowProps<T> = {
+    tableId: string;
     row: BodyRowData<T>;
     actualRi: number;
     baseOrder: string[];
@@ -252,6 +253,7 @@ const ExpandableDetailRow = ({
 };
 
 const BodyRowInner = <T,>({
+    tableId,
     row,
     actualRi,
     baseOrder,
@@ -395,6 +397,7 @@ const BodyRowInner = <T,>({
                                 window.dispatchEvent(
                                     new CustomEvent('AIR_TABLE_OPEN_CONTEXT_MENU', {
                                         detail: {
+                                            tableId,
                                             x: e.clientX,
                                             y: e.clientY,
                                             ri: actualRi,
@@ -435,6 +438,7 @@ const BodyRowInner = <T,>({
 };
 
 const areBodyRowPropsEqual = (prev: BodyRowProps<unknown>, next: BodyRowProps<unknown>) =>
+    prev.tableId === next.tableId &&
     prev.row.key === next.row.key &&
     prev.row.item === next.row.item &&
     prev.row.level === next.row.level &&
@@ -484,6 +488,7 @@ export const Body = <T,>({
     detailCellClassName,
 }: BodyProps) => {
     const {
+        tableId,
         props,
         tableAreaRef,
         scrollRef,
@@ -808,6 +813,7 @@ export const Body = <T,>({
                                                         window.dispatchEvent(
                                                             new CustomEvent('AIR_TABLE_OPEN_CONTEXT_MENU', {
                                                                 detail: {
+                                                                    tableId,
                                                                     x: e.clientX,
                                                                     y: e.clientY,
                                                                     ri: actualRi,
@@ -873,6 +879,7 @@ export const Body = <T,>({
                             return (
                                 <BodyRow
                                     key={row.key}
+                                    tableId={tableId}
                                     row={row}
                                     actualRi={actualRi}
                                     baseOrder={baseOrder}

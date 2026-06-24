@@ -42,6 +42,10 @@
     --granter-sub-sidebar-collapsed-width: 0px;
 }
 
+.PageTemplate[data-sub-sidebar-collapsed='true'] .SubSidebarToggle[data-overlay-open='true'] {
+    left: calc(var(--granter-sidebar-width) + var(--granter-sub-sidebar-overlay-width) + 8px);
+}
+
 .PageTemplate[data-theme='dark'] {
     @include theme.granter-dark-theme;
 }

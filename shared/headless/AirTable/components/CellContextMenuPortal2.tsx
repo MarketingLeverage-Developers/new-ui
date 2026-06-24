@@ -6,7 +6,10 @@ import { buildSelectionTsv2, copyTextToClipboard2 } from '../hooks/useCopySelect
 
 const AIR_TABLE2_OPEN_CONTEXT_MENU_EVENT = 'AIR_TABLE2_OPEN_CONTEXT_MENU';
 
+const normalizeCopyHeaderText = (text: string) => text.replace(/\r?\n/g, ' ').replace(/\t/g, ' ').trim();
+
 type ContextMenuDetail = {
+    tableId?: string;
     x: number;
     y: number;
     ri: number;
@@ -70,7 +73,7 @@ const MenuActionButton = ({
 };
 
 export const CellContextMenuPortal2 = <T,>() => {
-    const { state, baseOrder, getRange } = useAirTableContext<T>();
+    const { tableId, state, baseOrder, getRange } = useAirTableContext<T>();
 
     const [menu, setMenu] = useState<MenuState | null>(null);
     const ref = useRef<HTMLDivElement | null>(null);
@@ -103,6 +106,41 @@ export const CellContextMenuPortal2 = <T,>() => {
         [baseOrder, close, getRange, state.drag.draggingKey, state.rows]
     );
 
+    const handleCopyColumn = useCallback(async () => {
+        if (!menu) return;
+        if (state.drag.draggingKey) {
+            close();
+            return;
+        }
+
+        const columnIndex = baseOrder.indexOf(menu.colKey);
+        const ci = columnIndex >= 0 ? columnIndex : menu.ci;
+        const column = state.allLeafColumns.find((leaf) => leaf.key === menu.colKey);
+        const columnText = column?.copyColumnText?.();
+        const headerText = normalizeCopyHeaderText(column?.label ?? menu.colKey);
+
+        const tsv =
+            columnText ??
+            [
+                headerText,
+                buildSelectionTsv2({
+                    stateRows: state.rows,
+                    baseOrder,
+                    range: {
+                        top: 0,
+                        bottom: state.rows.length - 1,
+                        left: ci,
+                        right: ci,
+                    },
+                }),
+            ]
+                .filter((line) => line.length > 0)
+                .join('\n');
+
+        await copyTextToClipboard2(tsv);
+        close();
+    }, [baseOrder, close, menu, state.allLeafColumns, state.drag.draggingKey, state.rows]);
+
     useEffect(() => {
         console.log('✅ CellContextMenuPortal mounted');
 
@@ -112,6 +150,7 @@ export const CellContextMenuPortal2 = <T,>() => {
             console.log('✅ 컨텍스트 메뉴 이벤트 수신', e.detail);
 
             if (!e.detail) return;
+            if (e.detail.tableId !== tableId) return;
 
             setMenu({
                 open: true,
@@ -126,7 +165,7 @@ export const CellContextMenuPortal2 = <T,>() => {
 
         window.addEventListener(AIR_TABLE2_OPEN_CONTEXT_MENU_EVENT, handler);
         return () => window.removeEventListener(AIR_TABLE2_OPEN_CONTEXT_MENU_EVENT, handler);
-    }, []);
+    }, [tableId]);
 
     useEffect(() => {
         if (!menu?.open) return;
@@ -195,6 +234,10 @@ export const CellContextMenuPortal2 = <T,>() => {
 
                     <MenuActionButton onClick={() => void handleCopySelection(true)}>
                         헤더 포함 복사
+                    </MenuActionButton>
+
+                    <MenuActionButton onClick={() => void handleCopyColumn()}>
+                        해당열 복사
                     </MenuActionButton>
                 </div>
             </div>

@@ -28,7 +28,6 @@ export const ListInfiniteScroll = ({ total, page, size, onChange, isLoading, scr
             lastRequestedPageRef.current = null;
             requestedFromPageRef.current = null;
         }
-        if (scrollEl) wasIntersectingRef.current = false;
     }, [page, scrollEl]);
 
     useEffect(() => {
@@ -93,7 +92,6 @@ export const ListInfiniteScroll = ({ total, page, size, onChange, isLoading, scr
             onChange(nextPage);
         };
 
-        onScroll();
         scrollEl.addEventListener('scroll', onScroll, { passive: true });
         return () => scrollEl.removeEventListener('scroll', onScroll);
     }, [canLoad, nextPage, onChange, page, scrollEl]);

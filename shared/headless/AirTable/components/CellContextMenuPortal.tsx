@@ -2,8 +2,10 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { getThemeColor } from '../../../utils/css/getThemeColor';
 import { useAirTableContext } from '../AirTable';
+import { buildSelectionTsv, copyTextToClipboard } from '../hooks/useCopySelection';
 
 type ContextMenuDetail = {
+    tableId?: string;
     x: number;
     y: number;
     ri: number;
@@ -28,14 +30,10 @@ const itemStyle: React.CSSProperties = {
     fontSize: 13,
 };
 
-const dividerStyle: React.CSSProperties = {
-    height: 1,
-    background: 'rgba(0,0,0,0.08)',
-    margin: '6px 0',
-};
+const normalizeCopyHeaderText = (text: string) => text.replace(/\r?\n/g, ' ').replace(/\t/g, ' ').trim();
 
 export const CellContextMenuPortal = <T,>() => {
-    const { state, setPinnedColumnKeys, pinnedColumnKeys } = useAirTableContext<T>();
+    const { tableId, state, baseOrder } = useAirTableContext<T>();
 
     const [menu, setMenu] = useState<MenuState | null>(null);
     const ref = useRef<HTMLDivElement | null>(null);
@@ -51,6 +49,7 @@ export const CellContextMenuPortal = <T,>() => {
             console.log('✅ 컨텍스트 메뉴 이벤트 수신', e.detail);
 
             if (!e.detail) return;
+            if (e.detail.tableId !== tableId) return;
 
             setMenu({
                 open: true,
@@ -65,7 +64,7 @@ export const CellContextMenuPortal = <T,>() => {
 
         window.addEventListener('AIR_TABLE_OPEN_CONTEXT_MENU', handler);
         return () => window.removeEventListener('AIR_TABLE_OPEN_CONTEXT_MENU', handler);
-    }, []);
+    }, [tableId]);
 
     useEffect(() => {
         if (!menu?.open) return;
@@ -90,11 +89,43 @@ export const CellContextMenuPortal = <T,>() => {
         };
     }, [menu?.open, close]);
 
+    const handleCopyColumn = useCallback(async () => {
+        if (!menu) return;
+        if (state.drag.draggingKey) {
+            close();
+            return;
+        }
+
+        const columnIndex = baseOrder.indexOf(menu.colKey);
+        const ci = columnIndex >= 0 ? columnIndex : menu.ci;
+        const column = state.allLeafColumns.find((leaf) => leaf.key === menu.colKey);
+        const columnText = column?.copyColumnText?.();
+        const headerText = normalizeCopyHeaderText(column?.label ?? menu.colKey);
+
+        const tsv =
+            columnText ??
+            [
+                headerText,
+                buildSelectionTsv({
+                    stateRows: state.rows,
+                    baseOrder,
+                    range: {
+                        top: 0,
+                        bottom: state.rows.length - 1,
+                        left: ci,
+                        right: ci,
+                    },
+                }),
+            ]
+                .filter((line) => line.length > 0)
+                .join('\n');
+
+        await copyTextToClipboard(tsv);
+        close();
+    }, [baseOrder, close, menu, state.allLeafColumns, state.drag.draggingKey, state.rows]);
+
     if (!menu?.open) return null;
     if (typeof document === 'undefined') return null;
-
-    const colKey = menu.colKey;
-    const isPinned = pinnedColumnKeys.includes(colKey);
 
     // ✅ 화면 밖으로 안 나가게 clamp
     const MENU_W = 220;
@@ -131,6 +162,14 @@ export const CellContextMenuPortal = <T,>() => {
                     }}
                 >
                     복사
+                </button>
+
+                <button
+                    type="button"
+                    style={itemStyle}
+                    onClick={() => void handleCopyColumn()}
+                >
+                    해당열 복사
                 </button>
 
                 {/* <div style={dividerStyle} /> */}

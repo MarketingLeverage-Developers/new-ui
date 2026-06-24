@@ -111,6 +111,8 @@ export const BasicTable = <T,>({
     // 만약 TableSettingRail 실제 width가 다르면 이 값만 맞추면 됨
     const RAIL_WIDTH = 44;
     const PANEL_WIDTH = 260;
+    const showFilterTab = filterItems.length > 0;
+    const effectiveSettingsTab = showFilterTab || settingsTab !== 'filters' ? settingsTab : 'columns';
 
     const reservedRightSpace = useMemo(() => {
         if (!settingsVisible) return 0;
@@ -138,7 +140,7 @@ export const BasicTable = <T,>({
             {/* ✅ AirTable 내부로 툴바를 넣어서 context를 공유 */}
             <Flex direction="column" height="100%" minHeight={0} minWidth={0}>
                 {/* ✅ 툴바 */}
-                <Flex justify="space-between" margin={{ b: 12 }}>
+                <Flex className={styles.toolbar} justify="space-between" margin={{ b: 12 }}>
                     <Flex align="center" gap={8}>
                         {filterItems.map((item) => (
                             <React.Fragment key={item.label}>{item.element}</React.Fragment>
@@ -155,7 +157,7 @@ export const BasicTable = <T,>({
 
                 {/* ✅ 테이블 + 설정패널 영역 */}
                 <div
-                    className={classNames(styles.container)}
+                    className={classNames(styles.shell)}
                     style={{
                         display: 'flex',
                         width: '100%',
@@ -193,12 +195,14 @@ export const BasicTable = <T,>({
                                     rowClassName={styles.row}
                                     cellClassName={styles.cell}
                                     selectedCellClassName={styles.selected}
+                                    activeCellClassName={styles.active}
                                     detailRowClassName={styles.detailRow}
                                     detailCellClassName={styles.detailCell}
                                 />
                             ) : (
                                 // TODO : 임시 데이터 없음 UI
                                 <Flex
+                                    className={styles.emptyState}
                                     direction="column"
                                     height={'100%'}
                                     width={'100%'}
@@ -241,25 +245,27 @@ export const BasicTable = <T,>({
                                         height: '100%',
                                         minHeight: 0,
                                         flexShrink: 0,
-                                        borderLeft: '1px solid var(--Gray5)',
-                                        background: 'var(--White1)',
+                                        borderLeft: '1px solid var(--granter-gray-200)',
+                                        background: 'var(--granter-white)',
                                         overflowY: 'auto',
                                         overflowX: 'hidden',
                                     }}
                                 >
-                                    {settingsTab === 'columns' &&
+                                    {effectiveSettingsTab === 'columns' &&
                                         (useOwnBasicTablePanels ? (
                                             <ColumnVisibilityControlsPanel2<T> />
                                         ) : (
                                             <ColumnVisibilityControlsPanel<T> />
                                         ))}
-                                    {settingsTab === 'pinned' &&
+                                    {effectiveSettingsTab === 'pinned' &&
                                         (useOwnBasicTablePanels ? (
                                             <PinnedColumnControlsPanel2<T> />
                                         ) : (
                                             <PinnedColumnControlsPanel<T> />
                                         ))}
-                                    {settingsTab === 'filters' && <FilterControlsPanel items={filterItems} />}
+                                    {effectiveSettingsTab === 'filters' && showFilterTab && (
+                                        <FilterControlsPanel items={filterItems} />
+                                    )}
                                 </div>
                             )}
 
@@ -271,7 +277,12 @@ export const BasicTable = <T,>({
                                     flexShrink: 0,
                                 }}
                             >
-                                <TableSettingRail open={settingsOpen} tab={settingsTab} onSelectTab={handleSelectTab} />
+                                <TableSettingRail
+                                    open={settingsOpen}
+                                    tab={effectiveSettingsTab}
+                                    onSelectTab={handleSelectTab}
+                                    showFilters={showFilterTab}
+                                />
                             </div>
                         </div>
                     )}
