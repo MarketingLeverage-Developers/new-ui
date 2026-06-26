@@ -32,6 +32,21 @@ const escapeHtml = (value: string) =>
 const isSafeImageSrc = (value: string) =>
     /^(https?:)?\/\//i.test(value) || value.startsWith('/');
 
+const clampImageWidthPercent = (value: number) =>
+    Math.min(100, Math.max(20, Math.round(value)));
+
+const getValidImageWidth = (value?: string | null) => {
+    const parsedValue = Number.parseFloat(String(value ?? ''));
+    if (!Number.isFinite(parsedValue)) return '100';
+
+    return String(clampImageWidthPercent(parsedValue));
+};
+
+const getStyleImageWidth = (style?: string | null) => {
+    const match = String(style ?? '').match(/(?:^|;)\s*width\s*:\s*([0-9]+(?:\.[0-9]+)?)%\s*(?:;|$)/i);
+    return match?.[1] ?? null;
+};
+
 export const isRichTextHtml = (value?: string | null) => HTML_TAG_PATTERN.test(String(value ?? '').trim());
 
 export const toRichTextEditorContent = (value?: string | null) => {
@@ -84,8 +99,10 @@ const sanitizeNode = (node: Node): string => {
 
         const alt = element.getAttribute('alt') ?? '';
         const fileUUID = element.getAttribute('data-file-uuid') ?? '';
+        const widthPercent = getValidImageWidth(element.getAttribute('data-width') ?? getStyleImageWidth(element.getAttribute('style')));
         const fileUUIDAttribute = fileUUID ? ` data-file-uuid="${escapeHtml(fileUUID)}"` : '';
-        return `<img src="${escapeHtml(src)}" alt="${escapeHtml(alt)}"${fileUUIDAttribute}>`;
+        const widthAttribute = ` data-width="${widthPercent}" style="width: ${widthPercent}%;"`;
+        return `<img src="${escapeHtml(src)}" alt="${escapeHtml(alt)}"${fileUUIDAttribute}${widthAttribute}>`;
     }
 
     return `<${tagName}>${children}</${tagName}>`;

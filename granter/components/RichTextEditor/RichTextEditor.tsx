@@ -1,5 +1,11 @@
 import React, { useEffect, useMemo, useRef, useState, type ChangeEvent, type CSSProperties } from 'react';
-import { EditorContent, useEditor } from '@tiptap/react';
+import {
+    EditorContent,
+    NodeViewWrapper,
+    ReactNodeViewRenderer,
+    useEditor,
+    type ReactNodeViewProps,
+} from '@tiptap/react';
 import Image from '@tiptap/extension-image';
 import StarterKit from '@tiptap/starter-kit';
 import classNames from 'classnames';
@@ -10,6 +16,9 @@ import {
     toRichTextEditorContent,
 } from './richTextUtils';
 import styles from './RichTextEditor.module.scss';
+
+const MIN_IMAGE_WIDTH_PERCENT = 20;
+const MAX_IMAGE_WIDTH_PERCENT = 100;
 
 export type RichTextEditorUploadedImage = {
     src: string;
@@ -33,6 +42,129 @@ export type RichTextEditorProps = {
 const getSelectionTextLength = (from: number, to: number, doc: { textBetween: (from: number, to: number) => string }) =>
     Math.max(0, doc.textBetween(from, to).length);
 
+const clampImageWidthPercent = (value: number) =>
+    Math.min(MAX_IMAGE_WIDTH_PERCENT, Math.max(MIN_IMAGE_WIDTH_PERCENT, Math.round(value)));
+
+const getValidImageWidthPercent = (value?: string | number | null) => {
+    const parsedValue = typeof value === 'number' ? value : Number.parseFloat(String(value ?? ''));
+    if (!Number.isFinite(parsedValue)) return String(MAX_IMAGE_WIDTH_PERCENT);
+
+    return String(clampImageWidthPercent(parsedValue));
+};
+
+const getStyleImageWidthPercent = (style?: string | null) => {
+    const match = String(style ?? '').match(/(?:^|;)\s*width\s*:\s*([0-9]+(?:\.[0-9]+)?)%\s*(?:;|$)/i);
+    return match?.[1] ?? null;
+};
+
+const getImageWidthPercentFromElement = (element: HTMLElement) =>
+    getValidImageWidthPercent(element.getAttribute('data-width') ?? getStyleImageWidthPercent(element.getAttribute('style')));
+
+const RichTextImageNodeView: React.FC<ReactNodeViewProps<HTMLDivElement>> = ({
+    editor,
+    node,
+    selected,
+    updateAttributes,
+}) => {
+    const wrapperRef = useRef<HTMLDivElement | null>(null);
+    const [isResizing, setIsResizing] = useState(false);
+    const widthPercent = getValidImageWidthPercent(node.attrs.widthPercent);
+
+    const handleResizePointerDown = (event: React.PointerEvent<HTMLButtonElement>) => {
+        if (!editor.isEditable) return;
+
+        const wrapperElement = wrapperRef.current;
+        const parentElement = wrapperElement?.parentElement;
+        if (!wrapperElement || !parentElement) return;
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        const parentRect = parentElement.getBoundingClientRect();
+        const parentStyle = window.getComputedStyle(parentElement);
+        const parentPaddingLeft = Number.parseFloat(parentStyle.paddingLeft) || 0;
+        const parentPaddingRight = Number.parseFloat(parentStyle.paddingRight) || 0;
+        const resizeAreaLeft = parentRect.left + parentPaddingLeft;
+        const resizeAreaWidth = parentRect.width - parentPaddingLeft - parentPaddingRight;
+        if (resizeAreaWidth <= 0) return;
+
+        const previousCursor = document.body.style.cursor;
+        const previousUserSelect = document.body.style.userSelect;
+        document.body.style.cursor = 'ew-resize';
+        document.body.style.userSelect = 'none';
+        setIsResizing(true);
+
+        let lastWidthPercent = widthPercent;
+        const updateWidth = (clientX: number) => {
+            const nextWidthPercent = getValidImageWidthPercent(((clientX - resizeAreaLeft) / resizeAreaWidth) * 100);
+            if (nextWidthPercent === lastWidthPercent) return;
+
+            lastWidthPercent = nextWidthPercent;
+            updateAttributes({
+                widthPercent: nextWidthPercent,
+            });
+        };
+
+        const handlePointerMove = (moveEvent: PointerEvent) => {
+            moveEvent.preventDefault();
+            updateWidth(moveEvent.clientX);
+        };
+
+        const finishResize = (clientX?: number) => {
+            if (typeof clientX === 'number') {
+                updateWidth(clientX);
+            }
+            document.removeEventListener('pointermove', handlePointerMove);
+            document.removeEventListener('pointerup', handlePointerUp);
+            document.removeEventListener('pointercancel', handlePointerCancel);
+            document.body.style.cursor = previousCursor;
+            document.body.style.userSelect = previousUserSelect;
+            setIsResizing(false);
+        };
+
+        const handlePointerUp = (upEvent: PointerEvent) => {
+            finishResize(upEvent.clientX);
+        };
+
+        const handlePointerCancel = () => {
+            finishResize();
+        };
+
+        document.addEventListener('pointermove', handlePointerMove);
+        document.addEventListener('pointerup', handlePointerUp);
+        document.addEventListener('pointercancel', handlePointerCancel);
+    };
+
+    return (
+        <NodeViewWrapper
+            ref={wrapperRef}
+            as="div"
+            className={classNames(
+                styles.ImageNode,
+                selected && styles.ImageNodeSelected,
+                isResizing && styles.ImageNodeResizing
+            )}
+            style={{ width: `${widthPercent}%` }}
+            data-width={widthPercent}
+        >
+            <img
+                src={node.attrs.src}
+                alt={node.attrs.alt ?? ''}
+                data-file-uuid={node.attrs.fileUUID ?? undefined}
+                draggable={false}
+            />
+            {editor.isEditable && (selected || isResizing) ? (
+                <button
+                    type="button"
+                    className={styles.ImageResizeHandle}
+                    aria-label="이미지 크기 조절"
+                    onPointerDown={handleResizePointerDown}
+                />
+            ) : null}
+        </NodeViewWrapper>
+    );
+};
+
 const RichTextImage = Image.extend({
     addAttributes() {
         return {
@@ -45,7 +177,21 @@ const RichTextImage = Image.extend({
                     return { 'data-file-uuid': attributes.fileUUID };
                 },
             },
+            widthPercent: {
+                default: '100',
+                parseHTML: (element) => getImageWidthPercentFromElement(element),
+                renderHTML: (attributes) => {
+                    const widthPercent = getValidImageWidthPercent(attributes.widthPercent);
+                    return {
+                        'data-width': widthPercent,
+                        style: `width: ${widthPercent}%;`,
+                    };
+                },
+            },
         };
+    },
+    addNodeView() {
+        return ReactNodeViewRenderer(RichTextImageNodeView);
     },
 });
 
@@ -173,6 +319,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
                     src: image.src,
                     alt: image.alt,
                     fileUUID: image.fileUUID,
+                    widthPercent: '100',
                 }).run();
             });
         } catch {

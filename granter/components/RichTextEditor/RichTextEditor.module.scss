@@ -234,6 +234,64 @@
     border-radius: 8px;
 }
 
+.ImageNode {
+    position: relative;
+    display: block;
+    max-width: 100%;
+    margin: 10px 0;
+    line-height: 0;
+}
+
+.ImageNode img {
+    width: 100%;
+    margin: 0;
+}
+
+.ImageNodeSelected img,
+.ImageNodeResizing img,
+.Content :global(.ProseMirror img.ProseMirror-selectednode) {
+    border-color: var(--granter-sky-400, #38bdf8);
+    outline: 3px solid rgb(14 165 233 / 14%);
+}
+
+.ImageResizeHandle {
+    position: absolute;
+    right: -7px;
+    bottom: -7px;
+    width: 16px;
+    height: 16px;
+    padding: 0;
+    border: 2px solid var(--granter-white, #fff);
+    border-radius: 50%;
+    background: var(--granter-sky-500, #0ea5e9);
+    box-shadow:
+        0 2px 8px rgb(15 23 42 / 18%),
+        0 0 0 1px rgb(14 165 233 / 30%);
+    cursor: ew-resize;
+}
+
+.ImageResizeHandle:hover {
+    background: var(--granter-sky-600, #0284c7);
+}
+
+.EditorSurface img[data-width='50'],
+.Content :global(.ProseMirror img[data-width='50']),
+.Viewer img[data-width='50'] {
+    width: 50%;
+}
+
+.EditorSurface img[data-width='75'],
+.Content :global(.ProseMirror img[data-width='75']),
+.Viewer img[data-width='75'] {
+    width: 75%;
+}
+
+.EditorSurface img[data-width='100'],
+.Content :global(.ProseMirror img[data-width='100']),
+.Viewer img[data-width='100'] {
+    width: 100%;
+}
+
 .Footer {
     display: flex;
     justify-content: flex-end;
