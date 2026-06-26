@@ -253,6 +253,11 @@ export type {
     DashedDropzoneUploaderProps,
     DashedDropzoneUploaderVariant,
 } from './DashedDropzoneUploader/DashedDropzoneUploader';
+export { default as DashedDropzoneUploaderLegacy } from './DashedDropzoneUploaderLegacy/DashedDropzoneUploaderLegacy';
+export type {
+    DashedDropzoneUploaderLegacyProps,
+    DashedDropzoneUploaderLegacyVariant,
+} from './DashedDropzoneUploaderLegacy/DashedDropzoneUploaderLegacy';
 export { default as SingleImageDropzonePicker } from './SingleImageDropzonePicker/SingleImageDropzonePicker';
 export type { SingleImageDropzonePickerProps } from './SingleImageDropzonePicker/SingleImageDropzonePicker';
 export { default as ImagePreviewBox } from './ImagePreviewBox/ImagePreviewBox';

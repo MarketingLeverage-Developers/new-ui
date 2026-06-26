@@ -1,0 +1,663 @@
+.Root {
+    display: flex;
+    width: 100%;
+    min-width: 0;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.Dropzone {
+    display: flex;
+    width: 100%;
+    min-width: 0;
+    min-height: 104px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 20px 22px;
+    border: 1px dashed var(--granter-gray-300);
+    border-radius: 12px;
+    background-color: var(--granter-white);
+    transition:
+        background-color 0.15s ease,
+        border-color 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+.Dropzone[data-dragging='true'] {
+    border-color: var(--granter-gray-500);
+    background-color: var(--granter-gray-50);
+    box-shadow: 0 0 0 3px rgb(17 24 39 / 4%);
+}
+
+.Dropzone[data-disabled='true'] {
+    border-color: var(--granter-gray-200);
+    background-color: var(--granter-gray-50);
+    cursor: not-allowed;
+}
+
+.DropzoneLeft {
+    display: flex;
+    min-width: 0;
+    flex: 1 1 auto;
+    align-items: center;
+    gap: 12px;
+}
+
+.DropzoneIcon {
+    display: inline-flex;
+    width: 56px;
+    height: 56px;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    border-radius: 14px;
+    background: var(--granter-gray-100);
+    color: var(--granter-gray-500);
+}
+
+.DropzoneText {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.GuideText {
+    overflow: hidden;
+    color: var(--granter-gray-700);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.HelperText {
+    overflow: hidden;
+    color: var(--granter-gray-400);
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 18px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.UploadButton {
+    display: inline-flex;
+    height: 38px;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 0 14px;
+    border: 0;
+    border-radius: 8px;
+    background-color: var(--granter-gray-900);
+    color: var(--granter-white);
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 20px;
+    cursor: pointer;
+}
+
+.UploadButton:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.HiddenInput {
+    display: none;
+}
+
+.EmptyText {
+    margin: 0;
+    color: var(--granter-gray-400);
+    font-size: 12px;
+    line-height: 18px;
+}
+
+.ImageList {
+    display: flex;
+    min-width: 0;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.ImageItem {
+    display: flex;
+    width: 132px;
+    min-width: 0;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.ImageThumb {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border: 1px solid var(--granter-gray-200);
+    border-radius: 12px;
+    background: var(--granter-gray-100);
+}
+
+.ImageThumbPreviewButton {
+    display: flex;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--granter-gray-400);
+    cursor: pointer;
+}
+
+.ImageThumbPreviewButton:disabled {
+    cursor: default;
+}
+
+.ImageThumb img,
+.ImageThumb video {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.ImageThumb video {
+    background: var(--granter-gray-900);
+}
+
+.ImageThumb span {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    color: var(--granter-gray-400);
+    font-size: 13px;
+}
+
+.RemoveImageButton {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    display: inline-flex;
+    width: 22px;
+    height: 22px;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    border-radius: 999px;
+    background: var(--granter-white);
+    color: var(--granter-gray-900);
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgb(17 24 39 / 18%);
+}
+
+.RemoveImageButton:disabled {
+    cursor: not-allowed;
+    opacity: 0.45;
+}
+
+.ImageName,
+.ItemNameButton {
+    display: block;
+    width: 100%;
+    padding: 0;
+    overflow: hidden;
+    border: 0;
+    background: transparent;
+    color: var(--granter-gray-500);
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 18px;
+    text-align: left;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ItemNameButton:not(:disabled) {
+    cursor: pointer;
+}
+
+.ItemNameButton:disabled {
+    cursor: default;
+}
+
+.FileList {
+    display: flex;
+    width: 100%;
+    min-width: 0;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.FileItem {
+    display: flex;
+    width: 100%;
+    min-width: 0;
+    min-height: 40px;
+    align-items: center;
+    gap: 10px;
+    padding: 7px 12px;
+    border: 1px solid var(--granter-gray-200);
+    border-radius: 8px;
+    background: var(--granter-white);
+    color: inherit;
+    font: inherit;
+    text-align: left;
+}
+
+button.FileItem {
+    cursor: pointer;
+}
+
+.FileIcon {
+    display: inline-flex;
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    color: var(--granter-gray-500);
+}
+
+.FileName {
+    display: block;
+    min-width: 0;
+    flex: 1 1 auto;
+    overflow: hidden;
+    color: var(--granter-gray-900);
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 20px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.RemoveFileButton {
+    display: inline-flex;
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    border-radius: 999px;
+    background: var(--granter-gray-500);
+    color: var(--granter-white);
+    cursor: pointer;
+}
+
+.RemoveFileButton:disabled {
+    cursor: not-allowed;
+    opacity: 0.45;
+}
+
+.ReadOnlyImageList {
+    display: flex;
+    width: 100%;
+    min-width: 0;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.ReadOnlyImageItem {
+    width: 137px;
+    min-width: 0;
+}
+
+.ReadOnlyImageThumbWrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    min-width: 0;
+    overflow: hidden;
+    border: 1px solid var(--granter-gray-200);
+    border-radius: 14px;
+    background: var(--granter-gray-100);
+    cursor: pointer;
+}
+
+.ReadOnlyImageThumbButton {
+    display: flex;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 0;
+    outline: none;
+    background: transparent;
+    color: var(--granter-gray-400);
+    cursor: pointer;
+}
+
+.ReadOnlyImageThumbButton:disabled {
+    cursor: default;
+}
+
+.ReadOnlyImageThumbButton img,
+.ReadOnlyImageThumbButton video {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.ReadOnlyImageThumbButton video {
+    background: var(--granter-gray-900);
+}
+
+.VideoBadge {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--granter-white);
+    pointer-events: none;
+    filter: drop-shadow(0 1px 3px rgb(0 0 0 / 35%));
+}
+
+.VideoBadge svg {
+    width: 32px;
+    height: 32px;
+}
+
+.ReadOnlyImageThumbButton span {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    color: var(--granter-gray-400);
+    font-size: 13px;
+    font-weight: 400;
+}
+
+.ReadOnlyImageDim {
+    position: absolute;
+    inset: 0;
+    background: rgb(0 0 0 / 45%);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 150ms ease;
+}
+
+.ReadOnlyImageActions {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    opacity: 0;
+    pointer-events: none;
+    visibility: hidden;
+    transform: translateY(4px);
+    transition:
+        opacity 150ms ease,
+        transform 150ms ease,
+        visibility 150ms ease;
+}
+
+.ReadOnlyImageThumbWrap:hover .ReadOnlyImageDim,
+.ReadOnlyImageThumbWrap:focus-within .ReadOnlyImageDim {
+    opacity: 1;
+}
+
+.ReadOnlyImageThumbWrap:hover .ReadOnlyImageActions,
+.ReadOnlyImageThumbWrap:focus-within .ReadOnlyImageActions {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.ReadOnlyImageDownloadButton {
+    display: inline-flex;
+    width: 36px;
+    height: 36px;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--granter-white);
+    cursor: pointer;
+    pointer-events: auto;
+    transition: color 150ms ease, transform 150ms ease;
+}
+
+.ReadOnlyImageDownloadButton:hover:not(:disabled) {
+    transform: translateY(-1px);
+}
+
+.ReadOnlyImageDownloadButton:disabled {
+    opacity: 0.45;
+    cursor: default;
+}
+
+.ReadOnlyImageCaption {
+    margin-top: 8px;
+}
+
+.ReadOnlyImageName {
+    display: block;
+    min-width: 0;
+    overflow: hidden;
+    color: var(--granter-gray-600);
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 18px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ReadOnlyFileList {
+    display: flex;
+    width: 100%;
+    min-width: 0;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.ReadOnlyFileItem {
+    display: flex;
+    width: 100%;
+    min-width: 0;
+    min-height: 40px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 7px 16px;
+    border: 1px solid var(--granter-gray-200);
+    border-radius: 8px;
+    background: var(--granter-white);
+}
+
+.ReadOnlyFileMeta {
+    display: flex;
+    min-width: 0;
+    flex: 1;
+    align-items: center;
+    gap: 10px;
+}
+
+.ReadOnlyFileName {
+    min-width: 0;
+    flex: 1;
+    overflow: hidden;
+    color: var(--granter-gray-800);
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 18px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ReadOnlyFileType {
+    flex: none;
+    color: var(--granter-gray-500);
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 18px;
+    white-space: nowrap;
+}
+
+.ReadOnlyFileDownloadButton {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--granter-gray-500);
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 18px;
+    text-decoration: underline;
+    cursor: pointer;
+    transition: color 0.16s ease;
+}
+
+.ReadOnlyFileDownloadButton:hover:not(:disabled) {
+    color: var(--granter-gray-900);
+}
+
+.ReadOnlyFileDownloadButton:disabled {
+    opacity: 0.45;
+    cursor: default;
+}
+
+.ReadOnlyImagePreviewModalBackdrop {
+    z-index: 1300;
+}
+
+.ReadOnlyImagePreviewModalContent {
+    z-index: 1301;
+    min-width: min(320px, calc(100vw - 32px));
+    max-width: 60%;
+    display: block;
+    border: 0;
+    overflow: hidden;
+    background: transparent;
+    box-shadow: none;
+}
+
+.ReadOnlyPreviewFrame {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+}
+
+.ReadOnlyPreviewClose {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--granter-white);
+    cursor: pointer;
+    filter: drop-shadow(0 1px 2px rgb(0 0 0 / 45%));
+}
+
+.ReadOnlyPreviewClose svg {
+    display: block;
+}
+
+.ReadOnlyImagePreviewViewport {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    padding: 0 10%;
+    cursor: pointer;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.ReadOnlyImagePreviewCanvas {
+    display: flex;
+    flex-shrink: 0;
+    justify-content: center;
+    margin: auto 0;
+    cursor: default;
+    transition: width 0.1s ease-out;
+}
+
+.ReadOnlyImagePreviewImage {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    max-height: 100%;
+    margin: 0 auto;
+    border-radius: 8px;
+    object-fit: contain;
+}
+
+.ReadOnlyVideoPreviewViewport {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    padding: 24px;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.ReadOnlyVideoPreviewCanvas {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    cursor: default;
+}
+
+.ReadOnlyVideoPreviewPlayer {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    height: 100%;
+    max-height: 100%;
+    margin: 0 auto;
+    border-radius: 8px;
+    background: var(--granter-gray-900);
+    object-fit: contain;
+}
+
+@media (max-width: 720px) {
+    .Dropzone {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .UploadButton {
+        width: 100%;
+    }
+
+    .ReadOnlyImagePreviewModalContent {
+        max-width: calc(100vw - 32px);
+    }
+
+    .ReadOnlyVideoPreviewViewport {
+        padding: 16px;
+    }
+}
