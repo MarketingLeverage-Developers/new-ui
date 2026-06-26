@@ -418,6 +418,16 @@ export type {
 
 export { default as RichTextEditor } from './RichTextEditor/RichTextEditor';
 export type { RichTextEditorProps, RichTextEditorUploadedImage } from './RichTextEditor/RichTextEditor';
+export { default as RichTextViewer } from './RichTextEditor/RichTextViewer';
+export type { RichTextViewerProps } from './RichTextEditor/RichTextViewer';
+export {
+    getRichTextPlainText,
+    isRichTextEmpty,
+    isRichTextHtml,
+    normalizeRichTextValue,
+    sanitizeRichTextHtml,
+    toRichTextEditorContent,
+} from './RichTextEditor/richTextUtils';
 
 export { default as SingleDatePicker } from './SingleDatePicker/SingleDatePicker';
 export type { SingleDatePickerProps } from './SingleDatePicker/SingleDatePicker';

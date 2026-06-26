@@ -100,6 +100,15 @@ export { default as OutputAssetList } from './components/OutputAssetList/OutputA
 export { default as Flex } from './components/Flex/Flex';
 export { default as FileUploader } from './components/FileUploader/FileUploader';
 export { default as RichTextEditor } from './components/RichTextEditor/RichTextEditor';
+export { default as RichTextViewer } from './components/RichTextEditor/RichTextViewer';
+export {
+    getRichTextPlainText,
+    isRichTextEmpty,
+    isRichTextHtml,
+    normalizeRichTextValue,
+    sanitizeRichTextHtml,
+    toRichTextEditorContent,
+} from './components/RichTextEditor/richTextUtils';
 export { default as InlineSingleDateCalendar } from './components/InlineSingleDateCalendar/InlineSingleDateCalendar';
 export { default as FullWidthSingleDatePicker } from './components/FullWidthSingleDatePicker/FullWidthSingleDatePicker';
 export { default as RoundedSegmentTab } from './components/RoundedSegmentTab/RoundedSegmentTab';
@@ -349,6 +358,7 @@ export type {
     FileUploaderImageListProps,
 } from './components/FileUploader/FileUploader';
 export type { RichTextEditorProps, RichTextEditorUploadedImage } from './components/RichTextEditor/RichTextEditor';
+export type { RichTextViewerProps } from './components/RichTextEditor/RichTextViewer';
 export type { SingleDatePickerProps } from './components/SingleDatePicker/SingleDatePicker';
 export type { InlineSingleDateCalendarProps } from './components/InlineSingleDateCalendar/InlineSingleDateCalendar';
 export type { FullWidthSingleDatePickerProps } from './components/FullWidthSingleDatePicker/FullWidthSingleDatePicker';
