@@ -36,16 +36,17 @@ const fetchDownloadBlob = async (fileUrl: string) => {
     throw lastError;
 };
 
-type DownloadFileOptions = {
-    fallbackToOpen?: boolean;
-};
+export const downloadFileFromUrl = async (fileUrl: string, fileName: string) => {
+    const isCrossOriginUrl = (targetUrl: string) => {
+        if (typeof window === 'undefined') return false;
+        try {
+            const parsed = new URL(targetUrl, window.location.href);
+            return parsed.origin !== window.location.origin;
+        } catch {
+            return false;
+        }
+    };
 
-export const downloadFileFromUrl = async (
-    fileUrl: string,
-    fileName: string,
-    options: DownloadFileOptions = {}
-) => {
-    const { fallbackToOpen = true } = options;
     const openByAnchor = (targetUrl: string, targetName?: string) => {
         const link = document.createElement('a');
         link.href = targetUrl;
@@ -57,13 +58,16 @@ export const downloadFileFromUrl = async (
         document.body.removeChild(link);
     };
 
+    if (isCrossOriginUrl(fileUrl)) {
+        openByAnchor(fileUrl, fileName);
+        return;
+    }
+
     try {
         const blob = await fetchDownloadBlob(fileUrl);
         saveBlob(blob, fileName);
     } catch (error) {
         console.error('파일 다운로드 실패:', error);
-        if (fallbackToOpen) {
-            openByAnchor(fileUrl, fileName);
-        }
+        openByAnchor(fileUrl, fileName);
     }
 };
