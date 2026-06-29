@@ -45,9 +45,10 @@ export type AnnotatedImageViewerProps = {
     className?: string;
 };
 
-const IMAGE_ZOOM_MIN = 0.25;
+const IMAGE_ZOOM_MIN = 0.05;
 const IMAGE_ZOOM_MAX = 2;
 const IMAGE_ZOOM_STEP = 0.25;
+const IMAGE_ZOOM_SENSITIVITY = 0.00045;
 const PAN_DRAG_THRESHOLD = 3;
 const REGION_MIN_SIZE = 0.015;
 
@@ -206,23 +207,16 @@ const AnnotatedImageViewer = ({
         setImageZoom((prev) => clampImageZoom(prev + delta));
     }, []);
 
-    const handleImageStageWheel = React.useCallback(
-        (event: React.WheelEvent<HTMLDivElement>) => {
-            if (!selectedAsset?.src || (!event.ctrlKey && !event.metaKey)) return;
-
-            event.preventDefault();
-            event.stopPropagation();
-
-            const stage = event.currentTarget;
+    const zoomImageAtPointer = React.useCallback(
+        (stage: HTMLDivElement, clientX: number, clientY: number, deltaY: number) => {
             const stageRect = stage.getBoundingClientRect();
-            const pointerX = event.clientX - stageRect.left;
-            const pointerY = event.clientY - stageRect.top;
+            const pointerX = clientX - stageRect.left;
+            const pointerY = clientY - stageRect.top;
             const anchorX = stage.scrollLeft + pointerX;
             const anchorY = stage.scrollTop + pointerY;
-            const delta = event.deltaY < 0 ? IMAGE_ZOOM_STEP : -IMAGE_ZOOM_STEP;
 
             setImageZoom((prev) => {
-                const next = clampImageZoom(prev + delta);
+                const next = clampImageZoom(prev * Math.exp(deltaY * -IMAGE_ZOOM_SENSITIVITY));
                 if (next === prev) return prev;
 
                 const zoomRatio = next / prev;
@@ -234,8 +228,27 @@ const AnnotatedImageViewer = ({
                 return next;
             });
         },
-        [selectedAsset?.src]
+        []
     );
+
+    React.useEffect(() => {
+        const stage = stageRef.current;
+        if (!stage || !selectedAsset?.src) return;
+
+        const handleWheel = (event: WheelEvent) => {
+            if (!event.ctrlKey && !event.metaKey) return;
+
+            event.preventDefault();
+            event.stopPropagation();
+            zoomImageAtPointer(stage, event.clientX, event.clientY, event.deltaY);
+        };
+
+        stage.addEventListener('wheel', handleWheel, { passive: false });
+
+        return () => {
+            stage.removeEventListener('wheel', handleWheel);
+        };
+    }, [selectedAsset?.src, zoomImageAtPointer]);
 
     const handleImageLoad = React.useCallback(
         (event: React.SyntheticEvent<HTMLImageElement>) => {
@@ -651,7 +664,6 @@ const AnnotatedImageViewer = ({
                     ref={stageRef}
                     className={styles.Stage}
                     data-panning={isPanning ? 'true' : 'false'}
-                    onWheel={handleImageStageWheel}
                     onPointerDown={handleStagePointerDown}
                     onPointerMove={handleStagePointerMove}
                     onPointerUp={stopStagePan}
