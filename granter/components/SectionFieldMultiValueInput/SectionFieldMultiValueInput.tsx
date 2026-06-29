@@ -23,6 +23,7 @@ export type SectionFieldMultiValueInputProps = {
     disabled?: boolean;
     variant?: 'default' | 'compact' | 'compact-dropdown' | 'compact-stack';
     horizontalWheelScroll?: boolean;
+    commitOnBlur?: boolean;
     validateValue?: (value: string) => string | null;
 };
 
@@ -174,6 +175,7 @@ const SectionFieldMultiValueInput = ({
     disabled = false,
     variant = 'default',
     horizontalWheelScroll = false,
+    commitOnBlur = false,
     validateValue,
 }: SectionFieldMultiValueInputProps) => {
     const [pendingValue, setPendingValue] = useState('');
@@ -242,9 +244,20 @@ const SectionFieldMultiValueInput = ({
         },
         [horizontalWheelScroll, isCompact]
     );
+    const handleRootBlur = useCallback(
+        (event: React.FocusEvent<HTMLDivElement>) => {
+            if (!commitOnBlur) return;
+
+            const nextTarget = event.relatedTarget as Node | null;
+            if (nextTarget && event.currentTarget.contains(nextTarget)) return;
+
+            addPendingValues();
+        },
+        [addPendingValues, commitOnBlur]
+    );
 
     return (
-        <div className={styles.Root}>
+        <div className={styles.Root} onBlur={handleRootBlur}>
             {isCompactDropdown ? (
                 <Dropdown>
                     <CompactDropdownField
