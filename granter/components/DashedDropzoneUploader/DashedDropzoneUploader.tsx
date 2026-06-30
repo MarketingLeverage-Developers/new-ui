@@ -138,6 +138,13 @@ const resolveItemUrl = (url?: string) => {
     return `${apiOrigin}/api${path}`;
 };
 
+const getIntranetFileDownloadUrl = (item: object) => {
+    const fileUUID = firstString(toRecord(item), ['fileUUID', 'imageUUID']);
+    if (!fileUUID) return '';
+
+    return resolveItemUrl(`/api/v1/files/intranet/${encodeURIComponent(fileUUID)}/download`);
+};
+
 const getDefaultItemKey = (item: object, index: number) => {
     const record = toRecord(item);
     return (
@@ -563,9 +570,10 @@ const DashedDropzoneUploader = <TItem extends object>({
                             const previewStatus = getItemPreviewStatus(file.item);
                             const video = isVideoItem(file.item, file.name, file.url, file.metaText);
                             const previewUrl = getItemPreviewUrl(file.item);
-                            const downloadUrl = video
-                                ? getVideoPreviewTargetUrl(file.url, previewStatus, previewUrl)
-                                : file.url;
+                            const intranetDownloadUrl = getIntranetFileDownloadUrl(file.item);
+                            const downloadUrl =
+                                intranetDownloadUrl ||
+                                (video ? getVideoPreviewTargetUrl(file.url, previewStatus, previewUrl) : file.url);
                             const encodingGuideText = getVideoEncodingGuideText(video, Boolean(downloadUrl));
 
                             return (
