@@ -25,6 +25,8 @@ export type DashedDropzoneUploaderProps<TItem extends object> = {
     getItemUrl?: (item: TItem, index: number) => string | undefined;
     getItemMetaText?: (item: TItem, index: number) => string | undefined;
     onItemClick?: (item: TItem, index: number) => void;
+    selectedItemIndex?: number | null;
+    selectOnItemClick?: boolean;
     maxFiles?: number;
     maxFileSizeBytes?: number;
     maxFileSizeLabel?: string;
@@ -272,6 +274,8 @@ const DashedDropzoneUploader = <TItem extends object>({
     getItemUrl = getDefaultItemUrl,
     getItemMetaText = getDefaultItemMetaText,
     onItemClick,
+    selectedItemIndex,
+    selectOnItemClick = false,
     maxFiles,
     maxFileSizeBytes,
     maxFileSizeLabel,
@@ -672,17 +676,28 @@ const DashedDropzoneUploader = <TItem extends object>({
                             Boolean(previewTargetUrl && previewType) &&
                             (!video || canAccessVideoPreview(previewStatus, previewUrl));
                         const encodingGuideText = getVideoEncodingGuideText(video, canPreview);
-                        const clickable = canPreview || (!video && Boolean(onItemClick));
+                        const selectable = selectOnItemClick && Boolean(onItemClick);
+                        const clickable = canPreview || selectable || (!video && Boolean(onItemClick));
                         const thumbnailSrc = video ? thumbnailUrl : originalUrl;
 
                         return (
-                            <div key={getItemKey(item, index)} className={styles.ImageItem}>
+                            <div
+                                key={getItemKey(item, index)}
+                                className={styles.ImageItem}
+                                data-selected={selectedItemIndex === index ? 'true' : undefined}
+                            >
                                 <div className={styles.ImageThumb}>
                                     <button
                                         type="button"
                                         className={styles.ImageThumbPreviewButton}
-                                        disabled={!canPreview}
-                                        onClick={() => openPreview(item, index, name, previewTargetUrl, previewType)}
+                                        disabled={!canPreview && !selectable}
+                                        onClick={() => {
+                                            if (selectable) {
+                                                onItemClick?.(item, index);
+                                                return;
+                                            }
+                                            openPreview(item, index, name, previewTargetUrl, previewType);
+                                        }}
                                     >
                                         {thumbnailSrc ? (
                                             video && thumbnailSrc === originalUrl ? (
@@ -717,6 +732,10 @@ const DashedDropzoneUploader = <TItem extends object>({
                                         className={styles.ItemNameButton}
                                         title={name}
                                         onClick={() => {
+                                            if (selectable) {
+                                                onItemClick?.(item, index);
+                                                return;
+                                            }
                                             if (canPreview) {
                                                 openPreview(item, index, name, previewTargetUrl, previewType);
                                                 return;
@@ -743,6 +762,7 @@ const DashedDropzoneUploader = <TItem extends object>({
             {variant === 'file' && value.length > 0 ? (
                 <div className={styles.FileList}>
                     {value.map((item, index) => {
+                        const itemKey = getItemKey(item, index);
                         const name = getItemName(item, index);
                         const url = getItemUrl(item, index);
                         const metaText = getItemMetaText(item, index);
@@ -755,7 +775,8 @@ const DashedDropzoneUploader = <TItem extends object>({
                             Boolean(previewTargetUrl && previewType) &&
                             (!video || canAccessVideoPreview(previewStatus, previewUrl));
                         const encodingGuideText = getVideoEncodingGuideText(video, canPreview);
-                        const clickable = canPreview || (!video && Boolean(onItemClick));
+                        const selectable = selectOnItemClick && Boolean(onItemClick);
+                        const clickable = canPreview || selectable || (!video && Boolean(onItemClick));
                         const fileContent = (
                             <>
                                 <span className={styles.FileIcon}>
@@ -789,13 +810,16 @@ const DashedDropzoneUploader = <TItem extends object>({
                                 )}
                             </>
                         );
-
-                        return clickable ? (
+                        const fileRow = clickable ? (
                             <button
                                 type="button"
-                                key={getItemKey(item, index)}
                                 className={styles.FileItem}
+                                data-selected={selectedItemIndex === index ? 'true' : undefined}
                                 onClick={() => {
+                                    if (selectable) {
+                                        onItemClick?.(item, index);
+                                        return;
+                                    }
                                     if (canPreview) {
                                         openPreview(item, index, name, previewTargetUrl, previewType);
                                         return;
@@ -806,10 +830,15 @@ const DashedDropzoneUploader = <TItem extends object>({
                                 {fileContent}
                             </button>
                         ) : (
-                            <div key={getItemKey(item, index)} className={styles.FileItem}>
+                            <div
+                                className={styles.FileItem}
+                                data-selected={selectedItemIndex === index ? 'true' : undefined}
+                            >
                                 {fileContent}
                             </div>
                         );
+
+                        return <React.Fragment key={itemKey}>{fileRow}</React.Fragment>;
                     })}
                 </div>
             ) : null}
