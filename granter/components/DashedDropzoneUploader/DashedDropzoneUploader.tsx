@@ -37,6 +37,7 @@ export type DashedDropzoneUploaderProps<TItem extends object> = {
     helperText?: string;
     emptyText?: string;
     showEmpty?: boolean;
+    hideDropzone?: boolean;
     className?: string;
 };
 
@@ -284,6 +285,7 @@ const DashedDropzoneUploader = <TItem extends object>({
     helperText,
     emptyText,
     showEmpty = true,
+    hideDropzone = false,
     className,
 }: DashedDropzoneUploaderProps<TItem>) => {
     const { addToast } = useToast();
@@ -611,7 +613,7 @@ const DashedDropzoneUploader = <TItem extends object>({
 
     return (
         <div className={classNames(styles.Root, className)} data-variant={variant}>
-            {!readOnly ? (
+            {!readOnly && !hideDropzone ? (
                 <div
                     className={styles.Dropzone}
                     data-dragging={dragging ? 'true' : 'false'}
@@ -652,7 +654,7 @@ const DashedDropzoneUploader = <TItem extends object>({
                 </div>
             ) : null}
 
-            {value.length === 0 ? <p className={styles.EmptyText}>{resolvedEmptyText}</p> : null}
+            {value.length === 0 && showEmpty ? <p className={styles.EmptyText}>{resolvedEmptyText}</p> : null}
 
             {variant === 'image' && value.length > 0 ? (
                 <div className={styles.ImageList}>
