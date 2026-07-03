@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import classNames from 'classnames';
 import { FiDownload, FiEye, FiFile, FiMoreVertical, FiPackage, FiPlayCircle } from 'react-icons/fi';
+import { downloadFileFromUrl, downloadFilesAfterPrepared } from '@/components/common/shared/utils/download/download';
 import EmptyStatePanel from '../EmptyStatePanel/EmptyStatePanel';
 import styles from './OutputAssetList.module.scss';
 
@@ -76,24 +77,18 @@ const openPreview = (item: OutputAssetListItem, onPreview?: (item: OutputAssetLi
     }
 };
 
-const downloadAsset = (item: OutputAssetListItem, onDownload?: (item: OutputAssetListItem) => void) => {
+const downloadAsset = async (item: OutputAssetListItem, onDownload?: (item: OutputAssetListItem) => void) => {
     if (onDownload) {
-        onDownload(item);
+        await onDownload(item);
         return;
     }
 
     if (!item.url) return;
 
-    const anchor = document.createElement('a');
-    anchor.href = item.url;
-    anchor.download = item.name;
-    anchor.rel = 'noopener noreferrer';
-    document.body.appendChild(anchor);
-    anchor.click();
-    anchor.remove();
+    await downloadFileFromUrl(item.url, item.name);
 };
 
-const downloadAssets = (
+const downloadAssets = async (
     items: OutputAssetListItem[],
     onDownloadAll?: (items: OutputAssetListItem[]) => void,
     onDownload?: (item: OutputAssetListItem) => void
@@ -103,9 +98,21 @@ const downloadAssets = (
         return;
     }
 
-    items.filter((item) => item.url).forEach((item, index) => {
-        window.setTimeout(() => downloadAsset(item, onDownload), index * 80);
-    });
+    const downloadableItems = items.filter((item) => item.url);
+
+    if (!onDownload) {
+        await downloadFilesAfterPrepared(
+            downloadableItems.map((item) => ({
+                fileUrl: item.url as string,
+                fileName: item.name,
+            }))
+        );
+        return;
+    }
+
+    for (const item of downloadableItems) {
+        await downloadAsset(item, onDownload);
+    }
 };
 
 const OutputAssetList = ({
@@ -182,7 +189,9 @@ const OutputAssetList = ({
                                 type="button"
                                 className={styles.DownloadAllButton}
                                 disabled={downloadableItems.length === 0}
-                                onClick={() => downloadAssets(downloadableItems, onDownloadAll, onDownload)}
+                                onClick={() => {
+                                    void downloadAssets(downloadableItems, onDownloadAll, onDownload);
+                                }}
                             >
                                 <FiDownload aria-hidden="true" />
                                 전체 다운로드
