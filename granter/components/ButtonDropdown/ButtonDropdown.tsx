@@ -42,15 +42,23 @@ export type ButtonDropdownTriggerProps = Omit<React.ButtonHTMLAttributes<HTMLBut
 
 export type ButtonDropdownContentProps = Omit<React.ComponentProps<typeof HeadlessDropdown.Content>, 'className'>;
 
+type SearchableButtonDropdownContentProps = ButtonDropdownContentProps & {
+    searchable?: boolean;
+    searchPlaceholder?: string;
+    searchEmptyText?: React.ReactNode;
+    menuMaxHeight?: number | string;
+};
+
 export type ButtonDropdownItemProps = Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'value' | 'className'> & {
     value: string;
     children: React.ReactNode;
+    searchText?: string;
     onSelect?: () => void;
 };
 
 type ButtonDropdownComponent = React.FC<ButtonDropdownProps> & {
     Trigger: React.FC<ButtonDropdownTriggerProps>;
-    Content: React.FC<ButtonDropdownContentProps>;
+    Content: React.FC<SearchableButtonDropdownContentProps>;
     Item: React.FC<ButtonDropdownItemProps>;
 };
 
@@ -93,13 +101,86 @@ const Trigger = ({
     );
 };
 
-const Content = ({ children, keepMounted = false, ...props }: ButtonDropdownContentProps) => (
-    <HeadlessDropdown.Content className={styles.Menu} keepMounted={keepMounted} {...props}>
-        {children}
-    </HeadlessDropdown.Content>
-);
+const normalizeSearchText = (value: string) => value.trim().toLowerCase();
 
-const Item = ({ value, children, disabled, onSelect, onClick, ...props }: ButtonDropdownItemProps) => {
+const getNodeSearchText = (node: React.ReactNode): string => {
+    if (typeof node === 'string' || typeof node === 'number') {
+        return String(node);
+    }
+    if (Array.isArray(node)) {
+        return node.map(getNodeSearchText).join(' ');
+    }
+    if (React.isValidElement<{ children?: React.ReactNode }>(node)) {
+        return getNodeSearchText(node.props.children);
+    }
+
+    return '';
+};
+
+const Content = ({
+    children,
+    keepMounted = false,
+    searchable = false,
+    searchPlaceholder = '검색어를 입력해주세요.',
+    searchEmptyText = '검색 결과가 없습니다.',
+    menuMaxHeight,
+    style,
+    ...props
+}: SearchableButtonDropdownContentProps) => {
+    const { isOpen } = useHeadlessDropdown();
+    const [searchQuery, setSearchQuery] = React.useState('');
+    const normalizedSearchQuery = normalizeSearchText(searchQuery);
+
+    React.useEffect(() => {
+        if (isOpen) return;
+        setSearchQuery('');
+    }, [isOpen]);
+
+    const filteredChildren = React.useMemo(() => {
+        const childItems = React.Children.toArray(children);
+        if (!searchable || !normalizedSearchQuery) return childItems;
+
+        return childItems.filter((child) => {
+            if (!React.isValidElement<ButtonDropdownItemProps>(child)) return true;
+
+            const searchableText = normalizeSearchText(
+                [child.props.searchText, child.props.value, getNodeSearchText(child.props.children)]
+                    .filter(Boolean)
+                    .join(' ')
+            );
+
+            return searchableText.includes(normalizedSearchQuery);
+        });
+    }, [children, normalizedSearchQuery, searchable]);
+
+    return (
+        <HeadlessDropdown.Content
+            className={styles.Menu}
+            keepMounted={keepMounted}
+            style={{ maxHeight: menuMaxHeight, ...style }}
+            {...props}
+        >
+            {searchable ? (
+                <div className={styles.SearchWrap}>
+                    <input
+                        type="text"
+                        value={searchQuery}
+                        className={styles.SearchInput}
+                        placeholder={searchPlaceholder}
+                        aria-label={searchPlaceholder}
+                        onChange={(event) => setSearchQuery(event.target.value)}
+                    />
+                </div>
+            ) : null}
+
+            <div className={styles.OptionsViewport}>
+                {filteredChildren.length > 0 ? filteredChildren : <div className={styles.Empty}>{searchEmptyText}</div>}
+            </div>
+        </HeadlessDropdown.Content>
+    );
+};
+
+const Item = ({ value, children, disabled, searchText: _searchText, onSelect, onClick, ...props }: ButtonDropdownItemProps) => {
     const context = useButtonDropdownContext();
     const { close } = useHeadlessDropdown();
     const { isActive, changeSelectValue } = useSelect();
