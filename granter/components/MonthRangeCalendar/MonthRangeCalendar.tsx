@@ -43,9 +43,13 @@ const PRESETS: { key: PresetKey; label: string }[] = [
 ];
 
 const MONTH_LABELS = Array.from({ length: 12 }, (_, index) => `${index + 1}월`);
+const WEEKDAY_LABELS = ['일', '월', '화', '수', '목', '금', '토'] as const;
 
 const pad2 = (value: number) => String(value).padStart(2, '0');
-const formatMonthValue = (date?: Date) => (date ? `${date.getFullYear()}-${pad2(date.getMonth() + 1)}` : '');
+const formatDateValue = (date?: Date) =>
+    date ? `${date.getFullYear()}-${pad2(date.getMonth() + 1)}-${pad2(date.getDate())} (${WEEKDAY_LABELS[date.getDay()]})` : '';
+const formatStartInputValue = (date?: Date) => (date ? formatDateValue(startOfMonth(date)) : '');
+const formatEndInputValue = (date?: Date) => (date ? formatDateValue(endOfMonth(date)) : '');
 const formatRecentMonthLabel = (date: Date) => `${date.getFullYear()}.${pad2(date.getMonth() + 1)}`;
 const startOfMonth = (date: Date) => new Date(date.getFullYear(), date.getMonth(), 1);
 const endOfMonth = (date: Date) => new Date(date.getFullYear(), date.getMonth() + 1, 0);
@@ -69,14 +73,18 @@ const isMonthWithin = (target: Date, from?: Date, to?: Date) => {
 };
 
 const parseMonthValue = (value: string): Date | undefined => {
-    const matched = /^(\d{4})-(\d{2})$/.exec(value.trim());
+    const matched = /^(\d{4})-(\d{2})(?:-(\d{2}))?(?:\s*\([^)]+\))?$/.exec(value.trim());
     if (!matched) return undefined;
 
     const year = Number(matched[1]);
     const month = Number(matched[2]);
+    const day = matched[3] ? Number(matched[3]) : 1;
     if (month < 1 || month > 12) return undefined;
 
-    return new Date(year, month - 1, 1);
+    const date = new Date(year, month - 1, day);
+    if (date.getFullYear() !== year || date.getMonth() !== month - 1 || date.getDate() !== day) return undefined;
+
+    return date;
 };
 
 const isSameRange = (a?: DateRange, b?: DateRange) => {
@@ -182,8 +190,8 @@ const MonthRangeCalendar = ({
         });
         setHoveredMonth(undefined);
         setCurrentYear((range?.from ?? today).getFullYear());
-        setFromInput(formatMonthValue(range?.from));
-        setToInput(formatMonthValue(range?.to));
+        setFromInput(formatStartInputValue(range?.from));
+        setToInput(formatEndInputValue(range?.to));
         setFromError(false);
         setToError(false);
     }, [range, today]);
@@ -211,6 +219,8 @@ const MonthRangeCalendar = ({
         setPendingStartMonth(undefined);
         setHoveredMonth(undefined);
         setCurrentYear((nextRange.from ?? fromMonth).getFullYear());
+        setFromInput(formatStartInputValue(nextRange.from));
+        setToInput(formatEndInputValue(nextRange.to));
     };
 
     const handlePresetClick = (key: PresetKey) => {
@@ -220,8 +230,8 @@ const MonthRangeCalendar = ({
         setPendingStartMonth(undefined);
         setHoveredMonth(undefined);
         setCurrentYear((nextRange.from ?? today).getFullYear());
-        setFromInput(formatMonthValue(nextRange.from));
-        setToInput(formatMonthValue(nextRange.to));
+        setFromInput(formatStartInputValue(nextRange.from));
+        setToInput(formatEndInputValue(nextRange.to));
         setFromError(false);
         setToError(false);
     };
@@ -234,8 +244,8 @@ const MonthRangeCalendar = ({
             commitRange(nextRange);
             setPendingStartMonth(undefined);
             setHoveredMonth(undefined);
-            setFromInput(formatMonthValue(nextRange.from));
-            setToInput(formatMonthValue(nextRange.to));
+            setFromInput(formatStartInputValue(nextRange.from));
+            setToInput(formatEndInputValue(nextRange.to));
         } else {
             const nextRange = {
                 from: startOfMonth(date),
@@ -244,8 +254,8 @@ const MonthRangeCalendar = ({
             commitRange(nextRange);
             setPendingStartMonth(date);
             setHoveredMonth(undefined);
-            setFromInput(formatMonthValue(nextRange.from));
-            setToInput(formatMonthValue(nextRange.to));
+            setFromInput(formatStartInputValue(nextRange.from));
+            setToInput(formatEndInputValue(nextRange.to));
         }
 
         setCurrentYear(date.getFullYear());
@@ -307,7 +317,7 @@ const MonthRangeCalendar = ({
                                     setFromError(hasError);
                                     if (!hasError) applyInputsIfComplete(fromInput, toInput);
                                 }}
-                                placeholder="YYYY-MM"
+                                placeholder="YYYY-MM-DD"
                             />
                         </div>
                     </div>
@@ -332,7 +342,7 @@ const MonthRangeCalendar = ({
                                     setToError(hasError);
                                     if (!hasError) applyInputsIfComplete(fromInput, toInput);
                                 }}
-                                placeholder="YYYY-MM"
+                                placeholder="YYYY-MM-DD"
                             />
                         </div>
                     </div>

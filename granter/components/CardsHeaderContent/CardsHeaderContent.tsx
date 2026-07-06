@@ -34,6 +34,7 @@ export type HeaderBreadcrumbProps = {
 export type HeaderDateRangeControlProps = {
     dateLabel: React.ReactNode;
     mode?: 'date' | 'month';
+    labelMode?: 'date' | 'month';
     allowFutureDates?: boolean;
     onPrevDate?: () => void;
     onNextDate?: () => void;
@@ -45,6 +46,21 @@ export type HeaderDateRangeControlProps = {
 };
 
 export type HeaderDateRangeValue = {
+    from?: string;
+    to?: string;
+};
+
+export type HeaderMonthRangeControlProps = Omit<
+    HeaderDateRangeControlProps,
+    'dateLabel' | 'mode' | 'labelMode' | 'value' | 'defaultValue' | 'onValueChange'
+> & {
+    monthLabel: React.ReactNode;
+    value?: HeaderMonthRangeValue;
+    defaultValue?: HeaderMonthRangeValue;
+    onValueChange?: (next: HeaderMonthRangeValue) => void;
+};
+
+export type HeaderMonthRangeValue = {
     from?: string;
     to?: string;
 };
@@ -123,6 +139,28 @@ const formatIsoDate = (date?: Date) => {
     return `${year}-${month}-${day}`;
 };
 
+const parseIsoMonth = (value?: string): Date | undefined => {
+    if (!value) return undefined;
+
+    const matched = /^(\d{4})-(\d{2})$/.exec(value.trim());
+    if (!matched) return undefined;
+
+    const year = Number(matched[1]);
+    const month = Number(matched[2]);
+    if (month < 1 || month > 12) return undefined;
+
+    return new Date(year, month - 1, 1);
+};
+
+const formatIsoMonth = (date?: Date) => {
+    if (!date) return undefined;
+
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+
+    return `${year}-${month}`;
+};
+
 const formatIsoDateWithWeekday = (date?: Date) => {
     const formatted = formatIsoDate(date);
     if (!formatted || !date) return undefined;
@@ -186,6 +224,28 @@ const toDateRangeValue = (value?: DateRange): HeaderDateRangeValue => ({
     from: formatIsoDate(value?.from),
     to: formatIsoDate(value?.to),
 });
+
+const toDateRangeValueFromMonthRange = (value?: HeaderMonthRangeValue): HeaderDateRangeValue | undefined => {
+    const from = parseIsoMonth(value?.from);
+    const to = parseIsoMonth(value?.to);
+
+    if (!from && !to) return undefined;
+
+    return {
+        from: formatIsoDate(from ? startOfMonth(from) : undefined),
+        to: formatIsoDate(to ? endOfMonth(to) : undefined),
+    };
+};
+
+const toMonthRangeValue = (value?: HeaderDateRangeValue): HeaderMonthRangeValue => {
+    const from = parseIsoDate(value?.from);
+    const to = parseIsoDate(value?.to);
+
+    return {
+        from: formatIsoMonth(from),
+        to: formatIsoMonth(to ?? from),
+    };
+};
 
 const getRangeBounds = (value: DateRange | undefined) => {
     const from = value?.from ?? value?.to;
@@ -319,6 +379,7 @@ const HeaderDateRangeTrigger = ({
 const HeaderDateRangeControl = ({
     dateLabel,
     mode = 'date',
+    labelMode = mode,
     allowFutureDates = false,
     onPrevDate = noop,
     onNextDate = noop,
@@ -351,7 +412,7 @@ const HeaderDateRangeControl = ({
     }, [dateLabel, defaultValue, value]);
 
     const displayLabel =
-        (mode === 'month' ? formatMonthRangeLabel(selectedRange) : formatDateRangeLabel(selectedRange)) ?? dateLabel;
+        (labelMode === 'month' ? formatMonthRangeLabel(selectedRange) : formatDateRangeLabel(selectedRange)) ?? dateLabel;
 
     const handleRangeChange = React.useCallback(
         (nextRange: DateRange | undefined) => {
@@ -431,6 +492,36 @@ const HeaderDateRangeControl = ({
     );
 };
 
+const HeaderMonthRangeControl = ({
+    monthLabel,
+    value,
+    defaultValue,
+    onValueChange,
+    ...props
+}: HeaderMonthRangeControlProps) => {
+    const dateValue = React.useMemo(() => toDateRangeValueFromMonthRange(value), [value]);
+    const defaultDateValue = React.useMemo(() => toDateRangeValueFromMonthRange(defaultValue), [defaultValue]);
+
+    const handleValueChange = React.useCallback(
+        (next: HeaderDateRangeValue) => {
+            onValueChange?.(toMonthRangeValue(next));
+        },
+        [onValueChange]
+    );
+
+    return (
+        <HeaderDateRangeControl
+            {...props}
+            mode="month"
+            labelMode="date"
+            dateLabel={monthLabel}
+            value={dateValue}
+            defaultValue={defaultDateValue}
+            onValueChange={handleValueChange}
+        />
+    );
+};
+
 const HeaderRefreshingButton = ({
     onClick = noop,
     className,
@@ -474,6 +565,7 @@ type HeaderComponent = ((props: HeaderProps) => React.ReactElement) & {
     BackButton: typeof HeaderBackButton;
     Breadcrumb: typeof HeaderBreadcrumb;
     DateRangeControl: typeof HeaderDateRangeControl;
+    MonthRangeControl: typeof HeaderMonthRangeControl;
     RefreshingButton: typeof HeaderRefreshingButton;
     SupportButton: typeof HeaderSupportButton;
     AskButton: typeof HeaderAskButton;
@@ -491,6 +583,7 @@ Header.Right = HeaderRight;
 Header.BackButton = HeaderBackButton;
 Header.Breadcrumb = HeaderBreadcrumb;
 Header.DateRangeControl = HeaderDateRangeControl;
+Header.MonthRangeControl = HeaderMonthRangeControl;
 Header.RefreshingButton = HeaderRefreshingButton;
 Header.SupportButton = HeaderSupportButton;
 Header.AskButton = HeaderAskButton;

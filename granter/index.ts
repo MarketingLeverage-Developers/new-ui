@@ -212,6 +212,7 @@ export type {
     HeaderBackButtonProps as HeaderContentBackButtonProps,
     HeaderBreadcrumbProps as HeaderContentBreadcrumbProps,
     HeaderDateRangeControlProps as HeaderContentDateRangeControlProps,
+    HeaderMonthRangeControlProps as HeaderContentMonthRangeControlProps,
     HeaderRefreshingButtonProps as HeaderContentRefreshingButtonProps,
     HeaderSupportButtonProps as HeaderContentSupportButtonProps,
     HeaderAskButtonProps as HeaderContentAskButtonProps,
