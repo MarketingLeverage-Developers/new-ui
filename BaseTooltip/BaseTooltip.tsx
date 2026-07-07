@@ -29,6 +29,8 @@ export const BaseTooltip: React.FC<BaseTooltipProps> = ({ label, children, side 
                         borderRadius: 4,
                         fontSize: 13,
                         lineHeight: 1.2,
+                        whiteSpace: 'pre-line',
+                        maxWidth: 280,
                         zIndex: 9999,
                         userSelect: 'none',
                     }}
