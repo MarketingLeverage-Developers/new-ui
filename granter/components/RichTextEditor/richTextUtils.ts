@@ -1,4 +1,6 @@
 const HTML_TAG_PATTERN = /<\/?[a-z][\s\S]*>/i;
+const RICH_TEXT_LINE_BREAK_PATTERN = /<br\s*\/?>/gi;
+const RICH_TEXT_BLOCK_END_PATTERN = /<\/(?:p|li|blockquote|h[1-3]|pre)>/gi;
 const EMPTY_RICH_TEXT_VALUES = new Set(['', '<p></p>', '<p><br></p>']);
 
 const ALLOWED_RICH_TEXT_TAGS = new Set([
@@ -65,11 +67,15 @@ export const getRichTextPlainText = (value?: string | null) => {
     if (!text) return '';
     if (!isRichTextHtml(text)) return text;
 
+    const textWithBlockSeparators = text
+        .replace(RICH_TEXT_LINE_BREAK_PATTERN, '\n')
+        .replace(RICH_TEXT_BLOCK_END_PATTERN, (closingTag) => `${closingTag}\n`);
+
     if (typeof window === 'undefined' || typeof window.DOMParser !== 'function') {
-        return text.replace(/<br\s*\/?>/gi, '\n').replace(/<[^>]*>/g, '').trim();
+        return textWithBlockSeparators.replace(/<[^>]*>/g, '').trim();
     }
 
-    const doc = new window.DOMParser().parseFromString(text, 'text/html');
+    const doc = new window.DOMParser().parseFromString(textWithBlockSeparators, 'text/html');
     return doc.body.textContent?.trim() ?? '';
 };
 
