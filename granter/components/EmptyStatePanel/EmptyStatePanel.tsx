@@ -11,6 +11,8 @@ export type EmptyStatePanelProps = Omit<React.HTMLAttributes<HTMLDivElement>, 't
     icon?: React.ReactNode;
     title: React.ReactNode;
     description?: React.ReactNode;
+    action?: React.ReactNode;
+    layout?: 'inline' | 'stacked';
     height?: number | string;
     minHeight?: number | string;
 };
@@ -24,6 +26,8 @@ const EmptyStatePanel = ({
     icon,
     title,
     description,
+    action,
+    layout = 'inline',
     height,
     minHeight,
     className,
@@ -37,12 +41,20 @@ const EmptyStatePanel = ({
     };
 
     return (
-        <div className={classNames(styles.Root, className)} style={cssVariables} {...props}>
+        <div
+            className={classNames(styles.Root, className)}
+            data-has-action={action ? 'true' : undefined}
+            data-has-icon={icon ? 'true' : undefined}
+            data-layout={layout}
+            style={cssVariables}
+            {...props}
+        >
             {icon ? <span className={styles.Icon}>{icon}</span> : null}
             <span className={styles.Copy}>
                 <strong>{title}</strong>
                 {description ? <small>{description}</small> : null}
             </span>
+            {action ? <span className={styles.Action}>{action}</span> : null}
         </div>
     );
 };
