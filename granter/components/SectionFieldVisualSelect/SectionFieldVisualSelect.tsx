@@ -68,6 +68,8 @@ type SectionFieldVisualSelectCommonProps<T extends string = string> = {
     options: SectionFieldVisualSelectOption<T>[];
     className?: string;
     menuClassName?: string;
+    ariaLabelledBy?: string;
+    ariaRequired?: boolean;
     emptyBadgeStyle?: React.CSSProperties;
     visualMode?: SectionFieldVisualMode;
     disabled?: boolean;
@@ -440,6 +442,8 @@ const SectionFieldVisualSelectBase = <T extends string>({
     options,
     className,
     menuClassName,
+    ariaLabelledBy,
+    ariaRequired = false,
     emptyBadgeStyle,
     visualMode = 'avatar',
     disabled = false,
@@ -494,13 +498,15 @@ const SectionFieldVisualSelectBase = <T extends string>({
                     data-has-value={selectedOptions.length > 0 ? 'true' : 'false'}
                     disabled={disabled}
                     title={selectedLabelText || undefined}
-                    aria-label={
-                        selectedOptions.length > 0
-                            ? multiple
-                                ? `${selectedOptions.length}${selectionUnitLabel} 선택됨`
-                                : `${selectedOptions[0]?.label ?? ''} 선택됨`
-                            : toAccessibleText(emptyLabel, '항목 추가')
-                    }
+                    aria-labelledby={ariaLabelledBy}
+                    aria-required={ariaRequired || undefined}
+                    aria-label={ariaLabelledBy
+                        ? undefined
+                        : selectedOptions.length > 0
+                          ? multiple
+                              ? `${selectedOptions.length}${selectionUnitLabel} 선택됨`
+                              : `${selectedOptions[0]?.label ?? ''} 선택됨`
+                          : toAccessibleText(emptyLabel, '항목 추가')}
                 >
                     <TriggerContent
                         selectedOptions={selectedOptions}

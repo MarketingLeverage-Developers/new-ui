@@ -29,6 +29,8 @@ type SectionFieldMemberSelectCommonProps<T extends string = string> = {
     useShortNameAvatarWhenProfileMissing?: boolean;
     className?: string;
     menuClassName?: string;
+    ariaLabelledBy?: string;
+    ariaRequired?: boolean;
     disabled?: boolean;
     searchable?: boolean;
     searchPlaceholder?: string;
@@ -103,6 +105,8 @@ const SectionFieldMemberSelect = <T extends string = string>(props: SectionField
                 options={visualOptions}
                 className={props.className}
                 menuClassName={props.menuClassName}
+                ariaLabelledBy={props.ariaLabelledBy}
+                ariaRequired={props.ariaRequired}
                 disabled={props.disabled}
                 searchable={props.searchable}
                 searchPlaceholder={props.searchPlaceholder ?? '이름으로 검색'}
@@ -131,6 +135,8 @@ const SectionFieldMemberSelect = <T extends string = string>(props: SectionField
             options={visualOptions}
             className={singleProps.className}
             menuClassName={singleProps.menuClassName}
+            ariaLabelledBy={singleProps.ariaLabelledBy}
+            ariaRequired={singleProps.ariaRequired}
             disabled={singleProps.disabled}
             searchable={singleProps.searchable}
             searchPlaceholder={singleProps.searchPlaceholder ?? '이름으로 검색'}
