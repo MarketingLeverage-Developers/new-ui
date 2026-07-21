@@ -37,6 +37,10 @@ export type RichTextEditorProps = {
     maxTextLength?: number;
     showCounter?: boolean;
     onUploadImages?: (files: File[]) => Promise<RichTextEditorUploadedImage[]>;
+    ariaLabel?: string;
+    ariaLabelledBy?: string;
+    ariaDescribedBy?: string;
+    ariaInvalid?: boolean;
 };
 
 const getSelectionTextLength = (from: number, to: number, doc: { textBetween: (from: number, to: number) => string }) =>
@@ -206,6 +210,10 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
     maxTextLength,
     showCounter = false,
     onUploadImages,
+    ariaLabel,
+    ariaLabelledBy,
+    ariaDescribedBy,
+    ariaInvalid = false,
 }) => {
     const fileInputRef = useRef<HTMLInputElement | null>(null);
     const onChangeRef = useRef(onChange);
@@ -291,6 +299,26 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
 
         editor.setEditable(!disabled);
     }, [disabled, editor]);
+
+    useEffect(() => {
+        if (!editor) return;
+
+        const editorElement = editor.view.dom;
+        const syncAttribute = (name: string, attributeValue?: string) => {
+            if (attributeValue) {
+                editorElement.setAttribute(name, attributeValue);
+                return;
+            }
+            editorElement.removeAttribute(name);
+        };
+
+        editorElement.setAttribute('role', 'textbox');
+        editorElement.setAttribute('aria-multiline', 'true');
+        syncAttribute('aria-label', ariaLabel);
+        syncAttribute('aria-labelledby', ariaLabelledBy);
+        syncAttribute('aria-describedby', ariaDescribedBy);
+        editorElement.setAttribute('aria-invalid', ariaInvalid ? 'true' : 'false');
+    }, [ariaDescribedBy, ariaInvalid, ariaLabel, ariaLabelledBy, editor]);
 
     useEffect(() => {
         if (!editor) return;
