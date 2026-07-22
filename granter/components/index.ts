@@ -422,7 +422,11 @@ export type {
 } from './FileUploader/FileUploader';
 
 export { default as RichTextEditor } from './RichTextEditor/RichTextEditor';
-export type { RichTextEditorProps, RichTextEditorUploadedImage } from './RichTextEditor/RichTextEditor';
+export type {
+    RichTextEditorExternalImageSource,
+    RichTextEditorProps,
+    RichTextEditorUploadedImage,
+} from './RichTextEditor/RichTextEditor';
 export { default as RichTextViewer } from './RichTextEditor/RichTextViewer';
 export type { RichTextViewerProps } from './RichTextEditor/RichTextViewer';
 export {

@@ -10,6 +10,10 @@ const ALLOWED_RICH_TEXT_TAGS = new Set([
     'b',
     'em',
     'i',
+    'a',
+    'u',
+    's',
+    'mark',
     'ul',
     'ol',
     'li',
@@ -20,6 +24,12 @@ const ALLOWED_RICH_TEXT_TAGS = new Set([
     'hr',
     'code',
     'pre',
+    'table',
+    'thead',
+    'tbody',
+    'tr',
+    'th',
+    'td',
     'img',
 ]);
 
@@ -33,6 +43,14 @@ const escapeHtml = (value: string) =>
 
 const isSafeImageSrc = (value: string) =>
     /^(https?:)?\/\//i.test(value) || value.startsWith('/');
+
+const isSafeLinkHref = (value: string) => {
+    const href = value.trim();
+    if (!href) return false;
+
+    return /^https?:\/\//i.test(href)
+        || (href.startsWith('/') && !href.startsWith('//'));
+};
 
 const clampImageWidthPercent = (value: number) =>
     Math.min(100, Math.max(20, Math.round(value)));
@@ -109,6 +127,22 @@ const sanitizeNode = (node: Node): string => {
         const fileUUIDAttribute = fileUUID ? ` data-file-uuid="${escapeHtml(fileUUID)}"` : '';
         const widthAttribute = ` data-width="${widthPercent}" style="width: ${widthPercent}%;"`;
         return `<img src="${escapeHtml(src)}" alt="${escapeHtml(alt)}"${fileUUIDAttribute}${widthAttribute}>`;
+    }
+
+    if (tagName === 'a') {
+        const href = element.getAttribute('href') ?? '';
+        if (!isSafeLinkHref(href)) return children;
+
+        return `<a href="${escapeHtml(href.trim())}">${children}</a>`;
+    }
+
+    if (tagName === 'ul' && element.getAttribute('data-type') === 'taskList') {
+        return `<ul data-type="taskList">${children}</ul>`;
+    }
+
+    if (tagName === 'li' && element.getAttribute('data-type') === 'taskItem') {
+        const checked = element.getAttribute('data-checked') === 'true';
+        return `<li data-type="taskItem" data-checked="${checked}">${children}</li>`;
     }
 
     return `<${tagName}>${children}</${tagName}>`;

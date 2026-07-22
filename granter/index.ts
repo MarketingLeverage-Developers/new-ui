@@ -363,7 +363,11 @@ export type {
     FileUploaderFileListProps,
     FileUploaderImageListProps,
 } from './components/FileUploader/FileUploader';
-export type { RichTextEditorProps, RichTextEditorUploadedImage } from './components/RichTextEditor/RichTextEditor';
+export type {
+    RichTextEditorExternalImageSource,
+    RichTextEditorProps,
+    RichTextEditorUploadedImage,
+} from './components/RichTextEditor/RichTextEditor';
 export type { RichTextViewerProps } from './components/RichTextEditor/RichTextViewer';
 export type { SingleDatePickerProps } from './components/SingleDatePicker/SingleDatePicker';
 export type { InlineSingleDateCalendarProps } from './components/InlineSingleDateCalendar/InlineSingleDateCalendar';
