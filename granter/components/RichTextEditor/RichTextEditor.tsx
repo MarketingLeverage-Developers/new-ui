@@ -27,7 +27,7 @@ import { DOMParser as ProseMirrorDOMParser, DOMSerializer as ProseMirrorDOMSeria
 import { Plugin, PluginKey, TextSelection } from '@tiptap/pm/state';
 import { Decoration, DecorationSet, type EditorView } from '@tiptap/pm/view';
 import classNames from 'classnames';
-import { FiAlertCircle, FiBold, FiCode, FiImage, FiItalic, FiList, FiPlus, FiX } from 'react-icons/fi';
+import { FiAlertCircle, FiBold, FiCode, FiInfo, FiItalic, FiPlus, FiX } from 'react-icons/fi';
 import {
     getRichTextPlainText,
     isRichTextEmpty,
@@ -234,7 +234,6 @@ export type RichTextEditorProps = {
     className?: string;
     disabled?: boolean;
     minHeight?: number;
-    maxHeight?: number;
     maxTextLength?: number;
     showCounter?: boolean;
     onUploadImages?: (files: File[]) => Promise<RichTextEditorUploadedImage[]>;
@@ -990,7 +989,6 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
     className,
     disabled = false,
     minHeight = 172,
-    maxHeight = 420,
     maxTextLength,
     showCounter = false,
     onUploadImages,
@@ -1565,209 +1563,156 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
 
     const rootStyle = {
         '--rich-text-editor-min-height': `${minHeight}px`,
-        '--rich-text-editor-max-height': `${maxHeight}px`,
     } as CSSProperties;
 
     if (!editor) {
         return <div className={classNames(styles.Loading, className)}>로딩 중...</div>;
     }
 
-    const canUploadImage = Boolean(onUploadImages) && !disabled && activeUploadCount === 0;
     const isLengthOver = Boolean(maxTextLength && textLength >= maxTextLength);
 
     return (
-        <div className={classNames(styles.Root, className)} data-disabled={disabled ? 'true' : 'false'} style={rootStyle}>
-            <div className={styles.Toolbar}>
-                <button
-                    type="button"
-                    className={styles.ToolbarButton}
-                    title="블록 추가"
-                    aria-label="블록 추가"
-                    onClick={handleAddBlock}
-                    disabled={disabled || Boolean(maxTextLength && textLength >= maxTextLength)}
-                >
-                    <FiPlus />
-                </button>
-                <span className={styles.ToolbarDivider} aria-hidden="true" />
-                <button
-                    type="button"
-                    className={classNames(styles.ToolbarButton, editor.isActive('bold') && styles.Active)}
-                    title="굵게"
-                    aria-label="굵게"
-                    onClick={() => editor.chain().focus().toggleBold().run()}
-                    disabled={disabled}
-                >
-                    <FiBold />
-                </button>
-                <button
-                    type="button"
-                    className={classNames(styles.ToolbarButton, editor.isActive('italic') && styles.Active)}
-                    title="기울임"
-                    aria-label="기울임"
-                    onClick={() => editor.chain().focus().toggleItalic().run()}
-                    disabled={disabled}
-                >
-                    <FiItalic />
-                </button>
-                <span className={styles.ToolbarDivider} aria-hidden="true" />
-                <button
-                    type="button"
-                    className={classNames(styles.ToolbarButton, editor.isActive('bulletList') && styles.Active)}
-                    title="글머리 목록"
-                    aria-label="글머리 목록"
-                    onClick={() => editor.chain().focus().toggleBulletList().run()}
-                    disabled={disabled}
-                >
-                    <FiList />
-                </button>
-                <button
-                    type="button"
-                    className={classNames(styles.ToolbarButton, editor.isActive('orderedList') && styles.Active)}
-                    title="번호 목록"
-                    aria-label="번호 목록"
-                    onClick={() => editor.chain().focus().toggleOrderedList().run()}
-                    disabled={disabled}
-                >
-                    <span className={styles.OrderedIcon}>1.</span>
-                </button>
+        <div className={classNames(styles.Shell, className)}>
+            <div className={styles.Root} data-disabled={disabled ? 'true' : 'false'} style={rootStyle}>
                 {onUploadImages ? (
-                    <>
-                        <span className={styles.ToolbarDivider} aria-hidden="true" />
-                        <button
-                            type="button"
-                            className={styles.ToolbarButton}
-                            title="이미지 첨부"
-                            aria-label="이미지 첨부"
-                            onClick={() => {
-                                pendingFileInsertPositionRef.current = editor.state.selection.from;
-                                fileInputRef.current?.click();
-                            }}
-                            disabled={!canUploadImage}
-                        >
-                            <FiImage />
-                        </button>
-                        <input
-                            ref={fileInputRef}
-                            type="file"
-                            accept="image/*"
-                            multiple
-                            className={styles.HiddenInput}
-                            onChange={handleFileChange}
-                        />
-                    </>
+                    <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept="image/*"
+                        multiple
+                        className={styles.HiddenInput}
+                        onChange={handleFileChange}
+                    />
                 ) : null}
-            </div>
 
-            <BubbleMenu
-                editor={editor}
-                pluginKey="richTextSelectionBubbleMenu"
-                className={styles.BubbleMenu}
-                appendTo={() => document.body}
-                options={{ strategy: 'fixed', placement: 'top', offset: 8 }}
-                shouldShow={({ editor: currentEditor, state }) =>
-                    !disabled
-                    && currentEditor.isEditable
-                    && !state.selection.empty
-                    && !currentEditor.isActive('image')
-                }
-                onMouseDown={(event) => event.preventDefault()}
-            >
-                <button
-                    type="button"
-                    className={classNames(editor.isActive('bold') && styles.Active)}
-                    title="굵게"
-                    aria-label="굵게"
-                    onClick={() => editor.chain().focus().toggleBold().run()}
+                <BubbleMenu
+                    editor={editor}
+                    pluginKey="richTextSelectionBubbleMenu"
+                    className={styles.BubbleMenu}
+                    appendTo={() => document.body}
+                    options={{ strategy: 'fixed', placement: 'top', offset: 8 }}
+                    shouldShow={({ editor: currentEditor, state }) =>
+                        !disabled
+                        && currentEditor.isEditable
+                        && !state.selection.empty
+                        && !currentEditor.isActive('image')
+                    }
+                    onMouseDown={(event) => event.preventDefault()}
                 >
-                    <FiBold />
-                </button>
-                <button
-                    type="button"
-                    className={classNames(editor.isActive('italic') && styles.Active)}
-                    title="기울임"
-                    aria-label="기울임"
-                    onClick={() => editor.chain().focus().toggleItalic().run()}
-                >
-                    <FiItalic />
-                </button>
-                <button
-                    type="button"
-                    className={classNames(editor.isActive('code') && styles.Active)}
-                    title="인라인 코드"
-                    aria-label="인라인 코드"
-                    onClick={() => editor.chain().focus().toggleCode().run()}
-                >
-                    <FiCode />
-                </button>
-            </BubbleMenu>
-
-            {activeUploadCount > 0 || uploadError ? (
-                <div
-                    className={classNames(styles.UploadStatus, uploadError && styles.UploadStatusError)}
-                    role={uploadError ? 'alert' : 'status'}
-                    aria-live="polite"
-                >
-                    {uploadError ? <FiAlertCircle aria-hidden="true" /> : <span className={styles.UploadSpinner} aria-hidden="true" />}
-                    <span>
-                        {uploadError || `${activeUploadCount.toLocaleString()}개 이미지를 업로드하고 있습니다.`}
-                    </span>
-                    {uploadError ? (
-                        <button type="button" aria-label="업로드 안내 닫기" onClick={() => setUploadError('')}>
-                            <FiX />
-                        </button>
-                    ) : null}
-                </div>
-            ) : null}
-
-            <div className={styles.ContentWrap}>
-                {placeholder && isEmpty && activeUploadCount === 0
-                    ? <div className={styles.Placeholder}>{placeholder}</div>
-                    : null}
-                <EditorContent editor={editor} className={styles.Content} />
-            </div>
-            {showCounter && maxTextLength ? (
-                <div className={styles.Footer}>
-                    <span data-over={isLengthOver ? 'true' : 'false'}>
-                        {textLength.toLocaleString()} / {maxTextLength.toLocaleString()}
-                    </span>
-                </div>
-            ) : null}
-            {slashMenu && typeof document !== 'undefined'
-                ? createPortal(
-                    <div
-                        className={styles.SlashMenu}
-                        data-rich-text-slash-menu="true"
-                        role="listbox"
-                        aria-label="블록 유형 선택"
-                        style={{ left: slashMenu.left, top: slashMenu.top }}
-                        onMouseDown={(event) => event.preventDefault()}
+                    <button
+                        type="button"
+                        className={classNames(editor.isActive('bold') && styles.Active)}
+                        title="굵게"
+                        aria-label="굵게"
+                        onClick={() => editor.chain().focus().toggleBold().run()}
                     >
-                        <div className={styles.SlashMenuTitle}>기본 블록</div>
-                        {slashMenu.commands.map((command, index) => (
-                            <button
-                                key={command.id}
-                                type="button"
-                                role="option"
-                                aria-selected={index === slashMenu.selectedIndex}
-                                className={classNames(index === slashMenu.selectedIndex && styles.SlashMenuItemActive)}
-                                onMouseEnter={() => {
-                                    setSlashMenu((currentMenu) => currentMenu
-                                        ? { ...currentMenu, selectedIndex: index }
-                                        : null);
-                                }}
-                                onClick={() => executeSlashCommand(command)}
-                            >
-                                <span className={styles.SlashMenuIcon} aria-hidden="true">{command.icon}</span>
-                                <span className={styles.SlashMenuCopy}>
-                                    <strong>{command.label}</strong>
-                                    <small>{command.description}</small>
-                                </span>
+                        <FiBold />
+                    </button>
+                    <button
+                        type="button"
+                        className={classNames(editor.isActive('italic') && styles.Active)}
+                        title="기울임"
+                        aria-label="기울임"
+                        onClick={() => editor.chain().focus().toggleItalic().run()}
+                    >
+                        <FiItalic />
+                    </button>
+                    <button
+                        type="button"
+                        className={classNames(editor.isActive('code') && styles.Active)}
+                        title="인라인 코드"
+                        aria-label="인라인 코드"
+                        onClick={() => editor.chain().focus().toggleCode().run()}
+                    >
+                        <FiCode />
+                    </button>
+                </BubbleMenu>
+
+                {activeUploadCount > 0 || uploadError ? (
+                    <div
+                        className={classNames(styles.UploadStatus, uploadError && styles.UploadStatusError)}
+                        role={uploadError ? 'alert' : 'status'}
+                        aria-live="polite"
+                    >
+                        {uploadError ? <FiAlertCircle aria-hidden="true" /> : <span className={styles.UploadSpinner} aria-hidden="true" />}
+                        <span>
+                            {uploadError || `${activeUploadCount.toLocaleString()}개 이미지를 업로드하고 있습니다.`}
+                        </span>
+                        {uploadError ? (
+                            <button type="button" aria-label="업로드 안내 닫기" onClick={() => setUploadError('')}>
+                                <FiX />
                             </button>
-                        ))}
-                    </div>,
-                    document.body
-                )
-                : null}
+                        ) : null}
+                    </div>
+                ) : null}
+
+                <div className={styles.ContentWrap}>
+                    <button
+                        type="button"
+                        className={styles.InlineAddButton}
+                        title="블록 추가"
+                        aria-label="블록 추가"
+                        onClick={handleAddBlock}
+                        onMouseDown={(event) => event.preventDefault()}
+                        disabled={disabled || Boolean(maxTextLength && textLength >= maxTextLength)}
+                    >
+                        <FiPlus />
+                    </button>
+                    {placeholder && isEmpty && activeUploadCount === 0
+                        ? <div className={styles.Placeholder}>{placeholder}</div>
+                        : null}
+                    <EditorContent editor={editor} className={styles.Content} />
+                </div>
+                {showCounter && maxTextLength ? (
+                    <div className={styles.Footer}>
+                        <span data-over={isLengthOver ? 'true' : 'false'}>
+                            {textLength.toLocaleString()} / {maxTextLength.toLocaleString()}
+                        </span>
+                    </div>
+                ) : null}
+                {slashMenu && typeof document !== 'undefined'
+                    ? createPortal(
+                        <div
+                            className={styles.SlashMenu}
+                            data-rich-text-slash-menu="true"
+                            role="listbox"
+                            aria-label="블록 유형 선택"
+                            style={{ left: slashMenu.left, top: slashMenu.top }}
+                            onMouseDown={(event) => event.preventDefault()}
+                        >
+                            <div className={styles.SlashMenuTitle}>기본 블록</div>
+                            {slashMenu.commands.map((command, index) => (
+                                <button
+                                    key={command.id}
+                                    type="button"
+                                    role="option"
+                                    aria-selected={index === slashMenu.selectedIndex}
+                                    className={classNames(index === slashMenu.selectedIndex && styles.SlashMenuItemActive)}
+                                    onMouseEnter={() => {
+                                        setSlashMenu((currentMenu) => currentMenu
+                                            ? { ...currentMenu, selectedIndex: index }
+                                            : null);
+                                    }}
+                                    onClick={() => executeSlashCommand(command)}
+                                >
+                                    <span className={styles.SlashMenuIcon} aria-hidden="true">{command.icon}</span>
+                                    <span className={styles.SlashMenuCopy}>
+                                        <strong>{command.label}</strong>
+                                        <small>{command.description}</small>
+                                    </span>
+                                </button>
+                            ))}
+                        </div>,
+                        document.body
+                    )
+                    : null}
+            </div>
+            {!disabled ? (
+                <div className={styles.PasteGuide}>
+                    <FiInfo aria-hidden="true" />
+                    <span>노션에서 복사한 내용을 붙여넣으면 서식이 그대로 유지됩니다.</span>
+                </div>
+            ) : null}
         </div>
     );
 };
