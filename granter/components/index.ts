@@ -44,6 +44,8 @@ export { default as HeaderTabs } from './HeaderTabs/HeaderTabs';
 export type { HeaderTabsProps, HeaderTabsItem } from './HeaderTabs/HeaderTabs';
 export { default as HeaderDateTrigger } from './HeaderDateTrigger/HeaderDateTrigger';
 export type { HeaderDateTriggerProps } from './HeaderDateTrigger/HeaderDateTrigger';
+export { default as SectionFieldMonthInput } from './SectionFieldMonthInput/SectionFieldMonthInput';
+export type { SectionFieldMonthInputProps } from './SectionFieldMonthInput/SectionFieldMonthInput';
 export { default as Menu } from './SidebarMenu/SidebarMenu';
 export { default as SidebarMenu } from './SidebarMenu/SidebarMenu';
 export type {

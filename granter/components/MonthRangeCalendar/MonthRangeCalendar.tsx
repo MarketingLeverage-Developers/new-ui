@@ -26,6 +26,7 @@ export type MonthRangeCalendarProps = {
     onPresetSelect?: (key: PresetKey) => void;
     className?: string;
     allowFutureDates?: boolean;
+    selectionMode?: 'range' | 'single';
 };
 
 const PRESETS: { key: PresetKey; label: string }[] = [
@@ -110,7 +111,9 @@ const MonthRangeCalendar = ({
     onPresetSelect,
     className,
     allowFutureDates = false,
+    selectionMode = 'range',
 }: MonthRangeCalendarProps) => {
+    const isSingleSelection = selectionMode === 'single';
     const today = React.useMemo(() => new Date(), []);
     const [currentYear, setCurrentYear] = React.useState<number>((range?.from ?? today).getFullYear());
     const [tempRange, setTempRange] = React.useState<DateRange | undefined>(range);
@@ -239,6 +242,22 @@ const MonthRangeCalendar = ({
     const handleMonthClick = (date: Date) => {
         if (!allowFutureDates && isAfterMonth(date, today)) return;
 
+        if (isSingleSelection) {
+            const nextRange = {
+                from: startOfMonth(date),
+                to: endOfMonth(date),
+            };
+            commitRange(nextRange);
+            setPendingStartMonth(undefined);
+            setHoveredMonth(undefined);
+            setCurrentYear(date.getFullYear());
+            setFromInput(formatStartInputValue(nextRange.from));
+            setToInput(formatEndInputValue(nextRange.to));
+            setFromError(false);
+            setToError(false);
+            return;
+        }
+
         if (pendingStartMonth && !isSameMonth(pendingStartMonth, date)) {
             const nextRange = normalizeMonthRange(pendingStartMonth, date);
             commitRange(nextRange);
@@ -281,72 +300,76 @@ const MonthRangeCalendar = ({
     const yearValue = String(currentYear);
 
     return (
-        <div className={classNames(styles.Root, className)}>
-            <aside className={styles.LeftPreset}>
-                {PRESETS.map((preset) => (
-                    <button
-                        key={preset.key}
-                        type="button"
-                        className={classNames(styles.PresetItem, activePreset === preset.key && styles.PresetItemActive)}
-                        onClick={() => handlePresetClick(preset.key)}
-                    >
-                        {preset.label}
-                    </button>
-                ))}
-            </aside>
+        <div className={classNames(styles.Root, isSingleSelection && styles.RootSingle, className)}>
+            {!isSingleSelection ? (
+                <aside className={styles.LeftPreset}>
+                    {PRESETS.map((preset) => (
+                        <button
+                            key={preset.key}
+                            type="button"
+                            className={classNames(styles.PresetItem, activePreset === preset.key && styles.PresetItemActive)}
+                            onClick={() => handlePresetClick(preset.key)}
+                        >
+                            {preset.label}
+                        </button>
+                    ))}
+                </aside>
+            ) : null}
 
             <section className={styles.Center}>
-                <div className={styles.TopInputs}>
-                    <div className={styles.InputBlock}>
-                        <div className={styles.InputLabel}>시작월</div>
-                        <div className={styles.InputWrap}>
-                            <input
-                                type="text"
-                                className={classNames(styles.InputBox, fromError && styles.InputError)}
-                                inputMode="numeric"
-                                value={fromInput}
-                                onChange={(event) => {
-                                    const nextValue = event.target.value;
-                                    setFromInput(nextValue);
-                                    const hasError = !nextValue ? false : !parseMonthValue(nextValue);
-                                    setFromError(hasError);
-                                    if (!hasError) applyInputsIfComplete(nextValue, toInput);
-                                }}
-                                onBlur={() => {
-                                    const hasError = !fromInput ? false : !parseMonthValue(fromInput);
-                                    setFromError(hasError);
-                                    if (!hasError) applyInputsIfComplete(fromInput, toInput);
-                                }}
-                                placeholder="YYYY-MM-DD"
-                            />
+                {!isSingleSelection ? (
+                    <div className={styles.TopInputs}>
+                        <div className={styles.InputBlock}>
+                            <div className={styles.InputLabel}>시작월</div>
+                            <div className={styles.InputWrap}>
+                                <input
+                                    type="text"
+                                    className={classNames(styles.InputBox, fromError && styles.InputError)}
+                                    inputMode="numeric"
+                                    value={fromInput}
+                                    onChange={(event) => {
+                                        const nextValue = event.target.value;
+                                        setFromInput(nextValue);
+                                        const hasError = !nextValue ? false : !parseMonthValue(nextValue);
+                                        setFromError(hasError);
+                                        if (!hasError) applyInputsIfComplete(nextValue, toInput);
+                                    }}
+                                    onBlur={() => {
+                                        const hasError = !fromInput ? false : !parseMonthValue(fromInput);
+                                        setFromError(hasError);
+                                        if (!hasError) applyInputsIfComplete(fromInput, toInput);
+                                    }}
+                                    placeholder="YYYY-MM-DD"
+                                />
+                            </div>
                         </div>
-                    </div>
 
-                    <div className={styles.InputBlock}>
-                        <div className={styles.InputLabel}>종료월</div>
-                        <div className={styles.InputWrap}>
-                            <input
-                                type="text"
-                                className={classNames(styles.InputBox, toError && styles.InputError)}
-                                inputMode="numeric"
-                                value={toInput}
-                                onChange={(event) => {
-                                    const nextValue = event.target.value;
-                                    setToInput(nextValue);
-                                    const hasError = !nextValue ? false : !parseMonthValue(nextValue);
-                                    setToError(hasError);
-                                    if (!hasError) applyInputsIfComplete(fromInput, nextValue);
-                                }}
-                                onBlur={() => {
-                                    const hasError = !toInput ? false : !parseMonthValue(toInput);
-                                    setToError(hasError);
-                                    if (!hasError) applyInputsIfComplete(fromInput, toInput);
-                                }}
-                                placeholder="YYYY-MM-DD"
-                            />
+                        <div className={styles.InputBlock}>
+                            <div className={styles.InputLabel}>종료월</div>
+                            <div className={styles.InputWrap}>
+                                <input
+                                    type="text"
+                                    className={classNames(styles.InputBox, toError && styles.InputError)}
+                                    inputMode="numeric"
+                                    value={toInput}
+                                    onChange={(event) => {
+                                        const nextValue = event.target.value;
+                                        setToInput(nextValue);
+                                        const hasError = !nextValue ? false : !parseMonthValue(nextValue);
+                                        setToError(hasError);
+                                        if (!hasError) applyInputsIfComplete(fromInput, nextValue);
+                                    }}
+                                    onBlur={() => {
+                                        const hasError = !toInput ? false : !parseMonthValue(toInput);
+                                        setToError(hasError);
+                                        if (!hasError) applyInputsIfComplete(fromInput, toInput);
+                                    }}
+                                    placeholder="YYYY-MM-DD"
+                                />
+                            </div>
                         </div>
                     </div>
-                </div>
+                ) : null}
 
                 <div className={styles.CalendarHeader}>
                     <button type="button" className={styles.NavButton} onClick={() => setCurrentYear((prev) => prev - 1)} aria-label="이전 연도">
@@ -447,21 +470,23 @@ const MonthRangeCalendar = ({
                 </div>
             </section>
 
-            <aside className={styles.RightMonths}>
-                {recentMonths.map((month) => (
-                    <button
-                        key={month.key}
-                        type="button"
-                        className={classNames(
-                            styles.MonthItem,
-                            isMonthWithin(month.date, selectedFromMonth, selectedToMonth) && styles.MonthItemActive
-                        )}
-                        onClick={() => handleMonthClick(month.date)}
-                    >
-                        {month.label}
-                    </button>
-                ))}
-            </aside>
+            {!isSingleSelection ? (
+                <aside className={styles.RightMonths}>
+                    {recentMonths.map((month) => (
+                        <button
+                            key={month.key}
+                            type="button"
+                            className={classNames(
+                                styles.MonthItem,
+                                isMonthWithin(month.date, selectedFromMonth, selectedToMonth) && styles.MonthItemActive
+                            )}
+                            onClick={() => handleMonthClick(month.date)}
+                        >
+                            {month.label}
+                        </button>
+                    ))}
+                </aside>
+            ) : null}
         </div>
     );
 };

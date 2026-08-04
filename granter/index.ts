@@ -45,6 +45,7 @@ export { default as SectionFormDrawerContent } from './components/SectionFormDra
 export { default as SectionFieldRow } from './components/SectionFieldRow/SectionFieldRow';
 export { default as SectionFieldInput } from './components/SectionFieldInput/SectionFieldInput';
 export { default as SectionFieldDateInput } from './components/SectionFieldDateInput/SectionFieldDateInput';
+export { default as SectionFieldMonthInput } from './components/SectionFieldMonthInput/SectionFieldMonthInput';
 export { default as SectionFieldDateTextInput } from './components/SectionFieldDateTextInput/SectionFieldDateTextInput';
 export { default as SectionFieldRowInput } from './components/SectionFieldRowInput/SectionFieldRowInput';
 export { default as SectionFieldRowFileUpload } from './components/SectionFieldRowFileUpload/SectionFieldRowFileUpload';
@@ -342,6 +343,7 @@ export type { BookmarkTabsProps, BookmarkTabsItem } from './components/BookmarkT
 export type { HeaderBreadcrumbProps, HeaderBreadcrumbItem } from './components/HeaderBreadcrumb/HeaderBreadcrumb';
 export type { HeaderTabsProps, HeaderTabsItem } from './components/HeaderTabs/HeaderTabs';
 export type { HeaderDateTriggerProps } from './components/HeaderDateTrigger/HeaderDateTrigger';
+export type { SectionFieldMonthInputProps } from './components/SectionFieldMonthInput/SectionFieldMonthInput';
 export type {
     LabeledPillTabsProps,
     LabeledPillTabsItem,
