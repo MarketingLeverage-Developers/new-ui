@@ -369,6 +369,8 @@ const BodyRowInner = <T,>({
                                 selected ? (selectedCellClassName ?? '') : '',
                                 active ? (activeCellClassName ?? '') : '',
                             ].join(' ')}
+                            data-airtable-body-cell="true"
+                            data-col-key={colKey}
                             data-cell-selected={selected ? 'true' : 'false'}
                             data-cell-active={active ? 'true' : 'false'}
                             data-cell-edge-top={isTopEdge ? 'true' : 'false'}
