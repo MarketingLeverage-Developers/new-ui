@@ -160,6 +160,7 @@ const Content: React.FC<ContentProps> = ({
     }, []);
 
     const menuRef = useRef<HTMLDivElement>(null);
+    const wasOpenRef = useRef(false);
     const [style, setStyle] = useState<React.CSSProperties>({
         position: 'fixed',
         visibility: 'hidden',
@@ -261,15 +262,26 @@ const Content: React.FC<ContentProps> = ({
     }, [isOpen, close, anchorRef]);
 
     useEffect(() => {
-        if (!isOpen) {
-            if (lastFocusedEl && lastFocusedEl.focus) lastFocusedEl.focus();
-            else if (anchorRef.current) anchorRef.current.focus();
+        if (isOpen) {
+            wasOpenRef.current = true;
+            const el = menuRef.current;
+            const focusable = getFirstFocusable(el);
+            if (focusable) focusable.focus();
+            else el?.focus();
             return;
         }
-        const el = menuRef.current;
-        const focusable = getFirstFocusable(el);
-        if (focusable) focusable.focus();
-        else el?.focus();
+
+        if (!wasOpenRef.current) return;
+        wasOpenRef.current = false;
+
+        const activeElement = document.activeElement as HTMLElement | null;
+        const shouldRestoreFocus = !activeElement
+            || activeElement === document.body
+            || Boolean(menuRef.current?.contains(activeElement));
+        if (!shouldRestoreFocus) return;
+
+        if (lastFocusedEl?.isConnected && lastFocusedEl.focus) lastFocusedEl.focus();
+        else if (anchorRef.current) anchorRef.current.focus();
     }, [isOpen, lastFocusedEl, anchorRef]);
 
     if (!portalRoot) return null;
