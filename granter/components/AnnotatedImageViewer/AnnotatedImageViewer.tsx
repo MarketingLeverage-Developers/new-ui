@@ -25,6 +25,8 @@ export type AnnotatedImageViewerAsset = {
     originalHeight?: number | null;
 };
 
+export type AnnotatedImageViewerInitialZoomMode = 'actual' | 'fit';
+
 export type AnnotatedImageViewerProps = {
     assets?: AnnotatedImageViewerAsset[];
     selectedAssetId?: string | number | null;
@@ -41,12 +43,15 @@ export type AnnotatedImageViewerProps = {
     showAssetTabs?: boolean;
     showViewActionButton?: boolean;
     displayMode?: 'canvas' | 'document';
+    initialZoomMode?: AnnotatedImageViewerInitialZoomMode;
     emptyText?: React.ReactNode;
     className?: string;
 };
 
 const IMAGE_ZOOM_MIN = 0.05;
+const IMAGE_ZOOM_FIT_MIN = 0.001;
 const IMAGE_ZOOM_MAX = 2;
+const IMAGE_ZOOM_RATIO = 1.25;
 const IMAGE_ZOOM_STEP = 0.25;
 const IMAGE_ZOOM_SENSITIVITY = 0.00045;
 const PAN_DRAG_THRESHOLD = 3;
@@ -54,7 +59,33 @@ const REGION_MIN_SIZE = 0.015;
 
 const toPercent = (value: number) => `${Math.max(0, Math.min(1, Number(value) || 0)) * 100}%`;
 
-const clampImageZoom = (value: number) => Math.max(IMAGE_ZOOM_MIN, Math.min(IMAGE_ZOOM_MAX, value));
+const clampImageZoom = (value: number, minimum = IMAGE_ZOOM_MIN) =>
+    Math.max(minimum, Math.min(IMAGE_ZOOM_MAX, value));
+
+const getFitImageZoom = (stage: HTMLDivElement, imageWidth: number, imageHeight: number) => {
+    if (!imageWidth || !imageHeight) return 1;
+
+    const stageStyle = window.getComputedStyle(stage);
+    const horizontalPadding =
+        (Number.parseFloat(stageStyle.paddingLeft) || 0) + (Number.parseFloat(stageStyle.paddingRight) || 0);
+    const verticalPadding =
+        (Number.parseFloat(stageStyle.paddingTop) || 0) + (Number.parseFloat(stageStyle.paddingBottom) || 0);
+    const availableWidth = Math.max(1, stage.clientWidth - horizontalPadding);
+    const availableHeight = Math.max(1, stage.clientHeight - verticalPadding);
+
+    return clampImageZoom(
+        Math.min(1, availableWidth / imageWidth, availableHeight / imageHeight),
+        IMAGE_ZOOM_FIT_MIN
+    );
+};
+
+const formatImageZoomPercent = (zoom: number) => {
+    const percent = zoom * 100;
+
+    if (percent >= 10) return Math.round(percent);
+    if (percent >= 1) return Number(percent.toFixed(1));
+    return Number(percent.toFixed(2));
+};
 
 const getRegionStyle = (region: AnnotatedImageViewerRegion) => ({
     left: toPercent(region.x),
@@ -104,6 +135,7 @@ const AnnotatedImageViewer = ({
     showAssetTabs = true,
     showViewActionButton = true,
     displayMode = 'canvas',
+    initialZoomMode = 'actual',
     emptyText = '연결된 참고 이미지가 없습니다.',
     className,
 }: AnnotatedImageViewerProps) => {
@@ -111,7 +143,9 @@ const AnnotatedImageViewer = ({
         assets.find((asset) => String(asset.id) === String(selectedAssetId)) ?? assets[0] ?? null;
     const selectedAssetKey = selectedAsset ? String(selectedAsset.id) : '';
     const hasAssetTabs = showAssetTabs && assets.length > 1;
+    const imageZoomMinimum = initialZoomMode === 'fit' ? IMAGE_ZOOM_FIT_MIN : IMAGE_ZOOM_MIN;
     const [imageZoom, setImageZoom] = React.useState(1);
+    const [imageZoomMode, setImageZoomMode] = React.useState<'actual' | 'fit' | 'manual'>(initialZoomMode);
     const [draftRegion, setDraftRegion] = React.useState<AnnotatedImageViewerRegionDraft | null>(null);
     const [draggingRegionId, setDraggingRegionId] = React.useState<string | number | null>(null);
     const [loadedImageSizes, setLoadedImageSizes] = React.useState<Record<string, { width: number; height: number }>>({});
@@ -135,11 +169,40 @@ const AnnotatedImageViewer = ({
         : undefined;
     const hasToolbar = hasAssetTabs;
 
-    React.useEffect(() => {
+    React.useLayoutEffect(() => {
         setImageZoom(1);
+        setImageZoomMode(initialZoomMode);
         setDraftRegion(null);
         createDragRef.current = null;
-    }, [selectedAssetKey]);
+    }, [initialZoomMode, selectedAssetKey]);
+
+    const applyFitImageZoom = React.useCallback(() => {
+        const stage = stageRef.current;
+        if (!stage || !sourceImageWidth || !sourceImageHeight) return;
+
+        const nextZoom = getFitImageZoom(stage, sourceImageWidth, sourceImageHeight);
+        setImageZoom((currentZoom) => (currentZoom === nextZoom ? currentZoom : nextZoom));
+        window.requestAnimationFrame(() => {
+            stage.scrollLeft = 0;
+            stage.scrollTop = 0;
+        });
+    }, [sourceImageHeight, sourceImageWidth]);
+
+    React.useLayoutEffect(() => {
+        if (imageZoomMode !== 'fit') return;
+
+        const stage = stageRef.current;
+        if (!stage) return;
+
+        applyFitImageZoom();
+
+        if (typeof ResizeObserver === 'undefined') return;
+
+        const resizeObserver = new ResizeObserver(applyFitImageZoom);
+        resizeObserver.observe(stage);
+
+        return () => resizeObserver.disconnect();
+    }, [applyFitImageZoom, imageZoomMode]);
 
     const setRegionButtonRef = React.useCallback(
         (regionId: string | number, node: HTMLDivElement | null) => {
@@ -203,9 +266,29 @@ const AnnotatedImageViewer = ({
         sourceImageWidth,
     ]);
 
-    const changeImageZoom = React.useCallback((delta: number) => {
-        setImageZoom((prev) => clampImageZoom(prev + delta));
-    }, []);
+    const changeImageZoom = React.useCallback((direction: 1 | -1) => {
+        setImageZoomMode('manual');
+        setImageZoom((prev) => {
+            const nextZoom =
+                initialZoomMode === 'fit'
+                    ? direction > 0
+                        ? prev * IMAGE_ZOOM_RATIO
+                        : prev / IMAGE_ZOOM_RATIO
+                    : prev + direction * IMAGE_ZOOM_STEP;
+            return clampImageZoom(nextZoom, imageZoomMinimum);
+        });
+    }, [imageZoomMinimum, initialZoomMode]);
+
+    const resetImageZoom = React.useCallback(() => {
+        setImageZoomMode(initialZoomMode);
+
+        if (initialZoomMode === 'fit') {
+            applyFitImageZoom();
+            return;
+        }
+
+        setImageZoom(1);
+    }, [applyFitImageZoom, initialZoomMode]);
 
     const zoomImageAtPointer = React.useCallback(
         (stage: HTMLDivElement, clientX: number, clientY: number, deltaY: number) => {
@@ -215,8 +298,12 @@ const AnnotatedImageViewer = ({
             const anchorX = stage.scrollLeft + pointerX;
             const anchorY = stage.scrollTop + pointerY;
 
+            setImageZoomMode('manual');
             setImageZoom((prev) => {
-                const next = clampImageZoom(prev * Math.exp(deltaY * -IMAGE_ZOOM_SENSITIVITY));
+                const next = clampImageZoom(
+                    prev * Math.exp(deltaY * -IMAGE_ZOOM_SENSITIVITY),
+                    imageZoomMinimum
+                );
                 if (next === prev) return prev;
 
                 const zoomRatio = next / prev;
@@ -228,7 +315,7 @@ const AnnotatedImageViewer = ({
                 return next;
             });
         },
-        []
+        [imageZoomMinimum]
     );
 
     React.useEffect(() => {
@@ -618,23 +705,27 @@ const AnnotatedImageViewer = ({
                                 <button
                                     type="button"
                                     aria-label="이미지 확대"
-                                    onClick={() => changeImageZoom(IMAGE_ZOOM_STEP)}
+                                    onClick={() => changeImageZoom(1)}
                                     disabled={imageZoom >= IMAGE_ZOOM_MAX}
                                 >
                                     <FiZoomIn size={15} />
                                 </button>
                                 <button
                                     type="button"
-                                    aria-label="이미지 배율 100%로 초기화"
-                                    onClick={() => setImageZoom(1)}
+                                    aria-label={
+                                        initialZoomMode === 'fit'
+                                            ? '이미지 배율 화면 맞춤으로 초기화'
+                                            : '이미지 배율 100%로 초기화'
+                                    }
+                                    onClick={resetImageZoom}
                                 >
-                                    {Math.round(imageZoom * 100)}%
+                                    {formatImageZoomPercent(imageZoom)}%
                                 </button>
                                 <button
                                     type="button"
                                     aria-label="이미지 축소"
-                                    onClick={() => changeImageZoom(-IMAGE_ZOOM_STEP)}
-                                    disabled={imageZoom <= IMAGE_ZOOM_MIN}
+                                    onClick={() => changeImageZoom(-1)}
+                                    disabled={imageZoom <= imageZoomMinimum}
                                 >
                                     <FiZoomOut size={15} />
                                 </button>
@@ -650,7 +741,7 @@ const AnnotatedImageViewer = ({
                                             return;
                                         }
 
-                                        setImageZoom(1);
+                                        resetImageZoom();
                                     }}
                                 >
                                     <FiMaximize2 size={16} />
