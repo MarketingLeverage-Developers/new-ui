@@ -1,11 +1,13 @@
 import React from 'react';
 import classNames from 'classnames';
+import { BaseTooltip } from '../../../BaseTooltip/BaseTooltip';
 import Text from '../Text/Text';
 import styles from './MetricSummaryStrip.module.scss';
 
 export type MetricSummaryStripItem = {
     key: string;
     label: React.ReactNode;
+    tooltip?: string;
     topValue?: React.ReactNode;
     value?: React.ReactNode;
     subValue?: React.ReactNode;
@@ -30,6 +32,27 @@ export type MetricSummaryStripItem = {
     isSelected?: boolean;
 };
 
+const renderLabel = (item: MetricSummaryStripItem) => {
+    const label = (
+        <Text as="p" size="md" tone="muted" weight="regular" className={styles.Label}>
+            {item.label}
+        </Text>
+    );
+
+    if (!item.tooltip) return label;
+
+    return (
+        <BaseTooltip
+            label={item.tooltip}
+            side="bottom"
+            tabIndex={0}
+            style={{ display: 'inline-flex', cursor: 'help' }}
+        >
+            {label}
+        </BaseTooltip>
+    );
+};
+
 export type MetricSummaryStripProps = {
     items: MetricSummaryStripItem[];
     className?: string;
@@ -49,9 +72,7 @@ const MetricSummaryStrip = React.memo(({
         {items.map((item) => {
             const content = item.splitMetrics ? (
                 <>
-                    <Text as="p" size="md" tone="muted" weight="regular" className={styles.Label}>
-                        {item.label}
-                    </Text>
+                    {renderLabel(item)}
                     <div
                         key={layoutKey != null ? `${item.key}-${layoutKey}` : undefined}
                         className={styles.SplitMetrics}
@@ -96,9 +117,7 @@ const MetricSummaryStrip = React.memo(({
                 </>
             ) : (
                 <>
-                    <Text as="p" size="md" tone="muted" weight="regular" className={styles.Label}>
-                        {item.label}
-                    </Text>
+                    {renderLabel(item)}
                     {item.topValue != null ? (
                         <Text as="p" size="sm" tone="muted" weight="regular" className={styles.TopValue}>
                             {item.topValue}
