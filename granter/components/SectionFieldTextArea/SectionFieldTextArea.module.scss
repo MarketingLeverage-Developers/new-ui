@@ -39,3 +39,37 @@
     color: var(--granter-gray-500);
     cursor: not-allowed;
 }
+
+.TextArea[data-variant='document'] {
+    height: 34px;
+    min-height: 34px;
+    padding: 6px 10px;
+    border-color: transparent;
+    border-radius: 6px;
+    background-color: transparent;
+    box-shadow: none;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 20px;
+}
+
+.TextArea[data-variant='document']:hover:not(:disabled) {
+    border-color: var(--granter-gray-200, #e5e7eb);
+    background-color: var(--granter-gray-50, #f8fafc);
+}
+
+.TextArea[data-variant='document']:focus {
+    border-color: var(--granter-sky-500, #0ea5e9);
+    background-color: var(--granter-white, #fff);
+    box-shadow: 0 0 0 3px rgb(14 165 233 / 10%);
+}
+
+.TextArea[data-variant='document'][aria-invalid='true'] {
+    border-color: var(--granter-red-500, #ef4444);
+    background-color: var(--granter-white, #fff);
+}
+
+.TextArea[data-variant='document']:disabled {
+    border-color: transparent;
+    background-color: transparent;
+}

@@ -38,6 +38,34 @@
     cursor: not-allowed;
 }
 
+.Trigger[data-variant='document'] {
+    height: 34px;
+    min-height: 34px;
+    padding: 0 10px;
+    border-color: transparent;
+    border-radius: 6px;
+    background-color: transparent;
+    box-shadow: none;
+    font-size: 13px;
+    font-weight: 400;
+}
+
+.Trigger[data-variant='document']:hover:not(:disabled) {
+    border-color: var(--granter-gray-200, #e5e7eb);
+    background-color: var(--granter-gray-50, #f8fafc);
+}
+
+.Trigger[data-variant='document']:focus {
+    border-color: var(--granter-sky-500, #0ea5e9);
+    background-color: var(--granter-white, #fff);
+    box-shadow: 0 0 0 3px rgb(14 165 233 / 10%);
+}
+
+.Trigger[data-variant='document']:disabled {
+    border-color: transparent;
+    background-color: transparent;
+}
+
 .Value {
     min-width: 0;
     flex: 1;

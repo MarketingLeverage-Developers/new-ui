@@ -7,3 +7,254 @@
         0 8px 16px -8px rgba(17, 24, 39, 0.18);
     overflow: hidden;
 }
+
+.FormContent {
+    position: relative;
+    display: flex;
+    width: 100%;
+    max-height: inherit;
+    min-width: 0;
+    min-height: 0;
+    flex-direction: column;
+    overflow: hidden;
+    background: var(--granter-white);
+}
+
+.FormCloseButton {
+    position: absolute;
+    z-index: 1;
+    top: 22px;
+    right: 22px;
+    display: inline-flex;
+    width: 32px;
+    height: 32px;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 0;
+    border-radius: 999px;
+    background: transparent;
+    color: var(--granter-gray-500);
+    cursor: pointer;
+}
+
+.FormCloseButton:hover:not(:disabled) {
+    background: var(--granter-gray-100);
+    color: var(--granter-gray-800);
+}
+
+.FormCloseButton:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.FormCloseButton svg {
+    width: 18px;
+    height: 18px;
+}
+
+.FormIntro {
+    flex: 0 0 auto;
+    padding: 58px 40px 0;
+}
+
+.FormTitle {
+    margin: 0;
+    color: var(--granter-gray-900);
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 36px;
+    letter-spacing: -0.03em;
+}
+
+.FormDescription {
+    margin: 4px 0 0;
+    color: var(--granter-gray-500);
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 20px;
+    letter-spacing: -0.01em;
+}
+
+.FormBody {
+    min-width: 0;
+    min-height: 0;
+    flex: 1 1 auto;
+    overflow-y: auto;
+    padding: 36px 40px 0;
+}
+
+.FormFooter {
+    display: flex;
+    width: 100%;
+    flex: 0 0 auto;
+    align-items: center;
+    padding: 36px 40px 42px;
+    background: var(--granter-white);
+}
+
+.FormFooter > * {
+    width: 100%;
+}
+
+.FormContent[data-density='compact'] .FormCloseButton {
+    top: 16px;
+    right: 18px;
+}
+
+.FormContent[data-density='compact'] .FormIntro {
+    padding: 34px 32px 0;
+}
+
+.FormContent[data-density='compact'] .FormTitle {
+    font-size: 24px;
+    line-height: 32px;
+}
+
+.FormContent[data-density='compact'] .FormBody {
+    padding: 20px 32px 0;
+}
+
+.FormContent[data-density='compact'] .FormFooter {
+    padding: 20px 32px 26px;
+}
+
+.ConfirmContent {
+    display: grid;
+    width: 100%;
+    min-width: 0;
+    gap: 28px;
+    padding: 36px 24px 24px;
+    background: var(--granter-white);
+    text-align: center;
+}
+
+.ConfirmIntro {
+    display: grid;
+    gap: 8px;
+}
+
+.ConfirmTitle {
+    margin: 0;
+    color: var(--granter-gray-900);
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 26px;
+    letter-spacing: -0.035em;
+}
+
+.ConfirmDescription {
+    margin: 0;
+    color: var(--granter-gray-500);
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 18px;
+    letter-spacing: -0.015em;
+    white-space: pre-line;
+}
+
+.ConfirmActions {
+    display: grid;
+    gap: 8px;
+}
+
+.ConfirmPrimaryAction,
+.ConfirmSecondaryAction {
+    width: 100%;
+}
+
+.ConfirmPrimaryAction > *,
+.ConfirmSecondaryAction > * {
+    width: 100%;
+    height: 48px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 18px;
+}
+
+.ConfirmPrimaryAction > * {
+    border: 0;
+    background: var(--Gradient1, linear-gradient(90deg, #7ce1f0 0%, #002be8 100%));
+    color: var(--granter-white, #fff);
+}
+
+.ConfirmContent[data-tone='danger'] .ConfirmPrimaryAction > * {
+    background: var(--Gradient1, linear-gradient(90deg, #7ce1f0 0%, #002be8 100%));
+}
+
+.ConfirmContent[data-tone='success'] .ConfirmPrimaryAction > * {
+    background: var(--Gradient1, linear-gradient(90deg, #7ce1f0 0%, #002be8 100%));
+}
+
+.ConfirmSecondaryAction > * {
+    border: 0;
+    background: transparent;
+    color: var(--granter-gray-700, #374151);
+}
+
+.ConfirmPrimaryAction > *:hover:not(:disabled) {
+    filter: brightness(0.98);
+}
+
+.ConfirmSecondaryAction > *:hover:not(:disabled),
+.ConfirmSecondaryAction > *:focus-visible:not(:disabled) {
+    background: var(--granter-gray-100, #f3f4f6);
+}
+
+@media (max-width: 560px) {
+    .FormCloseButton {
+        top: 16px;
+        right: 16px;
+    }
+
+    .FormIntro {
+        padding: 48px 24px 0;
+    }
+
+    .FormTitle {
+        font-size: 23px;
+        line-height: 32px;
+    }
+
+    .FormBody {
+        padding: 30px 24px 0;
+    }
+
+    .FormFooter {
+        padding: 30px 24px 28px;
+    }
+
+    .FormContent[data-density='compact'] .FormIntro {
+        padding: 42px 24px 0;
+    }
+
+    .FormContent[data-density='compact'] .FormBody {
+        padding: 18px 24px 0;
+    }
+
+    .FormContent[data-density='compact'] .FormFooter {
+        padding: 18px 24px 24px;
+    }
+
+    .ConfirmContent {
+        gap: 28px;
+        padding: 36px 24px 24px;
+    }
+
+    .ConfirmTitle {
+        font-size: 18px;
+        line-height: 26px;
+    }
+
+    .ConfirmDescription {
+        font-size: 12px;
+        line-height: 18px;
+    }
+
+    .ConfirmPrimaryAction > *,
+    .ConfirmSecondaryAction > * {
+        height: 48px;
+        font-size: 13px;
+    }
+}

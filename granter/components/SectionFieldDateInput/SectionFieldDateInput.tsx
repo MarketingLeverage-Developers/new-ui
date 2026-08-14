@@ -65,6 +65,7 @@ export type SectionFieldDateInputProps = {
     id?: string;
     required?: boolean;
     className?: string;
+    variant?: 'default' | 'document';
     style?: React.CSSProperties;
     'aria-label'?: string;
 };
@@ -105,6 +106,7 @@ const SectionFieldDateInput = React.forwardRef<HTMLInputElement, SectionFieldDat
             id,
             required = false,
             className,
+            variant = 'default',
             style,
             'aria-label': ariaLabel,
         },
@@ -160,6 +162,7 @@ const SectionFieldDateInput = React.forwardRef<HTMLInputElement, SectionFieldDat
 
                 <Dropdown.Trigger
                     className={classNames(styles.Trigger, className)}
+                    data-variant={variant}
                     style={style}
                     disabled={disabled}
                     tabIndex={disabled ? -1 : 0}

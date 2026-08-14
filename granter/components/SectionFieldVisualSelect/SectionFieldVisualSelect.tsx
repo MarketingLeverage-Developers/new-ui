@@ -7,6 +7,7 @@ import styles from './SectionFieldVisualSelect.module.scss';
 const noop = () => undefined;
 
 export type SectionFieldVisualMode = 'avatar' | 'icon';
+export type SectionFieldVisualSelectVariant = 'default' | 'document';
 
 const normalizeText = (value: string) => value.trim().toLowerCase();
 const toCssLength = (value?: number | string) => {
@@ -32,10 +33,7 @@ const getFallbackVisualText = (label: string, visualText?: string) => {
     const normalizedVisualText = String(visualText ?? '').trim();
 
     if (normalizedVisualText.length > 0) {
-        return Array.from(normalizedVisualText.replace(/\s+/g, ''))
-            .slice(0, 2)
-            .join('')
-            .toUpperCase();
+        return Array.from(normalizedVisualText.replace(/\s+/g, '')).slice(0, 2).join('').toUpperCase();
     }
 
     const normalizedLabel = String(label).trim();
@@ -45,10 +43,7 @@ const getFallbackVisualText = (label: string, visualText?: string) => {
     const firstChar = Array.from(compact)[0] ?? '?';
 
     if (/[a-z0-9]/i.test(firstChar)) {
-        return Array.from(compact)
-            .slice(0, 2)
-            .join('')
-            .toUpperCase();
+        return Array.from(compact).slice(0, 2).join('').toUpperCase();
     }
 
     return firstChar.toUpperCase();
@@ -66,6 +61,7 @@ export type SectionFieldVisualSelectOption<T extends string = string> = {
 
 type SectionFieldVisualSelectCommonProps<T extends string = string> = {
     options: SectionFieldVisualSelectOption<T>[];
+    variant?: SectionFieldVisualSelectVariant;
     className?: string;
     menuClassName?: string;
     ariaLabelledBy?: string;
@@ -103,8 +99,7 @@ type SectionFieldVisualSelectMultipleProps<T extends string = string> = SectionF
 };
 
 export type SectionFieldVisualSelectProps<T extends string = string> =
-    | SectionFieldVisualSelectSingleProps<T>
-    | SectionFieldVisualSelectMultipleProps<T>;
+    SectionFieldVisualSelectSingleProps<T> | SectionFieldVisualSelectMultipleProps<T>;
 
 type SectionFieldVisualSelectCssProperties = React.CSSProperties & {
     '--granter-section-field-visual-select-menu-min-width'?: string;
@@ -150,13 +145,7 @@ type VisualTokenProps<T extends string = string> = {
     className?: string;
 };
 
-const VisualToken = <T extends string>({
-    option,
-    size,
-    fontSize,
-    mode = 'avatar',
-    className,
-}: VisualTokenProps<T>) => {
+const VisualToken = <T extends string>({ option, size, fontSize, mode = 'avatar', className }: VisualTokenProps<T>) => {
     const [hasImageError, setHasImageError] = useState(false);
     const imageSrc = typeof option.imageSrc === 'string' ? option.imageSrc.trim() : '';
     const showImage = imageSrc.length > 0 && !hasImageError;
@@ -206,6 +195,7 @@ type TriggerContentProps<T extends string = string> = {
     multiple?: boolean;
     maxVisibleVisuals?: number;
     visualMode?: SectionFieldVisualMode;
+    variant?: SectionFieldVisualSelectVariant;
 };
 
 const TriggerContent = <T extends string>({
@@ -215,7 +205,11 @@ const TriggerContent = <T extends string>({
     multiple = false,
     maxVisibleVisuals = 3,
     visualMode = 'avatar',
+    variant = 'default',
 }: TriggerContentProps<T>) => {
+    const visualSize = variant === 'document' ? 22 : 40;
+    const visualFontSize = variant === 'document' ? 10 : 13;
+
     if (selectedOptions.length === 0) {
         return (
             <span className={styles.EmptyBadge} style={emptyBadgeStyle}>
@@ -235,8 +229,8 @@ const TriggerContent = <T extends string>({
             <span className={styles.SelectedSingle}>
                 <VisualToken
                     option={selectedOption}
-                    size={40}
-                    fontSize={13}
+                    size={visualSize}
+                    fontSize={visualFontSize}
                     mode={visualMode}
                     className={styles.SelectedSingleVisual}
                 />
@@ -260,8 +254,8 @@ const TriggerContent = <T extends string>({
                     <VisualToken
                         key={option.value}
                         option={option}
-                        size={40}
-                        fontSize={13}
+                        size={visualSize}
+                        fontSize={visualFontSize}
                         mode={visualMode}
                         className={styles.SelectedVisual}
                     />
@@ -440,6 +434,7 @@ type SectionFieldVisualSelectBaseProps<T extends string = string> = SectionField
 
 const SectionFieldVisualSelectBase = <T extends string>({
     options,
+    variant = 'default',
     className,
     menuClassName,
     ariaLabelledBy,
@@ -471,9 +466,7 @@ const SectionFieldVisualSelectBase = <T extends string>({
     const optionMap = useMemo(() => new Map(options.map((option) => [option.value, option])), [options]);
     const selectedOptions = useMemo(
         () =>
-            selectedValues
-                .map((value) => optionMap.get(value))
-                .filter(Boolean) as SectionFieldVisualSelectOption<T>[],
+            selectedValues.map((value) => optionMap.get(value)).filter(Boolean) as SectionFieldVisualSelectOption<T>[],
         [optionMap, selectedValues]
     );
     const selectedSet = useMemo(() => new Set(selectedValues), [selectedValues]);
@@ -489,7 +482,7 @@ const SectionFieldVisualSelectBase = <T extends string>({
     }, [isOpen]);
 
     return (
-        <div className={classNames(styles.Root, className)} style={cssVariables}>
+        <div className={classNames(styles.Root, className)} data-variant={variant} style={cssVariables}>
             <Dropdown.Trigger className={styles.TriggerWrap} disabled={disabled}>
                 <button
                     type="button"
@@ -500,13 +493,15 @@ const SectionFieldVisualSelectBase = <T extends string>({
                     title={selectedLabelText || undefined}
                     aria-labelledby={ariaLabelledBy}
                     aria-required={ariaRequired || undefined}
-                    aria-label={ariaLabelledBy
-                        ? undefined
-                        : selectedOptions.length > 0
-                          ? multiple
-                              ? `${selectedOptions.length}${selectionUnitLabel} 선택됨`
-                              : `${selectedOptions[0]?.label ?? ''} 선택됨`
-                          : toAccessibleText(emptyLabel, '항목 추가')}
+                    aria-label={
+                        ariaLabelledBy
+                            ? undefined
+                            : selectedOptions.length > 0
+                              ? multiple
+                                  ? `${selectedOptions.length}${selectionUnitLabel} 선택됨`
+                                  : `${selectedOptions[0]?.label ?? ''} 선택됨`
+                              : toAccessibleText(emptyLabel, '항목 추가')
+                    }
                 >
                     <TriggerContent
                         selectedOptions={selectedOptions}
@@ -515,6 +510,7 @@ const SectionFieldVisualSelectBase = <T extends string>({
                         multiple={multiple}
                         maxVisibleVisuals={maxVisibleVisuals}
                         visualMode={visualMode}
+                        variant={variant}
                     />
                 </button>
             </Dropdown.Trigger>

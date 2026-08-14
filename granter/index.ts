@@ -44,6 +44,7 @@ export { default as EditableUnderlineTabs } from './components/EditableUnderline
 export { default as SectionFormDrawerContent } from './components/SectionFormDrawerContent/SectionFormDrawerContent';
 export { default as SectionFieldRow } from './components/SectionFieldRow/SectionFieldRow';
 export { default as SectionFieldInput } from './components/SectionFieldInput/SectionFieldInput';
+export { default as SectionFieldLabel } from './components/SectionFieldLabel/SectionFieldLabel';
 export { default as SectionFieldDateInput } from './components/SectionFieldDateInput/SectionFieldDateInput';
 export { default as SectionFieldMonthInput } from './components/SectionFieldMonthInput/SectionFieldMonthInput';
 export { default as SectionFieldDateTextInput } from './components/SectionFieldDateTextInput/SectionFieldDateTextInput';
@@ -149,7 +150,7 @@ export type {
     SidebarMenuMetaButtonProps,
 } from './components/SidebarMenu/SidebarMenu';
 export type { SubSidebarMenuItem, SubSidebarMenuProps } from './components/SubSidebarMenu/SubSidebarMenu';
-export type { BasicModalProps } from './components/BasicModal/BasicModal';
+export type { BasicModalFormContentProps, BasicModalProps } from './components/BasicModal/BasicModal';
 export type { ActionModalContentProps } from './components/ActionModalContent/ActionModalContent';
 export type { BasicRightDrawerProps } from './components/BasicRightDrawer/BasicRightDrawer';
 export type { BasicConfirmProps } from './components/BasicConfirm/BasicConfirm';
@@ -278,7 +279,12 @@ export type {
 } from './components/EditableUnderlineTabs/EditableUnderlineTabs';
 export type { SectionFormDrawerContentProps } from './components/SectionFormDrawerContent/SectionFormDrawerContent';
 export type { SectionFieldRowProps, SectionFieldRowSubFieldProps } from './components/SectionFieldRow/SectionFieldRow';
-export type { SectionFieldInputProps } from './components/SectionFieldInput/SectionFieldInput';
+export type {
+    SectionFieldInputProps,
+    SectionFieldInputSize,
+    SectionFieldInputVariant,
+} from './components/SectionFieldInput/SectionFieldInput';
+export type { SectionFieldLabelProps } from './components/SectionFieldLabel/SectionFieldLabel';
 export type { SectionFieldDateInputProps } from './components/SectionFieldDateInput/SectionFieldDateInput';
 export type { SectionFieldDateTextInputProps } from './components/SectionFieldDateTextInput/SectionFieldDateTextInput';
 export type { SectionFieldRowInputProps } from './components/SectionFieldRowInput/SectionFieldRowInput';
@@ -304,6 +310,7 @@ export type {
 export type {
     SectionFieldSelectProps,
     SectionFieldSelectOption,
+    SectionFieldSelectSize,
 } from './components/SectionFieldSelect/SectionFieldSelect';
 export type {
     SectionFieldVisualSelectProps,

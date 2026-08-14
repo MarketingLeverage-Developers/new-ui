@@ -4,6 +4,27 @@
     min-width: 0;
 }
 
+.Root[data-size='lg'] .Trigger {
+    height: 48px;
+    padding: 0 16px;
+}
+
+.Root[data-size='lg'] .Trigger[data-profile='true'] {
+    height: 64px;
+    padding: 8px 16px;
+}
+
+.Root[data-size='lg'] .Trigger[data-profile='true'][data-profile-variant='compact'] {
+    height: 48px;
+    padding: 0 16px;
+}
+
+.Root[data-size='lg'] .Label {
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 20px;
+}
+
 .Root[data-size='sm'] .Trigger {
     height: 34px;
     padding: 0 12px;
@@ -80,6 +101,37 @@
 
 .Root[data-variant='ghost'] .Label[data-placeholder='true'] {
     color: var(--granter-gray-500);
+}
+
+.Root[data-variant='document'] .Trigger {
+    height: 34px;
+    min-height: 34px;
+    padding: 0 10px;
+    border-color: transparent;
+    border-radius: 6px;
+    background-color: transparent;
+    box-shadow: none;
+}
+
+.Root[data-variant='document'] .Trigger:hover:not(:disabled) {
+    border-color: var(--granter-gray-200, #e5e7eb);
+    background-color: var(--granter-gray-50, #f8fafc);
+}
+
+.Root[data-variant='document'] .Trigger:focus-visible {
+    border-color: var(--granter-sky-500, #0ea5e9);
+    background-color: var(--granter-white, #fff);
+    box-shadow: 0 0 0 3px rgb(14 165 233 / 10%);
+}
+
+.Root[data-variant='document'] .Trigger[aria-invalid='true'] {
+    border-color: var(--granter-red-500, #ef4444);
+    background-color: var(--granter-white, #fff);
+}
+
+.Root[data-variant='document'] .Trigger:disabled {
+    border-color: transparent;
+    background-color: transparent;
 }
 
 .TriggerWrap {

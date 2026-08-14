@@ -8,6 +8,8 @@ import styles from './SectionFieldSelect.module.scss';
 
 const noop = () => undefined;
 
+export type SectionFieldSelectSize = 'xs' | 'sm' | 'md' | 'lg';
+
 type SectionFieldSelectProfile = {
     imageSrc?: string | null;
     imageAlt?: string;
@@ -39,12 +41,13 @@ export type SectionFieldSelectProps<T extends string = string> = {
     menuMaxHeight?: number | string;
     matchTriggerWidth?: boolean;
     disabled?: boolean;
-    size?: 'md' | 'sm' | 'xs';
-    variant?: 'default' | 'ghost';
+    size?: SectionFieldSelectSize;
+    variant?: 'default' | 'ghost' | 'document';
     searchable?: boolean;
     triggerProfileVariant?: 'default' | 'compact';
     searchPlaceholder?: string;
     searchEmptyText?: React.ReactNode;
+    ariaLabelledBy?: string;
 };
 
 const normalizeText = (value: string) => value.trim().toLowerCase();
@@ -147,12 +150,13 @@ type SectionFieldSelectViewProps<T extends string = string> = {
     menuMaxHeight: number | string;
     matchTriggerWidth: boolean;
     disabled?: boolean;
-    size?: 'md' | 'sm' | 'xs';
-    variant?: 'default' | 'ghost';
+    size?: SectionFieldSelectSize;
+    variant?: 'default' | 'ghost' | 'document';
     searchable?: boolean;
     triggerProfileVariant: 'default' | 'compact';
     searchPlaceholder: string;
     searchEmptyText: React.ReactNode;
+    ariaLabelledBy?: string;
 };
 
 const SectionFieldSelectView = <T extends string>({
@@ -169,6 +173,7 @@ const SectionFieldSelectView = <T extends string>({
     triggerProfileVariant,
     searchPlaceholder,
     searchEmptyText,
+    ariaLabelledBy,
 }: SectionFieldSelectViewProps<T>) => {
     const { selectValue } = useSelect();
     const { isOpen } = useDropdown();
@@ -199,6 +204,7 @@ const SectionFieldSelectView = <T extends string>({
                     data-profile={selectedOption?.profile ? 'true' : 'false'}
                     data-profile-variant={triggerProfileVariant}
                     disabled={disabled}
+                    aria-labelledby={ariaLabelledBy}
                 >
                     <span
                         className={styles.Label}
@@ -206,7 +212,9 @@ const SectionFieldSelectView = <T extends string>({
                         data-profile={selectedOption?.profile ? 'true' : 'false'}
                         data-profile-variant={triggerProfileVariant}
                     >
-                        {selectedOption ? renderOptionContent(selectedOption, triggerProfileVariant, true) : placeholder}
+                        {selectedOption
+                            ? renderOptionContent(selectedOption, triggerProfileVariant, true)
+                            : placeholder}
                     </span>
 
                     <span className={styles.Icon} data-open={isOpen ? 'true' : 'false'}>
@@ -269,6 +277,7 @@ const SectionFieldSelect = (<T extends string = string>({
     triggerProfileVariant = 'default',
     searchPlaceholder = '검색어를 입력해주세요.',
     searchEmptyText = '검색 결과가 없습니다.',
+    ariaLabelledBy,
 }: SectionFieldSelectProps<T>) => (
     <Select value={value} defaultValue={defaultValue} onChange={(nextValue) => onChange(nextValue as T)}>
         <Dropdown>
@@ -286,6 +295,7 @@ const SectionFieldSelect = (<T extends string = string>({
                 triggerProfileVariant={triggerProfileVariant}
                 searchPlaceholder={searchPlaceholder}
                 searchEmptyText={searchEmptyText}
+                ariaLabelledBy={ariaLabelledBy}
             />
         </Dropdown>
     </Select>

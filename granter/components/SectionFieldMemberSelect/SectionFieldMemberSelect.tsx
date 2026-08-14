@@ -25,6 +25,7 @@ const resolveUserAvatarSrc = <T extends string>(option: SectionFieldMemberSelect
 
 type SectionFieldMemberSelectCommonProps<T extends string = string> = {
     options: SectionFieldMemberSelectOption<T>[];
+    variant?: 'default' | 'document';
     useShortNameAvatar?: boolean;
     useShortNameAvatarWhenProfileMissing?: boolean;
     className?: string;
@@ -59,8 +60,7 @@ type SectionFieldMemberSelectMultipleProps<T extends string = string> = SectionF
 };
 
 export type SectionFieldMemberSelectProps<T extends string = string> =
-    | SectionFieldMemberSelectSingleProps<T>
-    | SectionFieldMemberSelectMultipleProps<T>;
+    SectionFieldMemberSelectSingleProps<T> | SectionFieldMemberSelectMultipleProps<T>;
 
 const isMultipleProps = <T extends string>(
     props: SectionFieldMemberSelectProps<T>
@@ -73,8 +73,7 @@ const SectionFieldMemberSelect = <T extends string = string>(props: SectionField
                 const normalizedProfileImageUrl = option.profileImageUrl?.trim() ?? '';
                 const hasProfileImage = normalizedProfileImageUrl.length > 0;
                 const shouldUseShortNameAvatar =
-                    props.useShortNameAvatar ||
-                    (props.useShortNameAvatarWhenProfileMissing && !hasProfileImage);
+                    props.useShortNameAvatar || (props.useShortNameAvatarWhenProfileMissing && !hasProfileImage);
 
                 return {
                     value: option.value,
@@ -99,6 +98,7 @@ const SectionFieldMemberSelect = <T extends string = string>(props: SectionField
         return (
             <SectionFieldVisualSelect
                 multiple
+                variant={props.variant}
                 values={props.values}
                 defaultValues={props.defaultValues}
                 onValuesChange={props.onValuesChange ?? noop}
@@ -128,6 +128,7 @@ const SectionFieldMemberSelect = <T extends string = string>(props: SectionField
 
     return (
         <SectionFieldVisualSelect
+            variant={singleProps.variant}
             value={singleProps.value}
             defaultValue={singleProps.defaultValue}
             onChange={singleProps.onChange ?? noop}

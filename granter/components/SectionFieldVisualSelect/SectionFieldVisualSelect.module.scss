@@ -5,6 +5,61 @@
     min-width: 0;
 }
 
+.Root[data-variant='document'] .Trigger {
+    height: 34px;
+    min-height: 34px;
+    padding: 0 10px;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    background-color: transparent;
+    box-shadow: none;
+}
+
+.Root[data-variant='document'] .Trigger:hover:not(:disabled) {
+    border-color: var(--granter-gray-200, #e5e7eb);
+    background-color: var(--granter-gray-50, #f8fafc);
+}
+
+.Root[data-variant='document'] .Trigger:focus-visible,
+.Root[data-variant='document'] .Trigger[data-open='true'] {
+    border-color: var(--granter-sky-500, #0ea5e9);
+    background-color: var(--granter-white, #fff);
+    box-shadow: 0 0 0 3px rgb(14 165 233 / 10%);
+}
+
+.Root[data-variant='document'] .Trigger:disabled {
+    border-color: transparent;
+    background-color: transparent;
+}
+
+.Root[data-variant='document'] .EmptyBadge {
+    justify-content: flex-start;
+    min-height: 0;
+    padding: 0;
+    background-color: transparent;
+    color: var(--granter-gray-400, #94a3b8);
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 20px;
+}
+
+.Root[data-variant='document'] .Trigger:hover:not(:disabled) .EmptyBadge {
+    background-color: transparent;
+}
+
+.Root[data-variant='document'] .SelectedSingle {
+    gap: 8px;
+}
+
+.Root[data-variant='document'] .SelectedSingleVisual {
+    border-width: 1px;
+}
+
+.Root[data-variant='document'] .SelectedSingleLabel {
+    font-size: 12px;
+    line-height: 18px;
+}
+
 .TriggerWrap {
     display: flex;
     width: 100%;

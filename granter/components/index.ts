@@ -291,7 +291,13 @@ export { default as SectionFieldRow } from './SectionFieldRow/SectionFieldRow';
 export type { SectionFieldRowProps, SectionFieldRowSubFieldProps } from './SectionFieldRow/SectionFieldRow';
 
 export { default as SectionFieldInput } from './SectionFieldInput/SectionFieldInput';
-export type { SectionFieldInputProps } from './SectionFieldInput/SectionFieldInput';
+export type {
+    SectionFieldInputProps,
+    SectionFieldInputSize,
+    SectionFieldInputVariant,
+} from './SectionFieldInput/SectionFieldInput';
+export { default as SectionFieldLabel } from './SectionFieldLabel/SectionFieldLabel';
+export type { SectionFieldLabelProps } from './SectionFieldLabel/SectionFieldLabel';
 export { default as SectionFieldDateInput } from './SectionFieldDateInput/SectionFieldDateInput';
 export type { SectionFieldDateInputProps } from './SectionFieldDateInput/SectionFieldDateInput';
 export { default as SectionFieldDateTextInput } from './SectionFieldDateTextInput/SectionFieldDateTextInput';
@@ -330,7 +336,11 @@ export type {
 } from './SectionFieldRadioGroup/SectionFieldRadioGroup';
 
 export { default as SectionFieldSelect } from './SectionFieldSelect/SectionFieldSelect';
-export type { SectionFieldSelectProps, SectionFieldSelectOption } from './SectionFieldSelect/SectionFieldSelect';
+export type {
+    SectionFieldSelectOption,
+    SectionFieldSelectProps,
+    SectionFieldSelectSize,
+} from './SectionFieldSelect/SectionFieldSelect';
 export { default as SectionFieldVisualSelect } from './SectionFieldVisualSelect/SectionFieldVisualSelect';
 export type {
     SectionFieldVisualSelectProps,
@@ -457,7 +467,7 @@ export { default as InfoTileCard } from './InfoTileCard/InfoTileCard';
 export type { InfoTileCardItem, InfoTileCardProps } from './InfoTileCard/InfoTileCard';
 
 export { default as BasicModal } from './BasicModal/BasicModal';
-export type { BasicModalProps } from './BasicModal/BasicModal';
+export type { BasicModalFormContentProps, BasicModalProps } from './BasicModal/BasicModal';
 
 export { default as ActionModalContent } from './ActionModalContent/ActionModalContent';
 export type { ActionModalContentProps } from './ActionModalContent/ActionModalContent';
