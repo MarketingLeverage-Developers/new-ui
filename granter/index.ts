@@ -62,6 +62,7 @@ export { default as SectionFieldOptionToggleCard } from './components/SectionFie
 export { default as SectionFieldRadioGroup } from './components/SectionFieldRadioGroup/SectionFieldRadioGroup';
 export { default as LabeledSwitch } from './components/LabeledSwitch/LabeledSwitch';
 export { default as SectionFieldSelect } from './components/SectionFieldSelect/SectionFieldSelect';
+export { default as SectionProfileSelect } from './components/SectionProfileSelect/SectionProfileSelect';
 export { default as SectionFieldVisualSelect } from './components/SectionFieldVisualSelect/SectionFieldVisualSelect';
 export { default as SectionFieldVisualSelectPair } from './components/SectionFieldVisualSelectPair/SectionFieldVisualSelectPair';
 export { default as SectionFieldMemberSelect } from './components/SectionFieldMemberSelect/SectionFieldMemberSelect';
@@ -312,6 +313,12 @@ export type {
     SectionFieldSelectOption,
     SectionFieldSelectSize,
 } from './components/SectionFieldSelect/SectionFieldSelect';
+export type {
+    SectionProfileSelectOption,
+    SectionProfileSelectProps,
+    SectionProfileSelectSize,
+    SectionProfileSelectVariant,
+} from './components/SectionProfileSelect/SectionProfileSelect';
 export type {
     SectionFieldVisualSelectProps,
     SectionFieldVisualSelectOption,

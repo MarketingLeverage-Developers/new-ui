@@ -341,6 +341,13 @@ export type {
     SectionFieldSelectProps,
     SectionFieldSelectSize,
 } from './SectionFieldSelect/SectionFieldSelect';
+export { default as SectionProfileSelect } from './SectionProfileSelect/SectionProfileSelect';
+export type {
+    SectionProfileSelectOption,
+    SectionProfileSelectProps,
+    SectionProfileSelectSize,
+    SectionProfileSelectVariant,
+} from './SectionProfileSelect/SectionProfileSelect';
 export { default as SectionFieldVisualSelect } from './SectionFieldVisualSelect/SectionFieldVisualSelect';
 export type {
     SectionFieldVisualSelectProps,

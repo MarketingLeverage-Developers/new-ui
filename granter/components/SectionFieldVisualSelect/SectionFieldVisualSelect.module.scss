@@ -109,7 +109,7 @@
     border-radius: 10px;
     background-color: var(--granter-gray-100);
     color: var(--granter-gray-800);
-    font-size: 15px;
+    font-size: var(--granter-section-field-visual-select-font-size, 15px);
     font-weight: 600;
     line-height: 20px;
     transition:
@@ -144,7 +144,7 @@
 .SelectedSingleLabel {
     min-width: 0;
     color: var(--granter-gray-800);
-    font-size: 15px;
+    font-size: var(--granter-section-field-visual-select-font-size, 15px);
     font-weight: 400;
     line-height: 20px;
     white-space: nowrap;

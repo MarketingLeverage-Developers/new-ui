@@ -10,6 +10,30 @@ export type AvatarStackButtonItem = {
     imageSrc?: string | null;
 };
 
+export type AvatarStackProfileProps = {
+    label: string;
+    imageSrc?: string | null;
+    avatarSize?: number;
+    avatarFontSize?: number;
+    stacked?: boolean;
+};
+
+export const AvatarStackProfile = ({
+    label,
+    imageSrc,
+    avatarSize = 40,
+    avatarFontSize = 13,
+    stacked = false,
+}: AvatarStackProfileProps) => (
+    <MemberProfileAvatar
+        className={classNames(styles.Avatar, { [styles.StandaloneAvatar]: !stacked })}
+        name={label}
+        src={imageSrc}
+        size={avatarSize}
+        fontSize={avatarFontSize}
+    />
+);
+
 export type AvatarStackButtonProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children'> & {
     items: AvatarStackButtonItem[];
     maxVisibleAvatars?: number;
@@ -37,13 +61,13 @@ const AvatarStackButton = ({
                 </span>
                 <span className={styles.AvatarCluster}>
                     {visibleItems.map((item) => (
-                        <MemberProfileAvatar
+                        <AvatarStackProfile
                             key={item.id}
-                            className={styles.Avatar}
-                            name={item.label}
-                            src={item.imageSrc}
-                            size={avatarSize}
-                            fontSize={avatarFontSize}
+                            label={item.label}
+                            imageSrc={item.imageSrc}
+                            avatarSize={avatarSize}
+                            avatarFontSize={avatarFontSize}
+                            stacked
                         />
                     ))}
                     {hiddenCount > 0 ? <span className={styles.Overflow}>+{hiddenCount}</span> : null}

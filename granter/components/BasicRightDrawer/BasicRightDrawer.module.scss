@@ -19,6 +19,46 @@
     transform: translateX(0);
 }
 
+.RightDrawerContent.RightDrawerContent.ResizableRightDrawer {
+    width: var(--right-drawer-resizable-width) !important;
+}
+
+.ResizeHandle {
+    position: absolute;
+    z-index: 20;
+    top: 0;
+    bottom: 0;
+    left: -4px;
+    width: 9px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: ew-resize;
+    touch-action: none;
+}
+
+.ResizeHandle::after {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 4px;
+    width: 1px;
+    background: var(--granter-sky-500, #0ea5e9);
+    content: '';
+    opacity: 0;
+    transition: opacity 120ms ease;
+}
+
+.ResizeHandle:hover::after,
+.ResizeHandle:focus-visible::after,
+.RightDrawerContent[data-resizing='true'] .ResizeHandle::after {
+    opacity: 1;
+}
+
+.ResizeHandle:focus-visible {
+    outline: none;
+}
+
 .TransparentBackdrop.TransparentBackdrop {
     background-color: transparent;
     backdrop-filter: none;
