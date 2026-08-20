@@ -96,6 +96,14 @@
     box-shadow: inset 0 0 0 1px rgb(15 23 42 / 10%);
 }
 
+.Root[data-surface-mode='plain'] .ViewerShell {
+    background-color: #fbfcfd;
+    background-image: radial-gradient(circle, rgb(148 163 184 / 35%) 1px, transparent 1px);
+    background-position: 0 0;
+    background-size: 18px 18px;
+    box-shadow: none;
+}
+
 .Root[data-display-mode='document'] .ViewerShell {
     display: block;
     min-height: 0;
@@ -146,6 +154,13 @@
         -8px 0;
     background-size: 16px 16px;
     box-shadow: 0 18px 34px rgb(0 0 0 / 26%);
+}
+
+.Root[data-surface-mode='plain'] .ImageFrame {
+    background: var(--granter-white, #fff);
+    box-shadow:
+        0 16px 44px rgb(15 23 42 / 14%),
+        0 0 0 1px var(--granter-gray-200, #e5e7eb);
 }
 
 .ImageFrame > img {
@@ -361,6 +376,42 @@
     box-shadow: 0 18px 42px rgb(15 23 42 / 16%);
     backdrop-filter: blur(14px);
     pointer-events: auto;
+}
+
+.Root[data-surface-mode='plain'] .FloatingOverlay {
+    right: 18px;
+    bottom: 18px;
+}
+
+.Root[data-surface-mode='plain'] .FloatingControlStack,
+.Root[data-surface-mode='plain'] .ZoomControls {
+    flex-direction: row;
+}
+
+.Root[data-surface-mode='plain'] .FloatingControlStack {
+    border-radius: 9px;
+    box-shadow: 0 4px 14px rgb(15 23 42 / 7%);
+    backdrop-filter: blur(10px);
+}
+
+.Root[data-surface-mode='plain'] .ZoomControls button {
+    width: 34px;
+    min-width: 34px;
+    height: 34px;
+    border-right: 1px solid rgb(226 232 240 / 82%);
+    border-bottom: 0;
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.Root[data-surface-mode='plain'] .ZoomControls button:nth-child(2) {
+    width: auto;
+    min-width: 48px;
+    padding: 0 8px;
+}
+
+.Root[data-surface-mode='plain'] .ZoomControls button:last-child {
+    border-right: 0;
 }
 
 .ResetViewButton {

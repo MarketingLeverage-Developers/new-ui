@@ -334,6 +334,11 @@ export type {
     SectionFieldRadioGroupOption,
     SectionFieldRadioGroupProps,
 } from './SectionFieldRadioGroup/SectionFieldRadioGroup';
+export { default as SectionFieldSegmentedControl } from './SectionFieldSegmentedControl/SectionFieldSegmentedControl';
+export type {
+    SectionFieldSegmentedControlOption,
+    SectionFieldSegmentedControlProps,
+} from './SectionFieldSegmentedControl/SectionFieldSegmentedControl';
 
 export { default as SectionFieldSelect } from './SectionFieldSelect/SectionFieldSelect';
 export type {

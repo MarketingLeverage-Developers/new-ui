@@ -60,6 +60,7 @@ export { default as SectionFieldTab } from './components/SectionFieldTab/Section
 export { default as SectionFieldRowTab } from './components/SectionFieldRowTab/SectionFieldRowTab';
 export { default as SectionFieldOptionToggleCard } from './components/SectionFieldOptionToggleCard/SectionFieldOptionToggleCard';
 export { default as SectionFieldRadioGroup } from './components/SectionFieldRadioGroup/SectionFieldRadioGroup';
+export { default as SectionFieldSegmentedControl } from './components/SectionFieldSegmentedControl/SectionFieldSegmentedControl';
 export { default as LabeledSwitch } from './components/LabeledSwitch/LabeledSwitch';
 export { default as SectionFieldSelect } from './components/SectionFieldSelect/SectionFieldSelect';
 export { default as SectionProfileSelect } from './components/SectionProfileSelect/SectionProfileSelect';
@@ -308,6 +309,10 @@ export type {
     SectionFieldRadioGroupOption,
     SectionFieldRadioGroupProps,
 } from './components/SectionFieldRadioGroup/SectionFieldRadioGroup';
+export type {
+    SectionFieldSegmentedControlOption,
+    SectionFieldSegmentedControlProps,
+} from './components/SectionFieldSegmentedControl/SectionFieldSegmentedControl';
 export type {
     SectionFieldSelectProps,
     SectionFieldSelectOption,

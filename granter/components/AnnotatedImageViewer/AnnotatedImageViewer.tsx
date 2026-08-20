@@ -1,6 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
-import { FiImage, FiMaximize2, FiTrash2, FiZoomIn, FiZoomOut } from 'react-icons/fi';
+import { FiImage, FiMaximize2, FiMinus, FiPlus, FiTrash2, FiZoomIn, FiZoomOut } from 'react-icons/fi';
 import Button from '../Button/Button';
 import Text from '../Text/Text';
 import styles from './AnnotatedImageViewer.module.scss';
@@ -43,6 +43,7 @@ export type AnnotatedImageViewerProps = {
     showAssetTabs?: boolean;
     showViewActionButton?: boolean;
     displayMode?: 'canvas' | 'document';
+    surfaceMode?: 'checkerboard' | 'plain';
     initialZoomMode?: AnnotatedImageViewerInitialZoomMode;
     emptyText?: React.ReactNode;
     className?: string;
@@ -135,6 +136,7 @@ const AnnotatedImageViewer = ({
     showAssetTabs = true,
     showViewActionButton = true,
     displayMode = 'canvas',
+    surfaceMode = 'checkerboard',
     initialZoomMode = 'actual',
     emptyText = '연결된 참고 이미지가 없습니다.',
     className,
@@ -670,7 +672,11 @@ const AnnotatedImageViewer = ({
     }, []);
 
     return (
-        <section className={classNames(styles.Root, className)} data-display-mode={displayMode}>
+        <section
+            className={classNames(styles.Root, className)}
+            data-display-mode={displayMode}
+            data-surface-mode={surfaceMode}
+        >
             {hasToolbar ? (
                 <div className={styles.Header}>
                     {hasAssetTabs ? (
@@ -702,14 +708,25 @@ const AnnotatedImageViewer = ({
                     <div className={styles.FloatingOverlay}>
                         <div className={styles.FloatingControlStack}>
                             <div className={styles.ZoomControls}>
-                                <button
-                                    type="button"
-                                    aria-label="이미지 확대"
-                                    onClick={() => changeImageZoom(1)}
-                                    disabled={imageZoom >= IMAGE_ZOOM_MAX}
-                                >
-                                    <FiZoomIn size={15} />
-                                </button>
+                                {surfaceMode === 'plain' ? (
+                                    <button
+                                        type="button"
+                                        aria-label="이미지 축소"
+                                        onClick={() => changeImageZoom(-1)}
+                                        disabled={imageZoom <= imageZoomMinimum}
+                                    >
+                                        <FiMinus size={15} />
+                                    </button>
+                                ) : (
+                                    <button
+                                        type="button"
+                                        aria-label="이미지 확대"
+                                        onClick={() => changeImageZoom(1)}
+                                        disabled={imageZoom >= IMAGE_ZOOM_MAX}
+                                    >
+                                        <FiZoomIn size={15} />
+                                    </button>
+                                )}
                                 <button
                                     type="button"
                                     aria-label={
@@ -721,14 +738,25 @@ const AnnotatedImageViewer = ({
                                 >
                                     {formatImageZoomPercent(imageZoom)}%
                                 </button>
-                                <button
-                                    type="button"
-                                    aria-label="이미지 축소"
-                                    onClick={() => changeImageZoom(-1)}
-                                    disabled={imageZoom <= imageZoomMinimum}
-                                >
-                                    <FiZoomOut size={15} />
-                                </button>
+                                {surfaceMode === 'plain' ? (
+                                    <button
+                                        type="button"
+                                        aria-label="이미지 확대"
+                                        onClick={() => changeImageZoom(1)}
+                                        disabled={imageZoom >= IMAGE_ZOOM_MAX}
+                                    >
+                                        <FiPlus size={15} />
+                                    </button>
+                                ) : (
+                                    <button
+                                        type="button"
+                                        aria-label="이미지 축소"
+                                        onClick={() => changeImageZoom(-1)}
+                                        disabled={imageZoom <= imageZoomMinimum}
+                                    >
+                                        <FiZoomOut size={15} />
+                                    </button>
+                                )}
                             </div>
                             {showViewActionButton ? (
                                 <button
