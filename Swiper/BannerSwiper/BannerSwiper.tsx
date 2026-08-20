@@ -1,12 +1,10 @@
 import React, { useRef, useState } from 'react';
-import { Autoplay, Navigation } from 'swiper/modules';
+import { Autoplay } from 'swiper/modules';
 import { Swiper } from 'swiper/react';
 import styles from './BannerSwiper.module.scss';
 import type { Swiper as SwiperCore } from 'swiper';
 
 import 'swiper/css';
-import 'swiper/css/pagination';
-import 'swiper/css/navigation';
 
 type BannerSwiperProps = {
     children: React.ReactNode;
@@ -33,7 +31,7 @@ const BannerSwiper = ({ slidesPerView = 1, children }: BannerSwiperProps) => {
         <div className={styles.Wrapper}>
             <Swiper
                 className={styles.BannerSwiper}
-                modules={[Autoplay, Navigation]}
+                modules={[Autoplay]}
                 slidesPerView={slidesPerView}
                 loop
                 autoplay={{ delay: 3000, disableOnInteraction: false }}
