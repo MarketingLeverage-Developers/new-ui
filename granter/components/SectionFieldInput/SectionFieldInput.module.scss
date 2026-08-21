@@ -87,6 +87,86 @@
     background-color: transparent;
 }
 
+.Input[data-variant='workflow'] {
+    height: 42px;
+    min-height: 42px;
+    padding: 0 13px;
+    border-color: #e8e9ec;
+    border-radius: 6px;
+    background-color: #fafafa;
+    box-shadow: none;
+    color: #2f3136;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 20px;
+}
+
+.Input[data-variant='workflow']:hover:not(:disabled) {
+    border-color: #d9dbe0;
+    background-color: #f7f7f8;
+}
+
+.Input[data-variant='workflow']:focus {
+    border-color: #9ca2ac;
+    background-color: #fff;
+    box-shadow: 0 0 0 2px rgb(37 39 44 / 6%);
+}
+
+.Input[data-variant='workflow'][aria-invalid='true'] {
+    border-color: var(--granter-red-500, #ef4444);
+    background-color: #fff;
+}
+
+.Input[data-variant='workflow']:disabled {
+    border-color: #eceef0;
+    background-color: #f4f4f5;
+}
+
+.Input[data-variant='workflow-title'] {
+    width: 100%;
+    height: 42px;
+    min-height: 42px;
+    padding: 0 6px;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    background: transparent;
+    box-shadow: none;
+    color: #25272c;
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 40px;
+    letter-spacing: -0.035em;
+}
+
+.Input[data-variant='workflow-title']:hover:not(:disabled) {
+    border-color: var(--granter-sky-500, #0ea5e9);
+    background: #fff;
+}
+
+.Input[data-variant='workflow-title']:focus,
+.Input[data-variant='workflow-title']:focus:hover {
+    border-color: var(--granter-sky-500, #0ea5e9);
+    background: #fff;
+    box-shadow: 0 0 0 2px rgb(14 165 233 / 10%);
+}
+
+.Input[data-variant='workflow-title']::placeholder {
+    color: #b2b4b9;
+    font-weight: 700;
+    opacity: 1;
+}
+
+.Input[data-variant='workflow-title'][aria-invalid='true'] {
+    border-color: var(--granter-red-500, #ef4444);
+    background: #fff;
+}
+
+.Input[data-variant='workflow-title']:disabled {
+    border-color: transparent;
+    background: transparent;
+    color: #8f9299;
+}
+
 .Input[type='date'] {
     color-scheme: light;
 }

@@ -4,7 +4,7 @@ import styles from './SectionFieldTextArea.module.scss';
 
 export type SectionFieldTextAreaProps = React.TextareaHTMLAttributes<HTMLTextAreaElement> & {
     className?: string;
-    variant?: 'default' | 'document';
+    variant?: 'default' | 'document' | 'workflow';
 };
 
 const SectionFieldTextArea = React.forwardRef<HTMLTextAreaElement, SectionFieldTextAreaProps>(

@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import styles from './SectionFieldInput.module.scss';
 
 export type SectionFieldInputSize = 'sm' | 'md' | 'lg';
-export type SectionFieldInputVariant = 'default' | 'embedded-label' | 'document';
+export type SectionFieldInputVariant = 'default' | 'embedded-label' | 'document' | 'workflow' | 'workflow-title';
 
 export type SectionFieldInputProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'> & {
     className?: string;

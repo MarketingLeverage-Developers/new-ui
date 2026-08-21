@@ -73,3 +73,38 @@
     border-color: transparent;
     background-color: transparent;
 }
+
+.TextArea[data-variant='workflow'] {
+    height: 84px;
+    min-height: 84px;
+    padding: 11px 13px;
+    border-color: #e8e9ec;
+    border-radius: 6px;
+    background-color: #fafafa;
+    box-shadow: none;
+    color: #2f3136;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 21px;
+}
+
+.TextArea[data-variant='workflow']:hover:not(:disabled) {
+    border-color: #d9dbe0;
+    background-color: #f7f7f8;
+}
+
+.TextArea[data-variant='workflow']:focus {
+    border-color: #9ca2ac;
+    background-color: #fff;
+    box-shadow: 0 0 0 2px rgb(37 39 44 / 6%);
+}
+
+.TextArea[data-variant='workflow'][aria-invalid='true'] {
+    border-color: var(--granter-red-500, #ef4444);
+    background-color: #fff;
+}
+
+.TextArea[data-variant='workflow']:disabled {
+    border-color: #eceef0;
+    background-color: #f4f4f5;
+}

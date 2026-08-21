@@ -1,0 +1,205 @@
+.Field {
+    display: flex;
+    width: 100%;
+    min-width: 0;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.Label {
+    display: inline-flex;
+    width: fit-content;
+    min-width: 0;
+    align-items: center;
+    gap: 2px;
+    color: #4b4f58;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 19px;
+}
+
+.Required {
+    flex: none;
+    color: var(--granter-red-500, #ef4444);
+}
+
+.Body {
+    display: flex;
+    width: 100%;
+    min-width: 0;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.Description,
+.Error {
+    margin: 0;
+    padding: 0 1px;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 18px;
+    white-space: pre-wrap;
+}
+
+.Description {
+    color: #92969e;
+}
+
+.Error {
+    color: var(--granter-red-500, #ef4444);
+}
+
+.Toggle {
+    min-height: 42px;
+    color: #4b4f58;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 20px;
+}
+
+.MultiSelectRoot {
+    position: relative;
+    width: 100%;
+    min-width: 0;
+}
+
+.MultiSelectTriggerWrap {
+    display: flex;
+    width: 100%;
+}
+
+.MultiSelectTrigger {
+    display: inline-flex;
+    width: 100%;
+    min-width: 0;
+    height: 42px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 0 13px;
+    border: 1px solid #e8e9ec;
+    border-radius: 6px;
+    background: #fafafa;
+    color: #2f3136;
+    cursor: pointer;
+    font-family: 'Pretendard', sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 20px;
+    transition: border-color 140ms ease, background-color 140ms ease, box-shadow 140ms ease;
+}
+
+.MultiSelectTrigger:hover:not(:disabled) {
+    border-color: #d9dbe0;
+    background: #f7f7f8;
+}
+
+.MultiSelectTrigger:focus-visible {
+    border-color: #9ca2ac;
+    outline: 0;
+    background: #fff;
+    box-shadow: 0 0 0 2px rgb(37 39 44 / 6%);
+}
+
+.MultiSelectTrigger:disabled {
+    border-color: #eceef0;
+    background: #f4f4f5;
+    color: #989ca4;
+    cursor: not-allowed;
+}
+
+.MultiSelectTrigger[data-invalid='true'] {
+    border-color: var(--granter-red-500, #ef4444);
+    background: #fff;
+}
+
+.MultiSelectValue {
+    min-width: 0;
+    flex: 1;
+    overflow: hidden;
+    text-align: left;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.MultiSelectValue[data-placeholder='true'] {
+    color: #989ca4;
+}
+
+.MultiSelectIcon {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    color: #92969e;
+    transition: transform 160ms ease;
+}
+
+.MultiSelectIcon[data-open='true'] {
+    transform: rotate(180deg);
+}
+
+.MultiSelectMenu {
+    display: flex;
+    max-height: 240px;
+    flex-direction: column;
+    gap: 2px;
+    padding: 4px;
+    border: 1px solid #e1e3e7;
+    border-radius: 8px;
+    background: #fff;
+    overflow-y: auto;
+    box-shadow: 0 8px 20px rgb(17 24 39 / 10%), 0 1px 2px rgb(17 24 39 / 4%);
+}
+
+.MultiSelectOption {
+    display: flex;
+    width: 100%;
+    min-height: 36px;
+    align-items: center;
+    gap: 9px;
+    border: 0;
+    border-radius: 6px;
+    padding: 7px 9px;
+    background: transparent;
+    color: #3e4148;
+    cursor: pointer;
+    font-family: 'Pretendard', sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 20px;
+    text-align: left;
+}
+
+.MultiSelectOption:hover:not(:disabled) {
+    background: #f5f6f7;
+}
+
+.MultiSelectOption:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.MultiSelectCheck {
+    display: inline-flex;
+    width: 17px;
+    height: 17px;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #cfd2d8;
+    border-radius: 4px;
+    background: #fff;
+    color: #fff;
+}
+
+.MultiSelectCheck[data-checked='true'] {
+    border-color: var(--granter-sky-500, #0ea5e9);
+    background: var(--granter-sky-500, #0ea5e9);
+}
+
+.MultiSelectCheck svg {
+    width: 12px;
+    height: 12px;
+    stroke-width: 2.5;
+}

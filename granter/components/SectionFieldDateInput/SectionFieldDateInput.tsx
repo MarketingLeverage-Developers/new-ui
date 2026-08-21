@@ -65,7 +65,7 @@ export type SectionFieldDateInputProps = {
     id?: string;
     required?: boolean;
     className?: string;
-    variant?: 'default' | 'document';
+    variant?: 'default' | 'document' | 'workflow';
     style?: React.CSSProperties;
     'aria-label'?: string;
 };

@@ -42,7 +42,7 @@ export type SectionFieldSelectProps<T extends string = string> = {
     matchTriggerWidth?: boolean;
     disabled?: boolean;
     size?: SectionFieldSelectSize;
-    variant?: 'default' | 'ghost' | 'document';
+    variant?: 'default' | 'ghost' | 'document' | 'workflow';
     searchable?: boolean;
     triggerProfileVariant?: 'default' | 'compact';
     searchPlaceholder?: string;
@@ -151,7 +151,7 @@ type SectionFieldSelectViewProps<T extends string = string> = {
     matchTriggerWidth: boolean;
     disabled?: boolean;
     size?: SectionFieldSelectSize;
-    variant?: 'default' | 'ghost' | 'document';
+    variant?: 'default' | 'ghost' | 'document' | 'workflow';
     searchable?: boolean;
     triggerProfileVariant: 'default' | 'compact';
     searchPlaceholder: string;

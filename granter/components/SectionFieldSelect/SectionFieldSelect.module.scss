@@ -134,6 +134,44 @@
     background-color: transparent;
 }
 
+.Root[data-variant='workflow'] .Trigger {
+    height: 42px;
+    min-height: 42px;
+    padding: 0 13px;
+    border-color: #e8e9ec;
+    border-radius: 6px;
+    background-color: #fafafa;
+    box-shadow: none;
+}
+
+.Root[data-variant='workflow'] .Trigger:hover:not(:disabled) {
+    border-color: #d9dbe0;
+    background-color: #f7f7f8;
+}
+
+.Root[data-variant='workflow'] .Trigger:focus-visible {
+    border-color: #9ca2ac;
+    background-color: #fff;
+    box-shadow: 0 0 0 2px rgb(37 39 44 / 6%);
+}
+
+.Root[data-variant='workflow'] .Trigger:disabled {
+    border-color: #eceef0;
+    background-color: #f4f4f5;
+}
+
+.Root[data-variant='workflow'] .Label {
+    color: #2f3136;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 20px;
+}
+
+.Root[data-variant='workflow'] .Label[data-placeholder='true'] {
+    color: #989ca4;
+    font-weight: 400;
+}
+
 .TriggerWrap {
     display: flex;
     width: 100%;
