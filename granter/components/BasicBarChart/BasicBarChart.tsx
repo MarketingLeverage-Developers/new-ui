@@ -29,6 +29,7 @@ export type BasicBarChartProps = {
     yTickFormatter?: (value: number) => string;
     yDomain?: Array<number | string | ((value: number) => number)>;
     valueFormatter?: (seriesKey: string, value: number, payloadItem?: unknown) => React.ReactNode;
+    onDatumClick?: (datum: BasicBarChartDatum, index: number) => void;
 };
 
 type TooltipPayloadItem = {
@@ -91,8 +92,23 @@ const BasicBarChart = ({
     yTickFormatter,
     yDomain,
     valueFormatter,
+    onDatumClick,
 }: BasicBarChartProps) => (
-    <BarChart width={width} height={height} data={data} margin={margin} barCategoryGap={barCategoryGap}>
+    <BarChart
+        width={width}
+        height={height}
+        data={data}
+        margin={margin}
+        barCategoryGap={barCategoryGap}
+        style={onDatumClick ? { cursor: 'pointer' } : undefined}
+        onClick={(chartState) => {
+            if (!onDatumClick) return;
+
+            const index = Number(chartState.activeTooltipIndex);
+            const datum = Number.isInteger(index) ? data[index] : undefined;
+            if (datum) onDatumClick(datum, index);
+        }}
+    >
         <CartesianGrid stroke="#EEF2F7" vertical={false} />
         <XAxis
             dataKey={xKey}
