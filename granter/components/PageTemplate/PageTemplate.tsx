@@ -1,5 +1,5 @@
 import React from 'react';
-import { FiChevronsLeft } from 'react-icons/fi';
+import { FiChevronsLeft, FiChevronsRight } from 'react-icons/fi';
 import { RiBuilding2Line, RiMenuLine } from 'react-icons/ri';
 import Aside from './components/Aside/Aside';
 import Header from './components/Header/Header';
@@ -74,7 +74,6 @@ const PageTemplate = ({
     const [isSidebarPreviewOpen, setSidebarPreviewOpen] = React.useState(false);
     const [isSubSidebarPreviewOpen, setSubSidebarPreviewOpen] = React.useState(false);
     const sidebarPreviewCloseTimerRef = React.useRef<number | null>(null);
-    const subSidebarPreviewCloseTimerRef = React.useRef<number | null>(null);
     const isSidebarOverlayMode = sidebarCollapsible && sidebarCollapseMode === 'overlay';
     const isSubSidebarOverlayMode =
         hasSubSidebar && subSidebarCollapsible && subSidebarCollapseMode === 'overlay';
@@ -109,12 +108,6 @@ const PageTemplate = ({
         window.clearTimeout(sidebarPreviewCloseTimerRef.current);
         sidebarPreviewCloseTimerRef.current = null;
     };
-    const clearSubSidebarPreviewCloseTimer = () => {
-        if (subSidebarPreviewCloseTimerRef.current === null) return;
-        window.clearTimeout(subSidebarPreviewCloseTimerRef.current);
-        subSidebarPreviewCloseTimerRef.current = null;
-    };
-
     const handleSidebarCollapse = () => {
         clearSidebarPreviewCloseTimer();
         setSidebarPreviewOpen(false);
@@ -127,14 +120,22 @@ const PageTemplate = ({
         updateSidebarCollapsed(false);
     };
     const handleSubSidebarCollapse = () => {
-        clearSubSidebarPreviewCloseTimer();
         setSubSidebarPreviewOpen(false);
         updateSubSidebarCollapsed(true);
     };
-    const handleSubSidebarExpand = () => {
-        clearSubSidebarPreviewCloseTimer();
+
+    const handleSubSidebarToggle = () => {
+        if (resolvedSubSidebarCollapsed) {
+            setSubSidebarPreviewOpen(false);
+            updateSubSidebarCollapsed(false);
+            return;
+        }
+        handleSubSidebarCollapse();
+    };
+
+    const handleSubSidebarPreviewToggle = () => {
         if (isSubSidebarOverlayMode && subSidebarExpandBehavior === 'overlay') {
-            setSubSidebarPreviewOpen(true);
+            setSubSidebarPreviewOpen((isOpen) => !isOpen);
             return;
         }
         setSubSidebarPreviewOpen(false);
@@ -155,20 +156,6 @@ const PageTemplate = ({
             sidebarPreviewCloseTimerRef.current = null;
         }, 120);
     };
-    const handleSubSidebarPreviewMouseEnter = () => {
-        if (!isSubSidebarOverlayMode || !resolvedSubSidebarCollapsed) return;
-        clearSubSidebarPreviewCloseTimer();
-        setSubSidebarPreviewOpen(true);
-    };
-    const handleSubSidebarPreviewMouseLeave = () => {
-        if (!isSubSidebarOverlayMode || !resolvedSubSidebarCollapsed) return;
-        clearSubSidebarPreviewCloseTimer();
-        subSidebarPreviewCloseTimerRef.current = window.setTimeout(() => {
-            setSubSidebarPreviewOpen(false);
-            subSidebarPreviewCloseTimerRef.current = null;
-        }, 120);
-    };
-
     React.useEffect(() => {
         if (!resolvedSidebarCollapsed) {
             clearSidebarPreviewCloseTimer();
@@ -177,20 +164,17 @@ const PageTemplate = ({
     }, [resolvedSidebarCollapsed]);
     React.useEffect(() => {
         if (!resolvedSubSidebarCollapsed) {
-            clearSubSidebarPreviewCloseTimer();
             setSubSidebarPreviewOpen(false);
         }
     }, [resolvedSubSidebarCollapsed]);
     React.useEffect(() => {
         if (subSidebarOverlayCloseKey === undefined) return;
-        clearSubSidebarPreviewCloseTimer();
         setSubSidebarPreviewOpen(false);
     }, [subSidebarOverlayCloseKey]);
 
     React.useEffect(
         () => () => {
             clearSidebarPreviewCloseTimer();
-            clearSubSidebarPreviewCloseTimer();
         },
         []
     );
@@ -243,36 +227,39 @@ const PageTemplate = ({
                 </aside>
             ) : null}
             {subSidebar ? (
-                <SubSidebar
-                    className={subSidebarClassName}
-                    onMouseEnter={handleSubSidebarPreviewMouseEnter}
-                    onMouseLeave={handleSubSidebarPreviewMouseLeave}
-                >
+                <SubSidebar className={subSidebarClassName}>
                     {resolvedSubSidebarCollapsed
                         ? subSidebarCollapsedContent ?? null
                         : subSidebar}
                 </SubSidebar>
             ) : null}
-            {subSidebarCollapsible && hasSubSidebar && (!resolvedSubSidebarCollapsed || showSubSidebarOverlay) ? (
-                <Tooltip content="서브 사이드바 닫기" side="right">
+            {subSidebarCollapsible && hasSubSidebar ? (
+                <Tooltip
+                    content={resolvedSubSidebarCollapsed ? '서브 사이드바 열기' : '서브 사이드바 닫기'}
+                    side="right"
+                >
                     <button
                         type="button"
                         className={styles.SubSidebarToggle}
                         data-collapsed={resolvedSubSidebarCollapsed ? 'true' : 'false'}
                         data-overlay-open={isSubSidebarPreviewOpen ? 'true' : 'false'}
-                        onClick={handleSubSidebarCollapse}
-                        aria-label={subSidebarCollapseAriaLabel}
+                        onClick={handleSubSidebarToggle}
+                        aria-label={
+                            resolvedSubSidebarCollapsed
+                                ? '서브 사이드바 열기'
+                                : subSidebarCollapseAriaLabel
+                        }
                     >
-                        <FiChevronsLeft size={14} />
+                        {resolvedSubSidebarCollapsed ? (
+                            <FiChevronsRight size={14} />
+                        ) : (
+                            <FiChevronsLeft size={14} />
+                        )}
                     </button>
                 </Tooltip>
             ) : null}
             {showSubSidebarOverlay ? (
-                <aside
-                    className={styles.SubSidebarOverlayPanel}
-                    onMouseEnter={handleSubSidebarPreviewMouseEnter}
-                    onMouseLeave={handleSubSidebarPreviewMouseLeave}
-                >
+                <aside className={styles.SubSidebarOverlayPanel}>
                     {subSidebar}
                 </aside>
             ) : null}
@@ -293,16 +280,18 @@ const PageTemplate = ({
                 ) : null}
                 {subSidebarCollapsible &&
                 hasSubSidebar &&
-                resolvedSubSidebarCollapsed &&
-                !showSubSidebarOverlay ? (
-                    <Tooltip content="서브 사이드바 열기" side="right" align="start">
+                resolvedSubSidebarCollapsed ? (
+                    <Tooltip
+                        content={showSubSidebarOverlay ? '플로팅 서브 사이드바 닫기' : '플로팅 서브 사이드바 열기'}
+                        side="right"
+                        align="start"
+                    >
                         <button
                             type="button"
                             className={styles.HeaderSubSidebarOpenButton}
-                            onClick={handleSubSidebarExpand}
-                            onMouseEnter={handleSubSidebarPreviewMouseEnter}
-                            onMouseLeave={handleSubSidebarPreviewMouseLeave}
-                            aria-label="서브 사이드바 열기"
+                            onClick={handleSubSidebarPreviewToggle}
+                            aria-label={showSubSidebarOverlay ? '플로팅 서브 사이드바 닫기' : '플로팅 서브 사이드바 열기'}
+                            aria-expanded={showSubSidebarOverlay}
                         >
                             <RiBuilding2Line size={14} />
                         </button>
