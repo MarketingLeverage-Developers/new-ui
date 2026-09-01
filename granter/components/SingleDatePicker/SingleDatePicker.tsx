@@ -61,7 +61,7 @@ const SingleDatePicker = ({ date, onChangeDate, className, ...props }: SingleDat
                 showOutsideDays
                 fixedWeeks
                 selected={safeDate}
-                onSelect={(next) => {
+                onSelect={(next: Date | undefined) => {
                     if (!next) return;
                     onChangeDate(next);
                 }}
