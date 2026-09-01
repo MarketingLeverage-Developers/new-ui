@@ -48,6 +48,7 @@ export type SectionFieldSelectProps<T extends string = string> = {
     searchPlaceholder?: string;
     searchEmptyText?: React.ReactNode;
     ariaLabelledBy?: string;
+    renderTriggerValue?: (option: SectionFieldSelectOption<T>) => React.ReactNode;
 };
 
 const normalizeText = (value: string) => value.trim().toLowerCase();
@@ -157,6 +158,7 @@ type SectionFieldSelectViewProps<T extends string = string> = {
     searchPlaceholder: string;
     searchEmptyText: React.ReactNode;
     ariaLabelledBy?: string;
+    renderTriggerValue?: (option: SectionFieldSelectOption<T>) => React.ReactNode;
 };
 
 const SectionFieldSelectView = <T extends string>({
@@ -174,6 +176,7 @@ const SectionFieldSelectView = <T extends string>({
     searchPlaceholder,
     searchEmptyText,
     ariaLabelledBy,
+    renderTriggerValue,
 }: SectionFieldSelectViewProps<T>) => {
     const { selectValue } = useSelect();
     const { isOpen } = useDropdown();
@@ -213,7 +216,8 @@ const SectionFieldSelectView = <T extends string>({
                         data-profile-variant={triggerProfileVariant}
                     >
                         {selectedOption
-                            ? renderOptionContent(selectedOption, triggerProfileVariant, true)
+                            ? renderTriggerValue?.(selectedOption) ??
+                              renderOptionContent(selectedOption, triggerProfileVariant, true)
                             : placeholder}
                     </span>
 
@@ -278,6 +282,7 @@ const SectionFieldSelect = (<T extends string = string>({
     searchPlaceholder = '검색어를 입력해주세요.',
     searchEmptyText = '검색 결과가 없습니다.',
     ariaLabelledBy,
+    renderTriggerValue,
 }: SectionFieldSelectProps<T>) => (
     <Select value={value} defaultValue={defaultValue} onChange={(nextValue) => onChange(nextValue as T)}>
         <Dropdown>
@@ -296,6 +301,7 @@ const SectionFieldSelect = (<T extends string = string>({
                 searchPlaceholder={searchPlaceholder}
                 searchEmptyText={searchEmptyText}
                 ariaLabelledBy={ariaLabelledBy}
+                renderTriggerValue={renderTriggerValue}
             />
         </Dropdown>
     </Select>
