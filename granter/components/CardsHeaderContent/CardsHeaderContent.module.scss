@@ -217,7 +217,7 @@
     color: var(--granter-gray-500);
 }
 
-@media (max-width: 1280px) {
+@media (min-width: 768px) and (max-width: 900px) {
     .CardsHeaderContent {
         flex-wrap: wrap;
         row-gap: 10px;
@@ -236,5 +236,37 @@
     .Center {
         order: 3;
         justify-content: flex-start;
+    }
+}
+
+@media (max-width: 767px) {
+    .DateRangeControl {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .DateEdgeButton {
+        width: 40px;
+        flex-basis: 40px;
+    }
+
+    .DateLabelTrigger {
+        min-width: 0;
+        flex: 1;
+    }
+
+    .DateLabelButton {
+        width: 100%;
+        padding: 0 8px;
+    }
+
+    .DateLabel {
+        overflow: hidden;
+        font-size: 14px;
+        text-overflow: ellipsis;
+    }
+
+    .DateDropdownContent {
+        max-width: calc(100vw - 24px);
     }
 }

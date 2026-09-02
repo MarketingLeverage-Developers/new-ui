@@ -497,3 +497,54 @@
         z-index: 30;
     }
 }
+
+@media (max-width: 767px) {
+    .Root {
+        width: min(337px, calc(100vw - 24px));
+        max-width: calc(100vw - 24px);
+    }
+
+    .LeftPreset,
+    .RightMonths {
+        display: none;
+    }
+
+    .Center {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .TopInputs {
+        gap: 6px;
+    }
+
+    .InputBlock,
+    .InputWrap,
+    .InputBox {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .InputBlock {
+        flex: 1;
+    }
+
+    .InputBox {
+        padding: 0 5px;
+        font-size: 12px;
+    }
+
+    .CalendarBody {
+        :global {
+            .rdp-month_grid {
+                table-layout: fixed;
+                padding-right: 8px;
+                padding-left: 8px;
+            }
+
+            .rdp-day {
+                width: auto;
+            }
+        }
+    }
+}
