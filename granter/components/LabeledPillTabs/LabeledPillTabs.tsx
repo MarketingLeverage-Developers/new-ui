@@ -1,15 +1,10 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo, useRef } from 'react';
 import classNames from 'classnames';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import { useLabeledPillTabsScroll } from './useLabeledPillTabsScroll';
 import styles from './LabeledPillTabs.module.scss';
 
-export type LabeledPillTabsTone =
-    | 'green'
-    | 'orange'
-    | 'purple'
-    | 'teal'
-    | 'gray';
+export type LabeledPillTabsTone = 'green' | 'orange' | 'purple' | 'teal' | 'gray';
 
 export type LabeledPillTabsVariant = 'default' | 'floating';
 export type LabeledPillTabsCarouselDirection = 'horizontal' | 'vertical';
@@ -25,10 +20,7 @@ export type LabeledPillTabsItem<T extends string = string> = {
     disabled?: boolean;
 };
 
-export type LabeledPillTabsProps<T extends string = string> = Omit<
-    React.HTMLAttributes<HTMLDivElement>,
-    'onChange'
-> & {
+export type LabeledPillTabsProps<T extends string = string> = Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> & {
     label?: React.ReactNode;
     items: LabeledPillTabsItem<T>[];
     value?: T;
@@ -39,6 +31,7 @@ export type LabeledPillTabsProps<T extends string = string> = Omit<
     tabsClassName?: string;
     carousel?: boolean;
     carouselDirection?: LabeledPillTabsCarouselDirection;
+    carouselSwipe?: boolean;
     fill?: boolean;
 };
 
@@ -54,11 +47,14 @@ const LabeledPillTabs = <T extends string = string>({
     tabsClassName,
     carousel = false,
     carouselDirection = 'horizontal',
+    carouselSwipe = false,
     fill = false,
     ...props
 }: LabeledPillTabsProps<T>) => {
     const activeIndex = items.findIndex((item) => item.value === value);
     const currentIndex = activeIndex >= 0 ? activeIndex : 0;
+    const touchStartRef = useRef<{ x: number; y: number } | null>(null);
+    const didSwipeRef = useRef(false);
     const displayedItems = useMemo(
         () =>
             items.map((item, index) => {
@@ -121,6 +117,56 @@ const LabeledPillTabs = <T extends string = string>({
         },
         [carousel, onChange, onItemClick]
     );
+    const moveCarousel = useCallback(
+        (offset: number) => {
+            if (!carousel || items.length < 2) return;
+
+            const nextIndex = (currentIndex + offset + items.length) % items.length;
+            const nextItem = items[nextIndex];
+            if (!nextItem || nextItem.disabled) return;
+
+            onChange?.(nextItem.value);
+        },
+        [carousel, currentIndex, items, onChange]
+    );
+    const handleCarouselTouchStart = useCallback(
+        (event: React.TouchEvent<HTMLDivElement>) => {
+            if (!carouselSwipe || !carousel || items.length < 2) return;
+
+            const touch = event.touches[0];
+            if (!touch) return;
+
+            touchStartRef.current = { x: touch.clientX, y: touch.clientY };
+        },
+        [carousel, carouselSwipe, items.length]
+    );
+    const handleCarouselTouchEnd = useCallback(
+        (event: React.TouchEvent<HTMLDivElement>) => {
+            const start = touchStartRef.current;
+            touchStartRef.current = null;
+
+            if (!carouselSwipe || !start) return;
+
+            const touch = event.changedTouches[0];
+            if (!touch) return;
+
+            const deltaX = touch.clientX - start.x;
+            const deltaY = touch.clientY - start.y;
+            const primaryDelta = carouselDirection === 'vertical' ? deltaY : deltaX;
+            const secondaryDelta = carouselDirection === 'vertical' ? deltaX : deltaY;
+
+            if (Math.abs(primaryDelta) < 28 || Math.abs(primaryDelta) <= Math.abs(secondaryDelta)) {
+                return;
+            }
+
+            didSwipeRef.current = true;
+            moveCarousel(primaryDelta < 0 ? 1 : -1);
+            window.setTimeout(() => {
+                didSwipeRef.current = false;
+            }, 120);
+        },
+        [carouselDirection, carouselSwipe, moveCarousel]
+    );
 
     return (
         <div
@@ -157,6 +203,8 @@ const LabeledPillTabs = <T extends string = string>({
                         data-carousel-has-prev={carousel && hasPrevVisible ? 'true' : 'false'}
                         data-carousel-has-next={carousel && hasNextVisible ? 'true' : 'false'}
                         data-fill={fill ? 'true' : 'false'}
+                        onTouchStart={handleCarouselTouchStart}
+                        onTouchEnd={handleCarouselTouchEnd}
                     >
                         {displayedItems.map(({ item, key, carouselRole, carouselSide }, itemIndex) => {
                             const active = item.value === value;
@@ -181,6 +229,7 @@ const LabeledPillTabs = <T extends string = string>({
                                         data-fill={fill ? 'true' : 'false'}
                                         disabled={item.disabled}
                                         onClick={() => {
+                                            if (didSwipeRef.current) return;
                                             if (item.disabled) return;
                                             handleItemSelect(item.value, active);
                                         }}
