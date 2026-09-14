@@ -63,22 +63,14 @@
 
 .Arrow {
     fill: var(--granter-white);
+    overflow: visible;
 }
 
-.Content[data-side='top'] .Arrow {
-    filter: drop-shadow(0 -1px 0 var(--granter-gray-200));
-}
-
-.Content[data-side='bottom'] .Arrow {
-    filter: drop-shadow(0 1px 0 var(--granter-gray-200));
-}
-
-.Content[data-side='left'] .Arrow {
-    filter: drop-shadow(-1px 0 0 var(--granter-gray-200));
-}
-
-.Content[data-side='right'] .Arrow {
-    filter: drop-shadow(1px 0 0 var(--granter-gray-200));
+.ArrowOutline {
+    fill: none;
+    stroke: var(--granter-gray-200);
+    stroke-width: 1px;
+    stroke-linejoin: round;
 }
 
 @keyframes TooltipFadeIn {
