@@ -22,6 +22,7 @@ type ContentProps = React.HTMLAttributes<HTMLDivElement> & {
     matchTriggerWidth?: boolean;
     collisionPadding?: number;
     keepMounted?: boolean;
+    autoFocus?: boolean;
 };
 
 const getPortalRoot = () => {
@@ -148,6 +149,8 @@ const Content: React.FC<ContentProps> = ({
     matchTriggerWidth,
     collisionPadding = 8,
     keepMounted = true,
+    autoFocus = true,
+    role = 'menu',
     className,
     style: styleProp,
     ...rest
@@ -264,6 +267,7 @@ const Content: React.FC<ContentProps> = ({
     useEffect(() => {
         if (isOpen) {
             wasOpenRef.current = true;
+            if (!autoFocus) return;
             const el = menuRef.current;
             const focusable = getFirstFocusable(el);
             if (focusable) focusable.focus();
@@ -282,7 +286,7 @@ const Content: React.FC<ContentProps> = ({
 
         if (lastFocusedEl?.isConnected && lastFocusedEl.focus) lastFocusedEl.focus();
         else if (anchorRef.current) anchorRef.current.focus();
-    }, [isOpen, lastFocusedEl, anchorRef]);
+    }, [isOpen, lastFocusedEl, anchorRef, autoFocus]);
 
     if (!portalRoot) return null;
     if (!keepMounted && !isOpen) return null;
@@ -290,7 +294,7 @@ const Content: React.FC<ContentProps> = ({
     const cn = [styles.Content, isOpen ? styles.Open : styles.Closed, className].filter(Boolean).join(' ');
 
     return createPortal(
-        <div {...rest} id={menuId} ref={menuRef} role="menu" className={cn} style={style} tabIndex={-1}>
+        <div {...rest} id={menuId} ref={menuRef} role={role} className={cn} style={style} tabIndex={-1}>
             {children}
         </div>,
         portalRoot
