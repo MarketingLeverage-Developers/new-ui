@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef } from 'react';
 
 type Props = {
     total: number;
+    totalPages?: number;
     page: number;
     size: number;
     onChange: (page: number) => void;
@@ -12,13 +13,16 @@ type Props = {
 const ROOT_MARGIN = '200px';
 const SCROLL_THRESHOLD_PX = 200;
 
-export const ListInfiniteScroll = ({ total, page, size, onChange, isLoading, scrollEl }: Props) => {
+export const ListInfiniteScroll = ({ total, totalPages: totalPagesProp, page, size, onChange, isLoading, scrollEl }: Props) => {
     const triggerRef = useRef<HTMLDivElement | null>(null);
     const lastRequestedPageRef = useRef<number | null>(null);
     const requestedFromPageRef = useRef<number | null>(null);
     const wasIntersectingRef = useRef(false);
 
-    const totalPages = useMemo(() => (size > 0 ? Math.ceil(total / size) : 0), [total, size]);
+    const totalPages = useMemo(
+        () => Math.max(0, totalPagesProp ?? (size > 0 ? Math.ceil(total / size) : 0)),
+        [total, totalPagesProp, size]
+    );
     const hasMore = totalPages > 0 && page < totalPages;
     const nextPage = page + 1;
     const canLoad = hasMore && !isLoading;
