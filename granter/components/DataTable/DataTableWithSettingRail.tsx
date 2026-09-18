@@ -48,6 +48,10 @@ const DataTableWithSettingRail = <T,>({
     onFilterChange,
     filterMode = 'internal',
     filterOptionsData,
+    filterOptionsByKey,
+    filterOptionLabel,
+    filterOptionsStatus,
+    onFilterOpenChange,
     fillContainerWidth = true,
     enableVirtualization = false,
     virtualRowHeight,
@@ -112,6 +116,10 @@ const DataTableWithSettingRail = <T,>({
                 onFilterChange={onFilterChange}
                 filterMode={filterMode}
                 filterOptionsData={filterOptionsData}
+                filterOptionsByKey={filterOptionsByKey}
+                filterOptionLabel={filterOptionLabel}
+                filterOptionsStatus={filterOptionsStatus}
+                onFilterOpenChange={onFilterOpenChange}
                 fillContainerWidth={fillContainerWidth}
                 enableVirtualization={enableVirtualization}
                 virtualRowHeight={virtualRowHeight}

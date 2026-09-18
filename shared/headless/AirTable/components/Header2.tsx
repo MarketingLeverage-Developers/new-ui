@@ -86,6 +86,8 @@ const SortIcon = ({
     return <FaSort size={13} color="var(--granter-gray-400, #94a3b8)" aria-hidden="true" />;
 };
 
+const EMPTY_FILTER_OPTIONS: string[] = [];
+
 const DefaultColumnFilter = <T,>({
     colKey,
     data,
@@ -93,8 +95,14 @@ const DefaultColumnFilter = <T,>({
     sortConfigByKey,
     filterState,
     setFilterState,
+    optionValues,
+    optionLabel,
+    optionsStatus,
 }: {
     colKey: string;
+    optionValues?: string[];
+    optionLabel?: (columnKey: string, value: string) => string;
+    optionsStatus?: React.ReactNode;
     data: T[];
     columnByKey: Map<
         string,
@@ -105,6 +113,8 @@ const DefaultColumnFilter = <T,>({
     setFilterState: (next: FilterState) => void;
 }) => {
     const [keyword, setKeyword] = useState('');
+    const [optionsScrollTop, setOptionsScrollTop] = useState(0);
+    const optionsContainerRef = useRef<HTMLDivElement>(null);
     const config = sortConfigByKey.get(colKey);
 
     useEffect(() => { setKeyword(''); }, [colKey]);
@@ -139,6 +149,12 @@ const DefaultColumnFilter = <T,>({
     };
 
     const options = useMemo(() => {
+        if (optionValues) {
+            const selected = filterState[colKey];
+            return [...new Set([...optionValues, ...(selected?.included ?? []), ...(selected?.excluded ?? [])])]
+                .map((key) => ({ key, label: optionLabel?.(colKey, key) ?? formatFilterLabel(key), count: undefined as number | undefined }))
+                .sort((a, b) => a.label.localeCompare(b.label, undefined, { numeric: true, sensitivity: 'base' }));
+        }
         if (!config?.sortValue) return [];
         const map = new Map<string, { key: string; label: string; count: number }>();
         const column = columnByKey.get(colKey);
@@ -173,13 +189,20 @@ const DefaultColumnFilter = <T,>({
         const list = Array.from(map.values());
         list.sort((a, b) => a.label.localeCompare(b.label, undefined, { numeric: true, sensitivity: 'base' }));
         return list;
-    }, [config, data, colKey, columnByKey]);
+    }, [config, data, colKey, columnByKey, optionValues, optionLabel, filterState]);
 
     const filteredOptions = useMemo(() => {
         const q = keyword.trim().toLowerCase();
         if (!q) return options;
         return options.filter((opt) => opt.label.toLowerCase().includes(q));
     }, [options, keyword]);
+
+    const virtualOptionStart = optionValues ? Math.min(Math.max(0, filteredOptions.length - 1), Math.max(0, Math.floor(optionsScrollTop / 36) - 4)) : 0;
+    const visibleOptions = optionValues ? filteredOptions.slice(virtualOptionStart, virtualOptionStart + 16) : filteredOptions;
+    useEffect(() => {
+        setOptionsScrollTop(0);
+        if (optionsContainerRef.current) optionsContainerRef.current.scrollTop = 0;
+    }, [keyword, colKey]);
 
     return (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -197,7 +220,10 @@ const DefaultColumnFilter = <T,>({
                     fontSize: 13,
                 }}
             />
+            {optionsStatus ? <div role="status">{optionsStatus}</div> : null}
             <div
+                ref={optionsContainerRef}
+                onScroll={(event) => setOptionsScrollTop(event.currentTarget.scrollTop)}
                 style={{
                     display: 'flex',
                     flexDirection: 'column',
@@ -206,18 +232,20 @@ const DefaultColumnFilter = <T,>({
                     overflowY: 'auto',
                 }}
             >
-                {filteredOptions.length === 0 ? (
+                {optionValues && virtualOptionStart > 0 ? <div style={{ height: virtualOptionStart * 36 - 4, flexShrink: 0 }} /> : null}
+                {filteredOptions.length === 0 ? (optionsStatus ? null : (
                     <div style={{ padding: '8px 4px', color: getThemeColor('Gray2'), fontSize: 12 }}>
                         결과 없음
                     </div>
-                ) : (
-                    filteredOptions.map((opt) => {
+                )) : (
+                    visibleOptions.map((opt) => {
                         const checked = isChecked(opt.key);
                         return (
                             <label
                                 key={opt.key || '__empty__'}
                                 style={{
                                     width: '100%',
+                                    ...(optionValues ? { height: 32, minHeight: 32, boxSizing: 'border-box' as const, flexShrink: 0 } : {}),
                                     background: isFilterApplied && !checked ? getThemeColor('Gray7') : 'transparent',
                                     borderRadius: 6,
                                     padding: '6px 8px',
@@ -245,6 +273,7 @@ const DefaultColumnFilter = <T,>({
                                     <input
                                         type="checkbox"
                                         checked={checked}
+                                        disabled={Boolean(optionsStatus)}
                                         onChange={() => toggleInclude(opt.key)}
                                         style={{
                                             width: 14,
@@ -269,6 +298,9 @@ const DefaultColumnFilter = <T,>({
                         );
                     })
                 )}
+                {optionValues && virtualOptionStart + visibleOptions.length < filteredOptions.length ? (
+                    <div style={{ height: (filteredOptions.length - virtualOptionStart - visibleOptions.length) * 36 - 4, flexShrink: 0 }} />
+                ) : null}
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <span style={{ fontSize: 11, color: getThemeColor('Gray2') }}>
@@ -574,6 +606,18 @@ export const Header2 = <T,>({ className, headerCellClassName, resizeHandleClassN
         y: number;
     }>({ open: false, colKey: null, x: 0, y: 0 });
 
+    const notifiedFilterKey = useRef<string | null>(null);
+    const onFilterOpenChange = props.onFilterOpenChange;
+    useEffect(() => {
+        const key = filterPopup.open ? filterPopup.colKey : null;
+        if (key === notifiedFilterKey.current) return;
+        notifiedFilterKey.current = key;
+        onFilterOpenChange?.(key);
+    }, [filterPopup.open, filterPopup.colKey, onFilterOpenChange]);
+    useEffect(() => () => {
+        if (notifiedFilterKey.current !== null) onFilterOpenChange?.(null);
+    }, [onFilterOpenChange]);
+
     const openFilter = useCallback((colKey: string, e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         e.stopPropagation();
@@ -722,6 +766,9 @@ export const Header2 = <T,>({ className, headerCellClassName, resizeHandleClassN
             <DefaultColumnFilter<T>
                 colKey={col.key}
                 data={filterOptionsData}
+                optionValues={props.filterOptionsByKey ? (props.filterOptionsByKey[col.key] ?? EMPTY_FILTER_OPTIONS) : undefined}
+                optionLabel={props.filterOptionLabel}
+                optionsStatus={props.filterOptionsStatus}
                 columnByKey={columnByKey}
                 sortConfigByKey={sortConfigByKey}
                 filterState={filterState}
@@ -734,6 +781,9 @@ export const Header2 = <T,>({ className, headerCellClassName, resizeHandleClassN
         columnRow.columns,
         sortConfigByKey,
         filterOptionsData,
+        props.filterOptionsByKey,
+        props.filterOptionLabel,
+        props.filterOptionsStatus,
         columnByKey,
         filterState,
         setFilterState,
@@ -840,10 +890,9 @@ export const Header2 = <T,>({ className, headerCellClassName, resizeHandleClassN
                         const sortConfig = sortConfigByKey.get(colKey);
                         const isSortable = !!sortConfig;
                         const sortDirection = sortState?.key === colKey ? sortState.direction : null;
-                        const hasFilterButton = !!col.filter || !!sortConfig?.sortValue;
-                        const isFilterActive = (filterState[colKey]?.included?.length ?? 0) > 0;
-                        const actionPaddingRight = 12 + (hasFilterButton ? 28 : 0) + (isSortable ? 24 : 0);
-                        const sortButtonRight = hasFilterButton ? 42 : 14;
+                        const hasFilterButton = !columnByKey.get(colKey)?.disableFiltering && (!!col.filter || !!sortConfig?.sortValue);
+                        const isFilterActive = (filterState[colKey]?.included?.length ?? 0) > 0 ||
+                            (filterState[colKey]?.excluded?.length ?? 0) > 0;
                         const pinnedStyle: React.CSSProperties = isPinned
                             ? {
                                   ...getPinnedStyle(colKey, pinnedHeaderBg ?? getThemeColor('Primary1'), {
@@ -882,9 +931,10 @@ export const Header2 = <T,>({ className, headerCellClassName, resizeHandleClassN
                                     data-col-header-content="true"
                                     style={{
                                         display: 'flex',
+                                        flex: '1 1 auto',
                                         alignItems: 'center',
-                                        gap: 8,
-                                        paddingRight: actionPaddingRight,
+                                        gap: 4,
+                                        width: '100%',
                                         minWidth: 0,
                                         overflow: 'hidden',
                                     }}
@@ -901,84 +951,82 @@ export const Header2 = <T,>({ className, headerCellClassName, resizeHandleClassN
                                     >
                                         {shouldHideLeafHeaderLabel ? null : col.render(colKey, data)}
                                     </div>
+
+                                    {isSortable || hasFilterButton ? (
+                                        <div
+                                            data-col-header-actions="true"
+                                            style={{ display: 'inline-flex', alignItems: 'center', gap: 4, flex: '0 0 auto' }}
+                                        >
+                                            {isSortable && (
+                                                <button
+                                                    type="button"
+                                                    data-col-sort-btn="true"
+                                                    onMouseDownCapture={stopOnly}
+                                                    onClick={(e) => {
+                                                        e.preventDefault();
+                                                        e.stopPropagation();
+                                                        handleSortToggle(colKey);
+                                                    }}
+                                                    style={{
+                                                        flex: '0 0 16px',
+                                                        width: 16,
+                                                        height: 16,
+                                                        padding: 0,
+                                                        borderRadius: 0,
+                                                        border: 'none',
+                                                        background: 'transparent',
+                                                        color: sortDirection
+                                                            ? getThemeColor('Black1')
+                                                            : 'var(--granter-gray-200, #94a3b8)',
+                                                        cursor: 'pointer',
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        justifyContent: 'center',
+                                                    }}
+                                                    title={
+                                                        sortDirection === 'asc'
+                                                            ? '오름차순'
+                                                            : sortDirection === 'desc'
+                                                            ? '내림차순'
+                                                            : '정렬'
+                                                    }
+                                                >
+                                                    <SortIcon direction={sortDirection} activeColor={sortActiveColor} />
+                                                </button>
+                                            )}
+
+                                            {hasFilterButton && (
+                                                <button
+                                                    type="button"
+                                                    data-col-menu-btn="true"
+                                                    onMouseDownCapture={stopOnly}
+                                                    onClick={(e) => openFilter(colKey, e)}
+                                                    style={{
+                                                        flex: '0 0 18px',
+                                                        width: 18,
+                                                        height: 18,
+                                                        padding: 0,
+                                                        borderRadius: 0,
+                                                        border: 'none',
+                                                        background: 'transparent',
+                                                        color: getThemeColor('Black1'),
+                                                        cursor: 'pointer',
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        justifyContent: 'center',
+                                                    }}
+                                                    title="Filter"
+                                                >
+                                                    {isFilterActive ? (
+                                                        <VscFilterFilled size={14} color={getThemeColor('Primary1')} />
+                                                    ) : (
+                                                        <VscFilter size={14} color={getThemeColor('Gray2')} />
+                                                    )}
+                                                </button>
+                                            )}
+                                        </div>
+                                    ) : null}
                                 </div>
-
-                                {isSortable && (
-                                    <button
-                                        type="button"
-                                        data-col-sort-btn="true"
-                                        onMouseDownCapture={stopOnly}
-                                        onClick={(e) => {
-                                            e.preventDefault();
-                                            e.stopPropagation();
-                                            handleSortToggle(colKey);
-                                        }}
-                                        style={{
-                                            position: 'absolute',
-                                            top: '50%',
-                                            transform: 'translateY(-50%)',
-                                            right: sortButtonRight,
-                                            width: 20,
-                                            height: '100%',
-                                            borderRadius: 0,
-                                            border: 'none',
-                                            background: 'transparent',
-                                            color: sortDirection
-                                                ? getThemeColor('Black1')
-                                                : 'var(--granter-gray-200, #94a3b8)',
-                                            cursor: 'pointer',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            zIndex: 40,
-                                        }}
-                                        title={
-                                            sortDirection === 'asc'
-                                                ? '오름차순'
-                                                : sortDirection === 'desc'
-                                                ? '내림차순'
-                                                : '정렬'
-                                        }
-                                    >
-                                        <SortIcon
-                                            direction={sortDirection}
-                                            activeColor={sortActiveColor}
-                                        />
-                                    </button>
-                                )}
-
-                                {hasFilterButton && (
-                                    <button
-                                        type="button"
-                                        data-col-menu-btn="true"
-                                        onMouseDownCapture={stopOnly}
-                                        onClick={(e) => openFilter(colKey, e)}
-                                        style={{
-                                            position: 'absolute',
-                                            top: '50%',
-                                            transform: 'translateY(-50%)',
-                                            right: 14,
-                                            width: 18,
-                                            height: 18,
-                                            borderRadius: 0,
-                                            border: 'none',
-                                            background: 'transparent',
-                                            color: getThemeColor('Black1'),
-                                            cursor: 'pointer',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            zIndex: 40,
-                                        }}
-                                        title="Filter"
-                                    >
-                                        {isFilterActive ? (
-                                            <VscFilterFilled size={14} color={getThemeColor('Primary1')} />
-                                        ) : (
-                                            <VscFilter size={14} color={getThemeColor('Gray2')} />
-                                        )}
-                                    </button>
-                                )}
 
                                 <div
                                     className={resizeHandleClassName}

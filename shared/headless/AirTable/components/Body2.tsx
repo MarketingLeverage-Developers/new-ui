@@ -1,5 +1,5 @@
 import React, { memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import type { CellRenderMeta, SelectionState } from '../AirTable2';
+import type { CellAlign, CellRenderMeta, SelectionState } from '../AirTable2';
 import { useAirTableContext } from '../AirTable2';
 import { getThemeColor } from '../../../utils/css/getThemeColor';
 import styles from './Body.module.scss';
@@ -34,6 +34,7 @@ type BodyRowData<T> = {
     level: number;
     cells: Array<{
         key: string;
+        cellAlign?: CellAlign;
         render: (it: T, idx: number, meta: CellRenderMeta<T>) => React.ReactNode;
     }>;
 };
@@ -85,6 +86,26 @@ const INDENT_PX = 24;
 const MAX_EXPANDED_DETAIL_ROWS = 3;
 const TRANSITION_MS = 220;
 const APPEAR_DELAY_MS = 32;
+
+const CELL_INTERACTIVE_SELECTOR = [
+    'input', 'textarea', 'select', 'button', 'a[href]', 'label',
+    '[contenteditable="true"]', '[contenteditable=""]',
+    '[data-cell-interactive="true"]', '[data-airtable-interactive="true"]', '[data-row-toggle="true"]',
+].join(', ');
+
+const isInteractiveCellTarget = (target: EventTarget | null) => {
+    const element = target as HTMLElement | null;
+    if (!element) return false;
+    if (element.isContentEditable) return true;
+    return Boolean(element.closest(CELL_INTERACTIVE_SELECTOR));
+};
+
+const getCellJustifyContent = (cellAlign?: CellAlign): React.CSSProperties['justifyContent'] | undefined => {
+    if (cellAlign === 'left') return 'flex-start';
+    if (cellAlign === 'right') return 'flex-end';
+    if (cellAlign === 'center') return 'center';
+    return undefined;
+};
 
 const findStartIndex = (measurements: RowMeasurement[], target: number) => {
     if (measurements.length === 0) return 0;
@@ -359,6 +380,7 @@ const BodyRowInner = <T,>({
                     const isRightEdge = selected && rangeRight !== null && ci === rangeRight;
                     const isIndentTarget = colKey === indentTargetKey;
                     const indentPadding = isChild ? row.level * INDENT_PX : 0;
+                    const justifyContent = getCellJustifyContent(cell.cellAlign);
 
                     return (
                         <div
@@ -380,11 +402,9 @@ const BodyRowInner = <T,>({
                             onMouseDown={(e) => {
                                 if (draggingKey) return;
                                 if (e.button !== 0) return;
+                                if (isInteractiveCellTarget(e.target)) return;
+
                                 e.preventDefault();
-
-                                const target = e.target as HTMLElement;
-                                if (target.closest('[data-row-toggle="true"]')) return;
-
                                 beginSelect(actualRi, ci);
                             }}
                             onMouseEnter={() => {
@@ -393,6 +413,7 @@ const BodyRowInner = <T,>({
                             }}
                             onContextMenu={(e) => {
                                 if (draggingKey) return;
+                                if (isInteractiveCellTarget(e.target)) return;
 
                                 e.preventDefault();
                                 e.stopPropagation();
@@ -422,6 +443,7 @@ const BodyRowInner = <T,>({
                             style={{
                                 backgroundColor: cellBg,
                                 color: rowStyleRaw.color,
+                                ...(justifyContent ? { justifyContent } : {}),
                                 ...getShiftStyle(colKey),
                                 ...getPinnedStyle(colKey, cellBg ?? getThemeColor('White1')),
                                 ...(isIndentTarget ? { paddingLeft: indentPadding } : {}),

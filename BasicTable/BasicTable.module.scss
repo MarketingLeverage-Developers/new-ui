@@ -139,7 +139,7 @@
     background-color: var(--granter-gray-50) !important;
 }
 
-.shell :global([data-col-sort-btn='true']) {
+.shell :global(.air-table-header-cell[data-airtable-header-cell='true'] [data-col-sort-btn='true']) {
     right: 32px !important;
     width: 16px !important;
     height: 16px !important;
@@ -156,12 +156,12 @@
 }
 
 .shell :global(
-        .air-table-header-cell:has([data-col-sort-btn='true'], [data-col-menu-btn='true']) > [data-col-header-content='true']
+        .air-table-header-cell[data-airtable-header-cell='true']:has([data-col-sort-btn='true'], [data-col-menu-btn='true']) > [data-col-header-content='true']
     ) {
     padding-right: 0 !important;
 }
 
-.shell :global([data-col-menu-btn='true']) {
+.shell :global(.air-table-header-cell[data-airtable-header-cell='true'] [data-col-menu-btn='true']) {
     right: 12px !important;
     width: 16px !important;
     height: 16px !important;

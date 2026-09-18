@@ -35,6 +35,10 @@ export type DataTableProps<T> = {
     onFilterChange?: (next: FilterState) => void;
     filterMode?: 'internal' | 'external';
     filterOptionsData?: T[];
+    filterOptionsByKey?: Record<string, string[]>;
+    filterOptionLabel?: (columnKey: string, value: string) => string;
+    filterOptionsStatus?: React.ReactNode;
+    onFilterOpenChange?: (key: string | null) => void;
     fillContainerWidth?: boolean;
     enableVirtualization?: boolean;
     virtualRowHeight?: number;
@@ -85,6 +89,10 @@ const DataTable = <T,>({
     onFilterChange,
     filterMode = 'internal',
     filterOptionsData,
+    filterOptionsByKey,
+    filterOptionLabel,
+    filterOptionsStatus,
+    onFilterOpenChange,
     fillContainerWidth = true,
     enableVirtualization = false,
     virtualRowHeight,
@@ -139,6 +147,10 @@ const DataTable = <T,>({
                 onFilterChange={onFilterChange}
                 filterMode={filterMode}
                 filterOptionsData={filterOptionsData}
+                filterOptionsByKey={filterOptionsByKey}
+                filterOptionLabel={filterOptionLabel}
+                filterOptionsStatus={filterOptionsStatus}
+                onFilterOpenChange={onFilterOpenChange}
                 fillContainerWidth={fillContainerWidth}
                 enableVirtualization={enableVirtualization}
                 virtualRowHeight={virtualRowHeight}
