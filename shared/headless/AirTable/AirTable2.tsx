@@ -130,6 +130,7 @@ export type AirTableProps<T> = {
     filterState?: FilterState;
     defaultFilterState?: FilterState;
     onFilterChange?: (next: FilterState) => void;
+    onFilterOpen?: (columnKey: string) => void;
     filterMode?: 'internal' | 'external';
     filterOptionsData?: T[];
 };
