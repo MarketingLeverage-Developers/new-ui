@@ -11,6 +11,7 @@ import { TableSettingRail } from '@/components/common/BasicTable/components/Tabl
 import type { AirTableComponentLike } from '@/components/common/BasicTable/BasicTable';
 import type { DataTableProps } from './DataTable';
 import Text from '../Text/Text';
+import { autoFitColumns } from '../../../shared/headless/AirTable/autoFitColumns';
 import styles from './DataTable.module.scss';
 
 export type DataTableWithSettingRailTab = 'columns' | 'pinned' | 'filters';
@@ -88,6 +89,7 @@ const DataTableWithSettingRail = <T,>({
     railWidth = 44,
 }: DataTableWithSettingRailProps<T>) => {
     const resizeClickGuard = useSuppressPostResizeHeaderClick();
+    const fittedColumns = React.useMemo(() => autoFitColumns(columns), [columns]);
     const showFilterTab = filterItems.length > 0;
     const effectiveSettingTab = showFilterTab || settingTab !== 'filters' ? settingTab : 'columns';
     const reservedRightSpace = isSettingOpen ? panelWidth + railWidth : 0;
@@ -101,7 +103,7 @@ const DataTableWithSettingRail = <T,>({
         >
             <AirTableComponent
                 data={data}
-                columns={columns}
+                columns={fittedColumns}
                 rowKeyField={rowKeyField}
                 defaultColWidth={defaultColWidth}
                 storageKey={storageKey}

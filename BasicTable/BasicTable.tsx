@@ -3,6 +3,7 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import type { FilterState as ExternalFilterState } from '@/components/common/shared/headless/AirTable/AirTable';
 import AirTable from '../shared/headless/AirTable/AirTable';
+import { autoFitColumns } from '../shared/headless/AirTable/autoFitColumns';
 import styles from './BasicTable.module.scss';
 import RowToggle from './components/RowToggle/RowToggle';
 import PlusToggle from './components/PlusToggle/PlusToggle';
@@ -121,11 +122,13 @@ export const BasicTable = <T,>({
     }, [settingsOpen, settingsVisible]);
 
     const data = props.data;
+    const fittedColumns = useMemo(() => autoFitColumns(props.columns), [props.columns]);
     const useOwnBasicTablePanels = Boolean(AirTableComponent.useOwnBasicTablePanels);
 
     return (
         <AirTableComponent
             {...(props as React.ComponentProps<typeof AirTable<T>>)}
+            columns={fittedColumns}
             defaultExpandedRowKeys={defaultExpandedRowKeys}
             persistExpandedRowKeys={persistExpandedRowKeys}
             enableAnimation={enableAnimation}

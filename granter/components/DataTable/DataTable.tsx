@@ -5,6 +5,7 @@ import AirTable from '../../../shared/headless/AirTable/AirTable';
 import type { AirTableComponentLike } from '../../../BasicTable/BasicTable';
 import { useSuppressPostResizeHeaderClick } from '../../../shared/hooks/client/useSuppressPostResizeHeaderClick';
 import Text from '../Text/Text';
+import { autoFitColumns } from '../../../shared/headless/AirTable/autoFitColumns';
 import styles from './DataTable.module.scss';
 
 export type DataTablePersistedState = {
@@ -123,6 +124,7 @@ const DataTable = <T,>({
     emptyStateClassName,
 }: DataTableProps<T>) => {
     const resizeClickGuard = useSuppressPostResizeHeaderClick();
+    const fittedColumns = React.useMemo(() => autoFitColumns(columns), [columns]);
 
     return (
         <div
@@ -132,7 +134,7 @@ const DataTable = <T,>({
         >
             <AirTableComponent
                 data={data}
-                columns={columns}
+                columns={fittedColumns}
                 rowKeyField={rowKeyField}
                 defaultColWidth={defaultColWidth}
                 storageKey={storageKey}
