@@ -49,6 +49,7 @@ type ListTableProps<T> = {
     filterState?: FilterState;
     defaultFilterState?: FilterState;
     onFilterChange?: (next: FilterState) => void;
+    onFilterOpen?: (columnKey: string) => void;
     filterMode?: 'internal' | 'external';
     filterOptionsData?: T[];
     fillContainerWidth?: boolean;
@@ -91,6 +92,7 @@ export const ListTable = <T,>({
     filterState,
     defaultFilterState,
     onFilterChange,
+    onFilterOpen,
     filterMode,
     filterOptionsData,
     fillContainerWidth,
@@ -132,6 +134,7 @@ export const ListTable = <T,>({
         filterState={filterState}
         defaultFilterState={defaultFilterState}
         onFilterChange={onFilterChange}
+        onFilterOpen={onFilterOpen}
         filterMode={filterMode}
         filterOptionsData={filterOptionsData}
         fillContainerWidth={fillContainerWidth}

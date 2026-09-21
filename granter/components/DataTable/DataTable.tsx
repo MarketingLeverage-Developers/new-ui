@@ -34,6 +34,7 @@ export type DataTableProps<T> = {
     sortMode?: 'internal' | 'external';
     filterState?: FilterState;
     onFilterChange?: (next: FilterState) => void;
+    onFilterOpen?: (columnKey: string) => void;
     filterMode?: 'internal' | 'external';
     filterOptionsData?: T[];
     filterOptionsByKey?: Record<string, string[]>;
@@ -88,6 +89,7 @@ const DataTable = <T,>({
     sortMode = 'internal',
     filterState,
     onFilterChange,
+    onFilterOpen,
     filterMode = 'internal',
     filterOptionsData,
     filterOptionsByKey,
@@ -147,6 +149,7 @@ const DataTable = <T,>({
                 sortMode={sortMode}
                 filterState={filterState}
                 onFilterChange={onFilterChange}
+                onFilterOpen={onFilterOpen}
                 filterMode={filterMode}
                 filterOptionsData={filterOptionsData}
                 filterOptionsByKey={filterOptionsByKey}

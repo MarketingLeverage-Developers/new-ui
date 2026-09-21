@@ -47,6 +47,7 @@ const DataTableWithSettingRail = <T,>({
     sortMode = 'internal',
     filterState,
     onFilterChange,
+    onFilterOpen,
     filterMode = 'internal',
     filterOptionsData,
     filterOptionsByKey,
@@ -116,6 +117,7 @@ const DataTableWithSettingRail = <T,>({
                 sortMode={sortMode}
                 filterState={filterState}
                 onFilterChange={onFilterChange}
+                onFilterOpen={onFilterOpen}
                 filterMode={filterMode}
                 filterOptionsData={filterOptionsData}
                 filterOptionsByKey={filterOptionsByKey}

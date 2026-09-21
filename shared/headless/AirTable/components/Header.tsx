@@ -651,6 +651,9 @@ export const Header = <T,>({ className, headerCellClassName, resizeHandleClassNa
         e.preventDefault();
         e.stopPropagation();
 
+        const isOpening = !(filterPopup.open && filterPopup.colKey === colKey);
+        if (isOpening) props.onFilterOpen?.(colKey);
+
         filterButtonRef.current = e.currentTarget;
         const rect = e.currentTarget.getBoundingClientRect();
 
@@ -666,7 +669,7 @@ export const Header = <T,>({ className, headerCellClassName, resizeHandleClassNa
                 y: rect.bottom + 8,
             };
         });
-    }, []);
+    }, [filterPopup.colKey, filterPopup.open, props]);
 
     useEffect(() => {
         if (!filterPopup.open) return;

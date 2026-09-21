@@ -622,6 +622,8 @@ export const Header2 = <T,>({ className, headerCellClassName, resizeHandleClassN
         e.preventDefault();
         e.stopPropagation();
 
+        props.onFilterOpen?.(colKey);
+
         const rect = e.currentTarget.getBoundingClientRect();
         const containerRect = headerContainerRef.current?.getBoundingClientRect() ?? { left: 0, top: 0 };
 
@@ -631,7 +633,7 @@ export const Header2 = <T,>({ className, headerCellClassName, resizeHandleClassN
             x: rect.left - containerRect.left - 200,
             y: rect.bottom - containerRect.top + 8,
         });
-    }, []);
+    }, [props]);
 
     const closeFilter = useCallback(() => {
         setFilterPopup((prev) => ({ ...prev, open: false }));
