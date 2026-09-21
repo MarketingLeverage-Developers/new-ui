@@ -916,6 +916,7 @@ export const Header2 = <T,>({ className, headerCellClassName, resizeHandleClassN
                                       }
                                     : {})}
                                 key={`h-${colKey}`}
+                                data-airtable-header-cell="true"
                                 data-col-key={colKey}
                                 className={[headerCellClassName, 'air-table-header-cell'].filter(Boolean).join(' ')}
                                 style={{
