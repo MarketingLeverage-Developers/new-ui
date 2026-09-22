@@ -1,6 +1,6 @@
 // AirTable/AirTable2.tsx
 
-import React, { createContext, useCallback, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { Container2 as Container } from './components/Container2';
 import Header from './components/Header2';
 import { Body2 as Body } from './components/Body2';
@@ -739,6 +739,23 @@ const areNumberRecordsEqual = (a: Record<string, number>, b: Record<string, numb
     }
 
     return true;
+};
+
+const mergeGrowingNumberRecords = (
+    previous: Record<string, number>,
+    measured: Record<string, number>
+) => {
+    let changed = false;
+    const next = { ...previous };
+
+    Object.entries(measured).forEach(([key, width]) => {
+        const previousWidth = previous[key] ?? 0;
+        if (width <= previousWidth) return;
+        next[key] = width;
+        changed = true;
+    });
+
+    return changed ? next : previous;
 };
 
 /* =========================
@@ -1605,13 +1622,22 @@ const AirTableInner = <T,>({
             ? column.children.filter((child) => child.autoFitContent).map((child) => String(child.key))
             : column.autoFitContent ? [String(column.key)] : []
     )), [columns]);
+    const autoFitColumnKeySignature = useMemo(
+        () => Array.from(autoFitColumnKeys).sort().join('\u001f'),
+        [autoFitColumnKeys]
+    );
     const [renderedAutoFitWidths, setRenderedAutoFitWidths] = useState<Record<string, number>>({});
     const updateRenderedAutoFitWidths = useCallback(() => {
         const root = wrapperRef.current;
         if (!root) return;
         const measured = measureRenderedAutoFitWidths(root, autoFitColumnKeys);
-        setRenderedAutoFitWidths((previous) => areNumberRecordsEqual(previous, measured) ? previous : measured);
+        setRenderedAutoFitWidths((previous) => mergeGrowingNumberRecords(previous, measured));
     }, [autoFitColumnKeys]);
+    const renderedAutoFitMeasurementRef = useRef({
+        columnKeySignature: '',
+        containerWidth: -1,
+        bodyMeasured: false,
+    });
 
     const [expandedRowKeys, setExpandedRowKeys] = useState<Set<string>>(() => {
         if (persistExpandedRowKeys && storageKey) {
@@ -1694,20 +1720,69 @@ const AirTableInner = <T,>({
         renderedAutoFitWidths,
     });
 
-    useLayoutEffect(() => {
-        updateRenderedAutoFitWidths();
-    }, [updateRenderedAutoFitWidths, sortedData, state.rows, containerWidth]);
+    // DOM auto-fit is intentionally deferred: cloning rendered cells and reading their
+    // computed layout must not block the paint for sorting, filtering, or data changes.
+    useEffect(() => {
+        if (autoFitColumnKeys.size === 0) return;
+
+        const previous = renderedAutoFitMeasurementRef.current;
+        const columnsChanged = previous.columnKeySignature !== autoFitColumnKeySignature;
+        const containerChanged = previous.containerWidth !== containerWidth;
+        const hasBody = sortedData.length > 0 && state.rows.length > 0;
+        const needsInitialBodyMeasurement = hasBody && (!previous.bodyMeasured || columnsChanged);
+        if (!columnsChanged && !containerChanged && !needsInitialBodyMeasurement) return;
+
+        let active = true;
+        let frame = 0;
+        let idleCallback = 0;
+        let timer = 0;
+        const measure = () => {
+            if (!active) return;
+            updateRenderedAutoFitWidths();
+            renderedAutoFitMeasurementRef.current = {
+                columnKeySignature: autoFitColumnKeySignature,
+                containerWidth,
+                bodyMeasured: columnsChanged ? hasBody : previous.bodyMeasured || hasBody,
+            };
+        };
+
+        frame = window.requestAnimationFrame(() => {
+            if (typeof window.requestIdleCallback === 'function') {
+                idleCallback = window.requestIdleCallback(measure, { timeout: 500 });
+                return;
+            }
+            timer = window.setTimeout(measure, 0);
+        });
+
+        return () => {
+            active = false;
+            window.cancelAnimationFrame(frame);
+            if (idleCallback && typeof window.cancelIdleCallback === 'function') {
+                window.cancelIdleCallback(idleCallback);
+            }
+            window.clearTimeout(timer);
+        };
+    }, [
+        autoFitColumnKeySignature,
+        autoFitColumnKeys.size,
+        containerWidth,
+        sortedData.length,
+        state.rows.length,
+        updateRenderedAutoFitWidths,
+    ]);
 
     useEffect(() => {
         if (autoFitColumnKeys.size === 0 || document.fonts?.status !== 'loading') return;
         let active = true;
         void document.fonts.ready.then(() => {
-            if (active) updateRenderedAutoFitWidths();
+            if (!active) return;
+            renderedAutoFitMeasurementRef.current.containerWidth = -1;
+            updateRenderedAutoFitWidths();
         });
         return () => {
             active = false;
         };
-    }, [autoFitColumnKeys, updateRenderedAutoFitWidths]);
+    }, [autoFitColumnKeySignature, autoFitColumnKeys.size, updateRenderedAutoFitWidths]);
 
     useEffect(() => {
         if (!perfEnabled) return;
