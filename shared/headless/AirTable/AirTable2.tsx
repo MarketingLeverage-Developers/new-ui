@@ -141,6 +141,7 @@ export type AirTableProps<T> = {
     filterMode?: 'internal' | 'external';
     filterOptionsData?: T[];
     filterOptionsByKey?: Record<string, string[]>;
+    filterOptionSortDirectionByKey?: Record<string, SortDirection>;
     filterOptionLabel?: (columnKey: string, value: string) => string;
     filterOptionsStatus?: React.ReactNode;
     onFilterOpenChange?: (key: string | null) => void;
@@ -1561,6 +1562,7 @@ const AirTableInner = <T,>({
     filterMode = 'internal',
     filterOptionsData,
     filterOptionsByKey,
+    filterOptionSortDirectionByKey,
     filterOptionLabel,
     filterOptionsStatus,
     onFilterOpenChange,
@@ -2057,6 +2059,7 @@ const AirTableInner = <T,>({
             virtualOverscan,
             filterOptionsData: filterOptionsData ?? data,
             filterOptionsByKey,
+            filterOptionSortDirectionByKey,
             filterOptionLabel,
             filterOptionsStatus,
             onFilterOpenChange,

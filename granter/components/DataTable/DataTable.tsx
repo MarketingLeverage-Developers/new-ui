@@ -38,6 +38,7 @@ export type DataTableProps<T> = {
     filterMode?: 'internal' | 'external';
     filterOptionsData?: T[];
     filterOptionsByKey?: Record<string, string[]>;
+    filterOptionSortDirectionByKey?: Record<string, 'asc' | 'desc'>;
     filterOptionLabel?: (columnKey: string, value: string) => string;
     filterOptionsStatus?: React.ReactNode;
     onFilterOpenChange?: (key: string | null) => void;
@@ -93,6 +94,7 @@ const DataTable = <T,>({
     filterMode = 'internal',
     filterOptionsData,
     filterOptionsByKey,
+    filterOptionSortDirectionByKey,
     filterOptionLabel,
     filterOptionsStatus,
     onFilterOpenChange,
@@ -153,6 +155,7 @@ const DataTable = <T,>({
                 filterMode={filterMode}
                 filterOptionsData={filterOptionsData}
                 filterOptionsByKey={filterOptionsByKey}
+                filterOptionSortDirectionByKey={filterOptionSortDirectionByKey}
                 filterOptionLabel={filterOptionLabel}
                 filterOptionsStatus={filterOptionsStatus}
                 onFilterOpenChange={onFilterOpenChange}

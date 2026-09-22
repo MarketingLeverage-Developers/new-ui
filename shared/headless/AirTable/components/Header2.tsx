@@ -87,6 +87,22 @@ const SortIcon = ({
 };
 
 const EMPTY_FILTER_OPTIONS: string[] = [];
+const DATE_ONLY_FILTER_KEY_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
+
+const compareFilterOptions = (
+    left: { key: string; label: string },
+    right: { key: string; label: string },
+    direction?: SortDirection
+) => {
+    const comparedByLabel = left.label.localeCompare(right.label, undefined, { numeric: true, sensitivity: 'base' });
+    if (!direction) return comparedByLabel;
+
+    const compared = DATE_ONLY_FILTER_KEY_PATTERN.test(left.key) && DATE_ONLY_FILTER_KEY_PATTERN.test(right.key)
+        ? left.key.localeCompare(right.key)
+        : comparedByLabel;
+
+    return direction === 'desc' ? -compared : compared;
+};
 
 const DefaultColumnFilter = <T,>({
     colKey,
@@ -96,11 +112,13 @@ const DefaultColumnFilter = <T,>({
     filterState,
     setFilterState,
     optionValues,
+    optionSortDirection,
     optionLabel,
     optionsStatus,
 }: {
     colKey: string;
     optionValues?: string[];
+    optionSortDirection?: SortDirection;
     optionLabel?: (columnKey: string, value: string) => string;
     optionsStatus?: React.ReactNode;
     data: T[];
@@ -153,7 +171,7 @@ const DefaultColumnFilter = <T,>({
             const selected = filterState[colKey];
             return [...new Set([...optionValues, ...(selected?.included ?? []), ...(selected?.excluded ?? [])])]
                 .map((key) => ({ key, label: optionLabel?.(colKey, key) ?? formatFilterLabel(key), count: undefined as number | undefined }))
-                .sort((a, b) => a.label.localeCompare(b.label, undefined, { numeric: true, sensitivity: 'base' }));
+                .sort((left, right) => compareFilterOptions(left, right, optionSortDirection));
         }
         if (!config?.sortValue) return [];
         const map = new Map<string, { key: string; label: string; count: number }>();
@@ -187,9 +205,9 @@ const DefaultColumnFilter = <T,>({
         });
 
         const list = Array.from(map.values());
-        list.sort((a, b) => a.label.localeCompare(b.label, undefined, { numeric: true, sensitivity: 'base' }));
+        list.sort((left, right) => compareFilterOptions(left, right, optionSortDirection));
         return list;
-    }, [config, data, colKey, columnByKey, optionValues, optionLabel, filterState]);
+    }, [config, data, colKey, columnByKey, optionValues, optionSortDirection, optionLabel, filterState]);
 
     const filteredOptions = useMemo(() => {
         const q = keyword.trim().toLowerCase();
@@ -769,6 +787,7 @@ export const Header2 = <T,>({ className, headerCellClassName, resizeHandleClassN
                 colKey={col.key}
                 data={filterOptionsData}
                 optionValues={props.filterOptionsByKey ? (props.filterOptionsByKey[col.key] ?? EMPTY_FILTER_OPTIONS) : undefined}
+                optionSortDirection={props.filterOptionSortDirectionByKey?.[col.key]}
                 optionLabel={props.filterOptionLabel}
                 optionsStatus={props.filterOptionsStatus}
                 columnByKey={columnByKey}
@@ -784,6 +803,7 @@ export const Header2 = <T,>({ className, headerCellClassName, resizeHandleClassN
         sortConfigByKey,
         filterOptionsData,
         props.filterOptionsByKey,
+        props.filterOptionSortDirectionByKey,
         props.filterOptionLabel,
         props.filterOptionsStatus,
         columnByKey,
