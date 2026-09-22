@@ -1699,22 +1699,13 @@ const AirTableInner = <T,>({
     }, [updateRenderedAutoFitWidths, sortedData, state.rows, containerWidth]);
 
     useEffect(() => {
-        const scrollElement = scrollRef.current;
-        if (!scrollElement || autoFitColumnKeys.size === 0) return;
+        if (autoFitColumnKeys.size === 0 || document.fonts?.status !== 'loading') return;
         let active = true;
-        let timer = 0;
-        const schedule = () => {
-            window.clearTimeout(timer);
-            timer = window.setTimeout(() => {
-                if (active) updateRenderedAutoFitWidths();
-            }, 120);
-        };
-        scrollElement.addEventListener('scroll', schedule, { passive: true });
-        document.fonts?.ready.then(() => { if (active) schedule(); });
+        void document.fonts.ready.then(() => {
+            if (active) updateRenderedAutoFitWidths();
+        });
         return () => {
             active = false;
-            scrollElement.removeEventListener('scroll', schedule);
-            window.clearTimeout(timer);
         };
     }, [autoFitColumnKeys, updateRenderedAutoFitWidths]);
 
