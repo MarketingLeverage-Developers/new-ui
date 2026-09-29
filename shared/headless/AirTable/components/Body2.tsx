@@ -548,7 +548,6 @@ export const Body2 = <T,>({
     const canVirtualize = enableVirtualization && !getExpandedRows;
 
     const bodyRef = useRef<HTMLDivElement | null>(null);
-    const virtualScrollRef = useRef<HTMLElement | null>(null);
     const [virtualState, setVirtualState] = useState<{ top: number; height: number }>({
         top: 0,
         height: 0,
@@ -581,13 +580,9 @@ export const Body2 = <T,>({
     }, [scrollRef]);
 
     const updateVirtualState = useCallback(() => {
-        const scrollEl = virtualScrollRef.current ?? resolveVirtualScrollEl();
+        const scrollEl = resolveVirtualScrollEl();
         const bodyEl = bodyRef.current;
         if (!scrollEl || !bodyEl) return;
-
-        if (scrollEl !== virtualScrollRef.current) {
-            virtualScrollRef.current = scrollEl;
-        }
 
         const scrollTop = scrollEl.scrollTop;
         const scrollRect = scrollEl.getBoundingClientRect();
@@ -696,7 +691,7 @@ export const Body2 = <T,>({
 
     useEffect(() => {
         if (!canVirtualize) return;
-        const scrollEl = resolveVirtualScrollEl();
+        let scrollEl = resolveVirtualScrollEl();
         if (!scrollEl) return;
 
         let raf = 0;
@@ -704,6 +699,13 @@ export const Body2 = <T,>({
             if (raf) return;
             raf = window.requestAnimationFrame(() => {
                 raf = 0;
+                // 필터/페이지/높이 변경으로 실제 스크롤 컨테이너가 바뀌면 이벤트도 새 대상에 연결한다.
+                const nextScrollEl = resolveVirtualScrollEl();
+                if (nextScrollEl !== scrollEl) {
+                    scrollEl?.removeEventListener('scroll', handle);
+                    scrollEl = nextScrollEl;
+                    scrollEl?.addEventListener('scroll', handle);
+                }
                 updateVirtualState();
             });
         };
@@ -711,13 +713,17 @@ export const Body2 = <T,>({
         handle();
         scrollEl.addEventListener('scroll', handle);
         window.addEventListener('resize', handle);
+        const resizeObserver = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(handle) : null;
+        if (scrollRef.current) resizeObserver?.observe(scrollRef.current);
+        if (bodyRef.current) resizeObserver?.observe(bodyRef.current);
 
         return () => {
-            scrollEl.removeEventListener('scroll', handle);
+            scrollEl?.removeEventListener('scroll', handle);
             window.removeEventListener('resize', handle);
+            resizeObserver?.disconnect();
             if (raf) window.cancelAnimationFrame(raf);
         };
-    }, [canVirtualize, resolveVirtualScrollEl, updateVirtualState]);
+    }, [canVirtualize, resolveVirtualScrollEl, rowMeasurements.totalHeight, rows.length, scrollRef, updateVirtualState]);
 
     let rowsToRender = rows as BodyRowData<T>[];
     let rowIndexOffset = 0;

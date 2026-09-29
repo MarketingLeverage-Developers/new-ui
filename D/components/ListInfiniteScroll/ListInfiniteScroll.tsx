@@ -8,12 +8,13 @@ type Props = {
     onChange: (page: number) => void;
     isLoading?: boolean;
     scrollEl?: HTMLElement | null;
+    resetKey?: string;
 };
 
 const ROOT_MARGIN = '200px';
 const SCROLL_THRESHOLD_PX = 200;
 
-export const ListInfiniteScroll = ({ total, totalPages: totalPagesProp, page, size, onChange, isLoading, scrollEl }: Props) => {
+export const ListInfiniteScroll = ({ total, totalPages: totalPagesProp, page, size, onChange, isLoading, scrollEl, resetKey }: Props) => {
     const triggerRef = useRef<HTMLDivElement | null>(null);
     const lastRequestedPageRef = useRef<number | null>(null);
     const requestedFromPageRef = useRef<number | null>(null);
@@ -28,11 +29,11 @@ export const ListInfiniteScroll = ({ total, totalPages: totalPagesProp, page, si
     const canLoad = hasMore && !isLoading;
 
     useEffect(() => {
-        if (lastRequestedPageRef.current !== null && lastRequestedPageRef.current <= page) {
-            lastRequestedPageRef.current = null;
-            requestedFromPageRef.current = null;
-        }
-    }, [page, scrollEl]);
+        // 새 페이지/조회 조건에서도 하단에 머무를 수 있으므로 진입 상태와 요청 잠금을 함께 초기화한다.
+        lastRequestedPageRef.current = null;
+        requestedFromPageRef.current = null;
+        wasIntersectingRef.current = false;
+    }, [page, resetKey, scrollEl]);
 
     useEffect(() => {
         if (!isLoading && requestedFromPageRef.current === page) {
@@ -71,7 +72,7 @@ export const ListInfiniteScroll = ({ total, totalPages: totalPagesProp, page, si
 
         observer.observe(el);
         return () => observer.disconnect();
-    }, [canLoad, nextPage, onChange, page, scrollEl]);
+    }, [canLoad, nextPage, onChange, page, resetKey, scrollEl]);
 
     useEffect(() => {
         if (!scrollEl) return;
@@ -97,8 +98,10 @@ export const ListInfiniteScroll = ({ total, totalPages: totalPagesProp, page, si
         };
 
         scrollEl.addEventListener('scroll', onScroll, { passive: true });
+        // 필터 결과가 짧거나 페이지 추가 후 이미 하단이면 새 스크롤 이벤트 없이도 이어서 조회한다.
+        onScroll();
         return () => scrollEl.removeEventListener('scroll', onScroll);
-    }, [canLoad, nextPage, onChange, page, scrollEl]);
+    }, [canLoad, nextPage, onChange, page, resetKey, scrollEl]);
 
     if (!hasMore) return null;
     if (scrollEl) return null;
