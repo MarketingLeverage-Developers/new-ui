@@ -1,0 +1,23 @@
+.Spinner {
+    display: inline-block;
+    width: 26px;
+    height: 26px;
+    box-sizing: border-box;
+    flex: none;
+    border: 2.5px solid color-mix(in srgb, var(--Black1, #20242a) 16%, transparent);
+    border-top-color: color-mix(in srgb, var(--Black1, #20242a) 56%, transparent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .Spinner {
+        animation-duration: 1.8s;
+    }
+}

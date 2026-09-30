@@ -1,0 +1,29 @@
+.Screen {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    display: grid;
+    place-items: center;
+    background: #f8f9fa;
+}
+
+.Screen img {
+    animation: float 0.76s ease-in-out infinite;
+    will-change: transform;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(2px) rotate(-2deg);
+    }
+
+    50% {
+        transform: translateY(-5px) rotate(2deg);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .Screen img {
+        animation: none;
+    }
+}

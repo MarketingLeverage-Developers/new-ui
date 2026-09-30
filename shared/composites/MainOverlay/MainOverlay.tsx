@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import React from 'react';
 import StaticOverlay from '../../../StaticOverlay/StaticOverlay';
-import LogoLottie from '../../../LogoLottie/LogoLottie';
+import PageLoadingSpinner from '../../../Loading/PageLoadingSpinner';
 import BlurOverlay from '../../../BlurOverlay/BlurOverlay';
 import ErrorFallback from '../../../ErrorFallback/ErrorFallback';
 
@@ -52,7 +52,7 @@ const MainOverlay: React.FC<MainOverlayProps> = ({
         return (
             <>
                 {children}
-                <StaticOverlay centerNode={suspenseFallbackCenterNode ?? <LogoLottie />} />
+                <StaticOverlay centerNode={suspenseFallbackCenterNode ?? <PageLoadingSpinner />} />
             </>
         );
     }
@@ -60,7 +60,7 @@ const MainOverlay: React.FC<MainOverlayProps> = ({
     return (
         <>
             {children}
-            <BlurOverlay centerNode={fetchingOverlayCenterNode ?? <LogoLottie />} />
+            <BlurOverlay centerNode={fetchingOverlayCenterNode ?? <PageLoadingSpinner />} />
         </>
     );
 };

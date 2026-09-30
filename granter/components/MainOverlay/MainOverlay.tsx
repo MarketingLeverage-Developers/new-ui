@@ -1,13 +1,14 @@
 import type { ReactNode } from 'react';
 import React, { useEffect, useLayoutEffect, useMemo, useRef } from 'react';
 import StaticOverlay from '../../../StaticOverlay/StaticOverlay';
-import LogoLottie from '../../../LogoLottie/LogoLottie';
-import BlurOverlay from '../../../BlurOverlay/BlurOverlay';
+import PageLoadingSpinner from '../../../Loading/PageLoadingSpinner';
 import ErrorFallback from '../../../ErrorFallback/ErrorFallback';
 import DeferredComponent from '../DeferredComponent/DeferredComponent';
+import type { AsyncLoadPhase } from '@/shared/utils/asyncLoadState';
 import styles from './MainOverlay.module.scss';
 
 export type MainOverlayState = {
+    phase?: AsyncLoadPhase;
     isFetching?: boolean;
     isEmpty?: boolean;
     hasError?: boolean;
@@ -74,9 +75,10 @@ const MainOverlay: React.FC<MainOverlayProps> = ({
     fetchingOverlayCenterNode: _fetchingOverlayCenterNode,
     onRetry: _onRetry,
 }) => {
+    const phase = state?.phase;
     const isFetching = _isFetching ?? state?.isFetching ?? false;
     const isEmpty = _isEmpty ?? state?.isEmpty ?? false;
-    const hasError = _hasError ?? state?.hasError ?? false;
+    const hasError = phase === 'error' || (_hasError ?? state?.hasError ?? false);
     const errorMessage = _errorMessage ?? state?.errorMessage;
     const suspenseFallbackCenterNode = _suspenseFallbackCenterNode ?? state?.suspenseFallbackCenterNode;
     const fetchingOverlayCenterNode = _fetchingOverlayCenterNode ?? state?.fetchingOverlayCenterNode;
@@ -104,50 +106,38 @@ const MainOverlay: React.FC<MainOverlayProps> = ({
     }, [isFetching, isEmpty]);
 
     const mode: OverlayMode = useMemo(() => {
+        if (phase) {
+            if (phase === 'initial') return 'initial';
+            if (phase === 'refreshing') return 'blur';
+            return 'none';
+        }
         if (hasError || !isFetching) return 'none';
         if (!hasCompletedFirstFetchRef.current) return 'initial';
         return 'blur';
-    }, [hasError, isFetching]);
-
-    const deferredConfig = useMemo(() => {
-        if (mode === 'initial' || mode === 'blur') {
-            return { delay: 300, minVisibleMs: 1000 };
-        }
-        return { delay: 0, minVisibleMs: 0 };
-    }, [mode]);
+    }, [phase, hasError, isFetching]);
 
     const overlayNode = useMemo(() => {
         if (mode === 'initial') {
             return (
                 <StaticOverlay
                     centerNode={
-                        suspenseFallbackCenterNode ?? (
-                            <div className={styles.LoadingLogoSmall}>
-                                <LogoLottie />
-                            </div>
-                        )
+                        suspenseFallbackCenterNode ?? <PageLoadingSpinner />
                     }
                 />
             );
         }
         if (mode === 'blur') {
             return (
-                <BlurOverlay
-                    centerNode={
-                        fetchingOverlayCenterNode ?? (
-                            <div className={styles.LoadingLogoSmall}>
-                                <LogoLottie />
-                            </div>
-                        )
-                    }
-                />
+                <div className={styles.RefreshIndicator} role="status" aria-label="내용을 업데이트하는 중입니다.">
+                    {fetchingOverlayCenterNode ?? <span className={styles.RefreshSpinner} />}
+                </div>
             );
         }
         return null;
     }, [mode, suspenseFallbackCenterNode, fetchingOverlayCenterNode]);
 
     useLayoutEffect(() => {
-        if (mode === 'none') return;
+        if (mode === 'none' && !hasError) return;
 
         const root = rootRef.current;
         if (!root) return;
@@ -155,6 +145,7 @@ const MainOverlay: React.FC<MainOverlayProps> = ({
         const viewport = getOverlayViewportElement(root);
         const previousOverflow = viewport.style.overflow;
         const previousOverscrollBehavior = viewport.style.overscrollBehavior;
+        const shouldLockScroll = mode === 'initial' || hasError;
         let resizeObserver: ResizeObserver | null = null;
 
         const updateBounds = () => {
@@ -162,8 +153,10 @@ const MainOverlay: React.FC<MainOverlayProps> = ({
         };
 
         updateBounds();
-        viewport.style.overflow = 'hidden';
-        viewport.style.overscrollBehavior = 'contain';
+        if (shouldLockScroll) {
+            viewport.style.overflow = 'hidden';
+            viewport.style.overscrollBehavior = 'contain';
+        }
 
         window.addEventListener('resize', updateBounds);
         window.addEventListener('scroll', updateBounds, true);
@@ -174,13 +167,15 @@ const MainOverlay: React.FC<MainOverlayProps> = ({
         }
 
         return () => {
-            viewport.style.overflow = previousOverflow;
-            viewport.style.overscrollBehavior = previousOverscrollBehavior;
+            if (shouldLockScroll) {
+                viewport.style.overflow = previousOverflow;
+                viewport.style.overscrollBehavior = previousOverscrollBehavior;
+            }
             window.removeEventListener('resize', updateBounds);
             window.removeEventListener('scroll', updateBounds, true);
             resizeObserver?.disconnect();
         };
-    }, [mode]);
+    }, [mode, hasError]);
 
     if (hasError) {
         return (
@@ -203,11 +198,12 @@ const MainOverlay: React.FC<MainOverlayProps> = ({
     return (
         <div ref={rootRef} className={styles.Root}>
             {children}
-            {overlayNode ? (
+            {mode === 'initial' ? overlayNode : null}
+            {mode === 'blur' ? (
                 <DeferredComponent
-                    active={mode !== 'none'}
-                    delay={deferredConfig.delay}
-                    minVisibleMs={deferredConfig.minVisibleMs}
+                    active
+                    delay={150}
+                    minVisibleMs={0}
                 >
                     {overlayNode}
                 </DeferredComponent>

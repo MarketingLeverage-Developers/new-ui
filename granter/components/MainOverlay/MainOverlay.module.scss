@@ -19,9 +19,34 @@
     right: auto;
     bottom: auto;
     z-index: var(--z-overlay, 10002);
+    background-color: var(--granter-white, var(--White1, #fff));
 }
 
-.LoadingLogoSmall {
-    transform: scale(0.72);
-    transform-origin: center;
+.RefreshIndicator {
+    position: fixed;
+    top: calc(var(--main-overlay-top) + 12px);
+    left: calc(var(--main-overlay-left) + var(--main-overlay-width) - 38px);
+    display: grid;
+    place-items: center;
+    width: 26px;
+    height: 26px;
+    z-index: var(--z-overlay, 10002);
+    pointer-events: none;
+}
+
+.RefreshSpinner {
+    width: 18px;
+    height: 18px;
+    border: 2px solid color-mix(in srgb, var(--Black1, #20242a) 16%, transparent);
+    border-top-color: color-mix(in srgb, var(--Black1, #20242a) 56%, transparent);
+    border-radius: 50%;
+    animation: refresh-spin 0.8s linear infinite;
+}
+
+@keyframes refresh-spin {
+    to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .RefreshSpinner { animation-duration: 1.8s; }
 }
