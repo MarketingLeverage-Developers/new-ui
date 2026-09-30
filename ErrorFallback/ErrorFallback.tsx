@@ -1,38 +1,38 @@
-// ErrorFallback.tsx
 import React from 'react';
-import Flex from '../Flex/Flex';
-import Text from '../Text/Text';
-import BaseButton from '../BaseButton/BaseButton';
-import { getThemeColor } from '../shared/utils/css/getThemeColor';
-import ErrorImage from '../shared/assets/components/ErrorFallback/error.svg';
+import { FiAlertCircle } from 'react-icons/fi';
+import styles from './ErrorFallback.module.scss';
 
 interface ErrorFallbackProps {
     onRetry?: () => void;
     message?: string;
+    title?: string;
+    variant?: 'page' | 'inline';
 }
 
-const ErrorFallback: React.FC<ErrorFallbackProps> = ({ onRetry, message }) => {
-    const description = message && message.trim().length > 0 ? message : '잠시 후에 다시 시도해 주세요';
+const TECHNICAL_ERROR_PATTERN = /request failed|status code|network error|timeout|axioserror|\b(?:GET|POST|PUT|PATCH|DELETE)\s+https?:/i;
+
+const ErrorFallback: React.FC<ErrorFallbackProps> = ({
+    onRetry,
+    message,
+    title = '내용을 불러오지 못했어요',
+    variant = 'page',
+}) => {
+    const trimmedMessage = message?.trim();
+    const description = trimmedMessage && !TECHNICAL_ERROR_PATTERN.test(trimmedMessage)
+        ? trimmedMessage
+        : '잠시 후 다시 시도해 주세요.';
 
     return (
-        <Flex direction="column" gap={16} align="center">
-            <img src={ErrorImage} />
-            <Text fontSize={17} fontWeight={500} textColor={getThemeColor('Gray1')}>
-                오류가 발생했습니다
-            </Text>
-            <Text fontSize={15} fontWeight={400} textColor={getThemeColor('Gray2')}>
-                {description}
-            </Text>
-            <BaseButton
-                bgColor={getThemeColor('Primary1')}
-                height={44}
-                padding={{ x: 42, y: 12 }}
-                radius={8}
-                onClick={onRetry}
-            >
-                재시도
-            </BaseButton>
-        </Flex>
+        <div className={styles.Root} data-variant={variant} role="alert">
+            <FiAlertCircle className={styles.Icon} aria-hidden="true" />
+            <strong className={styles.Title}>{title}</strong>
+            <p className={styles.Description}>{description}</p>
+            {onRetry ? (
+                <button className={styles.RetryButton} type="button" onClick={onRetry}>
+                    다시 시도
+                </button>
+            ) : null}
+        </div>
     );
 };
 

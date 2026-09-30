@@ -1,0 +1,70 @@
+.Root {
+    display: flex;
+    width: min(100%, 360px);
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 8px;
+    padding: 24px 16px;
+    text-align: center;
+}
+
+.Root[data-variant='inline'] {
+    width: 100%;
+    min-height: 220px;
+    padding: 24px 16px;
+}
+
+.Icon {
+    width: 30px;
+    height: 30px;
+    margin-bottom: 6px;
+    color: var(--granter-gray-400, #94a3b8);
+    stroke-width: 1.5;
+}
+
+.Root[data-variant='inline'] .Icon {
+    width: 26px;
+    height: 26px;
+}
+
+.Title {
+    color: var(--granter-gray-900, #111827);
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+.Root[data-variant='inline'] .Title {
+    font-size: 15px;
+}
+
+.Description {
+    margin: 0;
+    color: var(--granter-gray-500, #64748b);
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.RetryButton {
+    min-height: 34px;
+    margin-top: 8px;
+    padding: 0 14px;
+    border: 1px solid var(--granter-gray-300, #cbd5e1);
+    border-radius: 8px;
+    background: var(--granter-white, #fff);
+    color: var(--granter-blue-600, #2563eb);
+    font: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.RetryButton:hover {
+    background: color-mix(in srgb, var(--granter-blue-600, #2563eb) 7%, var(--granter-white, #fff));
+}
+
+.RetryButton:focus-visible {
+    outline: 2px solid var(--granter-blue-600, #2563eb);
+    outline-offset: 2px;
+}
